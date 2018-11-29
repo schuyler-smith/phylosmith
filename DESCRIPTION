@@ -1,0 +1,28 @@
+Package: phyloschuyler
+Title: Various functions that I have written to help analyze phyloseq data
+Version: 0.2
+Author: Schuyler Smith <sdsmith@iastate.edu>
+Maintainer: Schuyler Smith <sdsmith@iastate.edu>
+Description: Functions for phyloseq objects.
+Depends:
+    R (>= 3.2.2),
+    phyloseq,
+    data.table
+Imports:
+    RcppParallel,
+    RcppArmadillo,
+    utils
+LinkingTo: 
+    Rcpp,
+    RcppParallel,
+    RcppArmadillo
+Suggests:
+    knitr,
+    devtools,
+    rmarkdown
+SystemRequirements:
+VignetteBuilder: knitr
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
