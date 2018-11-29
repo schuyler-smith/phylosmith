@@ -1,17 +1,7 @@
----
-title: "phyloschuyler"
-author: "Schuyler D. smith"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
 
-## `phyloschuyler` description
+## `phyloschuyler`
 
-`phyloschuyler` is a compilation of functions that I have written, that I find very useful when analyzing phyloseq objects.
+This package is a compilation of functions that I have written, that I find very useful when analyzing phyloseq objects.
 
 ## Installation
 
