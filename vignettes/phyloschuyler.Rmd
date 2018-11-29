@@ -37,6 +37,7 @@ find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatmen
 find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatment"), subset = "5-soil")
 
 find_unique_taxa(mock_phyloseq, column = 2)
+find_unique_taxa(mock_phyloseq, column = "day")
 
 merge_asvs(mock_phyloseq, mock_phyloseq_2)
 ```
