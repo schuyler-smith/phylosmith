@@ -11,6 +11,7 @@
 #' @import phyloseq
 #' @import RcppArmadillo
 #' @import RcppParallel
+#' @import data.table
 #' @examples
 #' data(mock_phyloseq)
 #' FastCoOccur(mock_phyloseq, "day", 0.1)
@@ -19,7 +20,8 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.5){
   options(warnings=-1)
   treatments <- as.character(unique(sample_data(phyloseq_obj)[[treatment]]))
   treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(sample_data(phyloseq_obj)[[treatment]]) %in% trt)-1})
-  FastCoOccur_Rcpp(otu_table(phyloseq_obj), treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
+  cooccurrence <- FastCoOccur_Rcpp(otu_table(phyloseq_obj), treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
+  return(as.data.table(cooccurrence))
 }
 
 
