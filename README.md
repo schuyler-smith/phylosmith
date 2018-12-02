@@ -27,7 +27,7 @@ find_generalists(phyloseq_obj, frequency = 0, treatments = NULL, subset = NULL, 
 find_unique_taxa(phyloseq_obj, column, keyword = NULL)
 merge_asvs(...)
 ``` -->
-
+Call			 | use
 ---------------- | ------------------------------------------------
 FastCoOccur      | co-occurrence
 find_generalists | filter taxa by proportion of samples seen in
