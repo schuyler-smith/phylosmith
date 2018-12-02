@@ -18,12 +18,12 @@ using namespace std;
 
 Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMatrix long_input){
 
-    vector<string> shorter_seqs = Rcpp::as<vector<string>>(rownames(clone(short_input)));
-    vector<string> longer_seqs = Rcpp::as<vector<string>>(rownames(clone(long_input)));
+    vector<string> shorter_seqs = Rcpp::as<vector <string> >(rownames(clone(short_input)));
+    vector<string> longer_seqs = Rcpp::as<vector <string> >(rownames(clone(long_input)));
     int s_size = shorter_seqs.size();
     int l_size = longer_seqs.size();
-    vector<pair<double,double>> match_seqs;
-    vector<pair<double,double>> match_dups;
+    vector<pair <double,double> > match_seqs;
+    vector<pair <double,double> > match_dups;
 
     #pragma omp parallel for
     for(int i=0; i<s_size; ++i){ //loop through each sequence of set with shorter read lengths

@@ -15,7 +15,7 @@
 // [[Rcpp::export]]
 
 Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff)
-{vector<string> treatments_ = Rcpp::as<vector<string>>(treatment_names); 
+{vector<string> treatments_ = Rcpp::as<vector <string> >(treatment_names); 
 
 vector<string> treatments;
 vector<float> p_values;
@@ -23,7 +23,7 @@ vector<float> rho_values;
 vector<string> taxa_1;
 vector<string> taxa_2;
 
-vector<string> taxa_names = Rcpp::as<vector<string>>(rownames(clone(otu_table)));
+vector<string> taxa_names = Rcpp::as<vector <string> >(rownames(clone(otu_table)));
 arma::mat abundance_table = Rcpp::as<arma::mat>(clone(otu_table));
 arma::mat rank_table = Rcpp::as<arma::mat>(clone(otu_table));
 int n_treatments = treatments_.size();

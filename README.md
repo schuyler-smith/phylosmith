@@ -10,6 +10,8 @@ require(devtools)
 install_github('schuyler-smith/phylosmith')
 ```
 
+for WINDOWS you need to install RTools, when prompted, select 'add rtools to system PATH'
+
 ## Data
 
 `phylosmith` includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.
