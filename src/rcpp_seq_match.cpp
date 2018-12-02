@@ -9,6 +9,7 @@
 #include <regex>
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
+// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
 
