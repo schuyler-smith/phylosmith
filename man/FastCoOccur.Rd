@@ -23,3 +23,4 @@ FastCoOccur(mock_phyloseq, "day", 0.1)
 \keyword{Spearman}
 \keyword{co-occurrence}
 \keyword{coocurrence}
+\keyword{phylosmith}

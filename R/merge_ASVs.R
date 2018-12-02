@@ -1,10 +1,10 @@
 #' Merge Amplicon Sequence Variants
 #'
 #' This function takes any number of phyloseq object that have taxa_names() declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
-#' @useDynLib phyloschuyler
+#' @useDynLib phylosmith
 #' @usage merge_asvs(...)
 #' @param ... Any number of phyloseq-class objects created with the phyloseq package (must have Amplicon Sequence Variants for calling taxa).
-#' @keywords amplicon ASV merge phyloseq phyloschuyler
+#' @keywords amplicon ASV merge phyloseq phylosmith
 #' @export
 #' @import phyloseq
 #' @import RcppArmadillo

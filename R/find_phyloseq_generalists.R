@@ -1,7 +1,7 @@
 #' Find Generalists
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
-#' @useDynLib phyloschuyler
+#' @useDynLib phylosmith
 #' @usage find_generalists(phyloseq_obj, frequency = 0, treatments = NULL,
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A phyloseq-class object created with the phyloseq package.
@@ -10,7 +10,7 @@
 #' @param subset If taxa not needed to be seen in all treatments, then can check only one particular treatment subset.
 #' @param below Does frequency define the minimum or maximum, should the presence fall below frequency or not.
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency.
-#' @keywords generalists frequency phyloseq phyloschuyler
+#' @keywords generalists frequency phyloseq phylosmith
 #' @import phyloseq
 #' @import data.table
 #' @export

@@ -1,12 +1,12 @@
 #' FastCoOccur
 #'
 #' This function is a rewrite of the pair-wise Spearman rank co-occurence routine written by Jin Choi. I adapted the routine to integrate with the Rcpp API.
-#' @useDynLib phyloschuyler
+#' @useDynLib phylosmith
 #' @usage FastCoOccur(phyloseq_obj, treatment, p)
 #' @param phyloseq_obj A phyloseq-class object created with the phyloseq package.
 #' @param treatment the column name or number of the treatment to be comapred.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
-#' @keywords Spearman co-occurrence coocurrence
+#' @keywords Spearman co-occurrence coocurrence phylosmith
 #' @export
 #' @import phyloseq
 #' @import RcppArmadillo

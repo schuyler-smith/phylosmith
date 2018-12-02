@@ -33,5 +33,5 @@ find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatmen
 }
 \keyword{frequency}
 \keyword{generalists}
-\keyword{phyloschuyler}
 \keyword{phyloseq}
+\keyword{phylosmith}

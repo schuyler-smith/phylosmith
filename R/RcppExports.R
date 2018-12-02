@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 FastCoOccur_Rcpp <- function(otu_table, treatment_indices, treatment_names, p_cutoff = 0.5) {
-    .Call('_phyloschuyler_FastCoOccur_Rcpp', PACKAGE = 'phyloschuyler', otu_table, treatment_indices, treatment_names, p_cutoff)
+    .Call('_phylosmith_FastCoOccur_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, p_cutoff)
 }
 
 match_sequences <- function(short_input, long_input) {
-    .Call('_phyloschuyler_match_sequences', PACKAGE = 'phyloschuyler', short_input, long_input)
+    .Call('_phylosmith_match_sequences', PACKAGE = 'phylosmith', short_input, long_input)
 }
 

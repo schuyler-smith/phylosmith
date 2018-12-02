@@ -19,5 +19,5 @@ merge_asvs(mock_phyloseq, mock_phyloseq_2)
 \keyword{ASV}
 \keyword{amplicon}
 \keyword{merge}
-\keyword{phyloschuyler}
 \keyword{phyloseq}
+\keyword{phylosmith}

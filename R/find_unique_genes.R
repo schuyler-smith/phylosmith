@@ -1,12 +1,12 @@
 #' Find Unique Taxa
 #'
 #' This function takes a phyloseq object and finds which taxa are taxa that are unique to a specific subset of the data.
-#' @useDynLib phyloschuyler
+#' @useDynLib phylosmith
 #' @usage find_unique_taxa(phyloseq_obj, column, keyword = NULL)
 #' @param phyloseq_obj A phyloseq-class object created with the phyloseq package (must contain sample_data()).
 #' @param column Name or column number in the sample_data(). Function then checks if taxa seen in frequency in each treatment.
 #' @param keyword Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').
-#' @keywords unique taxa phyloseq phyloschuyler
+#' @keywords unique taxa phyloseq phylosmith
 #' @export
 #' @import phyloseq
 #' @examples

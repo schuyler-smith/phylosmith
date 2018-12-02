@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // FastCoOccur_Rcpp
 Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff);
-RcppExport SEXP _phyloschuyler_FastCoOccur_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP) {
+RcppExport SEXP _phylosmith_FastCoOccur_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // match_sequences
 Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMatrix long_input);
-RcppExport SEXP _phyloschuyler_match_sequences(SEXP short_inputSEXP, SEXP long_inputSEXP) {
+RcppExport SEXP _phylosmith_match_sequences(SEXP short_inputSEXP, SEXP long_inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,12 +34,12 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phyloschuyler_FastCoOccur_Rcpp", (DL_FUNC) &_phyloschuyler_FastCoOccur_Rcpp, 4},
-    {"_phyloschuyler_match_sequences", (DL_FUNC) &_phyloschuyler_match_sequences, 2},
+    {"_phylosmith_FastCoOccur_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_Rcpp, 4},
+    {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_phyloschuyler(DllInfo *dll) {
+RcppExport void R_init_phylosmith(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

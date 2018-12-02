@@ -20,7 +20,7 @@ This function takes a phyloseq object and finds which taxa are taxa that are uni
 data(mock_phyloseq)
 find_unique_taxa(mock_phyloseq, column = 2)
 }
-\keyword{phyloschuyler}
 \keyword{phyloseq}
+\keyword{phylosmith}
 \keyword{taxa}
 \keyword{unique}

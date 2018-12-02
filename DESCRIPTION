@@ -1,4 +1,4 @@
-Package: phyloschuyler
+Package: phylosmith
 Title: Various functions that I have written to help analyze phyloseq data
 Version: 0.3
 Author: Schuyler Smith <sdsmith@iastate.edu>

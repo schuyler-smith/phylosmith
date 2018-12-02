@@ -1,5 +1,5 @@
 
-## `phyloschuyler`
+## `phylosmith`
 
 This package is a compilation of functions that I have written, that I find very useful, when analyzing phyloseq objects.
 
@@ -7,17 +7,17 @@ This package is a compilation of functions that I have written, that I find very
 
 ```
 require(devtools)
-install_github('schuyler-smith/phyloschuyler')
+install_github('schuyler-smith/phylosmith')
 ```
 
 ## Data
 
-`phyloschuyler` includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.
+`phylosmith` includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.
 
 ## Usage
 
 ```
-library(phyloschuyler)
+library(phylosmith)
 data(mock_phyloseq); data(mock_phyloseq_2)
 
 find_generalists(mock_phyloseq, frequency = 0.3)
