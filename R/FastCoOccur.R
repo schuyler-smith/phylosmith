@@ -6,7 +6,7 @@
 #' @param phyloseq_obj A phyloseq-class object created with the phyloseq package.
 #' @param treatment the column name or number of the treatment to be comapred.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
-#' @keywords Spearman co-occurrence coocurrence phylosmith
+#' @keywords FastCoOccur Spearman co-occurrence coocurrence phylosmith
 #' @export
 #' @import phyloseq
 #' @import RcppArmadillo

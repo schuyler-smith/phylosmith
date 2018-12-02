@@ -20,6 +20,7 @@ This function is a rewrite of the pair-wise Spearman rank co-occurence routine w
 data(mock_phyloseq)
 FastCoOccur(mock_phyloseq, "day", 0.05)
 }
+\keyword{FastCoOccur}
 \keyword{Spearman}
 \keyword{co-occurrence}
 \keyword{coocurrence}

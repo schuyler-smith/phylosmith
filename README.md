@@ -6,7 +6,7 @@ This package is a compilation of functions that I have written, that I find usef
 ## Installation
 
 ```
-require(devtools)
+library(devtools)
 install_github('schuyler-smith/phylosmith')
 ```
 
@@ -14,12 +14,12 @@ install_github('schuyler-smith/phylosmith')
 
 ## Functions
 
-Call			   | Use
------------------- | ------------------------------------------------
-FastCoOccur()      | calculate co-occurrence between taxa
-find_generalists() | filter taxa by proportion of samples seen in
-find_unique_taxa() | find taxa unique to each treatment
-merge_asvs()       | combine ASVs to lowest common biological sequence
+Call			 | Use
+---------------- | ------------------------------------------------
+FastCoOccur      | calculate co-occurrence between taxa
+find_generalists | filter taxa by proportion of samples seen in
+find_unique_taxa | find taxa unique to each treatment
+merge_asvs       | combine ASVs to lowest common biological sequence
 
 ## Data
 
