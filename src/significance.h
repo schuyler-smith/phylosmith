@@ -1,25 +1,13 @@
 /*
  * 
- *  Maintainer: Schuyler Smith
  *  Author: Jin Choi
+ *  Maintainer: Schuyler Smith
  *      
  */
 #ifndef SIGNIFICANCE_H
 #define SIGNIFICANCE_H
 
-#include "significance.h"
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <stdlib.h>
-#include <dirent.h>
-#include <sstream>
-#include <cstdlib>
-#include <iomanip>
-#include <math.h>
 #include <cmath>
-#include <cstdio>
-#include <algorithm>
 
 using namespace std;
 
