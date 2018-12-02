@@ -12,6 +12,7 @@
 #' @examples
 #' data(mock_phyloseq)
 #' find_unique_taxa(mock_phyloseq, column = 2)
+#' find_unique_taxa(mock_phyloseq, column = "day")
 
 find_unique_taxa <- function(phyloseq_obj, column, keyword = NULL){
   if(is.numeric(column)){column <- colnames(phyloseq::sample_data(phyloseq_obj)[,column])
