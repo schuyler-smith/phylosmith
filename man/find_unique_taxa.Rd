@@ -19,6 +19,7 @@ This function takes a phyloseq object and finds which taxa are taxa that are uni
 \examples{
 data(mock_phyloseq)
 find_unique_taxa(mock_phyloseq, column = 2)
+find_unique_taxa(mock_phyloseq, column = "day")
 }
 \keyword{phyloseq}
 \keyword{phylosmith}

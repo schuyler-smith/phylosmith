@@ -18,7 +18,7 @@ This function is a rewrite of the pair-wise Spearman rank co-occurence routine w
 }
 \examples{
 data(mock_phyloseq)
-FastCoOccur(mock_phyloseq, "day", 0.1)
+FastCoOccur(mock_phyloseq, "day", 0.05)
 }
 \keyword{Spearman}
 \keyword{co-occurrence}
