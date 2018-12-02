@@ -1,7 +1,7 @@
 
 ## `phylosmith`
 
-This package is a compilation of functions that I have written, that I find very useful, when analyzing phyloseq objects.
+This package is a compilation of functions that I have written, that I find useful, for analyzing phyloseq objects.
 
 ## Installation
 
@@ -10,26 +10,26 @@ require(devtools)
 install_github('schuyler-smith/phylosmith')
 ```
 
-for WINDOWS you need to install RTools, when prompted, select 'add rtools to system PATH'
+for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select `add rtools to system PATH`.
 
 ## Data
 
 `phylosmith` includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.
 
-## Usage
+## Functions
 
-```
+<!-- ```
 library(phylosmith)
-data(mock_phyloseq); data(mock_phyloseq_2)
+data()
 
-find_generalists(mock_phyloseq, frequency = 0.3)
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = "day")
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = 3)
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatment"))
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatment"), subset = "5-soil")
+FastCoOccur(phyloseq_obj, treatment, p = 0.05)
+find_generalists(phyloseq_obj, frequency = 0, treatments = NULL, subset = NULL, below = FALSE, drop_samples = FALSE)
+find_unique_taxa(phyloseq_obj, column, keyword = NULL)
+merge_asvs(...)
+``` -->
 
-find_unique_taxa(mock_phyloseq, column = 2)
-find_unique_taxa(mock_phyloseq, column = "day")
-
-merge_asvs(mock_phyloseq, mock_phyloseq_2)
-```
+---------------- | ------------------------------------------------
+FastCoOccur      | co-occurrence
+find_generalists | filter taxa by proportion of samples seen in
+find_unique_taxa | find taxa seen only in particular treatment
+merge_asvs       | combine ASV to lowest common biological sequence
