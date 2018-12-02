@@ -7,7 +7,7 @@
 find_unique_taxa(phyloseq_obj, column, keyword = NULL)
 }
 \arguments{
-\item{phyloseq_obj}{An object created with the phyloseq package (must contain sample_data()).}
+\item{phyloseq_obj}{A phyloseq-class object created with the phyloseq package (must contain sample_data()).}
 
 \item{column}{Name or column number in the sample_data(). Function then checks if taxa seen in frequency in each treatment.}
 

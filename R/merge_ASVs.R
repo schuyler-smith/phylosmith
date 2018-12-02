@@ -3,7 +3,7 @@
 #' This function takes any number of phyloseq object that have taxa_names() declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
 #' @useDynLib phyloschuyler
 #' @usage merge_asvs(...)
-#' @param ... Any number of objects created with the phyloseq package (must have Amplicon Sequence Variants for calling taxa).
+#' @param ... Any number of phyloseq-class objects created with the phyloseq package (must have Amplicon Sequence Variants for calling taxa).
 #' @keywords amplicon ASV merge phyloseq phyloschuyler
 #' @export
 #' @import phyloseq
@@ -12,8 +12,6 @@
 #' @examples
 #' data(mock_phyloseq); data(mock_phyloseq_2)
 #' merge_asvs(mock_phyloseq, mock_phyloseq_2)
-
-
 
 merge_asvs <- function(...){
   options(warn=1)

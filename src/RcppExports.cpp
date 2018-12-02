@@ -6,6 +6,20 @@
 
 using namespace Rcpp;
 
+// FastCoOccur_Rcpp
+Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff);
+RcppExport SEXP _phyloschuyler_FastCoOccur_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< float >::type p_cutoff(p_cutoffSEXP);
+    rcpp_result_gen = Rcpp::wrap(FastCoOccur_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff));
+    return rcpp_result_gen;
+END_RCPP
+}
 // match_sequences
 Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMatrix long_input);
 RcppExport SEXP _phyloschuyler_match_sequences(SEXP short_inputSEXP, SEXP long_inputSEXP) {
@@ -20,6 +34,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_phyloschuyler_FastCoOccur_Rcpp", (DL_FUNC) &_phyloschuyler_FastCoOccur_Rcpp, 4},
     {"_phyloschuyler_match_sequences", (DL_FUNC) &_phyloschuyler_match_sequences, 2},
     {NULL, NULL, 0}
 };

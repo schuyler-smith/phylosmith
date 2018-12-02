@@ -4,7 +4,7 @@
 #' @useDynLib phyloschuyler
 #' @usage find_generalists(phyloseq_obj, frequency = 0, treatments = NULL,
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
-#' @param phyloseq_obj An object created with the phyloseq package.
+#' @param phyloseq_obj A phyloseq-class object created with the phyloseq package.
 #' @param frequency The minimum proportion of samples the taxa is seen in.
 #' @param treatments Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment.
 #' @param subset If taxa not needed to be seen in all treatments, then can check only one particular treatment subset.

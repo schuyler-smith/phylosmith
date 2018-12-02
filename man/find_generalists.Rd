@@ -8,7 +8,7 @@ find_generalists(phyloseq_obj, frequency = 0, treatments = NULL,
 subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
-\item{phyloseq_obj}{An object created with the phyloseq package.}
+\item{phyloseq_obj}{A phyloseq-class object created with the phyloseq package.}
 
 \item{frequency}{The minimum proportion of samples the taxa is seen in.}
 
