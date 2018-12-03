@@ -4,7 +4,7 @@
 \alias{FastCoOccur}
 \title{FastCoOccur}
 \usage{
-FastCoOccur(phyloseq_obj, treatment, p)
+FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }
 \arguments{
 \item{phyloseq_obj}{A phyloseq-class object created with the phyloseq package.}
