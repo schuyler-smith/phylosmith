@@ -12,6 +12,9 @@
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 using namespace std;
 

@@ -11,6 +11,9 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
 
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 // [[Rcpp::export]]
 
