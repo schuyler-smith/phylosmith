@@ -80,8 +80,11 @@ for(int trt=0; trt<n_treatments; ++trt){
 			if(arma::sum(taxa1_ranks) > 0 && arma::sum(taxa2_ranks) > 0){
 				// may add check for duplicate ranls, if none exist, can use below formula
 				// float rho = 1 - (6*arma::sum(arma::square(taxa1_ranks - taxa2_ranks))) / (n_samples*(pow(n_samples,2)-1));
-				arma::mat matrho = arma::cov(taxa1_ranks, taxa2_ranks) / (arma::stddev(taxa1_ranks)*arma::stddev(taxa1_ranks));
-				rho = arma::conv_to<float>::from(matrho);
+				// arma::mat matrho = arma::cov(taxa1_ranks, taxa2_ranks) / (arma::stddev(taxa1_ranks)*arma::stddev(taxa1_ranks));
+				// rho = arma::conv_to<float>::from(matrho);
+				vector<double> X = arma::conv_to<vector <double> >::from(taxa1_ranks);
+				vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
+				rho = pearsoncoeff(X, Y);
 				float t = rho * sqrt((n_samples-2)/(1 - rho*rho));
   				float df = n_samples - 2;
   				p_val = pvalue( t, df );

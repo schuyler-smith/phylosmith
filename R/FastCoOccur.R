@@ -23,6 +23,3 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
   cooccurrence <- FastCoOccur_Rcpp(otu_table(phyloseq_obj), treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
   return(as.data.table(cooccurrence))
 }
-
-
-
