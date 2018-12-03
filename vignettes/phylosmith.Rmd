@@ -18,6 +18,7 @@ This package is a compilation of functions that I have written, that I find usef
 ```
 library(devtools)
 install_github('schuyler-smith/phylosmith')
+library(phylosmith)
 ```
 
 \*for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select `add rtools to system PATH`.
