@@ -12,6 +12,9 @@
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 using namespace std;
 
@@ -26,7 +29,7 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
     vector<pair <double,double> > match_seqs;
     vector<pair <double,double> > match_dups;
 
-    // #pragma omp parallel for
+    #pragma omp parallel for
     for(int i=0; i<s_size; ++i){ //loop through each sequence of set with shorter read lengths
         string s_seq (shorter_seqs[i]);
         int ind = -1; //assign ind to not be within the dataframe
@@ -34,7 +37,7 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
             string l_seq (longer_seqs[j]);
             if (l_seq != s_seq){
                 if (l_seq.find(s_seq) != std::string::npos){ //if seq 1 is contained in seq 2
-                    // #pragma omp critical
+                    #pragma omp critical
                     if (ind == -1){
                         match_seqs.push_back(pair<double,double>(i,j));
                         ind = j;
@@ -46,7 +49,7 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
                 if (ind == -1){
                     ind = j;
                 } else {
-                    // #pragma omp critical
+                    #pragma omp critical
                     match_dups.push_back(pair<double,double>(ind,j));
                 }
             }
