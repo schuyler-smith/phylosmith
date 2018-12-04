@@ -41,11 +41,13 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
             if (l_seq != s_seq){
                 if (l_seq.find(s_seq) != std::string::npos){ //if seq 1 is contained in seq 2
                     #pragma omp critical
-                    if (ind == -1){
-                        match_seqs.push_back(pair<double,double>(i,j));
-                        ind = j;
-                    } else {
-                        match_dups.push_back(pair<double,double>(ind,j));
+                    {
+                        if (ind == -1){
+                            match_seqs.push_back(pair<double,double>(i,j));
+                            ind = j;
+                        } else {
+                            match_dups.push_back(pair<double,double>(ind,j));
+                        }
                     }
                 }
             } else {
