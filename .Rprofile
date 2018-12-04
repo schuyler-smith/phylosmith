@@ -1,0 +1,2 @@
+require(devtools)
+require(Rcpp)
