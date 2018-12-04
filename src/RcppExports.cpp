@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 // FastCoOccur_Rcpp
-Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff);
+Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff);
 RcppExport SEXP _phylosmith_FastCoOccur_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -15,7 +15,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
-    Rcpp::traits::input_parameter< float >::type p_cutoff(p_cutoffSEXP);
+    Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
     rcpp_result_gen = Rcpp::wrap(FastCoOccur_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff));
     return rcpp_result_gen;
 END_RCPP
