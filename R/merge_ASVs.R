@@ -13,6 +13,10 @@
 #' data(mock_phyloseq); data(mock_phyloseq_2)
 #' merge_asvs(mock_phyloseq, mock_phyloseq_2)
 
+# library(devtools)
+# library(Rcpp)
+# sourceCpp("src/rcpp_seq_match.cpp")
+
 merge_asvs <- function(...){
   options(warn=1)
   phyloseq_objects <- list(...)
