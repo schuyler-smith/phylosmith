@@ -15,7 +15,7 @@ using namespace std;
 double sum(vector<double> a)
 {
   double s = 0;
-  for (int i = 0; i < a.size(); i++)
+  for (size_t i = 0; i < a.size(); i++)
   {    
     s += a[i];
   }
@@ -31,7 +31,7 @@ double mean(vector<double> a)
 double sqsum(vector<double> a)
 {
   double s = 0;
-  for (int i = 0; i < a.size(); i++)
+  for (size_t i = 0; i < a.size(); i++)
   {
     s += pow(a[i], 2);
   }
@@ -47,7 +47,7 @@ double stdev(vector<double> nums)
 vector<double> operator-(vector<double> a, double b)
 {
   vector<double> retvect;
-  for (int i = 0; i < a.size(); i++)
+  for (size_t i = 0; i < a.size(); i++)
   {
     retvect.push_back(a[i] - b);
   }
@@ -57,7 +57,7 @@ vector<double> operator-(vector<double> a, double b)
 vector<double> operator*(vector<double> a, vector<double> b)
 {
   vector<double> retvect;
-  for (int i = 0; i < a.size() ; i++)
+  for (size_t i = 0; i < a.size() ; i++)
   {
      retvect.push_back(a[i] * b[i]);
   }
