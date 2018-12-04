@@ -15,6 +15,8 @@
   #include <omp.h>
 #endif
 
+using namespace std;
+
 // [[Rcpp::export]]
 
 Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff)
@@ -74,6 +76,7 @@ for(int trt=0; trt<n_treatments; ++trt){
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
+	#pragma omp parallel for
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 		arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
 		for(int taxa2=taxa1+1; taxa2<n_taxa; ++taxa2){
@@ -81,7 +84,7 @@ for(int trt=0; trt<n_treatments; ++trt){
 			double p_val;
 			arma::rowvec taxa2_ranks = treatment_matrix.row(taxa2);
 			if(arma::sum(taxa1_ranks) > 0 && arma::sum(taxa2_ranks) > 0){
-				// may add check for duplicate ranls, if none exist, can use below formula
+				// may add check for duplicate ranks, if none exist, can use below formula
 				// float rho = 1 - (6*arma::sum(arma::square(taxa1_ranks - taxa2_ranks))) / (n_samples*(pow(n_samples,2)-1));
 				// arma::mat matrho = arma::cov(taxa1_ranks, taxa2_ranks) / (arma::stddev(taxa1_ranks)*arma::stddev(taxa1_ranks));
 				// rho = arma::conv_to<float>::from(matrho);
@@ -96,11 +99,14 @@ for(int trt=0; trt<n_treatments; ++trt){
 				p_val = 1;
 			}
 			if(p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
-				treatments.push_back(treatments_[trt]);
-				p_values.push_back(p_val);
-				rho_values.push_back(rho);
-				taxa_1.push_back(taxa_names[taxa1]);
-				taxa_2.push_back(taxa_names[taxa2]);
+				#pragma omp critical
+				{
+					treatments.push_back(treatments_[trt]);
+					p_values.push_back(p_val);
+					rho_values.push_back(rho);
+					taxa_1.push_back(taxa_names[taxa1]);
+					taxa_2.push_back(taxa_names[taxa2]);
+				}
 			}
 		}	
 	}

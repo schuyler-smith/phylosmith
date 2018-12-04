@@ -7,11 +7,14 @@
 #include <iostream>
 #include <string>
 #include <regex>
+
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
+
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
+
 #ifdef _OPENMP
   #include <omp.h>
 #endif
@@ -50,7 +53,9 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
                     ind = j;
                 } else {
                     #pragma omp critical
-                    match_dups.push_back(pair<double,double>(ind,j));
+                    {
+                        match_dups.push_back(pair<double,double>(ind,j));
+                    }
                 }
             }
         }
