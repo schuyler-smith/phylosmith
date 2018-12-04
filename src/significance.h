@@ -64,18 +64,18 @@ vector<double> operator*(vector<double> a, vector<double> b)
   return retvect;
 }
 
-float pearsoncoeff(vector<double> X, vector<double> Y)
+double pearsoncoeff(vector<double> X, vector<double> Y)
 //calculate pearson coefficient
 {
   return sum((X - mean(X))*(Y - mean(Y))) / (X.size()*stdev(X)* stdev(Y));
 }
 
-float betai(float a, float b, float x)
+double betai(double a, double b, double x)
 // Returns the incomplete beta function Ix(a, b).
 {
-  float betacf(float a, float b, float x);
-  float gammln(float xx);
-  float bt;
+  double betacf(double a, double b, double x);
+  double gammln(double xx);
+  double bt;
   if (x == 0.0 || x == 1.0) 
     bt=0.0;
   else // Factors in front of the continued fraction.
@@ -90,11 +90,11 @@ float betai(float a, float b, float x)
 #define MAXIT 1000
 #define EPS 3.0e-7
 #define FPMIN 1.0e-30
-float betacf(float a, float b, float x)
+double betacf(double a, double b, double x)
 // Used by betai: Evaluates continued fraction for incomplete beta function by modiﬁed Lentz’s method (§5.2).
 {
   int m,m2;
-  float aa,c,d,del,h,qab,qam,qap;
+  double aa,c,d,del,h,qab,qam,qap;
   qab=a+b; // These q’s will be used in factors that occur
   qap=a+1.0; // in the coeﬃcients (6.4.6).
   qam=a-1.0;
@@ -127,7 +127,7 @@ float betacf(float a, float b, float x)
 }
 
 
-float gammln(float xx)
+double gammln(double xx)
 // Returns the value ln[Γ(xx)] for xx > 0.
 {
   // Internal arithmetic will be done in double precision, a nicety that you can omit if ﬁve-ﬁgure
@@ -143,7 +143,7 @@ float gammln(float xx)
   return -tmp+log(2.5066282746310005*ser/x);
 }
 
-float pvalue( float t, float df ) 
+double pvalue( double t, double df ) 
 // Compute p-value of t-statistic
 {
   return betai(0.5*df,0.5,df/(df+t*t));

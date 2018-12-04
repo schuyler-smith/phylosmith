@@ -19,12 +19,12 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, float p_cutoff)
+Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff)
 {vector<string> treatments_ = Rcpp::as<vector <string> >(treatment_names); 
 
 vector<string> treatments;
-vector<float> p_values;
-vector<float> rho_values;
+vector<double> p_values;
+vector<double> rho_values;
 vector<string> taxa_1;
 vector<string> taxa_2;
 
@@ -80,19 +80,19 @@ for(int trt=0; trt<n_treatments; ++trt){
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 		arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
 		for(int taxa2=taxa1+1; taxa2<n_taxa; ++taxa2){
-			float rho;
+			double rho;
 			double p_val;
 			arma::rowvec taxa2_ranks = treatment_matrix.row(taxa2);
 			if(arma::sum(taxa1_ranks) > 0 && arma::sum(taxa2_ranks) > 0){
 				// may add check for duplicate ranks, if none exist, can use below formula
-				// float rho = 1 - (6*arma::sum(arma::square(taxa1_ranks - taxa2_ranks))) / (n_samples*(pow(n_samples,2)-1));
+				// double rho = 1 - (6*arma::sum(arma::square(taxa1_ranks - taxa2_ranks))) / (n_samples*(pow(n_samples,2)-1));
 				// arma::mat matrho = arma::cov(taxa1_ranks, taxa2_ranks) / (arma::stddev(taxa1_ranks)*arma::stddev(taxa1_ranks));
-				// rho = arma::conv_to<float>::from(matrho);
+				// rho = arma::conv_to<double>::from(matrho);
 				vector<double> X = arma::conv_to<vector <double> >::from(taxa1_ranks);
 				vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
 				rho = pearsoncoeff(X, Y);
-				float t = rho * sqrt((n_samples-2)/(1 - rho*rho));
-  				float df = n_samples - 2;
+				double t = rho * sqrt((n_samples-2)/(1 - rho*rho));
+  				double df = n_samples - 2;
   				p_val = pvalue( t, df );
 			} else {
 				rho = 0; 
