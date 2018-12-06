@@ -20,7 +20,7 @@
 # library(Rcpp)
 # sourceCpp("src/FastCoOccur_Rcpp.cpp")
 
-FastCoOccur <- function(phyloseq_obj, treatment = "Treatment_Groups", p = 0.05){
+FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
   options(warnings=-1)
   treatments <- as.character(unique(sample_data(phyloseq_obj)[[treatment]]))
   treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(sample_data(phyloseq_obj)[[treatment]]) %in% trt)-1})
