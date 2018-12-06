@@ -6,8 +6,8 @@
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A phyloseq-class object created with the phyloseq package.
 #' @param frequency The minimum proportion of samples the taxa is seen in.
-#' @param treatment Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment.
-#' @param subset If taxa not needed to be seen in all treatment, then can check only one particular treatment subset.
+#' @param treatment Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment. If multiple sample_data() columns are given, they will be appended to the sample_data() as one column with '.' separating each.
+#' @param subset If taxa not needed to be seen in all `treatment``, then can check only one particular treatment subset, this works for multiple treatment inputs.
 #' @param below Does frequency define the minimum or maximum, should the presence fall below frequency or not.
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency.
 #' @keywords generalists frequency phyloseq phylosmith
@@ -20,10 +20,13 @@
 #' find_generalists(mock_phyloseq, frequency = 0.3, treatment = "day")
 #' find_generalists(mock_phyloseq, frequency = 0.3, treatment = 3)
 #' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "5-soil")
+#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "soil")
+#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = c("5","soil"))
+#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "5.soil")
 
 find_generalists <- function(phyloseq_obj, frequency = 0, treatment = NULL, subset = NULL, below = FALSE, drop_samples = FALSE){
-  # phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
+  # data("mock_phyloseq")
+  # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
   if(!(is.null(treatment))){
     if(is.numeric(treatment)){treatment <- colnames(sample_data(phyloseq_obj)[,treatment])}
 
@@ -61,7 +64,8 @@ find_generalists <- function(phyloseq_obj, frequency = 0, treatment = NULL, subs
       }
   }
   if(!(is.null(subset))){
-    phyloseq_obj <- eval(parse(text=paste0("subset_samples(phyloseq_obj, ", paste0(treatment_name), " %in% c('", paste0(subset, collapse = "', '"), "'))")))
+    phyloseq_obj <- prune_samples(apply(sample_data(phyloseq_obj),1,FUN = function(x){any(x[c(treatment, treatment_name)] %in% subset)}), phyloseq_obj)
+    # apply(sample_data(phyloseq_obj),1,FUN = function(x){(x[c(treatment, treatment_name)] %in% subset)}) == length(subset)
     phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) > 0}, TRUE)
   }
   if(drop_samples == TRUE){

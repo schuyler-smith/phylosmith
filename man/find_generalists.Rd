@@ -4,7 +4,7 @@
 \alias{find_generalists}
 \title{Find Generalists}
 \usage{
-find_generalists(phyloseq_obj, frequency = 0, treatments = NULL,
+find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
 subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
@@ -12,9 +12,9 @@ subset = NULL, below = FALSE, drop_samples = FALSE)
 
 \item{frequency}{The minimum proportion of samples the taxa is seen in.}
 
-\item{treatments}{Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment.}
+\item{treatment}{Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment. If multiple sample_data() columns are given, they will be appended to the sample_data() as one column with '.' separating each.}
 
-\item{subset}{If taxa not needed to be seen in all treatments, then can check only one particular treatment subset.}
+\item{subset}{If taxa not needed to be seen in all `treatment``, then can check only one particular treatment subset, this works for multiple treatment inputs.}
 
 \item{below}{Does frequency define the minimum or maximum, should the presence fall below frequency or not.}
 
@@ -26,10 +26,12 @@ This function takes a phyloseq object and finds which taxa are seen in a given p
 \examples{
 data(mock_phyloseq)
 find_generalists(mock_phyloseq, frequency = 0.3)
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = "day")
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = 3)
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatment"))
-find_generalists(mock_phyloseq, frequency = 0.3, treatments = c("day", "treatment"), subset = "5-soil")
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = "day")
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = 3)
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "soil")
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = c("5","soil"))
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "5.soil")
 }
 \keyword{frequency}
 \keyword{generalists}

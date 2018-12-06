@@ -26,7 +26,7 @@ find_unique_taxa <- function(phyloseq_obj, column, keyword = NULL){
   }
 
   seen_taxa <- lapply(treatments, FUN = function(treatment){
-    phyloseq::taxa_names(find_generalists(phyloseq_obj, treatments = column, subset = treatment, frequency = 0))
+    phyloseq::taxa_names(find_generalists(phyloseq_obj, treatment = column, subset = treatment, frequency = 0))
   })
   names(seen_taxa) <- treatments
 
