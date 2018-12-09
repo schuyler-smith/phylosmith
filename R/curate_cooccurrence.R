@@ -32,6 +32,7 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
       sub_cooccurrence <- rbind(sub_cooccurrence, new_row)
     }
   }
+  setorder(sub_cooccurrence, Treatment)
   return(sub_cooccurrence)
 }
 

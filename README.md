@@ -18,6 +18,7 @@ library(phylosmith)
 Call			 | Use
 ---------------- | ------------------------------------------------
 FastCoOccur      | calculate co-occurrence between taxa
+curate_cooccurrence | subsets the co-occurence table to specific taxa
 find_generalists | filter taxa by proportion of samples seen in
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
