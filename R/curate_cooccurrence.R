@@ -25,12 +25,14 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
   n_pairs <- nrow(sub_cooccurrence)
   for(row in 1:n_pairs){
     pair <- sub_cooccurrence[row,]
-    if(unlist(pair[,3]) %in% toi & !(unlist(pair[,2]) %in% toi)){
-      sub_cooccurrence[row,2] <- pair[,3]; sub_cooccurrence[row,3] <- pair[,2]}
-    if(unlist(pair[,2]) %in% toi & unlist(pair[,3]) %in% toi){
+    if(unlist(pair[,2]) %in% toi & !(unlist(pair[,3]) %in% toi)){
+      next
+    } else if(unlist(pair[,3]) %in% toi & !(unlist(pair[,2]) %in% toi)){
+      sub_cooccurrence[row,2] <- pair[,3]; sub_cooccurrence[row,3] <- pair[,2]
+    } else if(unlist(pair[,2]) %in% toi & unlist(pair[,3]) %in% toi){
       new_row <- pair; new_row[,2] <- pair[,3]; new_row[,3] <- pair[,2]
       sub_cooccurrence <- rbind(sub_cooccurrence, new_row)
-    }
+    } else {sub_cooccurrence <- sub_cooccurrence[-row,]}
   }
   setorder(sub_cooccurrence, Treatment)
   return(sub_cooccurrence)
