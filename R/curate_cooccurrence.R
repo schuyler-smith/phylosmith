@@ -9,10 +9,11 @@
 #' @keywords cooccurrence taxa phyloseq phylosmith
 #' @export
 #' @import phyloseq
+#' @import RcppArmadillo
+#' @import RcppParallel
 #' @import data.table
 #' @examples
 #' data(mock_phyloseq)
-
 
 curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all'){
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
@@ -22,19 +23,11 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
   } else {number_of_treatments <- number_of_treatments}
   toi <- names(table(toi_table$gene_1)[table(toi_table$gene_1) >= number_of_treatments])
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% toi | cooccurrence_table[[3]] %in% toi),]
-  n_pairs <- nrow(sub_cooccurrence)
-  for(row in 1:n_pairs){
-    pair <- sub_cooccurrence[row,]
-    if(unlist(pair[,2]) %in% toi & !(unlist(pair[,3]) %in% toi)){
-      next
-    } else if(unlist(pair[,3]) %in% toi & !(unlist(pair[,2]) %in% toi)){
-      sub_cooccurrence[row,2] <- pair[,3]; sub_cooccurrence[row,3] <- pair[,2]
-    } else if(unlist(pair[,2]) %in% toi & unlist(pair[,3]) %in% toi){
-      new_row <- pair; new_row[,2] <- pair[,3]; new_row[,3] <- pair[,2]
-      sub_cooccurrence <- rbind(sub_cooccurrence, new_row)
-    } else {sub_cooccurrence <- sub_cooccurrence[-row,]}
-  }
-  setorder(sub_cooccurrence, Treatment)
-  return(sub_cooccurrence)
+
+  # sourceCpp("src/arrange_cooccurrence_table.cpp")
+  arranged_coocurrence <- as.data.table(arrange_cooccurr_table(sub_cooccurrence, toi))
+
+  setorder(arranged_coocurrence, Treatment)
+  return(arranged_coocurrence)
 }
 

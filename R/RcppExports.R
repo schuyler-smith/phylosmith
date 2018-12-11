@@ -5,6 +5,10 @@ FastCoOccur_Rcpp <- function(otu_table, treatment_indices, treatment_names, p_cu
     .Call('_phylosmith_FastCoOccur_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, p_cutoff)
 }
 
+arrange_cooccurr_table <- function(cooccurrence_table, taxa_of_interest) {
+    .Call('_phylosmith_arrange_cooccurr_table', PACKAGE = 'phylosmith', cooccurrence_table, taxa_of_interest)
+}
+
 match_sequences <- function(short_input, long_input) {
     .Call('_phylosmith_match_sequences', PACKAGE = 'phylosmith', short_input, long_input)
 }

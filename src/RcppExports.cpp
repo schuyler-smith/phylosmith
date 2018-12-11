@@ -20,6 +20,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// arrange_cooccurr_table
+Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp::CharacterVector taxa_of_interest);
+RcppExport SEXP _phylosmith_arrange_cooccurr_table(SEXP cooccurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type cooccurrence_table(cooccurrence_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type taxa_of_interest(taxa_of_interestSEXP);
+    rcpp_result_gen = Rcpp::wrap(arrange_cooccurr_table(cooccurrence_table, taxa_of_interest));
+    return rcpp_result_gen;
+END_RCPP
+}
 // match_sequences
 Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMatrix long_input);
 RcppExport SEXP _phylosmith_match_sequences(SEXP short_inputSEXP, SEXP long_inputSEXP) {
@@ -35,6 +47,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_phylosmith_FastCoOccur_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_Rcpp, 4},
+    {"_phylosmith_arrange_cooccurr_table", (DL_FUNC) &_phylosmith_arrange_cooccurr_table, 2},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}
 };
