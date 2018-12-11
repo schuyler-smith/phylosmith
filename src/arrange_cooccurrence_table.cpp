@@ -28,8 +28,8 @@ Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp:
     Rcpp::CharacterVector treatment = cooccurrence_table[0];
     Rcpp::CharacterVector taxa_1 = cooccurrence_table[1];
     Rcpp::CharacterVector taxa_2 = cooccurrence_table[2];
-    Rcpp::CharacterVector rho_values = cooccurrence_table[3];
-    Rcpp::CharacterVector p_values = cooccurrence_table[4];
+    Rcpp::NumericVector rho_values = cooccurrence_table[3];
+    Rcpp::NumericVector p_values = cooccurrence_table[4];
     vector<string> headers = cooccurrence_table.names();
     int n_pairs = cooccurrence_table.nrow();
     int n_taxa = taxa_of_interest.size();
@@ -71,7 +71,7 @@ return Rcpp::DataFrame::create(
     Rcpp::Named(headers[0]) = treatment,
     Rcpp::Named(headers[1]) = taxa_1,
     Rcpp::Named(headers[2]) = taxa_2,
-    Rcpp::Named(headers[3])   = rho_values,
+    Rcpp::Named(headers[3]) = rho_values,
     Rcpp::Named(headers[4]) = p_values
     );
 }

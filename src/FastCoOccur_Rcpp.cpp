@@ -116,7 +116,7 @@ return Rcpp::DataFrame::create(
 	Rcpp::Named("Treatment") = treatments,
 	Rcpp::Named("OTU_1") = taxa_1,
 	Rcpp::Named("OTU_2") = taxa_2,
-	Rcpp::Named("rho")   = rho_values,
+	Rcpp::Named("rho") = rho_values,
 	Rcpp::Named("p") = p_values
 	);
 }
