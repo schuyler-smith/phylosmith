@@ -1,3 +1,4 @@
+
 #' Curate Co-Occurrence
 #'
 #' This is used to to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
@@ -30,4 +31,3 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
   setorder(arranged_coocurrence, Treatment)
   return(arranged_coocurrence)
 }
-

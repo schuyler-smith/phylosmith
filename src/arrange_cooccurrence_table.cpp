@@ -15,9 +15,9 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
 
-// #ifdef _OPENMP
-//   #include <omp.h>
-// #endif
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 using namespace std;
 
@@ -33,6 +33,7 @@ Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp:
     int n_pairs = cooccurrence_table.nrow();
     int n_taxa = taxa_of_interest.size();
 
+    #pragma omp parallel for
     for(int row=0; row<n_pairs; ++row){
         string t_1 = Rcpp::as<string>(taxa_1[row]);
         string t_2 = Rcpp::as<string>(taxa_2[row]);
@@ -52,11 +53,14 @@ Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp:
             taxa_1[row] = t_2;
             taxa_2[row] = t_1;
         } else if(t_1_in == TRUE && t_2_in == TRUE){
-            treatment.push_back(treatment[row]);
-            taxa_1.push_back(taxa_1[row]);
-            taxa_2.push_back(taxa_2[row]);
-            rho_values.push_back(rho_values[row]);
-            p_values.push_back(p_values[row]);
+            #pragma omp critical
+            {
+                treatment.push_back(treatment[row]);
+                taxa_1.push_back(taxa_1[row]);
+                taxa_2.push_back(taxa_2[row]);
+                rho_values.push_back(rho_values[row]);
+                p_values.push_back(p_values[row]);
+            }
         } else {
             continue;
         }
