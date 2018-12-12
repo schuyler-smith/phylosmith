@@ -1,3 +1,6 @@
+SHLIB_OPENMP_CFLAGS= -Xpreprocessor -fopenmp
+SHLIB_OPENMP_CXXFLAGS= -Xpreprocessor -fopenmp
+
 ## -- compiling for OpenMP 
 PKG_CXXFLAGS=-fopenmp
 ##
