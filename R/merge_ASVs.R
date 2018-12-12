@@ -13,8 +13,7 @@
 #' data(mock_phyloseq); data(mock_phyloseq_2)
 #' merge_asvs(mock_phyloseq, mock_phyloseq_2)
 
-# library(devtools)
-# library(Rcpp)
+
 # sourceCpp("src/rcpp_seq_match.cpp")
 
 merge_asvs <- function(...){
@@ -28,8 +27,6 @@ merge_asvs <- function(...){
   asvs <- asvs[read_size_order]
 
   pairs <- utils::combn(names(asvs), m = 2)
-  # Sys.setenv("OMP_NUM_THREADS"="2")
-  # Sys.setenv("PKG_CXXFLAGS"=" -fopenmp")
   for(run in 1:dim(pairs)[2]){
     asvs[[pairs[,run][2]]] <- match_sequences(asvs[[pairs[,run][1]]], asvs[[pairs[,run][2]]])
   }

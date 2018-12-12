@@ -76,7 +76,9 @@ for(int trt=0; trt<n_treatments; ++trt){
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
-	#pragma omp parallel for
+	#ifdef _OPENMP
+  		#pragma omp parallel for
+	#endif
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 		arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
 		for(int taxa2=taxa1+1; taxa2<n_taxa; ++taxa2){
@@ -99,7 +101,9 @@ for(int trt=0; trt<n_treatments; ++trt){
 				p_val = 1;
 			}
 			if(p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
-				#pragma omp critical
+				#ifdef _OPENMP
+			  		#pragma omp critical
+				#endif
 				{
 					treatments.push_back(treatments_[trt]);
 					p_values.push_back(p_val);

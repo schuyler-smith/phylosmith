@@ -16,6 +16,7 @@
 #' @examples
 #' data(mock_phyloseq)
 
+
 curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all'){
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
   toi_table <- unique(cbind(rbindlist(list(sub_cooccurrence[,1], sub_cooccurrence[,1])), rbindlist(list(sub_cooccurrence[,2], sub_cooccurrence[,3]))))
@@ -25,7 +26,7 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
   toi <- names(table(toi_table$gene_1)[table(toi_table$gene_1) >= number_of_treatments])
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% toi | cooccurrence_table[[3]] %in% toi),]
 
-  # sourceCpp("src/arrange_cooccurrence_table.cpp")
+  sourceCpp("src/arrange_cooccurrence_table_tbb.cpp")
   arranged_coocurrence <- as.data.table(arrange_cooccurr_table(sub_cooccurrence, toi))
 
   setorder(arranged_coocurrence, Treatment)

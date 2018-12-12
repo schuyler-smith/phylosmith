@@ -35,3 +35,8 @@ build
 src-i386/
 src-x64/
 phylosmith*.tar.gz
+R/test_new_functions.R
+src/arrange_cooccurrence_table_tbb.cpp
+src/tbbex.cpp
+src/test_match_parrallel.cpp
+

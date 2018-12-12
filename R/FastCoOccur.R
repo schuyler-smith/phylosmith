@@ -16,8 +16,7 @@
 #' data(mock_phyloseq)
 #' FastCoOccur(mock_phyloseq, "day", 0.05)
 
-# library(devtools)
-# library(Rcpp)
+
 # sourceCpp("src/FastCoOccur_Rcpp.cpp")
 
 FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
