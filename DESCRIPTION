@@ -1,6 +1,6 @@
 Package: phylosmith
 Title: Various functions that I have written to help analyze phyloseq data
-Version: 0.7
+Version: 0.8
 Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for phyloseq objects.
