@@ -26,7 +26,7 @@ curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_
   toi <- names(table(toi_table$gene_1)[table(toi_table$gene_1) >= number_of_treatments])
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% toi | cooccurrence_table[[3]] %in% toi),]
 
-  sourceCpp("src/arrange_cooccurrence_table_tbb.cpp")
+  # sourceCpp("src/arrange_cooccurrence_table_tbb.cpp")
   arranged_coocurrence <- as.data.table(arrange_cooccurr_table(sub_cooccurrence, toi))
 
   setorder(arranged_coocurrence, Treatment)

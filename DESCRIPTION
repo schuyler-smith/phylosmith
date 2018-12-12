@@ -1,11 +1,13 @@
 Package: phylosmith
-Title: Various functions that I have written to help analyze phyloseq data
+Title: Various functions to help analyze phyloseq data
 Version: 0.8
 Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for phyloseq objects.
+URL: https://github.com/schuyler-smith/phylosmith
+BugReports: https://github.com/schuyler-smith/phylosmith.issues
 Depends:
-    R (>= 3.2.2),
+    R (>= 3.5),
     phyloseq,
     data.table
 Imports:
@@ -20,7 +22,8 @@ Suggests:
     knitr,
     devtools,
     rmarkdown
-SystemRequirements:
+SystemRequirements: C++11
+NeedsCompilation: yes
 VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8

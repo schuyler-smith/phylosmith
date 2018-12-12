@@ -33,6 +33,7 @@ Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMa
     vector<pair <double,double> > match_dups;
 
     #ifdef _OPENMP
+        // #pragma omp parallel for num_threads(nthreads)
         #pragma omp parallel for
     #endif
     for(int i=0; i<s_size; ++i){ //loop through each sequence of set with shorter read lengths
