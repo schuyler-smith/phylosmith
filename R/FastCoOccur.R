@@ -1,4 +1,4 @@
-#' a very efficient c++ implementation of the pair-wise Spearman rank co-occurrence.
+#' an efficient c++ implementation of the pair-wise Spearman rank co-occurrence.
 #'
 #' This function is a rewrite of the pair-wise Spearman rank co-occurence routine written by Jin Choi. I adapted the routine to integrate with the Rcpp API.
 #' @aliases cooccurrence co_occurrence
@@ -27,4 +27,3 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
   cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
   return(as.data.table(cooccurrence))
 }
-\code{\link{[phyloseq]phyloseq-class}}

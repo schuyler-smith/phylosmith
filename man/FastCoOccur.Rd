@@ -4,12 +4,12 @@
 \alias{FastCoOccur}
 \alias{cooccurrence}
 \alias{co_occurrence}
-\title{a very efficient c++ implementation of the pair-wise Spearman rank co-occurrence.}
+\title{an efficient c++ implementation of the pair-wise Spearman rank co-occurrence.}
 \usage{
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }
 \arguments{
-\item{phyloseq_obj}{A \linkS4class[phyloseq]{phyloseq-class} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link{[phyloseq]phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
 
 \item{treatment}{the column name or number of the treatment to be comapred.}
 
