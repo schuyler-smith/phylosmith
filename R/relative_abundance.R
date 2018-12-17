@@ -1,4 +1,4 @@
-#' Relative Abundance
+#' Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample.
 #'
 #' This is used to transform abundance data into relative abundance, i.e. proportional data. This is an alternative normalization.
 #' @useDynLib phylosmith

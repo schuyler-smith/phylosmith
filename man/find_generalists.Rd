@@ -15,7 +15,7 @@ subset = NULL, below = FALSE, drop_samples = FALSE)
 
 \item{treatment}{Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment. If multiple sample_data() columns are given, they will be appended to the sample_data() as one column with '.' separating each.}
 
-\item{subset}{If taxa not needed to be seen in all `treatment``, then can check only one particular treatment subset, this works for multiple treatment inputs.}
+\item{subset}{If taxa not needed to be seen in all `treatment`, then can check only one particular treatment subset, this works for multiple treatment inputs.}
 
 \item{below}{Does frequency define the minimum or maximum, should the presence fall below frequency or not.}
 

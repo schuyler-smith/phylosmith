@@ -1,11 +1,11 @@
-#' Curate Co-Occurrence
+#' Curate co-occurrence data
 #'
-#' This is used to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
+#' This is used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function. It will take a list of taxa, find all pairs with those taxa.
 #' @aliases subset_cooccurrence subset_co_occurrence curate_co_occurrence
 #' @useDynLib phylosmith
 #' @usage curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')
-#' @param cooccurrence_table co-occurrence table generated with FastCoOccur().
-#' @param taxa_of_interest a list or vector of taxa names.
+#' @param cooccurrence_table co-occurrence table generated with \code{\link{FastCoOccur}}.
+#' @param taxa_of_interest a list or vector of taxa names, like those generated with \code{\link{find_unique_taxa}}.
 #' @param number_of_treatments how many treatments should the taxa of interest be seen in? require `int` or 'all' (default).
 #' @keywords manip
 #' @export
