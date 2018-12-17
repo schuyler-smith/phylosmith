@@ -65,7 +65,9 @@ find_generalists <- function(phyloseq_obj, frequency = 0, treatment = NULL, subs
       }
   }
   if(!(is.null(subset))){
-    phyloseq_obj <- prune_samples(apply(phyloseq_obj@sam_data,1,FUN = function(x){any(x[c(treatment, treatment_name)] %in% subset)}), phyloseq_obj)
+    treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(treatment_name), ")")))
+    treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(subset), '", treatments)]')))
+    phyloseq_obj <- prune_samples(apply(phyloseq_obj@sam_data,1,FUN = function(x){any(x[c(treatment, treatment_name)] %in% treatments)}), phyloseq_obj)
     # apply(sample_data(phyloseq_obj),1,FUN = function(x){(x[c(treatment, treatment_name)] %in% subset)}) == length(subset)
     phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) > 0}, TRUE)
   }
