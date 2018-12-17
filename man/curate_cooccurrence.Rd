@@ -3,8 +3,6 @@
 \name{curate_cooccurrence}
 \alias{curate_cooccurrence}
 \alias{subset_cooccurrence}
-\alias{subset_co_occurrence}
-\alias{curate_co_occurrence}
 \title{Curate co-occurrence data}
 \usage{
 curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')

@@ -2,8 +2,6 @@
 % Please edit documentation in R/find_unique_taxa.R
 \name{find_unique_taxa}
 \alias{find_unique_taxa}
-\alias{unique_taxa}
-\alias{unique_genes}
 \alias{find_unique_genes}
 \title{Find Unique Taxa}
 \usage{

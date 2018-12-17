@@ -2,8 +2,6 @@
 % Please edit documentation in R/merge_ASVs.R
 \name{merge_asvs}
 \alias{merge_asvs}
-\alias{asv_merge}
-\alias{amplicon_merge}
 \title{Merge Amplicon Sequence Variants}
 \usage{
 merge_asvs(...)
