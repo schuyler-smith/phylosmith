@@ -9,7 +9,7 @@
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }
 \arguments{
-\item{phyloseq_obj}{A \linkS4class{phyloseq-class} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \linkS4class[phyloseq]{phyloseq-class} object created with the \link[=phyloseq]{phyloseq} package.}
 
 \item{treatment}{the column name or number of the treatment to be comapred.}
 
