@@ -2,12 +2,14 @@
 % Please edit documentation in R/FastCoOccur.R
 \name{FastCoOccur}
 \alias{FastCoOccur}
+\alias{cooccurrence}
+\alias{co_occurrence}
 \title{FastCoOccur}
 \usage{
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }
 \arguments{
-\item{phyloseq_obj}{A phyloseq-class object created with the phyloseq package.}
+\item{phyloseq_obj}{A \code{phyloseq-class} object created with the \code{\link[phyloseq]} package.}
 
 \item{treatment}{the column name or number of the treatment to be comapred.}
 
@@ -20,8 +22,4 @@ This function is a rewrite of the pair-wise Spearman rank co-occurence routine w
 data(mock_phyloseq)
 FastCoOccur(mock_phyloseq, "day", 0.05)
 }
-\keyword{FastCoOccur}
-\keyword{Spearman}
-\keyword{co-occurrence}
-\keyword{coocurrence}
-\keyword{phylosmith}
+\keyword{nonparametric}

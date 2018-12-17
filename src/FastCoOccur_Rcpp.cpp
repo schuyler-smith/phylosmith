@@ -77,7 +77,7 @@ for(int trt=0; trt<n_treatments; ++trt){
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
 	#ifdef _OPENMP
-		// #pragma omp parallel for num_threads(nthreads)
+		// #pragma omp parallel for num_threads(ncores)
   		#pragma omp parallel for
 	#endif
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){

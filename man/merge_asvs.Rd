@@ -2,12 +2,14 @@
 % Please edit documentation in R/merge_ASVs.R
 \name{merge_asvs}
 \alias{merge_asvs}
+\alias{asv_merge}
+\alias{amplicon_merge}
 \title{Merge Amplicon Sequence Variants}
 \usage{
 merge_asvs(...)
 }
 \arguments{
-\item{...}{Any number of phyloseq-class objects created with the phyloseq package (must have Amplicon Sequence Variants for calling taxa).}
+\item{...}{Any number of \code{phyloseq-class} objects created with the \code{\link[phyloseq]} package (must have Amplicon Sequence Variants for calling taxa).}
 }
 \description{
 This function takes any number of phyloseq object that have taxa_names() declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
@@ -16,8 +18,4 @@ This function takes any number of phyloseq object that have taxa_names() declare
 data(mock_phyloseq); data(mock_phyloseq_2)
 merge_asvs(mock_phyloseq, mock_phyloseq_2)
 }
-\keyword{ASV}
-\keyword{amplicon}
-\keyword{merge}
-\keyword{phyloseq}
-\keyword{phylosmith}
+\keyword{manip}

@@ -2,6 +2,9 @@
 % Please edit documentation in R/curate_cooccurrence.R
 \name{curate_cooccurrence}
 \alias{curate_cooccurrence}
+\alias{subset_cooccurrence}
+\alias{subset_co_occurrence}
+\alias{curate_co_occurrence}
 \title{Curate Co-Occurrence}
 \usage{
 curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')
@@ -14,12 +17,9 @@ curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments =
 \item{number_of_treatments}{how many treatments should the taxa of interest be seen in? require `int` or 'all' (default).}
 }
 \description{
-This is used to to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
+This is used to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
 }
 \examples{
 data(mock_phyloseq)
 }
-\keyword{cooccurrence}
-\keyword{phyloseq}
-\keyword{phylosmith}
-\keyword{taxa}
+\keyword{manip}

@@ -2,13 +2,14 @@
 % Please edit documentation in R/find_phyloseq_generalists.R
 \name{find_generalists}
 \alias{find_generalists}
+\alias{generalists}
 \title{Find Generalists}
 \usage{
 find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
 subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
-\item{phyloseq_obj}{A phyloseq-class object created with the phyloseq package.}
+\item{phyloseq_obj}{A \code{phyloseq-class} object created with the \code{\link[phyloseq]} package.}
 
 \item{frequency}{The minimum proportion of samples the taxa is seen in.}
 
@@ -33,7 +34,4 @@ find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment
 find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = c("5","soil"))
 find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "5.soil")
 }
-\keyword{frequency}
-\keyword{generalists}
-\keyword{phyloseq}
-\keyword{phylosmith}
+\keyword{manip}

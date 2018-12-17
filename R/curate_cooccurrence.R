@@ -1,21 +1,20 @@
-
 #' Curate Co-Occurrence
 #'
-#' This is used to to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
+#' This is used to curate a co-occurrence table from the FastCoOccur function. It will take a list of taxa, find all pairs with those taxa.
+#' @aliases subset_cooccurrence subset_co_occurrence curate_co_occurrence
 #' @useDynLib phylosmith
 #' @usage curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')
 #' @param cooccurrence_table co-occurrence table generated with FastCoOccur().
 #' @param taxa_of_interest a list or vector of taxa names.
 #' @param number_of_treatments how many treatments should the taxa of interest be seen in? require `int` or 'all' (default).
-#' @keywords cooccurrence taxa phyloseq phylosmith
+#' @keywords manip
 #' @export
+#' @import data.table
 #' @import phyloseq
 #' @import RcppArmadillo
 #' @import RcppParallel
-#' @import data.table
 #' @examples
 #' data(mock_phyloseq)
-
 
 curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all'){
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
