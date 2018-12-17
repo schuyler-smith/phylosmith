@@ -5,7 +5,7 @@
 #' @useDynLib phylosmith
 #' @usage find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
-#' @param phyloseq_obj A \code{phyloseq-class} object created with the \code{\link[phyloseq]} package.
+#' @param phyloseq_obj A \code{phyloseq-class} object created with the \link[=phyloseq]{name} package.
 #' @param frequency The minimum proportion of samples the taxa is seen in.
 #' @param treatment Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment. If multiple sample_data() columns are given, they will be appended to the sample_data() as one column with '.' separating each.
 #' @param subset If taxa not needed to be seen in all `treatment`, then can check only one particular treatment subset, this works for multiple treatment inputs.
