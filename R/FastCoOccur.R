@@ -4,7 +4,7 @@
 #' @aliases cooccurrence co_occurrence
 #' @useDynLib phylosmith
 #' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05)
-#' @param phyloseq_obj A \linkS4class[phyloseq]{phyloseq-class} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param phyloseq_obj A \code{\link{[phyloseq]phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment the column name or number of the treatment to be comapred.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
 #' @keywords nonparametric
@@ -27,3 +27,4 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
   cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
   return(as.data.table(cooccurrence))
 }
+\code{\link{[phyloseq]phyloseq-class}}
