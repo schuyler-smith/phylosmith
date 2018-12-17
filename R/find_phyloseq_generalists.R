@@ -5,10 +5,10 @@
 #' @useDynLib phylosmith
 #' @usage find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
-#' @param phyloseq_obj A \linkS4class{phyloseq-class} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param frequency The minimum proportion of samples the taxa is seen in.
-#' @param treatment Name(s) or column number(s) in the sample_data(). Function then checks if taxa seen in frequency in each treatment. If multiple sample_data() columns are given, they will be appended to the sample_data() as one column with '.' separating each.
-#' @param subset If taxa not needed to be seen in all `treatment`, then can check only one particular treatment subset, this works for multiple treatment inputs.
+#' @param treatment Name(s) or column number(s) in the \code{\link[phyloseq]{sample_data()}}. Function then checks if taxa seen in frequency in each treatment. If multiple \code{sample_data()} columns are given, they will be appended to the \code{sample_data()} as one column with '.' separating each.
+#' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
 #' @param below Does frequency define the minimum or maximum, should the presence fall below frequency or not.
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency.
 #' @keywords manip
