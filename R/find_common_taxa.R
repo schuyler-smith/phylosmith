@@ -1,9 +1,9 @@
 #' Find Unique Taxa
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
-#' @aliases find_unique_genes
+#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
+#' @aliases find_common_genes
 #' @useDynLib phylosmith
-#' @usage find_unique_taxa(phyloseq_obj, column, keyword = NULL)
+#' @usage find_common_taxa(phyloseq_obj, column, keyword = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param column Name or column number in the \code{\link[phyloseq:sample_data]{sample_data()}}.
 #' @param keyword Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').
@@ -12,12 +12,12 @@
 #' @import phyloseq
 #' @examples
 #' data(mock_phyloseq)
-#' find_unique_taxa(mock_phyloseq, column = 2)
-#' find_unique_taxa(mock_phyloseq, column = "day")
+#' find_common_taxa(mock_phyloseq, column = 2)
+#' find_common_taxa(mock_phyloseq, column = "day")
 
-find_unique_taxa <- function(phyloseq_obj, column, keyword = NULL){
+find_common_taxa <- function(phyloseq_obj, column, keyword = NULL){
   if(is.numeric(column)){column <- colnames(phyloseq_obj@sam_data[,column])
-    } else {column <- eval(parse(text=paste0("colnames(phyloseq_obj@sam_data[,c('", paste0(column, collapse = "', '"), "')])")))
+  } else {column <- eval(parse(text=paste0("colnames(phyloseq_obj@sam_data[,c('", paste0(column, collapse = "', '"), "')])")))
   }
   if(is.null(keyword)){
     treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(column), ")")))
@@ -32,11 +32,7 @@ find_unique_taxa <- function(phyloseq_obj, column, keyword = NULL){
   names(seen_taxa) <- treatments
 
   taxa_counts <- table(unlist(seen_taxa))
-  unique_taxa <- names(taxa_counts[taxa_counts == 1])
+  shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])
 
-  unique_taxa <- lapply(seen_taxa, FUN = function(toi){
-    toi[toi %in% unique_taxa]
-  })
-
-  return(unique_taxa)
+  return(shared_taxa)
 }

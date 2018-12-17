@@ -30,8 +30,10 @@ Call			 | Use
 FastCoOccur      | calculate co-occurrence between taxa
 curate_cooccurrence | subsets the co-occurence table to specific taxa
 find_generalists | filter taxa by proportion of samples seen in
+find_common_taxa | find taxa common to each treatment
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
+relative_abundance | transform abundance data to relative abundance
 
 ## Data
 

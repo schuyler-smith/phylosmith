@@ -2,6 +2,7 @@
 
 export(FastCoOccur)
 export(curate_cooccurrence)
+export(find_common_taxa)
 export(find_generalists)
 export(find_unique_taxa)
 export(merge_asvs)
