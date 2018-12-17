@@ -4,7 +4,7 @@
 #' @aliases unique_taxa unique_genes find_unique_genes
 #' @useDynLib phylosmith
 #' @usage find_unique_taxa(phyloseq_obj, column, keyword = NULL)
-#' @param phyloseq_obj A \code{phyloseq-class} object created with the \code{\link[phyloseq]} package (must contain sample_data()).
+#' @param phyloseq_obj A \code{phyloseq-class} object created with the \link[=phyloseq]{name} package (must contain sample_data()).
 #' @param column Name or column number in the sample_data(). Function then checks if taxa seen in frequency in each treatment.
 #' @param keyword Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').
 #' @keywords manip

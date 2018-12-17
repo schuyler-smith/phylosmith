@@ -3,7 +3,7 @@
 #' This is used to transform abundance data into relative abundance, i.e. proportional data. This is an alternative normalization.
 #' @useDynLib phylosmith
 #' @usage relative_abundance(phyloseq_obj)
-#' @param phyloseq_obj A \code{phyloseq-class} object created with the \code{\link[phyloseq]} package.
+#' @param phyloseq_obj A \code{phyloseq-class} object created with the \link[=phyloseq]{name} package.
 #' @keywords manip
 #' @export
 #' @import phyloseq

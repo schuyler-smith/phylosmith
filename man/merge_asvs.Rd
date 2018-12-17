@@ -9,7 +9,7 @@
 merge_asvs(...)
 }
 \arguments{
-\item{...}{Any number of \code{phyloseq-class} objects created with the \code{\link[phyloseq]} package (must have Amplicon Sequence Variants for calling taxa).}
+\item{...}{Any number of \code{phyloseq-class} objects created with the \link[=phyloseq]{name} package (must have Amplicon Sequence Variants for calling taxa).}
 }
 \description{
 This function takes any number of phyloseq object that have taxa_names() declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
