@@ -4,7 +4,7 @@
 #' @aliases asv_merge amplicon_merge
 #' @useDynLib phylosmith
 #' @usage merge_asvs(...)
-#' @param ... Any number of \code{phyloseq-class} objects created with the \link[=phyloseq]{name} package (must have Amplicon Sequence Variants for calling taxa).
+#' @param ... Any number of \linkS4class{phyloseq-class} objects created with the \link[=phyloseq]{phyloseq} package (must have Amplicon Sequence Variants for calling taxa).
 #' @keywords manip
 #' @export
 #' @import phyloseq
