@@ -1,11 +1,11 @@
 #' Find Unique Taxa
 #'
-#' This function takes a phyloseq object and finds which taxa are taxa that are unique to a specific subset of the data.
+#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
 #' @aliases unique_taxa unique_genes find_unique_genes
 #' @useDynLib phylosmith
 #' @usage find_unique_taxa(phyloseq_obj, column, keyword = NULL)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq]{sample_data()}}).
-#' @param column Name or column number in the \code{\link[phyloseq]{sample_data()}}. Function then checks if taxa seen in frequency in each treatment.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
+#' @param column Name or column number in the \code{\link[phyloseq:sample_data]{sample_data()}}. Function then checks if taxa seen in frequency in each treatment.
 #' @param keyword Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').
 #' @keywords manip
 #' @export

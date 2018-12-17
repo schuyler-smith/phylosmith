@@ -1,6 +1,6 @@
 #' Merge Amplicon Sequence Variants
 #'
-#' This function takes any number of phyloseq object that have \code{\link[phyloseq]{taxa_names()}} declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
+#' This function takes any number of phyloseq object that have \code{\link[phyloseq:taxa_names]{taxa_names()}} declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
 #' @aliases asv_merge amplicon_merge
 #' @useDynLib phylosmith
 #' @usage merge_asvs(...)
