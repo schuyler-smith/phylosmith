@@ -19,7 +19,7 @@ This function takes a phyloseq object combines multiple columns in the meta-data
 }
 \examples{
 data(mock_phyloseq)
-concatenate_treatments(mock_phyloseq, treatments = c("treatment, "day"))
-concatenate_treatments(mock_phyloseq, treatments = c("treatment, "day"), sep = '_')
+concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"))
+concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')
 }
 \keyword{manip}
