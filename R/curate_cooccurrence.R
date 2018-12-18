@@ -6,7 +6,7 @@
 #' @usage curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')
 #' @param cooccurrence_table co-occurrence table generated with \code{\link{FastCoOccur}}.
 #' @param taxa_of_interest a list or vector of taxa names, like those generated with \code{\link{find_unique_taxa}}.
-#' @param number_of_treatments how many treatments should the taxa of interest be seen in? require `int` or 'all' (default).
+#' @param number_of_treatments how many treatments should the taxa of interest be seen in? require \code{integer} or 'all' (default).
 #' @keywords manip
 #' @export
 #' @import data.table
