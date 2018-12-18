@@ -2,11 +2,9 @@
 % Please edit documentation in R/find_phyloseq_generalists.R
 \name{find_generalists}
 \alias{find_generalists}
-\alias{generalists}
 \title{Find Generalists}
 \usage{
-find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
-subset = NULL, below = FALSE, drop_samples = FALSE)
+find_generalists(phyloseq_obj, frequency = 0, treatment = NULL, subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}

@@ -18,6 +18,7 @@ library(phylosmith)
 Call			 | Use
 ---------------- | ------------------------------------------------
 FastCoOccur      | calculate co-occurrence between taxa
+concatenate_treatments | combines multiple columns in meta-data into a single column
 curate_cooccurrence | subsets the co-occurence table to specific taxa
 find_generalists | filter taxa by proportion of samples seen in
 find_common_taxa | find taxa common to each treatment

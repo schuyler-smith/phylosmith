@@ -21,9 +21,14 @@
 # sourceCpp("src/FastCoOccur_Rcpp.cpp")
 
 FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
+  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
-  treatments <- as.character(unique(phyloseq_obj@sam_data[[treatment]]))
-  treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment]]) %in% trt)-1})
+
+  phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
+  treatment_name <- paste(treatment, collapse = ".")
+
+  treatments <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
   cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p)
   return(as.data.table(cooccurrence))
 }

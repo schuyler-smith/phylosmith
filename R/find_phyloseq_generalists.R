@@ -1,10 +1,8 @@
 #' Find Generalists
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
-#' @aliases generalists
 #' @useDynLib phylosmith
-#' @usage find_generalists(phyloseq_obj, frequency = 0, treatment = NULL,
-#' subset = NULL, below = FALSE, drop_samples = FALSE)
+#' @usage find_generalists(phyloseq_obj, frequency = 0, treatment = NULL, subset = NULL, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param frequency The minimum proportion of samples the taxa is seen in.
 #' @param treatment Name(s) or column number(s) in the \code{\link[phyloseq:sample_data]{sample_data()}}. Function then checks if taxa seen frequency number of times in each treatment. If multiple \code{sample_data} columns are given, they will be appended to the \code{sample_data} as one column with '.' separating each.
@@ -31,13 +29,9 @@ find_generalists <- function(phyloseq_obj, frequency = 0, treatment = NULL, subs
   if(!(is.null(treatment))){
     if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
 
-    Treatment_Groups <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatment], "data.frame"))
-    # Treatment_Groups[, Treatment_Group := .GRP, by = Treatment_Groups]
+    phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = ".")
-    eval(parse(text=paste0("Treatment_Groups[, '",treatment_name,"' := as.character(paste(", paste(treatment, collapse = ", "), ", sep = '.'), by = Treatment_Groups)]")))
-    phyloseq_obj@sam_data[[treatment_name]] <- Treatment_Groups[[treatment_name]]
-    Treatment_Groups <- unique(Treatment_Groups[[treatment_name]])
-    # phyloseq_obj <- phyloseq(otu_table(phyloseq_obj), tax_table(phyloseq_obj), sample_data(phyloseq_obj))
+    Treatment_Groups <- unique(phyloseq_obj@sam_data[[treatment_name]])
 
     if(below == TRUE){
       phyloseq_obj <- do.call(merge_phyloseq,
