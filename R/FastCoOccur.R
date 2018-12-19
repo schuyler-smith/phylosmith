@@ -25,6 +25,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05){
   options(warnings=-1)
 
   phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = ".")
 
   treatments <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
