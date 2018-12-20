@@ -14,7 +14,7 @@ FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 \item{p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
 }
 \description{
-A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
+A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp-package]{Rcpp} API.
 }
 \examples{
 data(mock_phyloseq)

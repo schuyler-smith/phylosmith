@@ -16,7 +16,7 @@
 #' @examples
 #' data(mock_phyloseq)
 
-curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all'){
+curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 1){
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
   toi_table <- unique(cbind(rbindlist(list(sub_cooccurrence[,1], sub_cooccurrence[,1])), rbindlist(list(sub_cooccurrence[,2], sub_cooccurrence[,3]))))
   toi_table <- toi_table[toi_table$gene_1 %in% taxa_of_interest]

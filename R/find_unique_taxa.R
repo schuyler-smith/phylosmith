@@ -17,7 +17,7 @@
 find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"
 
-  phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
+  phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = ".")
 

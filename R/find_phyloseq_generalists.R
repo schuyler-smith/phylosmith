@@ -29,7 +29,7 @@ find_generalists <- function(phyloseq_obj, frequency = 0, treatment = NULL, subs
   if(!(is.null(treatment))){
     if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
 
-    phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
+    phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = ".")
     Treatment_Groups <- unique(phyloseq_obj@sam_data[[treatment_name]])
 

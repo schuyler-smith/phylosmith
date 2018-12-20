@@ -8,7 +8,7 @@
 #'
 #' @docType data
 #' @usage data(mock_phyloseq)
-#' @format An object of class \code{"phyloseq"}
+#' @format A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @keywords datasets
 #' @source Simulation
 #' @examples
@@ -27,7 +27,7 @@
 #'
 #' @docType data
 #' @usage data(mock_phyloseq_2)
-#' @format An object of class \code{"phyloseq"}
+#' @format A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @keywords datasets
 #' @source Simulation
 #' @examples
