@@ -1,7 +1,6 @@
 #' Find unique taxa between treatments of a phyloseq object.
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
-#' @aliases find_unique_genes
 #' @useDynLib phylosmith
 #' @usage find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).

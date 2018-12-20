@@ -1,7 +1,6 @@
 #' Find taxa shared between treatments of a phyloseq object.
 #'
 #' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
-#' @aliases find_common_genes
 #' @useDynLib phylosmith
 #' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).

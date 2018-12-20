@@ -2,8 +2,6 @@
 % Please edit documentation in R/FastCoOccur.R
 \name{FastCoOccur}
 \alias{FastCoOccur}
-\alias{cooccurrence}
-\alias{co_occurrence}
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.}
 \usage{
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)

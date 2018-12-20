@@ -2,7 +2,6 @@
 % Please edit documentation in R/find_common_taxa.R
 \name{find_common_taxa}
 \alias{find_common_taxa}
-\alias{find_common_genes}
 \title{Find taxa shared between treatments of a phyloseq object.}
 \usage{
 find_common_taxa(phyloseq_obj, treatment, subset = NULL)
