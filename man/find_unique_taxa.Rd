@@ -12,7 +12,7 @@ find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
-\item{subset}{Looks for a subset of the treatment, can be a substring within the treatments names (e.g. 'control').}
+\item{subset}{Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
@@ -20,6 +20,6 @@ This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds wh
 \examples{
 data(mock_phyloseq)
 find_unique_taxa(mock_phyloseq, treatment = 2)
-find_unique_taxa(mock_phyloseq, treatment = "day")
+find_unique_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 }
 \keyword{manip}

@@ -6,14 +6,14 @@
 #' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset Looks for a subset of the treatment, can be a substring within the treatments names (e.g. 'control').
+#' @param subset Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').
 #' @keywords manip
 #' @export
 #' @import phyloseq
 #' @examples
 #' data(mock_phyloseq)
 #' find_common_taxa(mock_phyloseq, treatment = 2)
-#' find_common_taxa(mock_phyloseq, treatment = "day")
+#' find_common_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 
 find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"

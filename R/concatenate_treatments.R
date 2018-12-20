@@ -5,7 +5,7 @@
 #' @useDynLib phylosmith
 #' @usage concatenate_treatments(phyloseq_obj, treatments, sep = '.')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
-#' @param treatments Name(s) or column number(s) in the \code{\link[phyloseq:sample_data]{sample_data()}}.
+#' @param treatments A vector of column names or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param sep Delimiter to separate the treatments.
 #' @keywords manip
 #' @import data.table

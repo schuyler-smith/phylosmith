@@ -10,7 +10,7 @@ concatenate_treatments(phyloseq_obj, treatments, sep = '.')
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
 
-\item{treatments}{Name(s) or column number(s) in the \code{\link[phyloseq:sample_data]{sample_data()}}.}
+\item{treatments}{A vector of column names or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{sep}{Delimiter to separate the treatments.}
 }
