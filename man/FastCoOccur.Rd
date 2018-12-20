@@ -4,7 +4,7 @@
 \alias{FastCoOccur}
 \alias{cooccurrence}
 \alias{co_occurrence}
-\title{an efficient c++ implementation of the pair-wise Spearman rank co-occurrence.}
+\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.}
 \usage{
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }
@@ -16,7 +16,7 @@ FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 \item{p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
 }
 \description{
-This function is a rewrite of the pair-wise Spearman rank co-occurence routine written by Jin Choi. I adapted the routine to integrate with the Rcpp API.
+A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
 }
 \examples{
 data(mock_phyloseq)

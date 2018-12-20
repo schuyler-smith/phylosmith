@@ -3,7 +3,7 @@
 \name{concatenate_treatments}
 \alias{concatenate_treatments}
 \alias{combine_treatments}
-\title{Combine meta-data columns}
+\title{Combine meta-data columns.}
 \usage{
 concatenate_treatments(phyloseq_obj, treatments, sep = '.')
 }
@@ -15,11 +15,11 @@ concatenate_treatments(phyloseq_obj, treatments, sep = '.')
 \item{sep}{Delimiter to separate the treatments.}
 }
 \description{
-This function takes a phyloseq object combines multiple columns in the meta-data into a single variable column.
+Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 }
 \examples{
 data(mock_phyloseq)
-concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"))
-concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')
+concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"))@sam_data
+concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')@sam_data
 }
 \keyword{manip}

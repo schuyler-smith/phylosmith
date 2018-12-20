@@ -1,4 +1,4 @@
-#' Find Unique Taxa
+#' Find unique taxa between treatments of a phyloseq object.
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
 #' @aliases find_unique_genes

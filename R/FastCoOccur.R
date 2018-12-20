@@ -1,6 +1,6 @@
-#' an efficient c++ implementation of the pair-wise Spearman rank co-occurrence.
+#' pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 #'
-#' This function is a rewrite of the pair-wise Spearman rank co-occurence routine written by Jin Choi. I adapted the routine to integrate with the Rcpp API.
+#' A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
 #' @aliases cooccurrence co_occurrence
 #' @useDynLib phylosmith
 #' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05)

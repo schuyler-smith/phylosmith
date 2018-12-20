@@ -2,7 +2,7 @@
 % Please edit documentation in R/merge_ASVs.R
 \name{merge_asvs}
 \alias{merge_asvs}
-\title{Merge Amplicon Sequence Variants}
+\title{Merge amplicon sequence variants (asv).}
 \usage{
 merge_asvs(...)
 }
@@ -10,7 +10,7 @@ merge_asvs(...)
 \item{...}{Any number of \code{\link[phyloseq]{phyloseq-class}} objects created with the \link[=phyloseq]{phyloseq} package (must have Amplicon Sequence Variants for calling taxa).}
 }
 \description{
-This function takes any number of phyloseq object that have \code{\link[phyloseq:taxa_names]{taxa_names()}} declared as true biological sequences or Amplicon Sequence Variants(ASVs). If a dataset has longer reads than the other, it will look for the shorter sequence within the longer and redeclare the ASV.
+Takes any number of phyloseq objects that have \code{\link[phyloseq:taxa_names]{taxa_names}} declared as true biological sequences or Amplicon Sequence Variants (ASVs). If a dataset has longer reads than the others, it will look for the shorter sequence within the longer and redeclare the ASV.
 }
 \examples{
 data(mock_phyloseq); data(mock_phyloseq_2)

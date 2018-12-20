@@ -3,19 +3,19 @@
 \name{curate_cooccurrence}
 \alias{curate_cooccurrence}
 \alias{subset_cooccurrence}
-\title{Curate co-occurrence data}
+\title{Curate co-occurrence data.}
 \usage{
-curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 'all')
+curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 1)
 }
 \arguments{
-\item{cooccurrence_table}{co-occurrence table generated with \code{\link{FastCoOccur}}.}
+\item{cooccurrence_table}{co-occurrence table generated with \code{\link{FastCoOccur}}, or formatted in the same way.}
 
 \item{taxa_of_interest}{a list or vector of taxa names, like those generated with \code{\link{find_unique_taxa}}.}
 
-\item{number_of_treatments}{how many treatments should the taxa of interest be seen in? require \code{integer} or 'all' (default).}
+\item{number_of_treatments}{how many treatments should the taxa of interest be seen in? require \code{integer} or 'all' (default = 1).}
 }
 \description{
-This is used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function. It will take a list of taxa, find all pairs with those taxa.
+Used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function. Takes a list of taxa and finds all pairs containing any of those taxa.
 }
 \examples{
 data(mock_phyloseq)

@@ -3,7 +3,7 @@
 \name{find_common_taxa}
 \alias{find_common_taxa}
 \alias{find_common_genes}
-\title{Find Unique Taxa}
+\title{Find taxa shared between treatments of a phyloseq object.}
 \usage{
 find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 }
@@ -15,7 +15,7 @@ find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 \item{subset}{Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').}
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
+Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 }
 \examples{
 data(mock_phyloseq)

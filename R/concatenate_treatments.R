@@ -1,6 +1,6 @@
-#' Combine meta-data columns
+#' Combine meta-data columns.
 #'
-#' This function takes a phyloseq object combines multiple columns in the meta-data into a single variable column.
+#' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 #' @aliases combine_treatments
 #' @useDynLib phylosmith
 #' @usage concatenate_treatments(phyloseq_obj, treatments, sep = '.')
@@ -13,8 +13,8 @@
 #' @export
 #' @examples
 #' data(mock_phyloseq)
-#' concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"))
-#' concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')
+#' concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"))@sam_data
+#' concatenate_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')@sam_data
 
 concatenate_treatments <- function(phyloseq_obj, treatments, sep = '.'){
   # data("mock_phyloseq")

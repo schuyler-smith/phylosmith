@@ -10,7 +10,7 @@ relative_abundance(phyloseq_obj)
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
 }
 \description{
-This is used to transform abundance data into relative abundance, i.e. proportional data. This is an alternative normalization.
+Transform abundance data into relative abundance, i.e. proportional data. This is an alternative method of normalization and may not be appropriate for all datasets, particularly if your sequencing depth varies between samples.
 }
 \examples{
 data(mock_phyloseq)

@@ -1,6 +1,6 @@
-#' Find Unique Taxa
+#' Find taxa shared between treatments of a phyloseq object.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
+#' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 #' @aliases find_common_genes
 #' @useDynLib phylosmith
 #' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL)

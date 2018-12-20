@@ -3,7 +3,7 @@
 \name{find_unique_taxa}
 \alias{find_unique_taxa}
 \alias{find_unique_genes}
-\title{Find Unique Taxa}
+\title{Find unique taxa between treatments of a phyloseq object.}
 \usage{
 find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 }
