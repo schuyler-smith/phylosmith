@@ -5,7 +5,7 @@
 #' @useDynLib phylosmith
 #' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
-#' @param treatment the column name or number of the treatment to be comapred.
+#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
 #' @keywords nonparametric
 #' @export

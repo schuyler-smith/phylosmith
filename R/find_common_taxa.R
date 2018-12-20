@@ -3,33 +3,33 @@
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 #' @aliases find_common_genes
 #' @useDynLib phylosmith
-#' @usage find_common_taxa(phyloseq_obj, column, keyword = NULL)
+#' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param column Name or column number in the \code{\link[phyloseq:sample_data]{sample_data()}}.
-#' @param keyword Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').
+#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset Looks for a subset of the treatment, can be a substring within the treatments names (e.g. 'control').
 #' @keywords manip
 #' @export
 #' @import phyloseq
 #' @examples
 #' data(mock_phyloseq)
-#' find_common_taxa(mock_phyloseq, column = 2)
-#' find_common_taxa(mock_phyloseq, column = "day")
+#' find_common_taxa(mock_phyloseq, treatment = 2)
+#' find_common_taxa(mock_phyloseq, treatment = "day")
 
-find_common_taxa <- function(phyloseq_obj, column, keyword = NULL){
-  if(is.numeric(column)){column <- colnames(phyloseq_obj@sam_data[,column])
-  } else {column <- eval(parse(text=paste0("colnames(phyloseq_obj@sam_data[,c('", paste0(column, collapse = "', '"), "')])")))
-  }
-  if(is.null(keyword)){
-    treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(column), ")")))
-  } else {
-    treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(column), ")")))
-    treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(keyword), '", treatments)]')))
+find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL){
+  #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"
+
+  phyloseq_obj <- concatenate_treatments(phyloseq_obj, treatment)
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  treatment_name <- paste(treatment, collapse = ".")
+
+  treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(treatment_name), ")")))
+  if(!(is.null(subset))){
+    treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(subset), '", treatments)]')))
   }
 
-  seen_taxa <- lapply(treatments, FUN = function(treatment){
-    taxa_names(find_generalists(phyloseq_obj, treatment = column, subset = treatment, frequency = 0))
-  })
-  names(seen_taxa) <- treatments
+  seen_taxa <- lapply(treatments, FUN = function(trt){
+    taxa_names(find_generalists(phyloseq_obj, treatment = treatment_name, subset = trt, frequency = 0))
+  }); names(seen_taxa) <- treatments
 
   taxa_counts <- table(unlist(seen_taxa))
   shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])

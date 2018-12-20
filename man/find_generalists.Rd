@@ -11,7 +11,7 @@ find_generalists(phyloseq_obj, frequency = 0, treatment = NULL, subset = NULL, b
 
 \item{frequency}{The minimum proportion of samples the taxa is seen in.}
 
-\item{treatment}{Name(s) or column number(s) in the \code{\link[phyloseq:sample_data]{sample_data()}}. Function then checks if taxa seen frequency number of times in each treatment. If multiple \code{sample_data} columns are given, they will be appended to the \code{sample_data} as one column with '.' separating each.}
+\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}. Function then checks if taxa seen frequency number of times in each treatment. If multiple \code{sample_data} columns are given, they will be appended to the \code{sample_data} as one column with '.' separating each.}
 
 \item{subset}{If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.}
 

@@ -11,7 +11,7 @@ FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
 
-\item{treatment}{the column name or number of the treatment to be comapred.}
+\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
 }

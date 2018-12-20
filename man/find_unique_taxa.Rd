@@ -5,21 +5,21 @@
 \alias{find_unique_genes}
 \title{Find Unique Taxa}
 \usage{
-find_unique_taxa(phyloseq_obj, column, keyword = NULL)
+find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
 
-\item{column}{Name or column number in the \code{\link[phyloseq:sample_data]{sample_data()}}.}
+\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
-\item{keyword}{Looks for a subset of the column, can be a substring within the treatments names (e.g. 'control').}
+\item{subset}{Looks for a subset of the treatment, can be a substring within the treatments names (e.g. 'control').}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
 }
 \examples{
 data(mock_phyloseq)
-find_unique_taxa(mock_phyloseq, column = 2)
-find_unique_taxa(mock_phyloseq, column = "day")
+find_unique_taxa(mock_phyloseq, treatment = 2)
+find_unique_taxa(mock_phyloseq, treatment = "day")
 }
 \keyword{manip}
