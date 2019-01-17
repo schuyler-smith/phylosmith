@@ -24,9 +24,9 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Dark2"){
   # stressplot(MDS)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
-  MDS1 <- data.table(scores(MDS))$NMDS1
-  MDS2 <- data.table(scores(MDS))$NMDS2
-  NMDS <- data.table(MDS1,MDS2,Treatment)
+  NMDS1 <- data.table(scores(MDS))$NMDS1
+  NMDS2 <- data.table(scores(MDS))$NMDS2
+  NMDS <- data.table(NMDS1,NMDS2,Treatment)
   NMDS.narm <- subset(NMDS, !is.na(Treatment))
 
   veganCovEllipse<-function (cov, center = c(0, 0), scale = 1, npoints = 100){
@@ -36,11 +36,11 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Dark2"){
 
   df_ell <- data.frame()
   for(trt in unique(NMDS.narm[[3]])){
-    df_ell <- rbind(df_ell, cbind(as.data.frame(with(NMDS.narm[NMDS.narm[[3]]==trt,], veganCovEllipse(cov.wt(cbind(MDS1,MDS2),wt=rep(1/length(MDS1),length(MDS1)))$cov,center=c(mean(MDS1),mean(MDS2))))),group=trt))}
+    df_ell <- rbind(df_ell, cbind(as.data.frame(with(NMDS.narm[NMDS.narm[[3]]==trt,], veganCovEllipse(cov.wt(cbind(NMDS1,NMDS2),wt=rep(1/length(NMDS1),length(NMDS1)))$cov,center=c(mean(NMDS1),mean(NMDS2))))),group=trt))}
 
-  p <- ggplot(data = NMDS.narm, aes(MDS1, MDS2)) +
+  p <- ggplot(data = NMDS.narm, aes(NMDS1, NMDS2)) +
     geom_point(aes(color = Treatment), size=1.5, alpha=0.75) +
-    geom_path(data=df_ell, aes(x=MDS1, y=MDS2, colour=group), size=1.5, linetype=1) +
+    geom_path(data=df_ell, aes(x=NMDS1, y=NMDS2, colour=group), size=1.5, linetype=1) +
     scale_color_manual(values=colors) +
     theme_classic() +
     theme(aspect.ratio=1,
