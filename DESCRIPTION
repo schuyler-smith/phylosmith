@@ -1,6 +1,6 @@
 Package: phylosmith
 Title: Various functions to help analyze phyloseq data
-Version: 1.0
+Version: 1.1
 Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for phyloseq objects.
@@ -13,7 +13,10 @@ Depends:
 Imports:
     RcppParallel,
     RcppArmadillo,
-    utils
+    utils,
+    ggplot2,
+    RColorBrewer,
+    vegan
 LinkingTo: 
     Rcpp,
     RcppParallel,

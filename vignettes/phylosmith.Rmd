@@ -34,6 +34,7 @@ find_generalists | filter taxa by proportion of samples seen in
 find_common_taxa | find taxa common to each treatment
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
+nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
 relative_abundance | transform abundance data to relative abundance
 
 ## Data

@@ -2,7 +2,6 @@
 % Please edit documentation in R/curate_cooccurrence.R
 \name{curate_cooccurrence}
 \alias{curate_cooccurrence}
-\alias{subset_cooccurrence}
 \title{Curate co-occurrence data.}
 \usage{
 curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 1)

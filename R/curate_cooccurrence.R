@@ -1,7 +1,6 @@
 #' Curate co-occurrence data.
 #'
 #' Used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function. Takes a list of taxa and finds all pairs containing any of those taxa.
-#' @aliases subset_cooccurrence
 #' @useDynLib phylosmith
 #' @usage curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 1)
 #' @param cooccurrence_table co-occurrence table generated with \code{\link{FastCoOccur}}, or formatted in the same way.
