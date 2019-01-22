@@ -1,4 +1,4 @@
-#' Find taxa shared between treatments of a phyloseq object.
+#' Find taxa shared between treatments of a phyloseq object. phylosmith
 #'
 #' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 #' @useDynLib phylosmith

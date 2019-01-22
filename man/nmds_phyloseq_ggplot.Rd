@@ -2,7 +2,7 @@
 % Please edit documentation in R/nmds_phyloseq_ggplot.R
 \name{nmds_phyloseq_ggplot}
 \alias{nmds_phyloseq_ggplot}
-\title{Create a ggplot object of the NMDS from a phyloseq object.}
+\title{Create a ggplot object of the NMDS from a phyloseq object. phylosmith}
 \usage{
 nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Set2')
 }

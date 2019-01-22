@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_unique_taxa.R
 \name{find_unique_taxa}
 \alias{find_unique_taxa}
-\title{Find unique taxa between treatments of a phyloseq object.}
+\title{Find unique taxa between treatments of a phyloseq object. phylosmith}
 \usage{
 find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 }

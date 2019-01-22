@@ -2,7 +2,7 @@
 % Please edit documentation in R/merge_ASVs.R
 \name{merge_asvs}
 \alias{merge_asvs}
-\title{Merge amplicon sequence variants (asv).}
+\title{Merge amplicon sequence variants (asv). phylosmith}
 \usage{
 merge_asvs(...)
 }

@@ -2,9 +2,9 @@
 % Please edit documentation in R/bootstrap_rho.R
 \name{bootstrap_rho}
 \alias{bootstrap_rho}
-\title{bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.}
+\title{Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith}
 \usage{
-bootstraps_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
+bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
@@ -18,7 +18,7 @@ bootstraps_rho(phyloseq_obj, treatment, replicates = 'independent', permutations
 \item{p}{significance cut-off for the mean rho values.}
 }
 \description{
-'
+Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 }
 \examples{
 data(mock_phyloseq)

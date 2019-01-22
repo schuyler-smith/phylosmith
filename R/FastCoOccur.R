@@ -1,22 +1,21 @@
-#' pair-wise Spearman rank co-occurrence, written in efficient c++ code.
+#' pair-wise Spearman rank co-occurrence, written in efficient c++ code. phylosmith
 #'
 #' A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
 #' @useDynLib phylosmith
-#' @name FastCoOccur
 #' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
-#' @keywords nonparametric
-#' @export
 #' @import data.table
 #' @import phyloseq
 #' @import RcppArmadillo
 #' @import RcppParallel
+#' @keywords nonparametric
+#' @seealso \code{\link{phylosmith}}
 #' @examples
 #' data(mock_phyloseq)
 #' FastCoOccur(mock_phyloseq, "day", 0.05)
-
+#' @export
 
 # sourceCpp("src/FastCoOccur_Rcpp.cpp")
 

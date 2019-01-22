@@ -1,4 +1,4 @@
-#' Find unique taxa between treatments of a phyloseq object.
+#' Find unique taxa between treatments of a phyloseq object. phylosmith
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
 #' @useDynLib phylosmith

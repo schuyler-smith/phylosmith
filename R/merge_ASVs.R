@@ -1,4 +1,4 @@
-#' Merge amplicon sequence variants (asv).
+#' Merge amplicon sequence variants (asv). phylosmith
 #'
 #' Takes any number of phyloseq objects that have \code{\link[phyloseq:taxa_names]{taxa_names}} declared as true biological sequences or Amplicon Sequence Variants (ASVs). If a dataset has longer reads than the others, it will look for the shorter sequence within the longer and redeclare the ASV.
 #' @useDynLib phylosmith
