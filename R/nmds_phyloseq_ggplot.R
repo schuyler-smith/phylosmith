@@ -39,6 +39,8 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Set2"){
     df_ell <- rbind(df_ell, cbind(as.data.frame(with(NMDS.narm[NMDS.narm[[3]]==trt,], veganCovEllipse(cov.wt(cbind(NMDS1,NMDS2),wt=rep(1/length(NMDS1),length(NMDS1)))$cov,center=c(mean(NMDS1),mean(NMDS2))))),group=trt))}
 
   p <- ggplot(data = NMDS.narm, aes(NMDS1, NMDS2)) +
+    coord_fixed(xlim = c(floor(min(NMDS.narm[,c(1,2)])), ceiling(max(NMDS.narm[,c(1,2)]))),
+                ylim = c(floor(min(NMDS.narm[,c(1,2)])), ceiling(max(NMDS.narm[,c(1,2)])))) +
     geom_point(aes(color = Treatment), size=1.5, alpha=0.75) +
     geom_path(data=df_ell, aes(x=NMDS1, y=NMDS2, colour=group), size=1.5, linetype=1) +
     scale_color_manual(values=colors) +
