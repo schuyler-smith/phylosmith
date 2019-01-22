@@ -25,6 +25,7 @@ find_common_taxa | find taxa common to each treatment
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
 nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
+permute_rho | runs permutations of the otu_table to calculate a significant $\rho$ value
 relative_abundance | transform abundance data to relative abundance
 
 ## Data
