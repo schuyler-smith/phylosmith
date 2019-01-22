@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_phyloseq_generalists.R
 \name{find_generalists}
 \alias{find_generalists}
-\title{Filter taxa based on proportion of samples they are observed in. phylosmith}
+\title{Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.}
 \usage{
 find_generalists(phyloseq_obj, frequency = 0, treatment = NULL, subset = NULL, below = FALSE, drop_samples = FALSE)
 }

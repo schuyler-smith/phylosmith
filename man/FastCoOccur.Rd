@@ -2,7 +2,7 @@
 % Please edit documentation in R/FastCoOccur.R
 \name{FastCoOccur}
 \alias{FastCoOccur}
-\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code. phylosmith}
+\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.}
 \usage{
 FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 }

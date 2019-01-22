@@ -1,4 +1,4 @@
-#' Create a ggplot object of the NMDS from a phyloseq object. phylosmith
+#' Create a ggplot object of the NMDS from a phyloseq object. Function from the phylosmith-package.
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith

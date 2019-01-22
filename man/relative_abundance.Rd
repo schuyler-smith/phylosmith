@@ -2,7 +2,7 @@
 % Please edit documentation in R/relative_abundance.R
 \name{relative_abundance}
 \alias{relative_abundance}
-\title{Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample. phylosmith}
+\title{Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample. Function from the phylosmith-package.}
 \usage{
 relative_abundance(phyloseq_obj)
 }

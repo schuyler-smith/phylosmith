@@ -2,7 +2,7 @@
 % Please edit documentation in R/curate_cooccurrence.R
 \name{curate_cooccurrence}
 \alias{curate_cooccurrence}
-\title{Curate co-occurrence data.}
+\title{Curate co-occurrence data. Function from the phylosmith-package.}
 \usage{
 curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 1)
 }

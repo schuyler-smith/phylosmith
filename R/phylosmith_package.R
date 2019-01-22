@@ -1,4 +1,4 @@
-#' phylosmith package
+#' phylosmith-package
 #'
 #' @name phylosmith
 #' @author Schuyler Smith \email{sdsmith@@iastate.edu}

@@ -1,4 +1,4 @@
-#' Filter taxa based on proportion of samples they are observed in. phylosmith
+#' Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
 #' @useDynLib phylosmith

@@ -1,4 +1,4 @@
-#' Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample. phylosmith
+#' Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample. Function from the phylosmith-package.
 #'
 #' Transform abundance data into relative abundance, i.e. proportional data. This is an alternative method of normalization and may not be appropriate for all datasets, particularly if your sequencing depth varies between samples.
 #' @useDynLib phylosmith

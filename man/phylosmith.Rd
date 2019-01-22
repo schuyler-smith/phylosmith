@@ -4,9 +4,9 @@
 \name{phylosmith}
 \alias{phylosmith}
 \alias{phylosmith-package}
-\title{phylosmith package}
+\title{phylosmith-package}
 \description{
-phylosmith package
+phylosmith-package
 }
 \author{
 Schuyler Smith \email{sdsmith@iastate.edu}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/combine_treatments.R
 \name{combine_treatments}
 \alias{combine_treatments}
-\title{Combine meta-data columns.}
+\title{Combine meta-data columns. Function from the phylosmith-package.}
 \usage{
 combine_treatments(phyloseq_obj, treatments, sep = '.')
 }

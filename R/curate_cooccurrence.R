@@ -1,4 +1,4 @@
-#' Curate co-occurrence data.
+#' Curate co-occurrence data. Function from the phylosmith-package.
 #'
 #' Used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function. Takes a list of taxa and finds all pairs containing any of those taxa.
 #' @useDynLib phylosmith

@@ -1,4 +1,4 @@
-#' pair-wise Spearman rank co-occurrence, written in efficient c++ code. phylosmith
+#' pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.
 #'
 #' A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
 #' @useDynLib phylosmith

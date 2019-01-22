@@ -1,4 +1,4 @@
-#' Combine meta-data columns.
+#' Combine meta-data columns. Function from the phylosmith-package.
 #'
 #' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 #' @useDynLib phylosmith
