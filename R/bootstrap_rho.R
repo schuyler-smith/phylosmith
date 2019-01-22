@@ -1,8 +1,8 @@
-#' permutes the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
+#' bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #'
 #' '
 #' @useDynLib phylosmith
-#' @usage permute_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
+#' @usage bootstraps_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
@@ -16,10 +16,10 @@
 #' @import RcppParallel
 #' @examples
 #' data(mock_phyloseq)
-#' permute_rho(mock_phyloseq, "day", permutations = 10)
+#' bootstrap_rho(mock_phyloseq, "day", permutations = 10)
 
 
-permute_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05){
+bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
 
