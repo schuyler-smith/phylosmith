@@ -44,5 +44,5 @@ permute_rho <- function(phyloseq_obj, treatment, replicates = 'independent', per
     }
 	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = 0.05)$rho)
   }
-  stats::quantile(rhos, 1-p, na.rm = TRUE)
+  return(stats::quantile(rhos, 1-p, na.rm = TRUE))
 }
