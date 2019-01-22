@@ -27,7 +27,7 @@ permute_rho <- function(phyloseq_obj, treatment, replicates = 'independent', per
   if(is.numeric(replicates)){replicates <- colnames(phyloseq_obj@sam_data[,replicates])}
 
   if(replicates == 'independent'){
-    replicate_indices = 1:ncol(phyloseq_obj@otu_table)
+    replicate_indices <- 1:ncol(phyloseq_obj@otu_table)
   } else {
     phyloseq_obj_reps <- combine_treatments(phyloseq_obj, c(treatment, replicates))
     replicate_name <- paste(c(treatment, replicates), collapse = ".")
@@ -42,7 +42,7 @@ permute_rho <- function(phyloseq_obj, treatment, replicates = 'independent', per
     for(indices in replicate_indices){
       permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
     }
-	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p=0.05)$rho)
+	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = 0.05)$rho)
   }
   stats::quantile(rhos, 1-p, na.rm = TRUE)
 }
