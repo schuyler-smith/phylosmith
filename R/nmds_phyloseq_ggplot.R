@@ -13,7 +13,7 @@
 #' @import vegan
 
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Dark2"){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Set2"){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- find_generalists(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
