@@ -2,7 +2,7 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Dark2')
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Set2')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
@@ -17,7 +17,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Set2"){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- find_generalists(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
-  getPalette = colorRampPalette(brewer.pal(8, colors)); colorCount = 1 + length(unlist(unique(phyloseq_obj@sam_data[[treatment]]))); colors = getPalette(colorCount); theme_set(theme_bw())
+  getPalette = grDevices::colorRampPalette(brewer.pal(8, colors)); colorCount = 1 + length(unlist(unique(phyloseq_obj@sam_data[[treatment]]))); colors = getPalette(colorCount); theme_set(theme_bw())
 
   MDS <- metaMDS(t(otu_table(phyloseq_obj@otu_table)), autotransform = FALSE, distance = "bray", k=3, trymax=100)
   # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
