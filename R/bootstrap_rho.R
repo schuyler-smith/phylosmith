@@ -7,8 +7,7 @@
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations Number of iterations to compute.
-#' @param p significance cut-off for the mean rho values.
-#' @param all_rhos Option whether to return all bootstrapped rho values, rather than the 1-pth percentile.'
+#' @param p Significance cut-off for the mean rho values. If set to 0 (default) returns a vector of all permuted rho values.
 #' @keywords nonparametric
 #' @export
 #' @import data.table
@@ -20,7 +19,7 @@
 #' bootstrap_rho(mock_phyloseq, "day", permutations = 10)
 
 
-bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05, all_rhos = FALSE){
+bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
 
@@ -45,7 +44,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
     }
 	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = 0.05)$rho)
   }
-  if(all_rhos == TRUE){
+  if(p == 0){
     return(rhos)
   } else {
   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
