@@ -45,6 +45,7 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns); // subset the matrix to just those samples
 	int n_samples = treatment_columns.size();
 	// #pragma omp parallel for
+	Rcpp::checkUserInterrupt();
 	for(int taxa=0; taxa<n_taxa; ++taxa){ // loop through all the taxa
 		arma::rowvec rank_vector = arma::zeros<arma::rowvec>(treatment_columns.size());
 		arma::rowvec taxa_abund = treatment_matrix.row(taxa);
@@ -73,6 +74,7 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 
 for(int trt=0; trt<n_treatments; ++trt){
 	// has_ties = false;
+	Rcpp::checkUserInterrupt();
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
