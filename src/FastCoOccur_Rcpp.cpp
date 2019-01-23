@@ -19,7 +19,7 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff)
+Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores)
 {vector<string> treatments_ = Rcpp::as<vector <string> >(treatment_names); 
 
 vector<string> treatments;
@@ -44,8 +44,8 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]); // vector of elements for each sample in this treatment
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns); // subset the matrix to just those samples
 	int n_samples = treatment_columns.size();
-	// #pragma omp parallel for
 	Rcpp::checkUserInterrupt();
+	// #pragma omp parallel for
 	for(int taxa=0; taxa<n_taxa; ++taxa){ // loop through all the taxa
 		arma::rowvec rank_vector = arma::zeros<arma::rowvec>(treatment_columns.size());
 		arma::rowvec taxa_abund = treatment_matrix.row(taxa);
@@ -74,13 +74,13 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 
 for(int trt=0; trt<n_treatments; ++trt){
 	// has_ties = false;
-	Rcpp::checkUserInterrupt();
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
+	Rcpp::checkUserInterrupt();
 	#ifdef _OPENMP
-		// #pragma omp parallel for num_threads(ncores)
-  		#pragma omp parallel for
+		#pragma omp parallel for num_threads(ncores)
+  		// #pragma omp parallel for
 	#endif
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 		arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);

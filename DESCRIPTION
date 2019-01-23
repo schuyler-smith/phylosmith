@@ -12,6 +12,7 @@ Depends:
 Imports:
     RcppParallel,
     RcppArmadillo,
+    parallel,
     utils,
     data.table,
     ggplot2,

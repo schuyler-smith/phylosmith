@@ -4,7 +4,7 @@
 \alias{FastCoOccur}
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.}
 \usage{
-FastCoOccur(phyloseq_obj, treatment, p = 0.05)
+FastCoOccur(phyloseq_obj, treatment, p = 0.05, cores = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
@@ -12,6 +12,8 @@ FastCoOccur(phyloseq_obj, treatment, p = 0.05)
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
+
+\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
 }
 \description{
 A rewrite of the pair-wise Spearman rank co-occurence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
