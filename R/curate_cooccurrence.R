@@ -12,6 +12,7 @@
 #' @import phyloseq
 #' @import RcppArmadillo
 #' @import RcppParallel
+#' @seealso \code{\link{FastCoOccur}}
 #' @examples
 #' data(mock_phyloseq)
 

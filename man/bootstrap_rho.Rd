@@ -24,4 +24,7 @@ Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant
 data(mock_phyloseq)
 bootstrap_rho(mock_phyloseq, "day", permutations = 10)
 }
+\seealso{
+\code{\link{FastCoOccur}}
+}
 \keyword{nonparametric}

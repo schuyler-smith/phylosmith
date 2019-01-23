@@ -19,4 +19,7 @@ Used to curate a co-occurrence table from the \code{\link{FastCoOccur}} function
 \examples{
 data(mock_phyloseq)
 }
+\seealso{
+\code{\link{FastCoOccur}}
+}
 \keyword{manip}

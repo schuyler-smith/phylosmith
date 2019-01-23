@@ -12,6 +12,7 @@ Depends:
 Imports:
     RcppParallel,
     RcppArmadillo,
+    RcppProgress,
     parallel,
     utils,
     data.table,
@@ -25,7 +26,8 @@ Suggests:
 LinkingTo: 
     Rcpp,
     RcppParallel,
-    RcppArmadillo
+    RcppArmadillo,
+    RcppProgress,
 SystemRequirements: C++11
 NeedsCompilation: yes
 VignetteBuilder: knitr

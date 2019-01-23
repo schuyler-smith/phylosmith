@@ -9,6 +9,7 @@
 #' @keywords manip
 #' @export
 #' @import phyloseq
+#' @seealso \code{\link{find_unique_taxa}}
 #' @examples
 #' data(mock_phyloseq)
 #' find_common_taxa(mock_phyloseq, treatment = 2)

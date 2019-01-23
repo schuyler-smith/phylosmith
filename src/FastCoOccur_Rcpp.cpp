@@ -5,11 +5,12 @@
  *      
  */
 #include "significance.h"
-
-#include <RcppArmadillo.h>
-#include <RcppParallel.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
+// [[Rcpp::depends(RcppProgress)]]
+#include <RcppArmadillo.h>
+#include <RcppParallel.h>
+#include <progress.hpp>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -19,8 +20,14 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores)
-{vector<string> treatments_ = Rcpp::as<vector <string> >(treatment_names); 
+Rcpp::DataFrame FastCoOccur_Rcpp(
+	Rcpp::NumericMatrix otu_table, 
+	Rcpp::List treatment_indices, 
+	Rcpp::StringVector treatment_names, 
+	double p_cutoff, 
+	const int ncores){
+
+vector<string> treatments_ = Rcpp::as<vector <string> >(treatment_names); 
 
 vector<string> treatments;
 vector<double> p_values;
@@ -44,7 +51,6 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]); // vector of elements for each sample in this treatment
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns); // subset the matrix to just those samples
 	int n_samples = treatment_columns.size();
-	Rcpp::checkUserInterrupt();
 	// #pragma omp parallel for
 	for(int taxa=0; taxa<n_taxa; ++taxa){ // loop through all the taxa
 		arma::rowvec rank_vector = arma::zeros<arma::rowvec>(treatment_columns.size());
@@ -72,17 +78,18 @@ for(int trt=0; trt<n_treatments; ++trt){ // loop through each treatment
 	rank_table.cols(treatment_columns) = treatment_matrix; // put treatment back into whole table
 }
 
+Progress p(n_treatments, false);
 for(int trt=0; trt<n_treatments; ++trt){
 	// has_ties = false;
 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
 	int n_samples = treatment_columns.size();
-	Rcpp::checkUserInterrupt();
 	#ifdef _OPENMP
 		#pragma omp parallel for num_threads(ncores)
   		// #pragma omp parallel for
 	#endif
 	for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
+		if(!Progress::check_abort()){
 		arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
 		for(int taxa2=taxa1+1; taxa2<n_taxa; ++taxa2){
 			double rho;
@@ -116,7 +123,7 @@ for(int trt=0; trt<n_treatments; ++trt){
 				}
 			}
 		}	
-	}
+	}}
 }
 
 return Rcpp::DataFrame::create(

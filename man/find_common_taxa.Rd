@@ -21,4 +21,7 @@ data(mock_phyloseq)
 find_common_taxa(mock_phyloseq, treatment = 2)
 find_common_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 }
+\seealso{
+\code{\link{find_unique_taxa}}
+}
 \keyword{manip}
