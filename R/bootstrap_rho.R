@@ -2,12 +2,13 @@
 #'
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. 
 #' @useDynLib phylosmith
-#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
+#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05, all_rhos = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations Number of iterations to compute.
 #' @param p significance cut-off for the mean rho values.
+#' @param all_rhos Option whether to return all bootstrapped rho values, rather than the 1-pth percentile.'
 #' @keywords nonparametric
 #' @export
 #' @import data.table
@@ -19,7 +20,7 @@
 #' bootstrap_rho(mock_phyloseq, "day", permutations = 10)
 
 
-bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05){
+bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05, all_rhos = FALSE){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
 
@@ -44,5 +45,8 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
     }
 	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = 0.05)$rho)
   }
-  return(stats::quantile(rhos, 1-p, na.rm = TRUE))
+  if(all_rhos == TRUE){
+    return(rhos)
+  } else {
+  return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
 }
