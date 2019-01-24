@@ -38,7 +38,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   required_memory <- round((6.780e-07 + (2.867e-08 * (n*(n-1)*length(treatments)))), 2)
   available_memory <- round(as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo", intern = TRUE))/(1024^2), 2)
   if(required_memory >= available_memory){
-    message("Calculating ", (n*(n-1)*length(treatments)), " pairs-wise co-occurences.
+    message("Calculating ", (n*(n-1)*length(treatments)), " pairs-wise co-occurrences.
  This may take ", required_memory, " GB of RAM, or more.
  This machine has ", available_memory, " GB of RAM available.
  Recommend subsetting from ", n, " taxa to ",
