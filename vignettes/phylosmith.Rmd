@@ -11,7 +11,7 @@ vignette: >
 
 ## `phylosmith` description
 
-This package is a compilation of functions that I have written, that I find useful, for analyzing phyloseq objects.
+phylosmith is a conglomeration of functions written to process and analyze phyloseq-class objects.
 
 ## Installation
 
