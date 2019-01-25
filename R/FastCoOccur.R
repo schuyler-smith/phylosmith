@@ -36,7 +36,10 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   n <- nrow(phyloseq_obj@otu_table)
   memory_function <- function(n, t, r){(6.780e-07 + (2.867e-08 * (n*(n-1)*t))) - r}
   required_memory <- round((6.780e-07 + (2.867e-08 * (n*(n-1)*length(treatments)))), 2)
-  available_memory <- round(as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo", intern = TRUE))/(1024^2), 2)
+  if(Sys.info['sysname'] == "Windows"){
+    available_memory <- round(as.numeric(gsub("\r","",gsub("FreePhysicalMemory=","",system('wmic OS get FreePhysicalMemory /Value',intern=TRUE)[3])))/(1024^2), 2)
+    } else {
+    available_memory <- round(as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo", intern = TRUE))/(1024^2), 2)}
   if(required_memory >= available_memory){
     message("Calculating ", (n*(n-1)*length(treatments)), " pairs-wise co-occurrences.
  This may take ", required_memory, " GB of RAM, or more.
