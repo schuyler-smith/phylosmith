@@ -4,7 +4,7 @@
 \alias{bootstrap_rho}
 \title{Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith}
 \usage{
-bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0.05)
+bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0, cores = 0, cooccur_p = 0.05)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
@@ -16,13 +16,17 @@ bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations 
 \item{permutations}{Number of iterations to compute.}
 
 \item{p}{Significance cut-off for the mean rho values. If set to 0 (default) returns a vector of all permuted rho values.}
+
+\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
+
+\item{cooccur_p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
 }
 \description{
 Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 }
 \examples{
 data(mock_phyloseq)
-bootstrap_rho(mock_phyloseq, "day", permutations = 10)
+bootstrap_rho(mock_phyloseq, treatment = "day", permutations = 10)
 }
 \seealso{
 \code{\link{FastCoOccur}}
