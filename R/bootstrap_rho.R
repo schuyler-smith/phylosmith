@@ -43,22 +43,23 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
   n <- nrow(phyloseq_obj@otu_table)
   permuted_phyloseq_obj <- phyloseq_obj
 
-  start_time <- Sys.time()
-  for(indices in replicate_indices){
-    permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
-  }
-  rhos[1] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = cooccur_p, cores = cores)$rho)
-  end_time <- Sys.time()
-  time_taken <- end_time - start_time
+  # start_time <- Sys.time()
+  # for(indices in replicate_indices){
+  #   permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
+  # }
+  # rhos[1] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = cooccur_p, cores = cores)$rho)
+  # end_time <- Sys.time()
+  # time_taken <- end_time - start_time
+  # message('Allow up to ', round((time_taken*permutations)/360, 1), ' hours to complete these calculations.')
 
-  message('These calculations will take about ', round((time_taken*permutations)/60), ' minutes to complete.')
-
-  for(i in 2:permutations){
+  tryCatch({
+  for(i in 1:permutations){
     for(indices in replicate_indices){
       permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
     }
-	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = 0.05, cores = cores)$rho)
-  }
+	  rhos[i] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = cooccur_p, cores = cores)$rho)
+  }},
+  interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', length(rhos), ' permutations.'); return(rhos)})
 
   if(p == 0){
     return(rhos)
