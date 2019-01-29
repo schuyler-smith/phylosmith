@@ -38,24 +38,24 @@ find_generalists <- function(phyloseq_obj, treatment = NULL, frequency = 0, subs
                               apply(array(Treatment_Groups), 1, FUN = function(group){
                                 sub_phy <- eval(parse(text=paste0("subset_samples(phyloseq_obj, ",treatment_name," == '",group,"')")))
                                 cutoff <- floor(ncol(sub_phy@otu_table) * frequency)
-                                sub_phy <- filter_taxa(sub_phy, function(x){sum(x != 0) <= cutoff}, TRUE)
+                                sub_phy <- filter_taxa(sub_phy, function(x){sum(x != 0, na.rm = TRUE) <= cutoff}, TRUE)
                                 return(sub_phy)}))
     } else {
       phyloseq_obj <- do.call(merge_phyloseq,
                               apply(array(Treatment_Groups), 1, FUN = function(group){
                                 sub_phy <- eval(parse(text=paste0("subset_samples(phyloseq_obj, ",treatment_name," == '",group,"')")))
                                 cutoff <- floor(ncol(sub_phy@otu_table) * frequency)
-                                sub_phy <- filter_taxa(sub_phy, function(x){sum(x != 0) >= cutoff}, TRUE)
+                                sub_phy <- filter_taxa(sub_phy, function(x){sum(x != 0, na.rm = TRUE) >= cutoff}, TRUE)
                                 if(sum(taxa_sums(sub_phy)) != 0){sub_phy <- filter_taxa(sub_phy, function(x){sum(x) != 0}, TRUE)}
                                 return(sub_phy)}))
     }
   } else {
     cutoff <- floor(ncol(phyloseq_obj@otu_table) * frequency)
     if(below == TRUE){
-      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0) <= cutoff}, TRUE)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) <= cutoff}, TRUE)
     } else {
-      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0) >= cutoff}, TRUE)
-      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) != 0}, TRUE)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) >= cutoff}, TRUE)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) != 0, na.rm = TRUE}, TRUE)
       }
   }
   if(!(is.null(subset))){
