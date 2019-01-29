@@ -46,7 +46,7 @@ find_generalists <- function(phyloseq_obj, treatment = NULL, frequency = 0, subs
                                 sub_phy <- eval(parse(text=paste0("subset_samples(phyloseq_obj, ",treatment_name," == '",group,"')")))
                                 cutoff <- floor(ncol(sub_phy@otu_table) * frequency)
                                 sub_phy <- filter_taxa(sub_phy, function(x){sum(x != 0, na.rm = TRUE) >= cutoff}, TRUE)
-                                if(sum(taxa_sums(sub_phy)) != 0){sub_phy <- filter_taxa(sub_phy, function(x){sum(x) != 0}, TRUE)}
+                                if(sum(taxa_sums(sub_phy), na.rm = TRUE) != 0){sub_phy <- filter_taxa(sub_phy, function(x){sum(x, na.rm = TRUE) != 0}, TRUE)}
                                 return(sub_phy)}))
     }
   } else {
@@ -55,7 +55,7 @@ find_generalists <- function(phyloseq_obj, treatment = NULL, frequency = 0, subs
       phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) <= cutoff}, TRUE)
     } else {
       phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) >= cutoff}, TRUE)
-      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) != 0, na.rm = TRUE}, TRUE)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x, na.rm = TRUE) != 0}, TRUE)
       }
   }
   if(!(is.null(subset))){
@@ -63,7 +63,7 @@ find_generalists <- function(phyloseq_obj, treatment = NULL, frequency = 0, subs
     treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(subset), '", treatments)]')))
     phyloseq_obj <- prune_samples(apply(phyloseq_obj@sam_data,1,FUN = function(x){any(x[c(treatment, treatment_name)] %in% treatments)}), phyloseq_obj)
     # apply(sample_data(phyloseq_obj),1,FUN = function(x){(x[c(treatment, treatment_name)] %in% subset)}) == length(subset)
-    phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x) > 0}, TRUE)
+    phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x, na.rm = TRUE) > 0}, TRUE)
   }
   if(drop_samples == TRUE){
     phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
