@@ -49,6 +49,6 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
    )}
 
   if(cores == 0){cores <- parallel::detectCores()}
-  cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices = treatment_indices, treatment_names = treatments, p_cutoff = p, ncores = cores)
+  cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, p, cores)
   return(as.data.table(cooccurrence))
 }

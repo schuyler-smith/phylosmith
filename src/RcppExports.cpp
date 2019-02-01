@@ -21,6 +21,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// FastCoOccur_rho_Rcpp
+std::vector<double> FastCoOccur_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores);
+RcppExport SEXP _phylosmith_FastCoOccur_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(FastCoOccur_rho_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // arrange_cooccurr_table
 Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp::CharacterVector taxa_of_interest);
 RcppExport SEXP _phylosmith_arrange_cooccurr_table(SEXP cooccurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
@@ -48,6 +63,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_phylosmith_FastCoOccur_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_Rcpp, 5},
+    {"_phylosmith_FastCoOccur_rho_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_rho_Rcpp, 5},
     {"_phylosmith_arrange_cooccurr_table", (DL_FUNC) &_phylosmith_arrange_cooccurr_table, 2},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}

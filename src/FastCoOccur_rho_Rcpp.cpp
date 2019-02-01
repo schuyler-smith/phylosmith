@@ -20,14 +20,13 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-Rcpp::DataFrame FastCoOccur_Rcpp(
+std::vector<double> FastCoOccur_rho_Rcpp(
 	Rcpp::NumericMatrix otu_table, 
 	Rcpp::List treatment_indices, 
 	Rcpp::StringVector treatment_names, 
 	double p_cutoff, 
 	const int ncores){
 
-	vector<string> taxa_names = Rcpp::as<vector <string> >(rownames(otu_table));
 	arma::mat rank_table = Rcpp::as<arma::mat>(clone(otu_table));
 	int n_treatments = treatment_names.length();
 	int n_taxa = otu_table.nrow();
@@ -37,11 +36,7 @@ Rcpp::DataFrame FastCoOccur_Rcpp(
 	int ties = 1;
 
 	// return vectors
-	vector<string> treatments;
-	vector<double> p_values;
 	vector<double> rho_values;
-	vector<string> taxa_1;
-	vector<string> taxa_2;
 
 	// bool has_ties;
 	// creating ranks
@@ -49,7 +44,6 @@ Rcpp::DataFrame FastCoOccur_Rcpp(
 		arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]); // vector of elements for each sample in this treatment
 		arma::mat treatment_matrix = rank_table.cols(treatment_columns); // subset the matrix to just those samples
 		int n_samples = treatment_columns.size();
-		// #pragma omp parallel for
 		for(int taxa=0; taxa<n_taxa; ++taxa){ // loop through all the taxa
 			arma::rowvec rank_vector = arma::zeros<arma::rowvec>(treatment_columns.size());
 			arma::rowvec taxa_abund = treatment_matrix.row(taxa);
@@ -84,7 +78,6 @@ Rcpp::DataFrame FastCoOccur_Rcpp(
 		int n_samples = treatment_columns.size();
 		#ifdef _OPENMP
 			#pragma omp parallel for num_threads(ncores)
-	  		// #pragma omp parallel for
 		#endif
 		for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 			if(!Progress::check_abort()){
@@ -94,10 +87,6 @@ Rcpp::DataFrame FastCoOccur_Rcpp(
 				double p_val;
 				arma::rowvec taxa2_ranks = treatment_matrix.row(taxa2);
 				if(arma::sum(taxa1_ranks) > 0 && arma::sum(taxa2_ranks) > 0){
-					// may add check for duplicate ranks, if none exist, can use below formula
-					// double rho = 1 - (6*arma::sum(arma::square(taxa1_ranks - taxa2_ranks))) / (n_samples*(pow(n_samples,2)-1));
-					// arma::mat matrho = arma::cov(taxa1_ranks, taxa2_ranks) / (arma::stddev(taxa1_ranks)*arma::stddev(taxa1_ranks));
-					// rho = arma::conv_to<double>::from(matrho);
 					vector<double> X = arma::conv_to<vector <double> >::from(taxa1_ranks);
 					vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
 					rho = pearsoncoeff(X, Y);
@@ -108,43 +97,18 @@ Rcpp::DataFrame FastCoOccur_Rcpp(
 					rho = 0; 
 					p_val = 1;
 				}
-				if(p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+				if(p_val <= p_cutoff){ 
 					#ifdef _OPENMP
 				  		#pragma omp critical
 					#endif
 					{
-						treatments.push_back(Rcpp::as<string> (treatment_names[trt]));
-						p_values.push_back(p_val);
 						rho_values.push_back(rho);
-						taxa_1.push_back(taxa_names[taxa1]);
-						taxa_2.push_back(taxa_names[taxa2]);
 					}
 				}
 			}	
 		}}
 	}
 
-return Rcpp::DataFrame::create(
-	Rcpp::Named("Treatment") = treatments,
-	Rcpp::Named("OTU_1") = taxa_1,
-	Rcpp::Named("OTU_2") = taxa_2,
-	Rcpp::Named("rho") = rho_values,
-	Rcpp::Named("p") = p_values
-	);
+return(rho_values);
 }
 
-
-// CHECK FOR TIED RANKS
-
-// for(int trt=0; trt<n_treatments; ++trt){
-// 	has_ties = false;
-// 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
-// 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
-// 	map<double, int> countMap;
-// 		arma::rowvec ranks = treatment_matrix.row(8);
-// 		for(auto & elem : ranks){
-// 			auto result = countMap.insert(pair<double, int>(elem, 1));
-// 			if(result.second == false){result.first->second++;}
-// 		}
-// 		for(auto & elem : countMap){if(elem.first != 0 && elem.second > 1){has_ties = true;}}
-// }

@@ -18,7 +18,7 @@ Imports:
     data.table,
     ggplot2,
     RColorBrewer,
-    vegan 
+    vegan
 Suggests:
     knitr,
     devtools,
