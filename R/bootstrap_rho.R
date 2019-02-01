@@ -7,7 +7,6 @@
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations Number of iterations to compute.
-#' @param p Significance cut-off for the mean rho values. If set to 0 (default) returns a vector of all permuted rho values.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.
 #' @param cooccur_p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
 #' @keywords nonparametric
@@ -24,7 +23,7 @@
 
 # sourceCpp('src/FastCoOccur_rho_Rcpp.cpp')
 
-bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0, cores = 0, cooccur_p = 0.05){
+bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, cores = 0, cooccur_p = 0.05){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0; cooccur_p = 0.05
   options(warnings=-1)
 
@@ -54,11 +53,11 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
   interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', length(rhos), ' permutations.'); return(rhos)})
 
   rhos <- unlist(rhos)
-  if(p == 0){
+  # if(p == 0){
     return(rhos)
-  } else {
-  return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
-}
+   } #else {
+#   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
+# }
 
 # start_time <- Sys.time()
 # for(indices in replicate_indices){
