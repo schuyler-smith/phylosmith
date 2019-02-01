@@ -2,7 +2,8 @@
 #'
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #' @useDynLib phylosmith
-#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, p = 0, cores = 0, cooccur_p = 0.05)
+#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000,
+#' cores = 0, cooccur_p = 0.05)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
@@ -58,6 +59,10 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
    } #else {
 #   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
 # }
+
+
+
+
 
 # start_time <- Sys.time()
 # for(indices in replicate_indices){

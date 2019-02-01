@@ -1,6 +1,6 @@
 #' pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.
 #'
-#' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
+#' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
 #' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
@@ -45,7 +45,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
  This could take ", required_memory, " GB of RAM, or more depending on the number of significant interactions.
  This machine has ", available_memory, " GB of RAM available.
  Recommend subsetting from ", n, " taxa to ",
-   floor(uniroot(memory_function, t=length(treatments), r=available_memory, lower=0, upper=1000000)$root), " if your systems gets stuck."
+   floor(stats::uniroot(memory_function, t=length(treatments), r=available_memory, lower=0, upper=1000000)$root), " if your systems gets stuck."
    )}
 
   if(cores == 0){cores <- parallel::detectCores()}

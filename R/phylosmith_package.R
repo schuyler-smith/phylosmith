@@ -7,7 +7,7 @@
 #'
 #' \code{\link{bootstrap_rho}} runs permutations of the otu_table to calculate a significant rho value
 #'
-#' \code{\link{concatenate_treatments}} combines multiple columns in meta-data into a single column
+#' \code{\link{combine_treatments}} combines multiple columns in meta-data into a single column
 #'
 #' \code{\link{curate_cooccurrence}} subsets the co-occurence table to specific taxa
 #'

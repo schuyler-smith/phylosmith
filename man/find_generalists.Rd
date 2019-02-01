@@ -4,7 +4,8 @@
 \alias{find_generalists}
 \title{Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.}
 \usage{
-find_generalists(phyloseq_obj, treatment = NULL, frequency = 0, subset = NULL, below = FALSE, drop_samples = FALSE)
+find_generalists(phyloseq_obj, treatment = NULL, frequency = 0,
+subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
@@ -28,8 +29,11 @@ find_generalists(mock_phyloseq, frequency = 0.3)
 find_generalists(mock_phyloseq, frequency = 0.3, treatment = "day")
 find_generalists(mock_phyloseq, frequency = 0.3, treatment = 3)
 find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
-find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "soil")
-find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = c("5","soil"))
-find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"), subset = "5.soil")
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+subset = "soil")
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+subset = c("5","soil"))
+find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+subset = "5.soil")
 }
 \keyword{manip}

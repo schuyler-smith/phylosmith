@@ -16,11 +16,11 @@ FastCoOccur_rho(phyloseq_obj, treatment, p = 0.05, cores = 0)
 \item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
 }
 \description{
-A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \link[=Rcpp]{Rcpp} API.
+A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 }
 \examples{
 data(mock_phyloseq)
-FastCoOccur_rho(mock_phyloseq, "day", 0.05)
+phylosmith:::FastCoOccur_rho(mock_phyloseq, "day", 0.05)
 }
 \seealso{
 \code{\link{bootstrap_rho}} \code{\link{phylosmith}}
