@@ -2,16 +2,14 @@
 % Please edit documentation in R/FastCoOccur_rho.R
 \name{FastCoOccur_rho}
 \alias{FastCoOccur_rho}
-\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.}
+\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.}
 \usage{
-FastCoOccur_rho(phyloseq_obj, treatment, p = 0.05, cores = 0)
+FastCoOccur_rho(phyloseq_obj, treatment, cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
 
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
-
-\item{p}{the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.}
 
 \item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
 }

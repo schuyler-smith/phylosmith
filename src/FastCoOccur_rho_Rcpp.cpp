@@ -23,8 +23,7 @@ using namespace std;
 std::vector<double> FastCoOccur_rho_Rcpp(
 	Rcpp::NumericMatrix otu_table, 
 	Rcpp::List treatment_indices, 
-	Rcpp::StringVector treatment_names, 
-	double p_cutoff, 
+	Rcpp::StringVector treatment_names,
 	const int ncores){
 
 	arma::mat rank_table = Rcpp::as<arma::mat>(clone(otu_table));
@@ -84,26 +83,19 @@ std::vector<double> FastCoOccur_rho_Rcpp(
 			arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
 			for(int taxa2=taxa1+1; taxa2<n_taxa; ++taxa2){
 				double rho;
-				double p_val;
 				arma::rowvec taxa2_ranks = treatment_matrix.row(taxa2);
 				if(arma::sum(taxa1_ranks) > 0 && arma::sum(taxa2_ranks) > 0){
 					vector<double> X = arma::conv_to<vector <double> >::from(taxa1_ranks);
 					vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
 					rho = pearsoncoeff(X, Y);
-					double t = rho * sqrt((n_samples-2)/(1 - rho*rho));
-	  				double df = n_samples - 2;
-	  				p_val = pvalue( t, df );
 				} else {
 					rho = 0; 
-					p_val = 1;
 				}
-				if(p_val <= p_cutoff){ 
-					#ifdef _OPENMP
-				  		#pragma omp critical
-					#endif
-					{
-						rho_values.push_back(rho);
-					}
+				#ifdef _OPENMP
+					#pragma omp critical
+				#endif
+				{
+					rho_values.push_back(rho);
 				}
 			}	
 		}}

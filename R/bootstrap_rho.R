@@ -2,14 +2,13 @@
 #'
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #' @useDynLib phylosmith
-#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000,
-#' cores = 0, cooccur_p = 0.05)
+#' @usage bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 100,
+#' cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param replicates Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations Number of iterations to compute.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.
-#' @param cooccur_p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
 #' @keywords nonparametric
 #' @import data.table
 #' @import phyloseq
@@ -24,8 +23,8 @@
 
 # sourceCpp('src/FastCoOccur_rho_Rcpp.cpp')
 
-bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 10000, cores = 0, cooccur_p = 0.05){
-  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0; cooccur_p = 0.05
+bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', permutations = 100, cores = 0){
+  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0;
   options(warnings=-1)
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
@@ -49,7 +48,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
     for(indices in replicate_indices){
       permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
     }
-	  rhos[[i]] <- FastCoOccur_rho(permuted_phyloseq_obj, treatment, p = cooccur_p, cores = cores)
+	  rhos[[i]] <- FastCoOccur_rho(permuted_phyloseq_obj, treatment, cores = cores)
   }},
   interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', length(rhos), ' permutations.'); return(rhos)})
 
@@ -68,7 +67,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
 # for(indices in replicate_indices){
 #   permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
 # }
-# rhos[1] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, p = cooccur_p, cores = cores)$rho)
+# rhos[1] <- mean(FastCoOccur(permuted_phyloseq_obj, treatment, cores = cores)$rho)
 # end_time <- Sys.time()
 # time_taken <- end_time - start_time
 # message('Allow up to ', round((time_taken*permutations)/360, 1), ' hours to complete these calculations.')

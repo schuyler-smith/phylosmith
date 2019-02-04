@@ -4,7 +4,7 @@
 \alias{nmds_phyloseq_ggplot}
 \title{Create a ggplot object of the NMDS from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Set2')
+nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Spectral')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
