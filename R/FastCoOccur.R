@@ -25,7 +25,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
 
-  phyloseq_obj <- find_generalists(phyloseq_obj, treatment = treatment)
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = ".")
 

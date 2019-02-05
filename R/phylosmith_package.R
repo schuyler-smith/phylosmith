@@ -11,7 +11,7 @@
 #'
 #' \code{\link{curate_cooccurrence}} subsets the co-occurence table to specific taxa
 #'
-#' \code{\link{find_generalists}} filter taxa by proportion of samples they are seen in
+#' \code{\link{taxa_filter}} filter taxa by proportion of samples they are seen in
 #'
 #' \code{\link{find_common_taxa}} find taxa common to each treatment
 #'

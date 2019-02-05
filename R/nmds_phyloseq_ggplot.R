@@ -14,7 +14,7 @@
 
 nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral"){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  phyloseq_obj <- find_generalists(phyloseq_obj, treatment, frequency = 0)
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
   getPalette = grDevices::colorRampPalette(brewer.pal(8, colors)); colorCount = 1 + length(unlist(unique(phyloseq_obj@sam_data[[treatment]]))); colors = getPalette(colorCount); theme_set(theme_bw())
 

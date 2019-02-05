@@ -2,7 +2,7 @@
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
 #' @useDynLib phylosmith
-#' @usage find_generalists(phyloseq_obj, treatment = NULL, frequency = 0,
+#' @usage taxa_filter(phyloseq_obj, treatment = NULL, frequency = 0,
 #' subset = NULL, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}. Function then checks if taxa seen frequency number of times in each treatment. If multiple \code{sample_data} columns are given, they will be appended to the \code{sample_data} as one column with '.' separating each.
@@ -16,18 +16,18 @@
 #' @export
 #' @examples
 #' data(mock_phyloseq)
-#' find_generalists(mock_phyloseq, frequency = 0.3)
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = "day")
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = 3)
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+#' taxa_filter(mock_phyloseq, frequency = 0.3)
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = "day")
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = 3)
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
 #' subset = "soil")
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
 #' subset = c("5","soil"))
-#' find_generalists(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
+#' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
 #' subset = "5.soil")
 
-find_generalists <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = NULL, below = FALSE, drop_samples = FALSE){
+taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = NULL, below = FALSE, drop_samples = FALSE){
   # data("mock_phyloseq")
   # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
   if(!(is.null(treatment))){
