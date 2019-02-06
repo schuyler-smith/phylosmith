@@ -61,7 +61,7 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
 #' find_common_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 
 find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
-  #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"
+  #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"; n = 2
 
   phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
@@ -78,11 +78,11 @@ find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
 
   taxa_counts <- table(unlist(seen_taxa))
   if(n != 'all'){
-    if(!(is.integer(n))){
+    if(!(is.numeric(n))){
       message("n must be an integer.")
       return(NA)
     }
-    shared_taxa <- names(taxa_counts[taxa_counts == n])
+    shared_taxa <- names(taxa_counts[taxa_counts == round(n)])
   } else {
     shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])
   }
