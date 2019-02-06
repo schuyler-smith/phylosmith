@@ -46,10 +46,11 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
 #'
 #' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 #' @useDynLib phylosmith
-#' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL)
+#' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').
+#' @param n Number of treatment groups that need to share the taxa.
 #' @keywords manip
 #' @export
 #' @import phyloseq
@@ -59,7 +60,7 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
 #' find_common_taxa(mock_phyloseq, treatment = 2)
 #' find_common_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 
-find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL){
+find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
   #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"
 
   phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
@@ -76,7 +77,14 @@ find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   }); names(seen_taxa) <- treatments
 
   taxa_counts <- table(unlist(seen_taxa))
-  shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])
-
+  if(n != 'all'){
+    if(!(is.integer(n))){
+      message("n must be an integer.")
+      return(NA)
+    }
+    shared_taxa <- names(taxa_counts[taxa_counts == n])
+  } else {
+    shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])
+  }
   return(shared_taxa)
 }

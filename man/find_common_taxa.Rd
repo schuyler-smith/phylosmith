@@ -4,7 +4,7 @@
 \alias{find_common_taxa}
 \title{Find taxa shared between treatments of a phyloseq object. Function from the phylosmith-package.}
 \usage{
-find_common_taxa(phyloseq_obj, treatment, subset = NULL)
+find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -12,6 +12,8 @@ find_common_taxa(phyloseq_obj, treatment, subset = NULL)
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{subset}{Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').}
+
+\item{n}{Number of treatment groups that need to share the taxa.}
 }
 \description{
 Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
