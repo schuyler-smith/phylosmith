@@ -39,6 +39,7 @@ merge_asvs       | combine ASVs to lowest common biological sequence
 nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
 relative_abundance | transform abundance data to relative abundance
 taxa_filter | filter taxa by proportion of samples seen in
+tsne_phyloseq_ggplot  | create a ggplot object of the t-SNE from a phyloseq object
 
 ## Data
 

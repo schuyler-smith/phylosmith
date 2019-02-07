@@ -1,6 +1,6 @@
 Package: phylosmith
 Title: Various functions to help analyze phyloseq data
-Version: 1.2
+Version: 1.3
 Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for phyloseq objects.
@@ -18,7 +18,8 @@ Imports:
     data.table,
     ggplot2,
     RColorBrewer,
-    vegan
+    vegan,
+    Rtsne
 Suggests:
     knitr,
     devtools,
