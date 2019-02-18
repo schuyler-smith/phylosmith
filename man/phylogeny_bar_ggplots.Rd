@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 phylogeny_bar_ggplots(phyloseq_obj, classification_level, treatment, subset = NULL,
-relative_abundance = TRUE, colors = "Spectral")
+merge = TRUE, relative_abundance = TRUE, colors = "Spectral")
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -15,6 +15,8 @@ relative_abundance = TRUE, colors = "Spectral")
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{subset}{If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.}
+
+\item{merge}{if TRUE, does not show separation of individuals within each \code{classification_level}. FALSE separates with black lines.}
 
 \item{relative_abundance}{If TRUE, transforms the abundance data into relative abundance by sample.}
 
