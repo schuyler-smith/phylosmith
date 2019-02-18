@@ -138,11 +138,12 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 
 phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = TRUE, colors = "Spectral"){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(relative_abundance == TRUE){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment <- paste(treatment, collapse = '.')
 
-  graph_data <- tax_glom(phyloseq_obj, taxrank = "ARG_Class")
+  graph_data <- tax_glom(phyloseq_obj, taxrank = classification_level)
   graph_data <- phyloseq(graph_data@otu_table, graph_data@tax_table[,classification_level], graph_data@sam_data[,treatment])
   graph_data <- data.table(psmelt(graph_data))
 
@@ -159,6 +160,7 @@ phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment,
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_fill_manual(values=graph_colors)
+    if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
 
   return(p)
 }
