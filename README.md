@@ -25,6 +25,7 @@ find_common_taxa | find taxa common to each treatment
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
 nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
+phylogeny_bar_ggplots | create a ggplot barplot object of the compositons of each sample at a taxonomic level
 relative_abundance | transform abundance data to relative abundance
 taxa_filter | filter taxa by proportion of samples seen in
 tsne_phyloseq_ggplot  | create a ggplot object of the t-SNE from a phyloseq object
