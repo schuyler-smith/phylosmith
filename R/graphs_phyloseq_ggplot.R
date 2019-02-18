@@ -17,13 +17,20 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
-  getPalette = grDevices::colorRampPalette(brewer.pal(8, colors)); colorCount = 1 + length(unlist(unique(phyloseq_obj@sam_data[[treatment]]))); colors = getPalette(colorCount); theme_set(theme_bw())
 
   MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k=3, trymax=100)
   # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
   # stressplot(MDS)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
+  colorCount = 1 + length(unique(Treatment))
+  if(any(!(colors %in% grDevices::colors()))){
+    if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
+      getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
+    } else { getPalette <- grDevices::colorRampPalette(colors)}
+  } else { getPalette <- grDevices::colorRampPalette(colors)}
+  graph_colors = getPalette(colorCount)
+
   NMDS1 <- data.table(scores(MDS))$NMDS1
   NMDS2 <- data.table(scores(MDS))$NMDS2
   NMDS <- data.table(NMDS1,NMDS2,Treatment)
@@ -56,7 +63,8 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, colors = 'Spectral', circle = TRUE)
+#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
+#' colors = 'Spectral', circle = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
@@ -64,25 +72,27 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
 #' @param circle If TRUE, add elipses around each treatment.
 #' @import phyloseq
 #' @import ggplot2
-#' @import RColorBrewer
 #' @import vegan
 #' @import Rtsne
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 
 tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colors = "Spectral", circle = TRUE){
-  if (is.numeric(treatment)) {
-    treatment <- colnames(phyloseq_obj@sam_data[, treatment])
-  }
+  if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = ".")
-  getPalette = grDevices::colorRampPalette(brewer.pal(8, colors))
-  colorCount = 1 + length(unlist(unique(phyloseq_obj@sam_data[[treatment]])))
-  colors = getPalette(colorCount)
 
   tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity=perplexity)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
+  colorCount = 1 + length(unique(Treatment))
+  if(any(!(colors %in% grDevices::colors()))){
+    if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
+      getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
+    } else { getPalette <- grDevices::colorRampPalette(colors)}
+  } else { getPalette <- grDevices::colorRampPalette(colors)}
+  graph_colors = getPalette(colorCount)
+
   tsne1 <- tsne$Y[,1]
   tsne2 <- tsne$Y[,2]
   ord <- data.table(tsne1, tsne2, Treatment)
@@ -109,5 +119,47 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
   return(p)
 }
 
+#' Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.
+#'
+#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
+#' @useDynLib phylosmith
+#' @usage phylogeny_bar_ggplots(phyloseq_obj, classification_level, treatment, subset = NULL,
+#' relative_abundance = TRUE, colors = "Spectral")
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
+#' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
+#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
+#' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
+#' @import phyloseq
+#' @import ggplot2
+#' @import RColorBrewer
+#' @export
 
+phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = TRUE, colors = "Spectral"){
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
+  if(relative_abundance == TRUE){phyloseq_obj <- relative_abundance(phyloseq_obj)}
+  treatment <- paste(treatment, collapse = '.')
+
+  graph_data <- tax_glom(phyloseq_obj, taxrank = "ARG_Class")
+  graph_data <- phyloseq(graph_data@otu_table, graph_data@tax_table[,classification_level], graph_data@sam_data[,treatment])
+  graph_data <- data.table(psmelt(graph_data))
+
+  colorCount = length(unique(phyloseq_obj@tax_table[,classification_level]))
+  if(any(!(colors %in% grDevices::colors()))){
+    if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
+      getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
+    } else { getPalette <- grDevices::colorRampPalette(colors)}
+  } else { getPalette <- grDevices::colorRampPalette(colors)}
+  graph_colors = getPalette(colorCount)
+
+  p = ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification_level)) +
+    geom_bar(stat = "identity", position = "stack", color = "black") +
+    theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
+    facet_grid(treatment, scales = "free", space = "free") +
+    scale_fill_manual(values=graph_colors)
+
+  return(p)
+}
 

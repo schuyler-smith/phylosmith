@@ -13,7 +13,6 @@
 #' @keywords manip
 #' @import data.table
 #' @import phyloseq
-#' @export
 #' @examples
 #' data(mock_phyloseq)
 #' taxa_filter(mock_phyloseq, frequency = 0.3)
@@ -26,6 +25,7 @@
 #' subset = c("5","soil"))
 #' taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
 #' subset = "5.soil")
+#' @export
 
 taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = NULL, below = FALSE, drop_samples = FALSE){
   # data("mock_phyloseq")
@@ -72,5 +72,59 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
   if(drop_samples == TRUE){
     phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
   }
+  return(phyloseq_obj)
+}
+
+
+#' Combine meta-data columns. Function from the phylosmith-package.
+#'
+#' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
+#' @useDynLib phylosmith
+#' @usage combine_treatments(phyloseq_obj, treatments, sep = '.')
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param treatments A vector of column names or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param sep Delimiter to separate the treatments.
+#' @keywords manip
+#' @import data.table
+#' @import phyloseq
+#' @examples
+#' data(mock_phyloseq)
+#' combine_treatments(mock_phyloseq, treatments = c("treatment", "day"))@sam_data
+#' combine_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')@sam_data
+#' @export
+
+combine_treatments <- function(phyloseq_obj, treatments, sep = '.'){
+  # data("mock_phyloseq")
+  # phyloseq_obj = mock_phyloseq; sep='.'; treatments = c("treatment", "day");
+  if(!(is.null(treatments))){
+    if(is.numeric(treatments)){treatments <- colnames(phyloseq_obj@sam_data[,treatments])}
+
+    Treatment_Groups <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
+    treatment_name <- paste(treatments, collapse = sep)
+    eval(parse(text=paste0("Treatment_Groups[, '",treatment_name,"' := as.character(paste(", paste(treatments, collapse = ", "), ", sep = '",sep,"'), by = Treatment_Groups)]")))
+    phyloseq_obj@sam_data[[treatment_name]] <- Treatment_Groups[[treatment_name]]
+  }
+  return(phyloseq_obj)
+}
+
+
+#' Transform abundance data in an \code{otu_table} to relative abundance, sample-by-sample. Function from the phylosmith-package.
+#'
+#' Transform abundance data into relative abundance, i.e. proportional data. This is an alternative method of normalization and may not be appropriate for all datasets, particularly if your sequencing depth varies between samples.
+#' @useDynLib phylosmith
+#' @usage relative_abundance(phyloseq_obj)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @keywords manip
+#' @import phyloseq
+#' @import RcppArmadillo
+#' @import RcppParallel
+#' @examples
+#' data(mock_phyloseq)
+#' relative_abundance(mock_phyloseq)
+#' @export
+
+relative_abundance <- function(phyloseq_obj){
+  options(warnings=-1)
+  phyloseq_obj <- transform_sample_counts(phyloseq_obj, function(sample) sample/sum(sample))
   return(phyloseq_obj)
 }
