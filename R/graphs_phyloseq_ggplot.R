@@ -54,7 +54,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
           legend.background = element_rect(fill=(alpha = 0))
     )
   if(circle == TRUE){
-    p <- p + stat_ellipse(geom="polygon", type="norm", size=.6, linetype = 1, alpha=0.0, aes(fill=ord$Treatment))
+    p <- p + stat_ellipse(geom="polygon", type="norm", size=.6, linetype = 1, alpha=0.0, aes(fill=NMDS.narm$Treatment))
   }
   return(p)
 }
