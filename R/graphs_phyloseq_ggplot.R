@@ -23,7 +23,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
   # stressplot(MDS)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
-  colorCount = 1 + length(unique(Treatment))
+  colorCount = length(unique(Treatment))
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
       getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
@@ -85,7 +85,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
   tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
-  colorCount = 1 + length(unique(Treatment))
+  colorCount = length(unique(Treatment))
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
       getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
