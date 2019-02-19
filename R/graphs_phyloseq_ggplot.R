@@ -157,11 +157,12 @@ phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment,
   graph_colors = getPalette(colorCount)
 
   p <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification_level)) +
-    geom_bar(stat = "identity", position = "stack", color = "black", size = 0.12) +
+    theme_minimal() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
-  if(merge == TRUE){p <- p + eval(parse(text=paste0("geom_bar(aes(color = ", classification_level, ", fill = ", classification_level, "), stat = 'identity', position = 'stack', size = 0.13)")))}
+  if(merge == TRUE){p <- p + eval(parse(text=paste0("geom_bar(aes(color = ", classification_level, ", fill = ", classification_level, "), stat = 'identity', position = 'stack', size = 0.2)")))
+  } else {p <- p + geom_bar(stat = "identity", position = "stack", size = 0.12, color = 'black')}
   if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
 
   return(p)
