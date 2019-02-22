@@ -1,13 +1,13 @@
-#' classify_ARG_class
+#' classify_ARG_classes
 #'
 #' Classifies ARGs from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
-#' @usage classify_ARG_genes(phyloseq_obj, genes, obo = NULL)
+#' @usage classify_ARG_classes(phyloseq_obj, genes, obo = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
 #' @param obo an object processed with \code{\link{processOBO}}.
 #' @import stringr
 
-classify_ARG_class <- function(phyloseq_obj, genes, obo = NULL){
+classify_ARG_classes <- function(phyloseq_obj, genes, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
   if(!(is.null(obo))){CARD <- obo}
   genes <- data.frame(phyloseq_obj@tax_table[,genes], stringsAsFactors = FALSE)
