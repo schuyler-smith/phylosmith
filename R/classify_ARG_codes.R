@@ -148,9 +148,5 @@ processOBO <- function(OBO_filepath){
 
 # OBO_filepath <- '~/Downloads/card-ontology/aro.obo'
 # CARD <- processOBO(OBO_filepath)
-# test <- readRDS('~/Dropbox/Co-occur_ARGs/data/arg_phy_updated.RDS')
-# classify_ARG_mechanism(test)
-#
-# unique(classify_ARG_genes(test))
 # save(CARD, file = 'R/sysdata.rda')
 
