@@ -1,24 +1,28 @@
 #' classify_ARG_classes
 #'
 #' Classifies ARGs from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
-#' @usage classify_ARG_classes(phyloseq_obj, genes, obo = NULL)
+#' @usage classify_ARG_classes(phyloseq_obj, genes, combine = 1, obo = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
+#' @param combine The number of Classes a gene must belong to to be set to 'Multiple_Resistance'.
 #' @param obo an object processed with \code{\link{processOBO}}.
 #' @import stringr
 
-classify_ARG_classes <- function(phyloseq_obj, genes, obo = NULL){
+classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
   if(!(is.null(obo))){CARD <- obo}
   genes <- data.frame(phyloseq_obj@tax_table[,genes], stringsAsFactors = FALSE)
   ARG_Class <- unlist(unname(apply(genes,1,FUN = function(gene){
     if(gene %in% CARD$ID){
-      if(is.na(CARD$Resistance[gene])){return('Unclassified')}
-      return(CARD$Resistance[gene])
+      if(is.na(CARD$Resistance[gene])){res <- 'Unclassified'
+      } else {res <- CARD$Resistance[gene]}
     } else if(gene %in% CARD$Name){gene <- CARD$ID[which(CARD$Name %in% gene)]
-      if(is.na(CARD$Resistance[gene])){return('Unclassified')}
-      return(CARD$Resistance[gene])
-    } else {return('Unclassified')}
+      if(is.na(CARD$Resistance[gene])){res <- 'Unclassified'
+      } else {res <- CARD$Resistance[gene]}
+    } else {res <- 'Unclassified'}
+    if(combine == 0 | combine == 1){return(res)}
+    if(length(str_split(res, ', ')[[1]]) >= combine){res <- 'Multiple_Resistance'}
+    return(res)
   })))
   phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, ARG_Class))
   return(phyloseq_obj)
@@ -62,7 +66,8 @@ processOBO <- function(OBO_filepath){
   OBO <- list()
   while(TRUE){
     line <- readLines(con, n = 1)
-    if (length(line) == 0){break}
+    if(length(line) == 0){break}
+    if(line == '[Typedef]'){break}
     if(length(grep('id: ARO', line)) > 0){
       ID <- str_split(line, ': ')[[1]][2]
       OBO$ID[ID] <- ID
@@ -72,12 +77,12 @@ processOBO <- function(OBO_filepath){
       OBO$Mechanism[ID] <- NA
       res <- NULL}
     if(length(grep('name: ', line)) > 0){
-      name <- str_split(line, ': ')[[1]][2]
+      name <- str_to_title(gsub(' antibiotic', '', str_split(line, ': ')[[1]][2]))
       OBO$Name[ID] <- name}
 
     if(length(grep('confers_resistance_to', line)) > 0){
-      res <- c(res, str_split(line, '! ')[[1]][2])
-      OBO$Resistance[ID] <- gsub(' Antibiotic', '', str_to_title(paste(res, collapse = ', ')))}
+      res <- c(res, str_split(line, ' ')[[1]][3])
+      OBO$Resistance[ID] <- paste(res, collapse = ', ')}
 
     if(length(grep('is_a:', line)) > 0){
       if(is.na(OBO$is_a[ID])){OBO$is_a[ID] <- str_split(str_split(line, ' ! ')[[1]][1], ': ')[[1]][2]}}
@@ -93,36 +98,57 @@ processOBO <- function(OBO_filepath){
     res <- OBO$Resistance[gene]
     part_of <- OBO$part_of[gene]
     is_a <- OBO$is_a[gene]
-    for(j in 1:6){
-      if(!(is.na(OBO$Resistance[part_of])) & is.na(res)){
-        OBO$Resistance[gene] <- OBO$Resistance[part_of]}
-      if(!(is.na(OBO$Resistance[is_a])) & is.na(res)){
-        OBO$Resistance[gene] <- OBO$Resistance[is_a]}
-      if(is.na(res)){
-        part_of <- OBO$part_of[part_of]
-        is_a <- OBO$is_a[is_a]}
-      if(!(is.na(OBO$Resistance[gene]))){break}
+    if(is.na(res)){
+      for(j in 1:6){
+        if(!(is.na(OBO$Resistance[part_of]))){
+          res <- OBO$Resistance[part_of]}
+        if(!(is.na(OBO$Resistance[is_a]))){
+          res <- OBO$Resistance[is_a]}
+        if(is.na(res)){
+          part_of <- OBO$part_of[part_of]
+          is_a <- OBO$is_a[is_a]}
+        if(!(is.na(res))){break}
+      }
     }
+    ##removing this return specific resistance, instead of highest macro class
+    if(is.na(res) | res == 'Undefined'){res <- 'Undefined'
+    } else {res <- paste(unique(sapply(str_split(res, ', ')[[1]], FUN = function(class){
+      while(TRUE){
+        is_a <- OBO$is_a[class]
+        if(is_a != 'ARO:1000003'){class <- is_a
+        } else {break}}
+      return(class)
+      })), collapse = ', ')
+    }
+    OBO$Resistance[gene] <- res
     mech <- OBO$Mechanism[gene]
     part_of <- OBO$part_of[gene]
     is_a <- OBO$is_a[gene]
-    for(j in 1:10){
-      if(!(is.na(OBO$Mechanism[part_of])) & is.na(mech)){
-        OBO$Mechanism[gene] <- OBO$Mechanism[part_of]}
-      if(!(is.na(OBO$Mechanism[is_a])) & is.na(mech)){
-        OBO$Mechanism[gene] <- OBO$Mechanism[is_a]}
-      if(is.na(mech)){
-        part_of <- OBO$part_of[part_of]
-        is_a <- OBO$is_a[is_a]}
-      if(!(is.na(OBO$Mechanism[gene]))){break}
+    if(is.na(mech)){
+      for(j in 1:10){
+        if(!(is.na(OBO$Mechanism[part_of]))){
+          mech <- OBO$Mechanism[part_of]}
+        if(!(is.na(OBO$Mechanism[is_a]))){
+          mech <- OBO$Mechanism[is_a]}
+        if(is.na(mech)){
+          part_of <- OBO$part_of[part_of]
+          is_a <- OBO$is_a[is_a]}
+        if(!(is.na(mech))){break}
+      }
+      OBO$Mechanism[gene] <- mech
     }
+  }
+  for(i in 1:length(OBO$Resistance)){
+    OBO$Resistance[i] <- paste(sapply(str_split(OBO$Resistance[i], ', ')[[1]], FUN = function(id){
+      return(OBO$Name[id])
+    }), collapse = ', ')
   }
   return(OBO)
 }
 
 # OBO_filepath <- '~/Downloads/card-ontology/aro.obo'
 # CARD <- processOBO(OBO_filepath)
-# test <- readRDS('~/Dropbox/Co-occur_ARGs/data/arg_phy_updated.RDS')@tax_table[,4]
+# test <- readRDS('~/Dropbox/Co-occur_ARGs/data/arg_phy_updated.RDS')
 # classify_ARG_mechanism(test)
 #
 # unique(classify_ARG_genes(test))
