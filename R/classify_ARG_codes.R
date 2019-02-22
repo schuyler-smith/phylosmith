@@ -104,21 +104,23 @@ processOBO <- function(OBO_filepath){
           res <- OBO$Resistance[part_of]}
         if(!(is.na(OBO$Resistance[is_a]))){
           res <- OBO$Resistance[is_a]}
+          OBO$Resistance[gene] <- res
         if(is.na(res)){
-          part_of <- OBO$part_of[part_of]
           is_a <- OBO$is_a[is_a]}
         if(!(is.na(res))){break}
       }
     }
     ##removing this return specific resistance, instead of highest macro class
-    if(is.na(res) | res == 'Undefined'){res <- 'Undefined'
-    } else {res <- paste(unique(sapply(str_split(res, ', ')[[1]], FUN = function(class){
-      while(TRUE){
-        is_a <- OBO$is_a[class]
-        if(is_a != 'ARO:1000003'){class <- is_a
-        } else {break}}
-      return(class)
-      })), collapse = ', ')
+    if(!(is.na(res))){
+      if(res != 'Undefined'){
+        res <- paste(unique(sapply(str_split(res, ', ')[[1]], FUN = function(class){
+          while(TRUE){
+            is_a <- OBO$is_a[class]
+            if(is_a != 'ARO:1000003'){class <- is_a
+            } else {break}}
+          return(class)
+        })), collapse = ', ')
+      }
     }
     OBO$Resistance[gene] <- res
     mech <- OBO$Mechanism[gene]
