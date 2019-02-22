@@ -7,6 +7,7 @@
 #' @param combine The number of Classes a gene must belong to to be set to 'Multiple_Resistance'.
 #' @param obo an object processed with \code{\link{processOBO}}.
 #' @import stringr
+#' @import data.table
 
 classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
@@ -24,7 +25,9 @@ classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
     if(length(str_split(res, ', ')[[1]]) >= combine){res <- 'Multiple_Resistance'}
     return(res)
   })))
-  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, ARG_Class))
+  tax_tab <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
+  tax_tab[, ARG_Class := ARG_Class]
+  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab))
   return(phyloseq_obj)
 }
 
@@ -36,6 +39,7 @@ classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
 #' @param obo an object processed with \code{\link{processOBO}}.
 #' @import stringr
+#' @import data.table
 
 classify_ARG_mechanisms <- function(phyloseq_obj, genes, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
@@ -50,7 +54,9 @@ classify_ARG_mechanisms <- function(phyloseq_obj, genes, obo = NULL){
     return(CARD$Mechanism[gene])
     } else {return('Unclassified')}
   })))
-  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, ARG_Mechanism))
+  tax_tab <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
+  tax_tab[, ARG_Mechanism := ARG_Mechanism]
+  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab))
   return(phyloseq_obj)
 }
 
