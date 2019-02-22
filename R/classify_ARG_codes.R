@@ -27,7 +27,7 @@ classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
   })))
   tax_tab <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
   tax_tab[, ARG_Class := ARG_Class]
-  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab))
+  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab, rownames = 1))
   return(phyloseq_obj)
 }
 
@@ -56,7 +56,7 @@ classify_ARG_mechanisms <- function(phyloseq_obj, genes, obo = NULL){
   })))
   tax_tab <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
   tax_tab[, ARG_Mechanism := ARG_Mechanism]
-  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab))
+  phyloseq_obj@tax_table <- tax_table(as.matrix(tax_tab, rownames = 1))
   return(phyloseq_obj)
 }
 
