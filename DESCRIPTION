@@ -19,7 +19,8 @@ Imports:
     ggplot2,
     RColorBrewer,
     vegan,
-    Rtsne
+    Rtsne,
+    stringr
 Suggests:
     knitr,
     devtools,
