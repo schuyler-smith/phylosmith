@@ -104,8 +104,8 @@ processOBO <- function(OBO_filepath){
           res <- OBO$Resistance[part_of]}
         if(!(is.na(OBO$Resistance[is_a]))){
           res <- OBO$Resistance[is_a]}
-          OBO$Resistance[gene] <- res
         if(is.na(res)){
+          part_of <- OBO$part_of[part_of]
           is_a <- OBO$is_a[is_a]}
         if(!(is.na(res))){break}
       }
@@ -141,9 +141,11 @@ processOBO <- function(OBO_filepath){
     }
   }
   for(i in 1:length(OBO$Resistance)){
-    OBO$Resistance[i] <- paste(sapply(str_split(OBO$Resistance[i], ', ')[[1]], FUN = function(id){
+    if(is.na(OBO$Resistance[i])){OBO$Resistance[i] <- 'Undefined'
+    } else{OBO$Resistance[i] <- paste(sapply(str_split(OBO$Resistance[i], ', ')[[1]], FUN = function(id){
       return(OBO$Name[id])
     }), collapse = ', ')
+    }
   }
   return(OBO)
 }
