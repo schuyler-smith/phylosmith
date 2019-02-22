@@ -11,7 +11,7 @@ classify_ARG_genes <- function(phyloseq_obj, genes, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
   if(!(is.null(obo))){CARD <- obo}
   genes <- data.frame(phyloseq_obj@tax_table[,genes], stringsAsFactors = FALSE)
-  classified_genes <- unlist(unname(apply(genes,1,FUN = function(gene){
+  ARG_Class <- unlist(unname(apply(genes,1,FUN = function(gene){
     if(gene %in% CARD$ID){
       if(is.na(CARD$Resistance[gene])){return('Unclassified')}
       return(CARD$Resistance[gene])
@@ -20,7 +20,7 @@ classify_ARG_genes <- function(phyloseq_obj, genes, obo = NULL){
       return(CARD$Resistance[gene])
     } else {return('Unclassified')}
   })))
-  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, classified_genes))
+  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, ARG_Class))
   return(phyloseq_obj)
 }
 
@@ -37,7 +37,7 @@ classify_ARG_mechanisms <- function(phyloseq_obj, genes, obo = NULL){
   if(is.numeric(genes)){genes <- colnames(phyloseq_obj@tax_table[,genes])}
   if(!(is.null(obo))){CARD <- obo}
   genes <- data.frame(phyloseq_obj@tax_table[,genes], stringsAsFactors = FALSE)
-  classified_genes <- unlist(unname(apply(genes,1,FUN = function(gene){
+  ARG_Mechanism <- unlist(unname(apply(genes,1,FUN = function(gene){
     if(gene %in% CARD$ID){
       if(is.na(CARD$Mechanism[gene])){return('Unclassified')}
       return(CARD$Mechanism[gene])
@@ -46,7 +46,7 @@ classify_ARG_mechanisms <- function(phyloseq_obj, genes, obo = NULL){
     return(CARD$Mechanism[gene])
     } else {return('Unclassified')}
   })))
-  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, classified_genes))
+  phyloseq_obj@tax_table <- tax_table(cbind(phyloseq_obj@tax_table, ARG_Mechanism))
   return(phyloseq_obj)
 }
 
