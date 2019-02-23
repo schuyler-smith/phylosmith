@@ -1,7 +1,7 @@
 #' classify_ARG_classes
 #'
 #' Classifies ARGs from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
-#' @usage classify_ARG_classes(phyloseq_obj, genes, combine = 1, obo = NULL)
+#' @usage classify_ARG_classes(phyloseq_obj, genes, combine = 0, obo = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
 #' @param combine The number of Classes a gene must belong to to be set to 'Multiple_Resistance'.

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Schuyler D. smith" />
 
-<meta name="date" content="2019-02-01" />
+<meta name="date" content="2019-02-22" />
 
 <title>phylosmith</title>
 
@@ -92,13 +92,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">phylosmith</h1>
 <h4 class="author"><em>Schuyler D. smith</em></h4>
-<h4 class="date"><em>2019-02-01</em></h4>
+<h4 class="date"><em>2019-02-22</em></h4>
 
 
 
-<div id="phylosmith-description" class="section level2">
-<h2><code>phylosmith</code> description</h2>
-<p>phylosmith is a conglomeration of functions written to process and analyze phyloseq-class objects.</p>
+<div id="what-phylosmith-is-for" class="section level2">
+<h2>What <code>phylosmith</code> is for</h2>
+<p><code>phylosmith</code> is a conglomeration of functions written to process and analyze <code>phyloseq-class</code> objects. <code>phyloseq</code> can be used for anything that has an abundance table with associated metadata, such as microbiome or gene expression data.</p>
+<p>A lot of these functions are just to make “data-wrangling” easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -138,28 +139,36 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td>subsets the co-occurence table to specific taxa</td>
 </tr>
 <tr class="odd">
-<td>find_generalists</td>
-<td>filter taxa by proportion of samples seen in</td>
-</tr>
-<tr class="even">
 <td>find_common_taxa</td>
 <td>find taxa common to each treatment</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>find_unique_taxa</td>
 <td>find taxa unique to each treatment</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>merge_asvs</td>
 <td>combine ASVs to lowest common biological sequence</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>nmds_phyloseq_ggplot</td>
 <td>create a ggplot object of the NMDS from a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td>phylogeny_bar_ggplots</td>
+<td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
 </tr>
 <tr class="even">
 <td>relative_abundance</td>
 <td>transform abundance data to relative abundance</td>
+</tr>
+<tr class="odd">
+<td>taxa_filter</td>
+<td>filter taxa by proportion of samples seen in</td>
+</tr>
+<tr class="even">
+<td>tsne_phyloseq_ggplot</td>
+<td>create a ggplot object of the t-SNE from a phyloseq object</td>
 </tr>
 </tbody>
 </table>
@@ -167,6 +176,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="data" class="section level2">
 <h2>Data</h2>
 <p><code>phylosmith</code> includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.</p>
+<div id="fastcooccur" class="section level3">
+<h3>FastCoOccur</h3>
+<p>This function is an implementation of the pair-wise Spearman rank correlation that you can call in <code>R</code>. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank">FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank">Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank">Rcpp</a> API, so that it could be called within R.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mock_phyloseq)
+<span class="kw">FastCoOccur</span>(mock_phyloseq, <span class="st">&quot;day&quot;</span>, <span class="fl">0.05</span>)</code></pre></div>
+</div>
 </div>
 
 

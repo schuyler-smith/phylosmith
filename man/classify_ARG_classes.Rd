@@ -4,7 +4,7 @@
 \alias{classify_ARG_classes}
 \title{classify_ARG_classes}
 \usage{
-classify_ARG_classes(phyloseq_obj, genes, combine = 1, obo = NULL)
+classify_ARG_classes(phyloseq_obj, genes, combine = 0, obo = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
