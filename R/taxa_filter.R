@@ -12,7 +12,6 @@
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency.
 #' @keywords manip
 #' @import data.table
-#' @import phyloseq
 #' @examples
 #' data(mock_phyloseq)
 #' taxa_filter(mock_phyloseq, frequency = 0.3)
@@ -86,7 +85,6 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
 #' @param sep Delimiter to separate the treatments.
 #' @keywords manip
 #' @import data.table
-#' @import phyloseq
 #' @examples
 #' data(mock_phyloseq)
 #' combine_treatments(mock_phyloseq, treatments = c("treatment", "day"))@sam_data
@@ -101,8 +99,9 @@ combine_treatments <- function(phyloseq_obj, treatments, sep = '.'){
 
     Treatment_Groups <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
     treatment_name <- paste(treatments, collapse = sep)
-    eval(parse(text=paste0("Treatment_Groups[, '",treatment_name,"' := as.character(paste(", paste(treatments, collapse = ", "), ", sep = '",sep,"'), by = Treatment_Groups)]")))
-    phyloseq_obj@sam_data[[treatment_name]] <- Treatment_Groups[[treatment_name]]
+    order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(phyloseq_obj@sam_data[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = '.')})
+    eval(parse(text=paste0("Treatment_Groups[, '",treatment_name,"' := as.character(paste(", paste(treatments, collapse = ", "), ", sep = '", sep, "'), by = Treatment_Groups)]")))
+    phyloseq_obj@sam_data[[treatment_name]] <- factor(Treatment_Groups[[treatment_name]], levels = order)
   }
   return(phyloseq_obj)
 }
@@ -115,9 +114,6 @@ combine_treatments <- function(phyloseq_obj, treatments, sep = '.'){
 #' @usage relative_abundance(phyloseq_obj)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @keywords manip
-#' @import phyloseq
-#' @import RcppArmadillo
-#' @import RcppParallel
 #' @examples
 #' data(mock_phyloseq)
 #' relative_abundance(mock_phyloseq)
@@ -128,3 +124,25 @@ relative_abundance <- function(phyloseq_obj){
   phyloseq_obj <- transform_sample_counts(phyloseq_obj, function(sample) sample/sum(sample))
   return(phyloseq_obj)
 }
+
+
+#' order_phyloseq_metadata
+#'
+#' Reorders the levels of a metadata column in a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @useDynLib phylosmith
+#' @usage order_phyloseq_metadata(phyloseq_obj, treatment, order)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param treatment Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param order The order of rank for the variables in \code{treatment} column.
+#' @keywords manip
+#' @import data.table
+#' @export
+#'
+
+order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
+  return(phyloseq_obj)
+}
+
+

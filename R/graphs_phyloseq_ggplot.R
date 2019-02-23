@@ -7,7 +7,6 @@
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
 #' @param circle If TRUE, add elipses around each treatment.
-#' @import phyloseq
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import vegan
@@ -70,7 +69,6 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
 #' @param colors Name of a color set from the \code{\link[=RColorBrewer]{RColorBrewer}} package.
 #' @param circle If TRUE, add elipses around each treatment.
-#' @import phyloseq
 #' @import ggplot2
 #' @import vegan
 #' @import Rtsne
@@ -132,7 +130,6 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 #' @param merge if TRUE, does not show separation of individuals within each \code{classification_level}. FALSE separates with black lines.
 #' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
-#' @import phyloseq
 #' @import ggplot2
 #' @import RColorBrewer
 #' @export
