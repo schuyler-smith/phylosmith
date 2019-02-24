@@ -135,6 +135,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 #' @export
 
 phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = "Spectral"){
+
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
@@ -154,7 +155,7 @@ phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment,
   graph_colors = getPalette(colorCount)
 
   p <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification_level)) +
-    theme_minimal() +
+    theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
