@@ -34,7 +34,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
 
     phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = ".")
-    Treatment_Groups <- unique(phyloseq_obj@sam_data[[treatment_name]])
+    Treatment_Groups <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
 
     if(below == TRUE){
       phyloseq_obj <- do.call(merge_phyloseq,
