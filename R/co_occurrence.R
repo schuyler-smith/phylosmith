@@ -2,11 +2,12 @@
 #'
 #' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage FastCoOccur(phyloseq_obj, treatment, p = 0.05, cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param p the p-value cutoff. all returned co-occurrences must have a p-value less than or equal to p.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.
+#' @aliases FastCoOccur
 #' @import data.table
 #' @import RcppArmadillo
 #' @import RcppParallel
@@ -15,12 +16,12 @@
 #' @seealso \code{\link{bootstrap_rho}} \code{\link{phylosmith}}
 #' @examples
 #' data(mock_phyloseq)
-#' FastCoOccur(mock_phyloseq, "day", 0.05)
+#' co_occurrence(mock_phyloseq, "day", 0.05)
 #' @export
 
-# sourceCpp("src/FastCoOccur_Rcpp.cpp")
+# sourceCpp("src/co_occurrencer_Rcpp.cpp")
 
-FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
+co_occurrence <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
   options(warnings=-1)
 
@@ -48,7 +49,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
  #   )}
 
   if(cores == 0){cores <- parallel::detectCores()}
-  cooccurrence <- FastCoOccur_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, p, cores)
+  cooccurrence <- co_occurrence_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, p, cores)
   return(as.data.table(cooccurrence))
 }
 
@@ -71,7 +72,7 @@ FastCoOccur <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
 #' @import RcppArmadillo
 #' @import RcppParallel
 #' @import RcppProgress
-#' @seealso \code{\link{FastCoOccur}}
+#' @seealso \code{\link{co_occurrence}}
 #' @examples
 #' data(mock_phyloseq)
 #' bootstrap_rho(mock_phyloseq, treatment = "day", permutations = 10)
@@ -104,7 +105,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
       for(indices in replicate_indices){
         permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
       }
-      rhos[[i]] <- FastCoOccur_rho(permuted_phyloseq_obj, treatment, cores = cores)
+      rhos[[i]] <- co_occurrence_rho(permuted_phyloseq_obj, treatment, cores = cores)
     }},
     interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', length(rhos), ' permutations.'); return(rhos)})
 
@@ -129,7 +130,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
 #'
 #' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage FastCoOccur_rho(phyloseq_obj, treatment, cores = 0)
+#' @usage co_occurrence_rho(phyloseq_obj, treatment, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.
@@ -141,11 +142,11 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
 #' @seealso \code{\link{bootstrap_rho}} \code{\link{phylosmith}}
 #' @examples
 #' data(mock_phyloseq)
-#' phylosmith:::FastCoOccur_rho(mock_phyloseq, "day", 0.05)
+#' phylosmith:::co_occurrence_rho(mock_phyloseq, "day", 0.05)
 
-# sourceCpp("src/FastCoOccur_rho_Rcpp.cpp")
+# sourceCpp("src/co_occurrence_rho_Rcpp.cpp")
 
-FastCoOccur_rho <- function(phyloseq_obj, treatment, cores = 0){
+co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05; cores = 0
   options(warnings=-1)
 
@@ -157,6 +158,41 @@ FastCoOccur_rho <- function(phyloseq_obj, treatment, cores = 0){
   treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
 
   if(cores == 0){cores <- parallel::detectCores()}
-  rhos <- FastCoOccur_rho_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, cores)
+  rhos <- co_occurrence_rho_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, cores)
   return(rhos)
 }
+
+#' Curate co-occurrence data. Function from the phylosmith-package.
+#'
+#' Used to curate a co-occurrence table from the \code{\link{co_occurrence}} function. Takes a list of taxa and finds all pairs containing any of those taxa.
+#' @useDynLib phylosmith
+#' @usage curate_cooccurrence(cooccurrence_table, taxa_of_interest, number_of_treatments = 1)
+#' @param cooccurrence_table co-occurrence table generated with \code{\link{co_occurrence}}, or formatted in the same way.
+#' @param taxa_of_interest a list or vector of taxa names, like those generated with \code{\link{find_unique_taxa}}.
+#' @param number_of_treatments how many treatments should the taxa of interest be seen in? require \code{integer} or 'all' (default = 1).
+#' @keywords manip
+#' @export
+#' @import data.table
+#' @import phyloseq
+#' @import RcppArmadillo
+#' @import RcppParallel
+#' @seealso \code{\link{co_occurrence}}
+#' @examples
+#' data(mock_phyloseq)
+
+curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 1){
+  sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
+  toi_table <- unique(cbind(rbindlist(list(sub_cooccurrence[,1], sub_cooccurrence[,1])), rbindlist(list(sub_cooccurrence[,2], sub_cooccurrence[,3]))))
+  toi_table <- toi_table[toi_table$gene_1 %in% taxa_of_interest]
+  if(number_of_treatments == 'all'){number_of_treatments <- length(unique(sub_cooccurrence$Treatment))
+  } else {number_of_treatments <- number_of_treatments}
+  toi <- names(table(toi_table$gene_1)[table(toi_table$gene_1) >= number_of_treatments])
+  sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% toi | cooccurrence_table[[3]] %in% toi),]
+
+  # sourceCpp("src/arrange_cooccurrence_table_tbb.cpp")
+  arranged_coocurrence <- as.data.table(arrange_cooccurr_table(sub_cooccurrence, toi))
+
+  setorder(arranged_coocurrence, Treatment)
+  return(arranged_coocurrence)
+}
+

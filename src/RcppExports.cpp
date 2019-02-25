@@ -6,35 +6,6 @@
 
 using namespace Rcpp;
 
-// FastCoOccur_Rcpp
-Rcpp::DataFrame FastCoOccur_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores);
-RcppExport SEXP _phylosmith_FastCoOccur_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
-    Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
-    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(FastCoOccur_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff, ncores));
-    return rcpp_result_gen;
-END_RCPP
-}
-// FastCoOccur_rho_Rcpp
-std::vector<double> FastCoOccur_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, const int ncores);
-RcppExport SEXP _phylosmith_FastCoOccur_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP ncoresSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
-    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(FastCoOccur_rho_Rcpp(otu_table, treatment_indices, treatment_names, ncores));
-    return rcpp_result_gen;
-END_RCPP
-}
 // arrange_cooccurr_table
 Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp::CharacterVector taxa_of_interest);
 RcppExport SEXP _phylosmith_arrange_cooccurr_table(SEXP cooccurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
@@ -44,6 +15,35 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type cooccurrence_table(cooccurrence_tableSEXP);
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type taxa_of_interest(taxa_of_interestSEXP);
     rcpp_result_gen = Rcpp::wrap(arrange_cooccurr_table(cooccurrence_table, taxa_of_interest));
+    return rcpp_result_gen;
+END_RCPP
+}
+// co_occurrence_Rcpp
+Rcpp::DataFrame co_occurrence_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores);
+RcppExport SEXP _phylosmith_co_occurrence_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(co_occurrence_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// co_occurrence_rho_Rcpp
+std::vector<double> co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, const int ncores);
+RcppExport SEXP _phylosmith_co_occurrence_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(co_occurrence_rho_Rcpp(otu_table, treatment_indices, treatment_names, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,9 +61,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_FastCoOccur_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_Rcpp, 5},
-    {"_phylosmith_FastCoOccur_rho_Rcpp", (DL_FUNC) &_phylosmith_FastCoOccur_rho_Rcpp, 4},
     {"_phylosmith_arrange_cooccurr_table", (DL_FUNC) &_phylosmith_arrange_cooccurr_table, 2},
+    {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 5},
+    {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}
 };
