@@ -157,6 +157,7 @@ phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment,
   p <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification_level)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
+    guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification_level]]))/30))) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
   if(merge == TRUE){p <- p + eval(parse(text=paste0("geom_bar(aes(color = ", classification_level, ", fill = ", classification_level, "), stat = 'identity', position = 'stack', size = 0.2)")))
