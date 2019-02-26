@@ -12,7 +12,7 @@
 
 <meta name="author" content="Schuyler D. smith" />
 
-<meta name="date" content="2019-02-22" />
+<meta name="date" content="2019-02-25" />
 
 <title>phylosmith</title>
 
@@ -92,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">phylosmith</h1>
 <h4 class="author"><em>Schuyler D. smith</em></h4>
-<h4 class="date"><em>2019-02-22</em></h4>
+<h4 class="date"><em>2019-02-25</em></h4>
 
 
 
@@ -110,6 +110,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="functions" class="section level2">
 <h2>Functions</h2>
+<div id="data-parsing" class="section level3">
+<h3>Data Parsing</h3>
 <table style="width:92%;">
 <colgroup>
 <col width="23%"></col>
@@ -123,40 +125,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </thead>
 <tbody>
 <tr class="odd">
-<td>FastCoOccur</td>
-<td>calculate co-occurrence between taxa</td>
-</tr>
-<tr class="even">
-<td>bootstrap_rho</td>
-<td>runs permutations of the otu_table to calculate a significant <span class="math inline">\(\rho\)</span> value</td>
-</tr>
-<tr class="odd">
-<td>concatenate_treatments</td>
+<td>combine_treatments</td>
 <td>combines multiple columns in meta-data into a single column</td>
 </tr>
 <tr class="even">
-<td>curate_cooccurrence</td>
-<td>subsets the co-occurence table to specific taxa</td>
-</tr>
-<tr class="odd">
 <td>find_common_taxa</td>
 <td>find taxa common to each treatment</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>find_unique_taxa</td>
 <td>find taxa unique to each treatment</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>merge_asvs</td>
 <td>combine ASVs to lowest common biological sequence</td>
 </tr>
-<tr class="even">
-<td>nmds_phyloseq_ggplot</td>
-<td>create a ggplot object of the NMDS from a phyloseq object</td>
-</tr>
 <tr class="odd">
-<td>phylogeny_bar_ggplots</td>
-<td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
+<td>order_phyloseq_metadata</td>
+<td>sets the orders of the factors in a sample_data column (for ordering graphs)</td>
 </tr>
 <tr class="even">
 <td>relative_abundance</td>
@@ -166,6 +152,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td>taxa_filter</td>
 <td>filter taxa by proportion of samples seen in</td>
 </tr>
+</tbody>
+</table>
+</div>
+<div id="graphs" class="section level3">
+<h3>Graphs</h3>
+<table style="width:92%;">
+<colgroup>
+<col width="23%"></col>
+<col width="68%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>abundance_lines_ggplot</td>
+<td>create a ggplot object of the abundance data as a line graph</td>
+</tr>
+<tr class="even">
+<td>nmds_phyloseq_ggplot</td>
+<td>create a ggplot object of the NMDS from a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td>phylogeny_bars_ggplot</td>
+<td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
+</tr>
 <tr class="even">
 <td>tsne_phyloseq_ggplot</td>
 <td>create a ggplot object of the t-SNE from a phyloseq object</td>
@@ -173,9 +188,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 </div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<p><code>phylosmith</code> includes two mock datasets. They are made to meet the phyloseq requirements, but do not represent real data; and therefore are not always perfect examples, but generally demonstrate how the functions operate.</p>
+<div id="calculations" class="section level3">
+<h3>Calculations</h3>
+<table style="width:92%;">
+<colgroup>
+<col width="23%"></col>
+<col width="68%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>co_occurrence</td>
+<td>calculate co-occurrence between taxa</td>
+</tr>
+<tr class="even">
+<td>curate_cooccurrence</td>
+<td>subsets the co-occurence table to specific taxa</td>
+</tr>
+<tr class="odd">
+<td>bootstrap_rho</td>
+<td>runs permutations of the otu_table to calculate a significant <span class="math inline">\(\rho\)</span> value</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="fastcooccur" class="section level3">
 <h3>FastCoOccur</h3>
 <p>This function is an implementation of the pair-wise Spearman rank correlation that you can call in <code>R</code>. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank">FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank">Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank">Rcpp</a> API, so that it could be called within R.</p>
