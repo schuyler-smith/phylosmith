@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the abundance table from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 abundance_lines_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-relative_abundance = FALSE, points = TRUE, colors = "Spectral")
+relative_abundance = FALSE, points = TRUE, colors = cbcolors)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -20,7 +20,7 @@ relative_abundance = FALSE, points = TRUE, colors = "Spectral")
 
 \item{points}{if TRUE, will diplay the data-points.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.}
+\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.

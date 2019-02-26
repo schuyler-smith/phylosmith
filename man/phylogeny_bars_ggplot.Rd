@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 phylogeny_bars_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-merge = TRUE, relative_abundance = TRUE, colors = "Spectral")
+merge = TRUE, relative_abundance = TRUE, colors = cbcolors)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -20,7 +20,7 @@ merge = TRUE, relative_abundance = TRUE, colors = "Spectral")
 
 \item{relative_abundance}{If TRUE, transforms the abundance data into relative abundance by sample.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.}
+\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.

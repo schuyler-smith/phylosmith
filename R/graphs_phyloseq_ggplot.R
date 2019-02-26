@@ -2,17 +2,17 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, colors = 'Spectral', circle = TRUE)
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = cbcolors)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
 #' @param circle If TRUE, add elipses around each treatment.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import vegan
 #' @export
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", circle = TRUE){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = cbcolors){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
@@ -63,19 +63,19 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, colors = "Spectral", c
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
-#' colors = 'Spectral', circle = TRUE)
+#' circle = TRUE, colors = cbcolors)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
-#' @param colors Name of a color set from the \code{\link[=RColorBrewer]{RColorBrewer}} package.
 #' @param circle If TRUE, add elipses around each treatment.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @import ggplot2
 #' @import vegan
 #' @import Rtsne
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 
-tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colors = "Spectral", circle = TRUE){
+tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, colors = cbcolors){
   if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = ".")
@@ -122,19 +122,19 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
 #' @useDynLib phylosmith
 #' @usage phylogeny_bars_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-#' merge = TRUE, relative_abundance = TRUE, colors = "Spectral")
+#' merge = TRUE, relative_abundance = TRUE, colors = cbcolors)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
 #' @param merge if TRUE, does not show separation of individuals within each \code{classification_level}. FALSE separates with black lines.
 #' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @import ggplot2
 #' @import RColorBrewer
 #' @export
 
-phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = "Spectral"){
+phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = cbcolors){
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
@@ -173,19 +173,19 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment,
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.
 #' @useDynLib phylosmith
 #' @usage abundance_lines_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-#' relative_abundance = FALSE, points = TRUE, colors = "Spectral")
+#' relative_abundance = FALSE, points = TRUE, colors = cbcolors)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
 #' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
 #' @param points if TRUE, will diplay the data-points.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @import ggplot2
 #' @import RColorBrewer
 #' @export
 
-abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = "Spectral"){
+abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = cbcolors){
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
