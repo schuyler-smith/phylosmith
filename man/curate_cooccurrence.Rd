@@ -18,6 +18,7 @@ Used to curate a co-occurrence table from the \code{\link{co_occurrence}} functi
 }
 \examples{
 data(mock_phyloseq)
+curate_cooccurrence(co_occurrence(mock_phyloseq, 'day', p=1), c('tat', 'cct'))
 }
 \seealso{
 \code{\link{co_occurrence}}

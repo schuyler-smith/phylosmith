@@ -19,7 +19,7 @@
 #' co_occurrence(mock_phyloseq, "day", 0.05)
 #' @export
 
-# sourceCpp("src/co_occurrencer_Rcpp.cpp")
+# sourceCpp("src/co_occurrence_Rcpp.cpp")
 
 co_occurrence <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
@@ -179,20 +179,21 @@ co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
 #' @seealso \code{\link{co_occurrence}}
 #' @examples
 #' data(mock_phyloseq)
+#' curate_cooccurrence(co_occurrence(mock_phyloseq, 'day', p=1), c('tat', 'cct'))
 
 curate_cooccurrence <- function(cooccurrence_table, taxa_of_interest, number_of_treatments = 1){
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% taxa_of_interest | cooccurrence_table[[3]] %in% taxa_of_interest),]
   toi_table <- unique(cbind(rbindlist(list(sub_cooccurrence[,1], sub_cooccurrence[,1])), rbindlist(list(sub_cooccurrence[,2], sub_cooccurrence[,3]))))
-  toi_table <- toi_table[toi_table$gene_1 %in% taxa_of_interest]
-  if(number_of_treatments == 'all'){number_of_treatments <- length(unique(sub_cooccurrence$Treatment))
+  toi_table <- toi_table[toi_table[[2]] %in% taxa_of_interest]
+  if(number_of_treatments == 'all'){number_of_treatments <- length(unique(sub_cooccurrence[[1]]))
   } else {number_of_treatments <- number_of_treatments}
-  toi <- names(table(toi_table$gene_1)[table(toi_table$gene_1) >= number_of_treatments])
+  toi <- names(table(toi_table[[2]])[table(toi_table[[2]]) >= number_of_treatments])
   sub_cooccurrence <- cooccurrence_table[(cooccurrence_table[[2]] %in% toi | cooccurrence_table[[3]] %in% toi),]
 
   # sourceCpp("src/arrange_cooccurrence_table_tbb.cpp")
   arranged_coocurrence <- as.data.table(arrange_cooccurr_table(sub_cooccurrence, toi))
 
-  setorder(arranged_coocurrence, Treatment)
+  setorder(arranged_coocurrence, 'Treatment')
   return(arranged_coocurrence)
 }
 

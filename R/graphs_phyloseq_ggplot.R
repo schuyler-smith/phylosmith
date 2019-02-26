@@ -121,7 +121,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
 #' @useDynLib phylosmith
-#' @usage phylogeny_bar_ggplots(phyloseq_obj, classification_level, treatment, subset = NULL,
+#' @usage phylogeny_bars_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
 #' merge = TRUE, relative_abundance = TRUE, colors = "Spectral")
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
@@ -134,7 +134,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, colo
 #' @import RColorBrewer
 #' @export
 
-phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = "Spectral"){
+phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = "Spectral"){
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
@@ -160,10 +160,60 @@ phylogeny_bar_ggplots <- function(phyloseq_obj, classification_level, treatment,
     guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification_level]]))/30))) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
-  if(merge == TRUE){p <- p + eval(parse(text=paste0("geom_bar(aes(color = ", classification_level, ", fill = ", classification_level, "), stat = 'identity', position = 'stack', size = 0.2)")))
+  if(merge == TRUE){p <- p + geom_bar(aes_string(color = classification_level, fill = classification_level), stat = 'identity', position = 'stack', size = 0.2)
   } else {p <- p + geom_bar(stat = "identity", position = "stack", size = 0.12, color = 'black')}
   if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
 
   return(p)
 }
 
+
+#' Create a ggplot object of the abundance table from a phyloseq object. Function from the phylosmith-package.
+#'
+#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.
+#' @useDynLib phylosmith
+#' @usage abundance_lines_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
+#' relative_abundance = FALSE, points = TRUE, colors = "Spectral")
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
+#' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
+#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
+#' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
+#' @param points if TRUE, will diplay the data-points.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package.
+#' @import ggplot2
+#' @import RColorBrewer
+#' @export
+
+abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = "Spectral"){
+
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
+  if(relative_abundance == TRUE){phyloseq_obj <- relative_abundance(phyloseq_obj)}
+  treatment <- paste(treatment, collapse = '.')
+
+  # graph_data <- tax_glom(phyloseq_obj, taxrank = classification_level)
+  graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification_level], phyloseq_obj@sam_data[,treatment])
+  graph_data <- data.table(psmelt(graph_data))
+
+  colorCount = length(unique(phyloseq_obj@tax_table[,classification_level]))
+  if(any(!(colors %in% grDevices::colors()))){
+    if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
+      getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
+    } else { getPalette <- grDevices::colorRampPalette(colors)}
+  } else { getPalette <- grDevices::colorRampPalette(colors)}
+  graph_colors = getPalette(colorCount)
+
+  p <- ggplot(graph_data, aes_string(x = 'Sample', y = 'Abundance', group = classification_level)) +
+    geom_line(aes_string(color=classification_level))+
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
+    guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification_level]]))/30))) +
+    facet_grid(treatment, scales = "free", space = "free") +
+    scale_colour_manual(values = graph_colors)
+  if(points == TRUE){p <- p + geom_point(aes_string(color=classification_level))}
+  if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
+
+  return(p)
+}
