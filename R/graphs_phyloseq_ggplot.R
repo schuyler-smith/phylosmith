@@ -7,17 +7,19 @@
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param circle If TRUE, add elipses around each treatment.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param verbose Whether or not to print the \code{\link[vegan:metaMDS]{metaMDS}} convergion to console or not.
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import vegan
 #' @export
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = 'default'){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = 'default', verbose = TRUE){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
 
-  MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)
+  if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
+  else if(verbose == FALSE){sink("/dev/null");(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)); sink()}
   # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
   # stressplot(MDS)
 

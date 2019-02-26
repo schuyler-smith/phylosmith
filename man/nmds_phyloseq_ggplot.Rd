@@ -14,6 +14,8 @@ nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = 'default')
 \item{circle}{If TRUE, add elipses around each treatment.}
 
 \item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
+
+\item{verbose}{Whether or not to print the \code{\link[vegan:metaMDS]{metaMDS}} convergion to console or not.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
