@@ -41,9 +41,9 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
   p <- ggplot(data = NMDS.narm, aes(NMDS1, NMDS2, color = NMDS.narm$Treatment)) +
     # coord_fixed(xlim = c(floor(min(NMDS.narm[,c(1,2)])), ceiling(max(NMDS.narm[,c(1,2)]))),
     #             ylim = c(floor(min(NMDS.narm[,c(1,2)])), ceiling(max(NMDS.narm[,c(1,2)])))) +
-    geom_point(aes(color = Treatment), size = 1.5, alpha = 0.75) +
+    geom_point(aes(color = Treatment), size = 3.0, alpha = 1.0) +
     scale_color_manual(values = graph_colors) +
-    theme_classic() +
+    theme_light() +
     theme(aspect.ratio = 1,
           axis.line.x = element_line(colour = 'black', size = 1, linetype = 'solid'),
           axis.line.y = element_line(colour = 'black', size = 1, linetype = 'solid'),
@@ -101,9 +101,9 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   ord <- subset(ord, !is.na(Treatment))
 
   p <- ggplot(data = ord, aes(tsne1, tsne2, color = ord$Treatment)) +
-    geom_point(aes(color = ord$Treatment), size = 1.5, alpha = 1) +
+    geom_point(aes(color = ord$Treatment), size = 3.0, alpha = 1.0) +
     scale_color_manual(values = graph_colors) +
-    theme_classic() +
+    theme_light() +
     theme(aspect.ratio = 1,
           axis.line.x = element_line(colour = 'black', size = 1, linetype = 'solid'),
           axis.line.y = element_line(colour = 'black', size = 1, linetype = 'solid'),
@@ -218,7 +218,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment
     guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification_level]]))/30))) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_colour_manual(values = graph_colors)
-  if(points == TRUE){p <- p + geom_point(aes_string(color=classification_level))}
+  if(points == TRUE){p <- p + geom_point(size = 1.5, aes_string(color = classification_level))}
   if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
 
   return(p)
