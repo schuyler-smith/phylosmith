@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 phylogeny_bars_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-merge = TRUE, relative_abundance = TRUE, colors = cbcolors)
+merge = TRUE, relative_abundance = TRUE, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}

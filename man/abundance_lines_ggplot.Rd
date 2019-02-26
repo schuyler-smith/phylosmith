@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the abundance table from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 abundance_lines_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-relative_abundance = FALSE, points = TRUE, colors = cbcolors)
+relative_abundance = FALSE, points = TRUE, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}

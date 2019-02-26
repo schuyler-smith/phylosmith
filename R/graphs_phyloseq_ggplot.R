@@ -2,7 +2,7 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = cbcolors)
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param circle If TRUE, add elipses around each treatment.
@@ -12,7 +12,7 @@
 #' @import vegan
 #' @export
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = cbcolors){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = 'default'){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = '.')
@@ -22,6 +22,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
   # stressplot(MDS)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
+  if(colors == 'default'){colors <- cbcolors}
   colorCount = length(unique(Treatment))
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
@@ -63,7 +64,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
-#' circle = TRUE, colors = cbcolors)
+#' circle = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
@@ -75,7 +76,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 
-tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, colors = cbcolors){
+tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, colors = 'default'){
   if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment <- paste(treatment, collapse = ".")
@@ -83,6 +84,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
 
   Treatment <- phyloseq_obj@sam_data[[treatment]]
+  if(colors == 'default'){colors <- cbcolors}
   colorCount = length(unique(Treatment))
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
@@ -122,7 +124,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
 #' @useDynLib phylosmith
 #' @usage phylogeny_bars_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-#' merge = TRUE, relative_abundance = TRUE, colors = cbcolors)
+#' merge = TRUE, relative_abundance = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
@@ -134,7 +136,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
 #' @import RColorBrewer
 #' @export
 
-phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = cbcolors){
+phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default'){
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
@@ -147,6 +149,7 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment,
   graph_data <- data.table(psmelt(graph_data))
 
   colorCount = length(unique(phyloseq_obj@tax_table[,classification_level]))
+  if(colors == 'default'){colors <- cbcolors}
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
       getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
@@ -173,7 +176,7 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment,
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.
 #' @useDynLib phylosmith
 #' @usage abundance_lines_ggplot(phyloseq_obj, classification_level, treatment, subset = NULL,
-#' relative_abundance = FALSE, points = TRUE, colors = cbcolors)
+#' relative_abundance = FALSE, points = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param classification_level Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
@@ -185,7 +188,7 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification_level, treatment,
 #' @import RColorBrewer
 #' @export
 
-abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = cbcolors){
+abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification_level)){classification_level <- colnames(phyloseq_obj@tax_table[,classification_level])}
@@ -198,6 +201,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment
   graph_data <- data.table(psmelt(graph_data))
 
   colorCount = length(unique(phyloseq_obj@tax_table[,classification_level]))
+  if(colors == 'default'){colors <- cbcolors}
   if(any(!(colors %in% grDevices::colors()))){
     if(any(colors %in% rownames(RColorBrewer::brewer.pal.info))){
       getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(min(c(colorCount, RColorBrewer::brewer.pal.info[rownames(RColorBrewer::brewer.pal.info) == colors, 1])), colors))
