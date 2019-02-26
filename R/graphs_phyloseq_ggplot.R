@@ -212,14 +212,17 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification_level, treatment
   graph_colors = getPalette(colorCount)
 
   p <- ggplot(graph_data, aes_string(x = 'Sample', y = 'Abundance', group = classification_level)) +
-    geom_line(aes_string(color=classification_level))+
+    geom_line(size = 1.0, aes_string(color=classification_level))+
     theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification_level]]))/30))) +
     facet_grid(treatment, scales = "free", space = "free") +
     scale_colour_manual(values = graph_colors)
-  if(points == TRUE){p <- p + geom_point(size = 1.5, aes_string(color = classification_level))}
+  if(points == TRUE){p <- p + geom_point(size = 1.8, aes_string(color = classification_level))}
   if(relative_abundance == TRUE){p <- p + ylab('Relative Abundance')}
 
   return(p)
 }
+
+
+# cbcolors <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
