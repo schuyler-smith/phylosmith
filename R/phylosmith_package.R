@@ -3,7 +3,7 @@
 #' phylosmith is a conglomeration of functions written to process and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
 #'
 #'
-#' \code{\link{FastCoOccur}} calculate Spearman-rank co-occurrence between taxa
+#' \code{\link{co_occurrence}} calculate Spearman-rank co-occurrence between taxa
 #'
 #' \code{\link{bootstrap_rho}} runs permutations of the otu_table to calculate a significant rho value
 #'
@@ -26,13 +26,9 @@
 #'
 #'
 #' @name phylosmith
-#' @author Schuyler Smith \email{sdsmith@@iastate.edu}
+#' @author Schuyler Smith \email{schuyler.smith@@iastate.edu}
 #' @docType package
 #' @keywords package
 NA
 
-
-# cbcolors <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-# load('R/sysdata.rda')
-# save(cbcolors, CARD, file = 'R/sysdata.rda')
 

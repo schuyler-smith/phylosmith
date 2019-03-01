@@ -9,11 +9,11 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-## What `phylosmith` is for
+## `phylosmith` 
 
-`phylosmith` is a conglomeration of functions written to process and analyze `phyloseq-class` objects. `phyloseq` can be used for anything that has an abundance table with associated metadata, such as microbiome or gene expression data.
+`phylosmith` is a conglomeration of functions written to process and analyze `phyloseq-class` objects. `phyloseq` Phyloseq objects are a great data-standard for microbiome and gene-expression data.
 
-A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner.
+A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication.
 
 ## Installation
 
@@ -43,9 +43,12 @@ taxa_filter | filter taxa by proportion of samples seen in
 
 Call			 | Use
 ---------------- | ------------------------------------------------
+abundance_heatmap_ggplot | create a ggplot object of the heatmaps of the abndance table
 abundance_lines_ggplot | create a ggplot object of the abundance data as a line graph
+network_phyloseq | creates a network of the co-occurrence of taxa
 nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
 phylogeny_bars_ggplot | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+taxa_abundance_bars_ggplot | create a ggplot object of the abundance of taxa in each sample
 tsne_phyloseq_ggplot  | create a ggplot object of the t-SNE from a phyloseq object
 
 ### Calculations
@@ -57,9 +60,9 @@ curate_cooccurrence | subsets the co-occurence table to specific taxa
 bootstrap_rho | runs permutations of the otu_table to calculate a significant $\rho$ value
 
 
-### FastCoOccur
+### co_occurrence
 
-This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R. 
+This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input. 
 
 ```r
 data(mock_phyloseq)

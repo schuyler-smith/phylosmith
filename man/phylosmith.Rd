@@ -9,7 +9,7 @@
 phylosmith is a conglomeration of functions written to process and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
 }
 \details{
-\code{\link{FastCoOccur}} calculate Spearman-rank co-occurrence between taxa
+\code{\link{co_occurrence}} calculate Spearman-rank co-occurrence between taxa
 
 \code{\link{bootstrap_rho}} runs permutations of the otu_table to calculate a significant rho value
 
@@ -30,6 +30,6 @@ phylosmith is a conglomeration of functions written to process and analyze \code
 \code{\link{relative_abundance}} transform abundance data to relative abundance
 }
 \author{
-Schuyler Smith \email{sdsmith@iastate.edu}
+Schuyler Smith \email{schuyler.smith@iastate.edu}
 }
 \keyword{package}
