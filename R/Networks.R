@@ -22,9 +22,11 @@
 #' @export
 
 network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence, classification = 'none', node_colors = 'default',
-                             cluster = FALSE, cluster_colors = 'Pastel2', buffer = 1){
+                             cluster = FALSE, cluster_colors = 'default', buffer = 1){
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  node_classes = sort(unique(phyloseq_obj@tax_table[,classification]))
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = '.')
 
@@ -55,8 +57,8 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
     community_count = length(unique(cluster))
     community_colors <- create_palette(community_count, cluster_colors)}
 
-  node_count = length(unique(nodes[[classification]]))
-  node_colors <- create_palette(node_count, node_colors)
+  node_colors <- create_palette(length(node_classes), colors)
+  node_colors <- node_colors[node_classes %in% sort(unique(nodes[[classification]]))]
 
   g <- ggraph(layout) + theme_graph() + coord_fixed()
   if(length(cluster) > 1){g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y', alpha = 0.4, group = 'Community'), fill = community_colors[hulls$Community])}
