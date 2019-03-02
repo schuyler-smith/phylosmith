@@ -57,7 +57,7 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
     community_count = length(unique(cluster))
     community_colors <- create_palette(community_count, cluster_colors)}
 
-  node_colors <- create_palette(length(node_classes), colors)
+  node_colors <- create_palette(length(node_classes), node_colors)
   node_colors <- node_colors[node_classes %in% sort(unique(nodes[[classification]]))]
 
   g <- ggraph(layout) + theme_graph() + coord_fixed()
