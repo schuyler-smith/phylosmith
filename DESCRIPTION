@@ -21,6 +21,7 @@ Imports:
     ggplot2,
     igraph,
     ggraph,
+    sp,
     sf,
     vegan,
     Rtsne,
