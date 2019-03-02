@@ -5,8 +5,8 @@
 \title{Create an object of the abundance barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence,
-classification = 'none', node_colors = 'default', cluster = FALSE, buffer = 1,
-cluster_colors)
+classification = 'none', node_colors = 'default', cluster = FALSE, cluster_colors,
+ buffer = 1)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -23,9 +23,9 @@ cluster_colors)
 
 \item{cluster}{if TRUE, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, can pass a vctor of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.}
 
-\item{buffer}{Amount of space beyond the points to extend the cluster.}
-
 \item{cluster_colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the cluster.}
+
+\item{buffer}{Amount of space beyond the points to extend the cluster.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.

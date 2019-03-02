@@ -3,8 +3,8 @@
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
 #' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence,
-#' classification = 'none', node_colors = 'default', cluster = FALSE, buffer = 1,
-#' cluster_colors)
+#' classification = 'none', node_colors = 'default', cluster = FALSE, cluster_colors,
+#'  buffer = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
@@ -12,8 +12,8 @@
 #' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for node colors.
 #' @param node_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param cluster if TRUE, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, can pass a vctor of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
-#' @param buffer Amount of space beyond the points to extend the cluster.
 #' @param cluster_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the cluster.
+#' @param buffer Amount of space beyond the points to extend the cluster.
 #' @import igraph
 #' @import ggraph
 #' @importFrom sf st_as_sf st_buffer
@@ -22,7 +22,7 @@
 #' @export
 
 network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence, classification = 'none', node_colors = 'default',
-                             cluster = FALSE, buffer = 1, cluster_colors = 'Pastel2'){
+                             cluster = FALSE, cluster_colors = 'Pastel2', buffer = 1){
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
@@ -53,7 +53,7 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
     communities <- communities[, .SD[chull(.SD)], by = Community, ]
     hulls <- communities[, .SD[chull(.SD)], by = Community, ]
     community_count = length(unique(cluster))
-    community_colors <- create_palette(community_count, 'Pastel2')}
+    community_colors <- create_palette(community_count, cluster_colors)}
 
   node_count = length(unique(nodes[[classification]]))
   node_colors <- create_palette(node_count, node_colors)
