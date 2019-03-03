@@ -2,13 +2,13 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence = NULL,
-#' classification = 'none', node_colors = 'default', cluster = FALSE, cluster_colors,
-#'  buffer = 1)
+#' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL,
+#' classification = 'none', node_colors = 'default', cluster = FALSE,
+#' cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param co_occurrence Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}
+#' @param co_occurrence_table Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence_table}}
 #' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for node colors.
 #' @param node_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param cluster if TRUE, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, can pass a vctor of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
@@ -21,7 +21,7 @@
 #' @import graphics
 #' @export
 
-network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence = NULL, classification = 'none', node_colors = 'default',
+network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL, classification = 'none', node_colors = 'default',
                              cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
@@ -30,8 +30,8 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = '.')
 
-  if(is.null(co_occurrence)){co_occurrence <- co_occurrence(phyloseq_obj, treatment)}
-  links <- co_occurrence[co_occurrence[['Treatment']] %like% subset]
+  if(is.null(co_occurrence_table)){co_occurrence_table <- co_occurrence(phyloseq_obj, treatment)}
+  links <- co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
   links <- links[,c(2,3,1,4,5)]
   colnames(links)[colnames(links)=='rho'] <- 'weight'
 
