@@ -2,7 +2,7 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence,
+#' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence = NULL,
 #' classification = 'none', node_colors = 'default', cluster = FALSE, cluster_colors,
 #'  buffer = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
@@ -21,8 +21,8 @@
 #' @import graphics
 #' @export
 
-network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence, classification = 'none', node_colors = 'default',
-                             cluster = FALSE, cluster_colors = 'default', buffer = 1){
+network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence = NULL, classification = 'none', node_colors = 'default',
+                             cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
@@ -30,6 +30,7 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = '.')
 
+  if(is.null(co_occurrence)){co_occurrence <- co_occurrence(phyloseq_obj, treatment)}
   links <- co_occurrence[co_occurrence[['Treatment']] %like% subset]
   links <- links[,c(2,3,1,4,5)]
   colnames(links)[colnames(links)=='rho'] <- 'weight'
