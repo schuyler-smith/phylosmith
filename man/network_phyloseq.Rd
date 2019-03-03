@@ -15,7 +15,7 @@ cluster_colors = 'default', buffer = 0.5)
 
 \item{subset}{If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.}
 
-\item{co_occurrence_table}{Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence_table}}}
+\item{co_occurrence_table}{Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If none is given, it will computer the co-occurrence with the \code{phyloseq_obj}, using the given \code{treatment} and $p$ = 0.05.}
 
 \item{classification}{Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for node colors.}
 

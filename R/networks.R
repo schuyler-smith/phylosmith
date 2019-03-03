@@ -8,7 +8,7 @@
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param co_occurrence_table Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence_table}}
+#' @param co_occurrence_table Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If none is given, it will computer the co-occurrence with the \code{phyloseq_obj}, using the given \code{treatment} and $p$ = 0.05.
 #' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for node colors.
 #' @param node_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param cluster if TRUE, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, can pass a vctor of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
