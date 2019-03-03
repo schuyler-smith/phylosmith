@@ -20,7 +20,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
   treatment_name <- paste(treatment, collapse = '.')
 
   if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
-  else if(verbose == FALSE){sink("/dev/null");(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)); sink()}
+  else if(verbose == FALSE){(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))}
   # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
   # stressplot(MDS)
 
@@ -310,10 +310,10 @@ create_palette <- function(color_count, colors){
   options(warn = -1)
   cbcolors <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   if(colors == 'default'){colors <- cbcolors}
-  {sink("/dev/null");if(any(!(colors %in% colors()))){
+  if(any(!(colors %in% colors()))){
     if(any(colors %in% rownames(brewer.pal.info))){
       getPalette <- colorRampPalette(brewer.pal(min(c(color_count, brewer.pal.info[rownames(brewer.pal.info) == colors, 1])), colors))
     } else { getPalette <- colorRampPalette(colors)}
-  } else { getPalette <- colorRampPalette(colors)};sink()}
+  } else { getPalette <- colorRampPalette(colors)}
   return(getPalette(color_count))
 }
