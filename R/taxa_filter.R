@@ -158,6 +158,8 @@ order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
 #' @export
 
 merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
+  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
+  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(merge_on)){merge_on <- colnames(phyloseq_obj@sam_data[,merge_on])}
@@ -170,22 +172,23 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 
   sub_phy <- do.call(merge_phyloseq,
      sapply(Treatment_Groups, FUN = function(group){
-       sub_phy <- taxa_filter(phyloseq_obj, treatment, subset = group)
-       if(nsamples(sub_phy) > 1){sub_phy <- phyloseq::merge_samples(sub_phy, merge_on)
+       group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', merge_on, ' == "', group, '")')))
+       if(nsamples(group_phy) > 1){sub_phy <- phyloseq::merge_samples(group_phy, merge_on)
        merge_names <- rownames(sub_phy@sam_data)
-       sample_names(sub_phy) <- paste0(group, '_', merge_names)
+       if(group != merge_names){sample_names(sub_phy) <- paste0(group, '_', merge_names)}
        sam <- as(sub_phy@sam_data, 'data.frame')
        sam[, merge_on] <- merge_names
        sam[,treatment_name] <- group
        for(i in treatment){
-         sam[,i] <- unique(taxa_filter(phyloseq_obj, treatment, subset = group)@sam_data[,i])}
+         sam[,i] <- unique(group_phy@sam_data[,i])}
        sub_phy@sam_data <- sample_data(sam)}
        return(sub_phy)
      })
   )
-  phyloseq_obj <- tryCatch({phyloseq_obj <- subset_samples(phyloseq_obj, eval(parse(text=paste0('!(', treatment_name,' %in% Treatment_Groups)'))))},
-                           error = function(e){phyloseq_obj <- sub_phy},
-                           finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+  phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% Treatment_Groups))')))},
+       error = function(e){phyloseq_obj <- sub_phy},
+       finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   return(phyloseq_obj)
 }
 
