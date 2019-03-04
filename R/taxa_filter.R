@@ -169,6 +169,13 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   merge_on <- paste(merge_on, collapse = ".")
   Treatment_Groups <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
   Treatment_Groups <- eval(parse(text=paste0('Treatment_Groups[grepl("', paste0(subset), '", Treatment_Groups)]')))
+  merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
+  merge_sample_levels <- paste(sapply(Treatment_Groups,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(Treatment_Groups)), sep = '_')
+
+  phyloseq_table <- data.table(psmelt(phyloseq_obj))
+  # phyloseq_table[, Merged_Abundance := mean(Abundance), by = c(treatment_name, merge_on, 'OTU')]
+  phyloseq_table[, Merged_Name := do.call(paste0, list(phyloseq_table[[treatment_name]], "_", phyloseq_table[[merge_on]]))]
+  otu_tab <- dcast(phyloseq_table[,c('OTU','Abundance','Merged_Name'), with=FALSE], Merged_Name ~ OTU, value.var = 'Abundance', fun.aggregate = mean)
 
   sub_phy <- do.call(merge_phyloseq,
      sapply(Treatment_Groups, FUN = function(group){
@@ -177,17 +184,20 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
        merge_names <- rownames(sub_phy@sam_data)
        if(group != merge_names){sample_names(sub_phy) <- paste0(group, '_', merge_names)}
        sam <- as(sub_phy@sam_data, 'data.frame')
-       sam[, merge_on] <- merge_names
        sam[,treatment_name] <- group
        for(i in treatment){
          sam[,i] <- unique(group_phy@sam_data[,i])}
+       sam[, merge_on] <- factor(merge_names, levels = levels(meged_on_factor))
        sub_phy@sam_data <- sample_data(sam)}
        return(sub_phy)
      })
   )
   phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% Treatment_Groups))')))},
-       error = function(e){phyloseq_obj <- sub_phy},
-       finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+     error = function(e){phyloseq_obj <- sub_phy},
+     finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+  phylo_object <- phyloseq(otu_table(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name'), taxa_are_rows = FALSE),
+     phylo_object@tax_table,
+     phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   return(phyloseq_obj)
 }
