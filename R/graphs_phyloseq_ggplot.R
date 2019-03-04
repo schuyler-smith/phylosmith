@@ -20,7 +20,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
   treatment_name <- paste(treatment, collapse = '.')
 
   if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
-  else if(verbose == FALSE){(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))}
+  else if(verbose == FALSE){(invisible(capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
   # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
   # stressplot(MDS)
 
@@ -31,12 +31,14 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
 
   NMDS1 <- data.table(scores(MDS))$NMDS1
   NMDS2 <- data.table(scores(MDS))$NMDS2
-  NMDS <- data.table(NMDS1,NMDS2,Treatment)
-  NMDS.narm <- subset(NMDS, !is.na(Treatment))
+  ord <- data.table(NMDS1,NMDS2,Treatment)
+  ord <- subset(ord, !is.na(Treatment))
 
-  g <- ggplot(data = NMDS.narm, aes(NMDS1, NMDS2, color = NMDS.narm$Treatment)) +
-    geom_point(aes(color = Treatment), size = 3.0, alpha = 1.0) +
-    scale_color_manual(values = graph_colors) +
+  g <- ggplot(data = ord, aes(NMDS1, NMDS2))
+  if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
+      scale_color_manual(values = graph_colors) + guides(color = FALSE)}
+  g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black', size = 5, alpha = 1.0) +
+    scale_fill_manual(values = graph_colors) +
     theme_light() +
     theme(aspect.ratio = 1,
           axis.line.x = element_line(colour = 'black', size = 1, linetype = 'solid'),
@@ -49,9 +51,6 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
           legend.text=element_text(size = 11, face = "bold"),
           legend.background = element_rect(fill = (alpha = 0))
     )
-  if(circle == TRUE){
-    g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.0, aes(fill = NMDS.narm$Treatment))
-  }
   return(g)
 }
 
@@ -85,29 +84,28 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   color_count <- length(unique(Treatment))
   graph_colors <- create_palette(color_count, colors)
 
-  tsne1 <- tsne$Y[,1]
-  tsne2 <- tsne$Y[,2]
-  ord <- data.table(tsne1, tsne2, Treatment)
+  tSNE1 <- tsne$Y[,1]
+  tSNE2 <- tsne$Y[,2]
+  ord <- data.table(tSNE1, tSNE2, Treatment)
   ord <- subset(ord, !is.na(Treatment))
 
-  g <- ggplot(data = ord, aes(tsne1, tsne2, color = ord$Treatment)) +
-    geom_point(aes(color = ord$Treatment), size = 3.0, alpha = 1.0) +
-    scale_color_manual(values = graph_colors) +
+  g <- ggplot(data = ord, aes(tSNE1, tSNE2))
+  if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
+    scale_color_manual(values = graph_colors) + guides(color = FALSE)}
+  g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black', size = 5, alpha = 1.0) +
+    scale_fill_manual(values = graph_colors) +
     theme_light() +
     theme(aspect.ratio = 1,
           axis.line.x = element_line(colour = 'black', size = 1, linetype = 'solid'),
           axis.line.y = element_line(colour = 'black', size = 1, linetype = 'solid'),
-          axis.text.x = element_text(size = 10, face = "bold"),
-          axis.text.y = element_text(size = 10, face = "bold"),
-          axis.title.x = element_text(size = 12, face= "bold"),
-          axis.title.y = element_text(size = 12, face= "bold"),
-          legend.title = element_blank(),
-          legend.text = element_text(size = 11, face = "bold"),
+          axis.text.x=element_text(size = 10, face = "bold"),
+          axis.text.y=element_text(size = 10, face = "bold"),
+          axis.title.x=element_text(size = 12, face= "bold"),
+          axis.title.y=element_text(size = 12, face= "bold"),
+          legend.title=element_blank(),
+          legend.text=element_text(size = 11, face = "bold"),
           legend.background = element_rect(fill = (alpha = 0))
     )
-  if(circle == TRUE){
-    g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.0, aes(fill = ord$Treatment))
-  }
   return(g)
 }
 
