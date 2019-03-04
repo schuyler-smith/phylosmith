@@ -187,7 +187,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
        sam[,treatment_name] <- group
        for(i in treatment){
          sam[,i] <- unique(group_phy@sam_data[,i])}
-       sam[, merge_on] <- factor(merge_names, levels = levels(meged_on_factor))
+       sam[, merge_on] <- factor(merge_names, levels = levels(merge_sample_levels))
        sub_phy@sam_data <- sample_data(sam)}
        return(sub_phy)
      })
@@ -195,8 +195,8 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% Treatment_Groups))')))},
      error = function(e){phyloseq_obj <- sub_phy},
      finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
-  phylo_object <- phyloseq(otu_table(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name'), taxa_are_rows = FALSE),
-     phylo_object@tax_table,
+  phyloseq_obj <- phyloseq(otu_table(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name'), taxa_are_rows = FALSE),
+     phyloseq_obj@tax_table,
      phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   return(phyloseq_obj)
