@@ -4,8 +4,8 @@
 \alias{nmds_phyloseq_ggplot}
 \title{Create a ggplot object of the NMDS from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = 'default',
-verbose = TRUE)
+nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE,
+colors = 'default', verbose = TRUE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
@@ -13,6 +13,8 @@ verbose = TRUE)
 \item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{circle}{If TRUE, add elipses around each treatment.}
+
+\item{labels}{Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.}
 
 \item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 

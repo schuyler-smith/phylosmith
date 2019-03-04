@@ -4,7 +4,7 @@
 \alias{tsne_phyloseq_ggplot}
 \title{Create a ggplot object using t-SNE from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, labels = FALSE,
 circle = TRUE, colors = 'default')
 }
 \arguments{
@@ -15,6 +15,8 @@ circle = TRUE, colors = 'default')
 \item{perplexity}{similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)}
 
 \item{circle}{If TRUE, add elipses around each treatment.}
+
+\item{labels}{Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.}
 
 \item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 }

@@ -2,27 +2,27 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, colors = 'default',
-#' verbose = TRUE)
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE,
+#' colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param circle If TRUE, add elipses around each treatment.
+#' @param labels Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param verbose Whether or not to print the \code{\link[vegan:metaMDS]{metaMDS}} convergion to console or not.
 #' @import ggplot2
 #' @importFrom vegan metaMDS scores
 #' @export
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors = 'default', verbose = TRUE){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE){
   options(warn = -1)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = '.')
 
   if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
   else if(verbose == FALSE){(invisible(capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
-  # plot(MDS, display = c("sites", "species"), choices = c(1,2), type = "p");abline(h=0,lty=2);abline(v=0,lty=2)
-  # stressplot(MDS)
 
   Treatment <- phyloseq_obj@sam_data[[treatment_name]]
 
@@ -33,6 +33,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
   NMDS2 <- data.table(scores(MDS))$NMDS2
   ord <- data.table(NMDS1,NMDS2,Treatment)
   ord <- subset(ord, !is.na(Treatment))
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := phyloseq_obj@sam_data[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(NMDS1, NMDS2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
@@ -51,6 +52,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
           legend.text=element_text(size = 11, face = "bold"),
           legend.background = element_rect(fill = (alpha = 0))
     )
+  if(is.character(labels)){g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'), label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines") , show.legend = FALSE)}
   return(g)
 }
 
@@ -58,12 +60,13 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
+#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, labels = FALSE,
 #' circle = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
 #' @param circle If TRUE, add elipses around each treatment.
+#' @param labels Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @import ggplot2
 #' @importFrom Rtsne Rtsne
@@ -71,9 +74,10 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, colors 
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 
-tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, colors = 'default'){
+tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default'){
   options(warn = -1)
   if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
+  if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = ".")
 
@@ -88,6 +92,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   tSNE2 <- tsne$Y[,2]
   ord <- data.table(tSNE1, tSNE2, Treatment)
   ord <- subset(ord, !is.na(Treatment))
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := phyloseq_obj@sam_data[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(tSNE1, tSNE2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
@@ -106,6 +111,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
           legend.text=element_text(size = 11, face = "bold"),
           legend.background = element_rect(fill = (alpha = 0))
     )
+  if(is.character(labels)){g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'), label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines") , show.legend = FALSE)}
   return(g)
 }
 
