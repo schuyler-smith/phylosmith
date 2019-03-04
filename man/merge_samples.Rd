@@ -2,7 +2,7 @@
 % Please edit documentation in R/taxa_filter.R
 \name{merge_samples}
 \alias{merge_samples}
-\title{Merge samples with treatment groups. Function from the phylosmith-package.}
+\title{Merge samples based on common factor within sample_data. Function from the phylosmith-package.}
 \usage{
 merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
 }

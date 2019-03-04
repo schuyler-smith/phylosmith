@@ -145,7 +145,7 @@ order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
   return(phyloseq_obj)
 }
 
-#' Merge samples with treatment groups. Function from the phylosmith-package.
+#' Merge samples based on common factor within sample_data. Function from the phylosmith-package.
 #'
 #' This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.
 #' @useDynLib phylosmith
@@ -172,7 +172,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 
   sub_phy <- do.call(merge_phyloseq,
      sapply(Treatment_Groups, FUN = function(group){
-       group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', merge_on, ' == "', group, '")')))
+       group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', treatment_name, ' == "', group, '")')))
        if(nsamples(group_phy) > 1){sub_phy <- phyloseq::merge_samples(group_phy, merge_on)
        merge_names <- rownames(sub_phy@sam_data)
        if(group != merge_names){sample_names(sub_phy) <- paste0(group, '_', merge_names)}
