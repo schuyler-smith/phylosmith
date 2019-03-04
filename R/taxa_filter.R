@@ -145,4 +145,47 @@ order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
   return(phyloseq_obj)
 }
 
+#' Merge samples with treatment groups. Function from the phylosmith-package.
+#'
+#' This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.
+#' @useDynLib phylosmith
+#' @usage merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}, the function will look in to merge on. If you want to merge basedon treatment, assign this argument and do not assing \code{merge_on}.
+#' @param subset If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.
+#' @param merge_on Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} to merge on.
+#' @keywords manip
+#' @export
+
+merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
+  options(warn = -1)
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(merge_on)){merge_on <- colnames(phyloseq_obj@sam_data[,merge_on])}
+  phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
+  phyloseq_obj <- combine_treatments(phyloseq_obj, merge_on)
+  treatment_name <- paste(treatment, collapse = ".")
+  merge_on <- paste(merge_on, collapse = ".")
+  Treatment_Groups <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  Treatment_Groups <- eval(parse(text=paste0('Treatment_Groups[grepl("', paste0(subset), '", Treatment_Groups)]')))
+
+  sub_phy <- do.call(merge_phyloseq,
+     sapply(Treatment_Groups, FUN = function(group){
+       sub_phy <- taxa_filter(phyloseq_obj, treatment, subset = group)
+       if(nsamples(sub_phy) > 1){sub_phy <- phyloseq::merge_samples(sub_phy, merge_on)
+       merge_names <- rownames(sub_phy@sam_data)
+       sample_names(sub_phy) <- paste0(group, '_', merge_names)
+       sam <- as(sub_phy@sam_data, 'data.frame')
+       sam[, merge_on] <- merge_names
+       sam[,treatment_name] <- group
+       for(i in treatment){
+         sam[,i] <- unique(taxa_filter(phyloseq_obj, treatment, subset = group)@sam_data[,i])}
+       sub_phy@sam_data <- sample_data(sam)}
+       return(sub_phy)
+     })
+  )
+  phyloseq_obj <- tryCatch({phyloseq_obj <- subset_samples(phyloseq_obj, eval(parse(text=paste0('!(', treatment_name,' %in% Treatment_Groups)'))))},
+                           error = function(e){phyloseq_obj <- sub_phy},
+                           finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+  return(phyloseq_obj)
+}
 

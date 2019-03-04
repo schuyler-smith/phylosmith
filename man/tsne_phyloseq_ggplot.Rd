@@ -4,8 +4,8 @@
 \alias{tsne_phyloseq_ggplot}
 \title{Create a ggplot object using t-SNE from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, labels = FALSE,
-circle = TRUE, colors = 'default')
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
+labels = FALSE, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}

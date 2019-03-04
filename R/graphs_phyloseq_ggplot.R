@@ -22,7 +22,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   treatment_name <- paste(treatment, collapse = '.')
 
   if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
-  else if(verbose == FALSE){(invisible(capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
+  else if(verbose == FALSE){(invisible(utils::capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
 
   Treatment <- phyloseq_obj@sam_data[[treatment_name]]
 
@@ -60,8 +60,8 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, labels = FALSE,
-#' circle = TRUE, colors = 'default')
+#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
+#' labels = FALSE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
 #' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
