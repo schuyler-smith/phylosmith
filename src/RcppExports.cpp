@@ -6,15 +6,15 @@
 
 using namespace Rcpp;
 
-// arrange_cooccurr_table
-Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp::CharacterVector taxa_of_interest);
-RcppExport SEXP _phylosmith_arrange_cooccurr_table(SEXP cooccurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
+// arrange_co_occurrence_table
+Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table, Rcpp::CharacterVector taxa_of_interest);
+RcppExport SEXP _phylosmith_arrange_co_occurrence_table(SEXP co_occurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type cooccurrence_table(cooccurrence_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type co_occurrence_table(co_occurrence_tableSEXP);
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type taxa_of_interest(taxa_of_interestSEXP);
-    rcpp_result_gen = Rcpp::wrap(arrange_cooccurr_table(cooccurrence_table, taxa_of_interest));
+    rcpp_result_gen = Rcpp::wrap(arrange_co_occurrence_table(co_occurrence_table, taxa_of_interest));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,7 +61,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_arrange_cooccurr_table", (DL_FUNC) &_phylosmith_arrange_cooccurr_table, 2},
+    {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 5},
     {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},

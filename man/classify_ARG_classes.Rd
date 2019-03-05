@@ -7,7 +7,7 @@
 classify_ARG_classes(phyloseq_obj, genes, combine = 0, obo = NULL)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
 \item{genes}{Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.}
 

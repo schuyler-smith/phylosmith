@@ -8,17 +8,17 @@ tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
 labels = FALSE, colors = 'default')
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
 \item{perplexity}{similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)}
 
-\item{circle}{If TRUE, add elipses around each treatment.}
+\item{circle}{Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around each of the \code{treatment} factors (\code{TRUE}).}
 
-\item{labels}{Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.}
+\item{labels}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of that factor instead of circle points.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
+\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.

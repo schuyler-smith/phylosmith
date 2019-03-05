@@ -4,21 +4,14 @@
 \alias{combine_treatments}
 \title{Combine meta-data columns. Function from the phylosmith-package.}
 \usage{
-combine_treatments(phyloseq_obj, treatments, sep = '.')
+combine_treatments(phyloseq_obj, treatments)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatments}{A vector of column names or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}.}
-
-\item{sep}{Delimiter to separate the treatments.}
+\item{treatments}{A vector of column name as a strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}. This requires at least two columns to be given.}
 }
 \description{
 Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
-}
-\examples{
-data(mock_phyloseq)
-combine_treatments(mock_phyloseq, treatments = c("treatment", "day"))@sam_data
-combine_treatments(mock_phyloseq, treatments = c("treatment", "day"), sep = '_')@sam_data
 }
 \keyword{manip}

@@ -2,7 +2,7 @@
 #'
 #' Classifies ARGs from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
 #' @usage classify_ARG_classes(phyloseq_obj, genes, combine = 0, obo = NULL)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
 #' @param combine The number of Classes a gene must belong to to be set to 'Multiple_Resistance'.
 #' @param obo an object processed with \code{\link{processOBO}}.
@@ -35,7 +35,7 @@ classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
 #'
 #' Classifies ARGs mechanism of function from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
 #' @usage classify_ARG_mechanisms(phyloseq_obj, genes, obo = NULL)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param genes Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.
 #' @param obo an object processed with \code{\link{processOBO}}.
 #' @import stringr
@@ -156,7 +156,5 @@ processOBO <- function(OBO_filepath){
   return(OBO)
 }
 
-# OBO_filepath <- '~/Downloads/card-ontology/aro.obo'
-# CARD <- processOBO(OBO_filepath)
-# save(CARD, file = 'R/sysdata.rda')
+
 

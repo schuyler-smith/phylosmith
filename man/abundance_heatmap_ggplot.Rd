@@ -8,17 +8,17 @@ abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subse
 transformation = 'none', colors = 'default')
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{classification}{Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.}
+\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{subset}{If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.}
+\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 
-\item{transformation}{Transforms the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt"}
+\item{transformation}{Transformation to be used on the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt"}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
+\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates heatmaps of the abundances across samples.

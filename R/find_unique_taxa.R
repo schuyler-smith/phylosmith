@@ -3,33 +3,25 @@
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
 #' @useDynLib phylosmith
 #' @usage find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @keywords manip
 #' @export
-#' @import phyloseq
 #' @seealso \code{\link{find_common_taxa}}
-#' @examples
-#' data(mock_phyloseq)
-#' find_unique_taxa(mock_phyloseq, treatment = 2)
-#' find_unique_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 
 find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"
 
-  phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  treatment_name <- paste(treatment, collapse = ".")
+  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
+  treatment_name <- paste(treatment, collapse = sep)
+  treatment_classes <- unique(phyloseq_obj@sam_data[[treatment_name]])
 
-  treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(treatment_name), ")")))
-  if(!(is.null(subset))){
-    treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(subset), '", treatments)]')))
-  }
-
-  seen_taxa <- lapply(treatments, FUN = function(trt){
+  seen_taxa <- lapply(treatment_classes, FUN = function(trt){
     taxa_names(taxa_filter(phyloseq_obj, treatment = treatment_name, subset = trt, frequency = 0))
-  }); names(seen_taxa) <- treatments
+  }); names(seen_taxa) <- treatment_classes
 
   taxa_counts <- table(unlist(seen_taxa))
   unique_taxa <- names(taxa_counts[taxa_counts == 1])
@@ -47,34 +39,26 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
 #' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
 #' @useDynLib phylosmith
 #' @usage find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').
-#' @param n Number of treatment groups that need to share the taxa.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param n Number of treatment groups that need to share the taxa to be considered a common taxa.
 #' @keywords manip
-#' @export
-#' @import phyloseq
 #' @seealso \code{\link{find_unique_taxa}}
-#' @examples
-#' data(mock_phyloseq)
-#' find_common_taxa(mock_phyloseq, treatment = 2)
-#' find_common_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
+#' @export
 
 find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
   #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"; n = 2
 
-  phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  treatment_name <- paste(treatment, collapse = ".")
+  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
+  treatment_name <- paste(treatment, collapse = sep)
+  treatment_classes <- unique(phyloseq_obj@sam_data[[treatment_name]])
 
-  treatments <- eval(parse(text=paste0("unique(phyloseq_obj@sam_data$", paste0(treatment_name), ")")))
-  if(!(is.null(subset))){
-    treatments <- eval(parse(text=paste0('treatments[grepl("', paste0(subset), '", treatments)]')))
-  }
-
-  seen_taxa <- lapply(treatments, FUN = function(trt){
+  seen_taxa <- lapply(treatment_classes, FUN = function(trt){
     taxa_names(taxa_filter(phyloseq_obj, treatment = treatment_name, subset = trt, frequency = 0))
-  }); names(seen_taxa) <- treatments
+  }); names(seen_taxa) <- treatment_classes
 
   taxa_counts <- table(unlist(seen_taxa))
   if(n != 'all'){
@@ -84,7 +68,7 @@ find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
     }
     shared_taxa <- names(taxa_counts[taxa_counts == round(n)])
   } else {
-    shared_taxa <- names(taxa_counts[taxa_counts == length(treatments)])
+    shared_taxa <- names(taxa_counts[taxa_counts == length(treatment_classes)])
   }
   return(shared_taxa)
 }

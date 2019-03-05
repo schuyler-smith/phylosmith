@@ -8,22 +8,18 @@ bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations 
 cores = 0)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{replicates}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
+\item{replicates}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
 
 \item{permutations}{Number of iterations to compute.}
 
-\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
+\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.}
 }
 \description{
 Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
-}
-\examples{
-data(mock_phyloseq)
-bootstrap_rho(mock_phyloseq, treatment = "day", permutations = 10)
 }
 \seealso{
 \code{\link{co_occurrence}}

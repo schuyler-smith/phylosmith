@@ -23,15 +23,15 @@ using namespace std;
 
 // [[Rcpp::export]]
 
-Rcpp::DataFrame arrange_cooccurr_table(Rcpp::DataFrame cooccurrence_table, Rcpp::CharacterVector taxa_of_interest){
+Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table, Rcpp::CharacterVector taxa_of_interest){
 
-    Rcpp::CharacterVector treatment = cooccurrence_table[0];
-    Rcpp::CharacterVector taxa_1 = cooccurrence_table[1];
-    Rcpp::CharacterVector taxa_2 = cooccurrence_table[2];
-    Rcpp::NumericVector rho_values = cooccurrence_table[3];
-    Rcpp::NumericVector p_values = cooccurrence_table[4];
-    vector<string> headers = cooccurrence_table.names();
-    int n_pairs = cooccurrence_table.nrow();
+    Rcpp::CharacterVector treatment = co_occurrence_table[0];
+    Rcpp::CharacterVector taxa_1 = co_occurrence_table[1];
+    Rcpp::CharacterVector taxa_2 = co_occurrence_table[2];
+    Rcpp::NumericVector rho_values = co_occurrence_table[3];
+    Rcpp::NumericVector p_values = co_occurrence_table[4];
+    vector<string> headers = co_occurrence_table.names();
+    int n_pairs = co_occurrence_table.nrow();
     int n_taxa = taxa_of_interest.size();
 
     #pragma omp parallel for

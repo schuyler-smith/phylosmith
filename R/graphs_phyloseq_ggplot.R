@@ -4,12 +4,12 @@
 #' @useDynLib phylosmith
 #' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE,
 #' colors = 'default', verbose = TRUE)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param circle If TRUE, add elipses around each treatment.
-#' @param labels Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
-#' @param verbose Whether or not to print the \code{\link[vegan:metaMDS]{metaMDS}} convergion to console or not.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param circle Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around each of the \code{treatment} factors (\code{TRUE}).
+#' @param labels Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of that factor instead of circle points.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
+#' @param verbose Whether or not to print the \code{\link[vegan:metaMDS]{metaMDS}} stress convergence to console (\code{TRUE}) or not (\code{FALSE}).
 #' @import ggplot2
 #' @importFrom vegan metaMDS scores
 #' @export
@@ -19,7 +19,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
-  treatment_name <- paste(treatment, collapse = '.')
+  treatment_name <- paste(treatment, collapse = sep)
 
   if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
   else if(verbose == FALSE){(invisible(utils::capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
@@ -62,12 +62,12 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
 #' labels = FALSE, colors = 'default')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \code{\link[=phyloseq]{phyloseq}} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
-#' @param circle If TRUE, add elipses around each treatment.
-#' @param labels Column name or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels instead of points.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param circle Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around each of the \code{treatment} factors (\code{TRUE}).
+#' @param labels Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of that factor instead of circle points.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @importFrom Rtsne Rtsne
 #' @importFrom vegan vegdist
@@ -79,7 +79,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
   if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
-  treatment_name <- paste(treatment, collapse = ".")
+  treatment_name <- paste(treatment, collapse = sep)
 
   tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
 
@@ -121,13 +121,13 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
 #' @useDynLib phylosmith
 #' @usage phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
 #' merge = TRUE, relative_abundance = TRUE, colors = 'default')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
-#' @param merge if TRUE, does not show separation of individuals within each \code{classification}. FALSE separates with black lines.
-#' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
+#' @param merge if \code{FALSE}, will show separation of individuals within each \code{classification}.
+#' @param relative_abundance If \code{TRUE}, transforms the abundance data into relative abundance by sample.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
@@ -137,11 +137,12 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(relative_abundance == TRUE){phyloseq_obj <- relative_abundance(phyloseq_obj)}
-  treatment_name <- paste(treatment, collapse = '.')
+  treatment_name <- paste(treatment, collapse = sep)
 
   # graph_data <- tax_glom(phyloseq_obj, taxrank = classification)
   graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])
   graph_data <- data.table(psmelt(graph_data))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -166,13 +167,13 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
 #' @useDynLib phylosmith
 #' @usage abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
 #' relative_abundance = FALSE, points = TRUE, colors = 'default')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}
-#' @param relative_abundance If TRUE, transforms the abundance data into relative abundance by sample.
-#' @param points if TRUE, will diplay the data-points.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
+#' @param relative_abundance If \code{TRUE}, transforms the abundance data into relative abundance by sample.
+#' @param points if \code{FALSE}, will not diplay the data-points.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
@@ -182,11 +183,12 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(relative_abundance == TRUE){phyloseq_obj <- relative_abundance(phyloseq_obj)}
-  treatment_name <- paste(treatment, collapse = '.')
+  treatment_name <- paste(treatment, collapse = sep)
 
   # graph_data <- tax_glom(phyloseq_obj, taxrank = classification)
   graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])
   graph_data <- data.table(psmelt(graph_data))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -210,12 +212,12 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
 #' @useDynLib phylosmith
 #' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
 #' transformation = 'none', colors = 'default')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}}.
-#' @param transformation Transforms the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt"
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
+#' @param transformation Transformation to be used on the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt"
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
@@ -225,7 +227,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(transformation == 'relative_abundance'){phyloseq_obj <- relative_abundance(phyloseq_obj)}
-  treatment_name <- paste(treatment, collapse = '.')
+  treatment_name <- paste(treatment, collapse = sep)
 
   color_count <- 10
   if(colors == 'default'){colors <- 'YlOrRd'}
@@ -235,6 +237,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- data.table(psmelt(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
 
   g <- ggplot(graph_data, aes_string('Sample', classification, fill = 'Abundance')) +
     geom_tile(color = "white", size = 0.25) +
@@ -253,12 +256,12 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 #' @useDynLib phylosmith
 #' @usage taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment,
 #' subset = NULL, transformation = 'none', colors = 'default')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).
-#' @param treatment Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param subset If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.
-#' @param classification Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the x-axis.
-#' @param transformation Transforms the data. "none", "mean", "median", "sd", "log", "log10"
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
+#' @param transformation Transformation to be used on the data. "none", "mean", "median", "sd", "log", "log10"
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
@@ -267,7 +270,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  treatment_name <- paste(treatment, collapse = '.')
+  treatment_name <- paste(treatment, collapse = sep)
   abundance <- 'Abundance'
 
   if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,1], phyloseq_obj@sam_data[,treatment_name])
@@ -305,7 +308,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
 #' @useDynLib phylosmith
 #' @usage create_palette(color_count, colors)
 #' @param color_count Number of colors to choose for palette.
-#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import RColorBrewer
 #' @import grDevices
 #'

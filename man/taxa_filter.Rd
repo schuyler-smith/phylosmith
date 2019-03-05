@@ -8,32 +8,19 @@ taxa_filter(phyloseq_obj, treatment = NULL, frequency = 0,
 subset = NULL, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}. Function then checks if taxa seen frequency number of times in each treatment. If multiple \code{sample_data} columns are given, they will be appended to the \code{sample_data} as one column with '.' separating each.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{frequency}{The minimum proportion of samples the taxa is seen in.}
+\item{frequency}{The proportion of samples the taxa is found in.}
 
-\item{subset}{If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.}
+\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 
-\item{below}{Does frequency define the minimum or maximum, should the presence fall below frequency or not.}
+\item{below}{Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.}
 
-\item{drop_samples}{Should the function remove samples that that are empty after removing taxa filtered by frequency.}
+\item{drop_samples}{Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).}
 }
 \description{
 This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
-}
-\examples{
-data(mock_phyloseq)
-taxa_filter(mock_phyloseq, frequency = 0.3)
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = "day")
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = 3)
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"))
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
-subset = "soil")
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
-subset = c("5","soil"))
-taxa_filter(mock_phyloseq, frequency = 0.3, treatment = c("day", "treatment"),
-subset = "5.soil")
 }
 \keyword{manip}

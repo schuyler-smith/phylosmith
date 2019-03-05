@@ -35,6 +35,7 @@ combine_treatments | combines multiple columns in meta-data into a single column
 find_common_taxa | find taxa common to each treatment
 find_unique_taxa | find taxa unique to each treatment
 merge_asvs       | combine ASVs to lowest common biological sequence
+merge_samples | combines samples based on common factor within sample_data
 order_phyloseq_metadata | sets the orders of the factors in a sample_data column (for ordering graphs)
 relative_abundance | transform abundance data to relative abundance
 taxa_filter | filter taxa by proportion of samples seen in

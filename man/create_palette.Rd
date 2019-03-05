@@ -9,7 +9,7 @@ create_palette(color_count, colors)
 \arguments{
 \item{color_count}{Number of colors to choose for palette.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
+\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
 }
 \description{
 This function creates color palettes for graphs.

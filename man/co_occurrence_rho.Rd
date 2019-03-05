@@ -7,18 +7,14 @@
 co_occurrence_rho(phyloseq_obj, treatment, cores = 0)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default uses all cores available.}
+\item{cores}{Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.}
 }
 \description{
 A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
-}
-\examples{
-data(mock_phyloseq)
-phylosmith:::co_occurrence_rho(mock_phyloseq, "day", 0.05)
 }
 \seealso{
 \code{\link{bootstrap_rho}} \code{\link{phylosmith}}

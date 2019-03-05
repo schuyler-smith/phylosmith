@@ -7,19 +7,14 @@
 find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{subset}{Keyword for a subset of the treatments, can be a substring within the treatment names (e.g. 'control').}
+\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
-}
-\examples{
-data(mock_phyloseq)
-find_unique_taxa(mock_phyloseq, treatment = 2)
-find_unique_taxa(mock_phyloseq, treatment = c("treatment", "day"), subset = "control")
 }
 \seealso{
 \code{\link{find_common_taxa}}

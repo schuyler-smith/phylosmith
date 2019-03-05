@@ -7,13 +7,13 @@
 merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}, the function will look in to merge on. If you want to merge basedon treatment, assign this argument and do not assing \code{merge_on}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{subset}{If taxa not needed to be seen in all \code{treatment}, then can check only one particular treatment subset, this works for multiple treatment inputs.}
+\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 
-\item{merge_on}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}} to merge on.}
+\item{merge_on}{Defines which variable the data is merged according to. This needs to be a column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 }
 \description{
 This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.

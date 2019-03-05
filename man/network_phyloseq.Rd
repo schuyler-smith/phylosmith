@@ -9,23 +9,23 @@ classification = 'none', node_colors = 'default', cluster = FALSE,
 cluster_colors = 'default', buffer = 0.5)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object created with the \link[=phyloseq]{phyloseq} package (must contain \code{\link[phyloseq:sample_data]{sample_data()}}).}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{treatment}{Column name or number, or vector of, in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{subset}{If taxa not needed to be seen in all \code{treatment}, then will subset to treatments containing this string.}
+\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 
-\item{co_occurrence_table}{Co_Occurence table of the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If none is given, it will computer the co-occurrence with the \code{phyloseq_obj}, using the given \code{treatment} and $p$ = 0.05.}
+\item{co_occurrence_table}{Table of the co-occurrence of taxa/genes in the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no table is given, it will be computed with the \code{phyloseq_obj}, using the given \code{treatment} and \code{p} = 0.05.}
 
-\item{classification}{Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} for node colors.}
+\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.}
 
 \item{node_colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 
-\item{cluster}{if TRUE, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, can pass a vctor of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.}
+\item{cluster}{if \code{TRUE}, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.}
 
-\item{cluster_colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the cluster.}
+\item{cluster_colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the clusters.}
 
-\item{buffer}{Amount of space beyond the points to extend the cluster.}
+\item{buffer}{Amount of space beyond the points to extend the cluster (aesthetic argument).}
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
