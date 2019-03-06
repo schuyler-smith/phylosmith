@@ -6,6 +6,7 @@ Meta
 *Rcheck/
 .Rhistory
 .RData
+.Rprofile
 *~
 tags
 build
@@ -35,7 +36,4 @@ build
 src-i386/
 src-x64/
 phylosmith*.tar.gz
-src/arrange_cooccurrence_table_tbb.cpp
-src/tbbex.cpp
-src/test_match_parrallel.cpp
 

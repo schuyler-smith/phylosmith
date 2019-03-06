@@ -28,15 +28,15 @@ Imports:
     stringr
 Remotes: 
     joey711/phyloseq
-Suggests:
-    knitr,
-    devtools,
-    rmarkdown
 LinkingTo: 
     Rcpp,
     RcppParallel,
     RcppArmadillo,
     RcppProgress,
+Suggests:
+    knitr,
+    devtools,
+    rmarkdown
 SystemRequirements: C++11
 NeedsCompilation: yes
 VignetteBuilder: knitr

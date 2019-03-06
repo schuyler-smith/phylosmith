@@ -1,7 +1,0 @@
-require(devtools)
-require(Rcpp)
-require(phyloseq)
-require(data.table)
-require(phylosmith)
-require(stringr)
-require(ggplot2)
