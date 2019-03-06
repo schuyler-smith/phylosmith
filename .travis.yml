@@ -8,4 +8,4 @@ addons:
  apt:
    packages:
      - libudunits2-dev # required for units, required for ggforce, required for ggraph
-     - libgdal1-dev # required for sf
+     - libgdal-dev # required for sf

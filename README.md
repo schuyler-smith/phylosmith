@@ -1,6 +1,9 @@
 
 ## `phylosmith`
 
+[![Travis Build
+Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith)
+
 A conglomeration of functions that I have written, that I find useful, for analyzing phyloseq objects. Phyloseq objects are a great data-standard for microbiome and gene-expression data.
 
 ## Installation
