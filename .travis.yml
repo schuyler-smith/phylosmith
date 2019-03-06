@@ -1,5 +1,10 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
 cache: packages
+sudo: false
+
+addons:
+ apt:
+   packages:
+     - libudunits2-dev # required for units, required for ggforce, required for ggraph
