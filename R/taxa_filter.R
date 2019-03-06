@@ -18,6 +18,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
   # data("mock_phyloseq")
   # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
+  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
 
   if(!(is.null(treatment))){
@@ -59,6 +60,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
     phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
   }
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
+  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
   return(phyloseq_obj)
 }
 
@@ -134,6 +136,7 @@ order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
 merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
   options(warn = -1)
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
+  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
@@ -174,6 +177,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
      phyloseq_obj@tax_table,
      phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
+  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
   return(phyloseq_obj)
 }
 

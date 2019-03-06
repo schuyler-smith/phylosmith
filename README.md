@@ -33,7 +33,7 @@ Call			 | Use
 ---------------- | ------------------------------------------------
 abundance_heatmap_ggplot | create a ggplot object of the heatmaps of the abndance table
 abundance_lines_ggplot | create a ggplot object of the abundance data as a line graph
-network_phyloseq | creates a network of the co-occurrence of taxa
+network_phyloseq | creates a ggplot object of the co-occurrence network of taxa
 nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
 phylogeny_bars_ggplot | create a ggplot barplot object of the compositons of each sample at a taxonomic level
 taxa_abundance_bars_ggplot | create a ggplot object of the abundance of taxa in each sample
