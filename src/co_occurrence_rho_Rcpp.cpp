@@ -74,7 +74,6 @@ std::vector<double> co_occurrence_rho_Rcpp(
 		// has_ties = false;
 		arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 		arma::mat treatment_matrix = rank_table.cols(treatment_columns);
-		int n_samples = treatment_columns.size();
 		#ifdef _OPENMP
 			#pragma omp parallel for num_threads(ncores)
 		#endif

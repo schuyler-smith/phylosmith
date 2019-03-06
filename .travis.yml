@@ -3,9 +3,21 @@
 language: R
 cache: packages
 sudo: false
+dist: trusty
+
+os:
+  - linux
+  - osx
 
 addons:
  apt:
    packages:
      - libudunits2-dev # required for units, required for ggforce, required for ggraph
      - libgdal-dev # required for sf
+
+env:
+  global:
+  # don't treat missing suggested packages as error
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
+  - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
