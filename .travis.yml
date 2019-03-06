@@ -8,6 +8,10 @@ dist: trusty
 os:
   - linux
   - osx
+  
+compiler:
+  - gcc
+  - clang
 
 addons:
  apt:

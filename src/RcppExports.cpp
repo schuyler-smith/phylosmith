@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// arrange_co_occurrence_table
-Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table, Rcpp::CharacterVector taxa_of_interest);
-RcppExport SEXP _phylosmith_arrange_co_occurrence_table(SEXP co_occurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type co_occurrence_table(co_occurrence_tableSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type taxa_of_interest(taxa_of_interestSEXP);
-    rcpp_result_gen = Rcpp::wrap(arrange_co_occurrence_table(co_occurrence_table, taxa_of_interest));
-    return rcpp_result_gen;
-END_RCPP
-}
 // co_occurrence_Rcpp
 Rcpp::DataFrame co_occurrence_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores);
 RcppExport SEXP _phylosmith_co_occurrence_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
@@ -47,6 +35,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// arrange_co_occurrence_table
+Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table, Rcpp::CharacterVector taxa_of_interest);
+RcppExport SEXP _phylosmith_arrange_co_occurrence_table(SEXP co_occurrence_tableSEXP, SEXP taxa_of_interestSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type co_occurrence_table(co_occurrence_tableSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type taxa_of_interest(taxa_of_interestSEXP);
+    rcpp_result_gen = Rcpp::wrap(arrange_co_occurrence_table(co_occurrence_table, taxa_of_interest));
+    return rcpp_result_gen;
+END_RCPP
+}
 // match_sequences
 Rcpp::DataFrame match_sequences(Rcpp::NumericMatrix short_input, Rcpp::NumericMatrix long_input);
 RcppExport SEXP _phylosmith_match_sequences(SEXP short_inputSEXP, SEXP long_inputSEXP) {
@@ -61,9 +61,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 5},
     {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
+    {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}
 };

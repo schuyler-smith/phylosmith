@@ -3,7 +3,7 @@
 #' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
 #' @usage co_occurrence(phyloseq_obj, treatment, p = 0.05, cores = 0)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param p The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to \code{p}.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
@@ -26,11 +26,11 @@ co_occurrence <- function(phyloseq_obj, treatment, p = 0.05, cores = 0){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = sep)
 
-  treatments <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
+  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
 
   if(cores == 0){cores <- parallel::detectCores()}
-  co_occurrence <- co_occurrence_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, p, cores)
+  co_occurrence <- co_occurrence_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatment_classes, p, cores)
   return(as.data.table(co_occurrence))
 }
 
@@ -118,11 +118,11 @@ co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = sep)
 
-  treatments <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_indices <- lapply(treatments, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
+  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
 
   if(cores == 0){cores <- parallel::detectCores()}
-  rhos <- co_occurrence_rho_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatments, cores)
+  rhos <- co_occurrence_rho_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatment_classes, cores)
   return(rhos)
 }
 
