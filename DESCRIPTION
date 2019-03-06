@@ -26,6 +26,8 @@ Imports:
     vegan,
     Rtsne,
     stringr
+Remotes: 
+    joey711/phyloseq
 Suggests:
     knitr,
     devtools,
