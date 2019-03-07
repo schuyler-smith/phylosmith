@@ -278,15 +278,15 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
   graph_data <- data.table(psmelt(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = unique(graph_data[[classification]]))
   graph_data <- graph_data[, -'Sample']
-  if(transformation == 'mean'){abundance <- 'Mean.Abundance'
+  if(transformation == 'mean'){abundance <- 'Mean_Abundance'
     graph_data <- graph_data[, mean(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
-  if(transformation == 'median'){abundance <- 'Median.Abundance'
+  if(transformation == 'median'){abundance <- 'Median_Abundance'
     graph_data <- graph_data[, stats::median(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
-  if(transformation == 'sd'){abundance <- 'StdDev.Abundance'
+  if(transformation == 'sd'){abundance <- 'StdDev_Abundance'
     graph_data <- graph_data[, stats::sd(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
-  if(transformation == 'log'){abundance <- 'log.Abundance'
+  if(transformation == 'log'){abundance <- 'log_Abundance'
     graph_data <- graph_data[, log(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
-  if(transformation == 'log10'){abundance <- 'log10.Abundance'
+  if(transformation == 'log10'){abundance <- 'log10_Abundance'
     graph_data <- graph_data[, log10(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
 
   color_count <- length(unique(graph_data[[treatment_name]]))
