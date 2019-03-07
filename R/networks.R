@@ -14,11 +14,11 @@
 #' @param cluster if \code{TRUE}, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
 #' @param cluster_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the clusters.
 #' @param buffer Amount of space beyond the points to extend the cluster (aesthetic argument).
+#' @import data.table
 #' @import igraph
 #' @import ggraph
-#' @importFrom sf st_as_sf st_buffer
-#' @import data.table
 #' @import graphics
+#' @importFrom sf st_as_sf st_buffer
 #' @export
 
 network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL, classification = 'none', node_colors = 'default',
