@@ -36,7 +36,8 @@ LinkingTo:
 Suggests:
     knitr,
     devtools,
-    rmarkdown
+    rmarkdown,
+    testthat
 SystemRequirements: C++11
 NeedsCompilation: yes
 VignetteBuilder: knitr

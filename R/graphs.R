@@ -21,8 +21,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(verbose == TRUE){MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100)}
-  else if(verbose == FALSE){(invisible(utils::capture.output(MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100))))}
+  MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100, trace = verbose)
 
   Treatment <- phyloseq_obj@sam_data[[treatment_name]]
 
