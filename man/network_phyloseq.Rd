@@ -4,9 +4,9 @@
 \alias{network_phyloseq}
 \title{Create an object of the abundance barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL,
-classification = 'none', node_colors = 'default', cluster = FALSE,
-cluster_colors = 'default', buffer = 0.5)
+network_phyloseq(phyloseq_obj, treatment = NULL, subset = NULL,
+co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
+cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}

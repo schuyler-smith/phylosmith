@@ -5,7 +5,7 @@
 \alias{FastCoOccur}
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code. Function from the phylosmith-package.}
 \usage{
-co_occurrence(phyloseq_obj, treatment, p = 0.05, cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}

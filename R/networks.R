@@ -2,9 +2,9 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage network_phyloseq(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL,
-#' classification = 'none', node_colors = 'default', cluster = FALSE,
-#' cluster_colors = 'default', buffer = 0.5)
+#' @usage network_phyloseq(phyloseq_obj, treatment = NULL, subset = NULL,
+#' co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
+#' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
@@ -21,7 +21,7 @@
 #' @importFrom sf st_as_sf st_buffer
 #' @export
 
-network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurrence_table = NULL, classification = 'none', node_colors = 'default',
+network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
                              cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
@@ -43,7 +43,8 @@ network_phyloseq <- function(phyloseq_obj, treatment, subset = NULL, co_occurren
   net <- simplify(net, remove.multiple = F, remove.loops = T)
   layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
 
-  if(cluster == TRUE){cluster <- cluster_fast_greedy(net)$membership}
+  if(cluster == TRUE){cluster_table <- co_occurrence_table; cluster_table[['weight']] <- abs(cluster_table[['weight']])
+    cluster <- cluster_fast_greedy(simplify(graph_from_data_frame(d=cluster_table, vertices=nodes, directed=F), remove.multiple = F, remove.loops = T))$membership}
   if(length(cluster) > 1){communities <- data.table(layout[,1:2])
     circles <- as(st_buffer(st_as_sf(communities, coords = c('x','y')), dist = buffer, nQuadSegs = 15), 'Spatial')
     circle_coords <- data.frame()
