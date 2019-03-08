@@ -149,7 +149,7 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
   g <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
-    guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification]]))/30))) +
+    guides(colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
     facet_grid(treatment_name, scales = "free", space = "free") +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
   if(merge == TRUE){g <- g + geom_bar(aes_string(color = classification, fill = classification), stat = 'identity', position = 'stack', size = 0.2)
@@ -196,7 +196,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
     geom_line(size = 1.0, aes_string(color=classification))+
     theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
-    guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification]]))/30))) +
+    guides(colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
     facet_grid(treatment_name, scales = "free", space = "free") +
     scale_colour_manual(values = graph_colors)
   if(points == TRUE){g <- g + geom_point(size = 1.8, aes_string(color = classification))}
@@ -295,7 +295,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
     geom_bar(stat = "identity", position = "dodge", size = 0.12, color = 'black') +
     theme_light() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
-    guides(colour = guide_legend(ncol = ceiling(length(levels(graph_data[[classification]]))/30))) +
+    guides(colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
 
   return(g)
