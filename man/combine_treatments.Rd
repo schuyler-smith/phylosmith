@@ -4,12 +4,12 @@
 \alias{combine_treatments}
 \title{Combine meta-data columns. Function from the phylosmith-package.}
 \usage{
-combine_treatments(phyloseq_obj, treatments)
+combine_treatments(phyloseq_obj, ...)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample.}
 
-\item{treatments}{A vector of column name as a strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}. This requires at least two columns to be given.}
+\item{...}{any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.}
 }
 \description{
 Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.

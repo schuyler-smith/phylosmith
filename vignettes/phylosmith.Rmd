@@ -9,13 +9,19 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.width=16, fig.height=8, cache=TRUE)
+library(phylosmith)
+data(soil_column)
+```
+
 ## `phylosmith` 
 
-`phylosmith` is a conglomeration of functions written to process and analyze `phyloseq-class` objects. `phyloseq` Phyloseq objects are a great data-standard for microbiome and gene-expression data.
+`phylosmith` is a conglomeration of functions written to process and analyze `phyloseq-class` objects. <a href="https://joey711.github.io/phyloseq/" targe="_blank" >Phyloseq</a> objects are a great data-standard for microbiome, gene-expression, and many other data types.
 
-A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication.
+A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication as some may require parameter optimization.
 
-## Installation
+# Installation
 
 ```r
 library(devtools)
@@ -25,9 +31,9 @@ library(phylosmith)
 
 \*for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select `add rtools to system PATH`.
 
-## Functions
+# Functions
 
-### Data Parsing
+## Data Parsing
 
 Call			 | Use
 ---------------- | ------------------------------------------------
@@ -40,7 +46,7 @@ order_phyloseq_metadata | sets the orders of the factors in a sample_data column
 relative_abundance | transform abundance data to relative abundance
 taxa_filter | filter taxa by proportion of samples seen in
 
-### Graphs
+## Graphs
 
 Call			 | Use
 ---------------- | ------------------------------------------------
@@ -52,7 +58,7 @@ phylogeny_bars_ggplot | create a ggplot barplot object of the compositons of eac
 taxa_abundance_bars_ggplot | create a ggplot object of the abundance of taxa in each sample
 tsne_phyloseq_ggplot  | create a ggplot object of the t-SNE from a phyloseq object
 
-### Calculations
+## Calculations
 
 Call			 | Use
 ---------------- | ------------------------------------------------
@@ -60,8 +66,91 @@ co_occurrence | calculate co-occurrence between taxa
 curate_cooccurrence | subsets the co-occurence table to specific taxa
 bootstrap_rho | runs permutations of the otu_table to calculate a significant $\rho$ value
 
+## Datasets
 
-### co_occurrence
+Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 
+
+Then I decided that I should include a real example of microbiome data (`soil_column`) becasue it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.
+
+But then I figured everyone looks at microbes and science-related data all day, and maybe some people might want something a little more fun than that or `iris`-es.. so I put together `mtg_legacy`. `mtg_legacy` is a compilation of decks from the Legacy format of the Trading Card game Magic the Gathering. In this dataset I have pooled the top 8 decklists from major tournaments around the world from July, 2018, to March, 2019 (the era post Deathrite Shaman banning.. R.I.P.).
+
+# Function Documentation
+
+### taxa_filter()
+
+***Arguments***
+
+call | description
+---------------- | ------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`frequency` | The proportion of samples the taxa is found in.
+`below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
+`drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
+
+This is a robust function that is implemented in nearly every other function of this package. It uses many of the subsetting processes distributed within `phyloseq`, but strives to make them a more user-friendly and combined into a one-stop function. The function works in several steps.
+
+  * Checks to see if `treatments` were specified. If so, it splits the phyloseq into separate objects for each treatment to process.
+  * Check to see which taxa are seen in a proportion of samples across each phyloseq object > `frequency` (filtering out taxa seen in few samples) and then merge back to one object
+  * If `subset` is declared, remove all `treatment` outside of the `subset`
+  * If `drop_samples` is `TRUE` then remove any samples that have 0 taxa observed after filtering (this is a very situational need)
+
+If `frequency` is set to $0$ (default), then the function removes any taxa with no abundance in any sample.
+
+***Useful for:***
+  
+  * subsetting by sample_data factors
+  * removing low-presence taxa
+  * removing high-presence taxa
+  
+***Examples***
+
+The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
+```{r check_data}
+soil_column
+```
+However, 339 of those taxa are not actually seen in any of the samples.
+```{r number_emtpy_taxa}
+length(phyloseq::taxa_sums(soil_column)[phyloseq::taxa_sums(soil_column) == 0])
+```
+`taxa_filter` with `frequency = 0` will remove those taxa.
+```{r taxa_filter_1}
+taxa_filter(soil_column, frequency = 0)
+```
+Let's say that we wanted to only look at taxa that are seen in 80% of the samples.
+```{r taxa_filter_2}
+taxa_filter(soil_column, frequency = 0.80)
+```
+But if we want taxa that are seen in 80% of any 1 teatment group;
+```{r taxa_filter_3}
+taxa_filter(soil_column, frequency = 0.80, treatment = 'Treatment')
+```
+It returns a larger number of taxa, since they need to be seen in less samples overall.
+
+In `soil_column`, the actual experimental conditions are a combination of the `Matrix` and `Treatment` columns, and the function can handle that too.
+```{r taxa_filter_4}
+taxa_filter(soil_column, frequency = 0.80, treatment = c('Matrix', 'Treatment'))
+```
+
+### combine_treatments()
+
+***Arguments***
+
+call | description
+---------------- | ------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample.
+`treatments` | A vector of column name as a strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}. This requires at least two columns to be given.
+
+This function will combine multiple columns from the sample-data into a single column. Doing this can make it easier to subset and look at the data on multiple factors. If you looked at the last example from `taxa_filter` you may have noticed there was an additional sample variable after the function ran. That is becasue when multiple `treatment` are given, it uses this function to combine them for subsetting.
+
+***Examples***
+
+```{r combine_treatments}
+combine_treatments(soil_column, 'Matrix', 2, 'Day')@sam_data[1:4,]
+```
+
+### co_occurrence()
 
 This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input. 
 

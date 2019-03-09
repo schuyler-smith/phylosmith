@@ -2,19 +2,19 @@
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
 #' @useDynLib phylosmith
-#' @usage taxa_filter(phyloseq_obj, treatment = NULL, frequency = 0,
-#' subset = NULL, below = FALSE, drop_samples = FALSE)
+#' @usage taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, 
+#' frequency = 0, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @param frequency The proportion of samples the taxa is found in.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param frequency The proportion of samples the taxa is found in.
 #' @param below Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
 #' @keywords manip
 #' @import data.table
 #' @export
 
-taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = NULL, below = FALSE, drop_samples = FALSE){
+taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE){
   # data("mock_phyloseq")
   # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
@@ -69,15 +69,20 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, frequency = 0, subset = 
 #'
 #' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 #' @useDynLib phylosmith
-#' @usage combine_treatments(phyloseq_obj, treatments)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param treatments A vector of column name as a strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}}. This requires at least two columns to be given.
+#' @usage combine_treatments(phyloseq_obj, ...)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample.
+#' @param ... any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
 #' @keywords manip
 #' @import data.table
 #' @export
 
-combine_treatments <- function(phyloseq_obj, treatments){
-  if(is.numeric(treatments)){treatments <- colnames(phyloseq_obj@sam_data[,treatments])}
+combine_treatments <- function(phyloseq_obj, ...){
+  treatments <- c(...)
+  treatments <- sapply(treatments, FUN = function(treatment){
+  if(is.numeric(treatment)){
+    return(colnames(phyloseq_obj@sam_data[,treatment]))
+    } else {return(treatment)}
+  })
   treatment_classes <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
   treatment_name <- paste(treatments, collapse = sep)
   order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(phyloseq_obj@sam_data[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = sep)})

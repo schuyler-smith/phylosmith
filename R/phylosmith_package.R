@@ -42,6 +42,7 @@
 #' @author Schuyler Smith \email{schuyler.smith@@iastate.edu}
 #' @docType package
 #' @keywords package
+#' @import phyloseq
 NA
 
 

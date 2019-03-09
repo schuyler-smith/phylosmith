@@ -5,10 +5,9 @@
 #' @usage merge_asvs(...)
 #' @param ... Any number of \code{\link[phyloseq]{phyloseq-class}} objects created with the \link[=phyloseq]{phyloseq} package (must have Amplicon Sequence Variants for calling taxa).
 #' @keywords manip
-#' @export
-#' @import phyloseq
 #' @import RcppArmadillo
 #' @import RcppParallel
+#' @export
 #' @examples
 #' data(mock_phyloseq); data(mock_phyloseq_2)
 #' merge_asvs(mock_phyloseq, mock_phyloseq_2)

@@ -1,3 +1,17 @@
+#' Soil Column 16S Data - OTUs
+#'
+#' @docType data
+#' @usage data(soil_column)
+#' @format A \code{\link[phyloseq]{phyloseq-class}} object.
+#' @keywords datasets
+#' @source Simulation
+#' @references \url{https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full}
+#' @examples
+#' data(soil_column)
+#' otu_table(soil_column)
+#' sample_data(soil_column)
+"soil_column"
+
 #' Mock Phyloseq Object 1
 #'
 #' These datasets were made-up for the purpose
