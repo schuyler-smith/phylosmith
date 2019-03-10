@@ -2,7 +2,7 @@
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
 #' @useDynLib phylosmith
-#' @usage taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, 
+#' @usage taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL,
 #' frequency = 0, below = FALSE, drop_samples = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
@@ -23,7 +23,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
 
   if(!(is.null(treatment))){
     if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-    phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
+    phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
 
@@ -69,14 +69,14 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
 #'
 #' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 #' @useDynLib phylosmith
-#' @usage combine_treatments(phyloseq_obj, ...)
+#' @usage merge_treatments(phyloseq_obj, ...)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample.
 #' @param ... any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
 #' @keywords manip
 #' @import data.table
 #' @export
 
-combine_treatments <- function(phyloseq_obj, ...){
+merge_treatments <- function(phyloseq_obj, ...){
   treatments <- c(...)
   treatments <- sapply(treatments, FUN = function(treatment){
   if(is.numeric(treatment)){
@@ -108,11 +108,11 @@ relative_abundance <- function(phyloseq_obj){
 }
 
 
-#' order_phyloseq_metadata
+#' order_treatment
 #'
 #' Reorders the levels of a metadata column in a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @useDynLib phylosmith
-#' @usage order_phyloseq_metadata(phyloseq_obj, treatment, order)
+#' @usage order_treatment(phyloseq_obj, treatment, order)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param order The order of factors in \code{treatment} column as a vector of strings.
@@ -120,7 +120,7 @@ relative_abundance <- function(phyloseq_obj){
 #' @import data.table
 #' @export
 
-order_phyloseq_metadata <- function(phyloseq_obj, treatment, order){
+order_treatment <- function(phyloseq_obj, treatment, order){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
   return(phyloseq_obj)
@@ -146,8 +146,8 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(merge_on)){merge_on <- colnames(phyloseq_obj@sam_data[,merge_on])}
-  phyloseq_obj <- combine_treatments(phyloseq_obj, treatment)
-  phyloseq_obj <- combine_treatments(phyloseq_obj, merge_on)
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
+  phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on)
   treatment_name <- paste(treatment, collapse = sep)
   merge_on <- paste(merge_on, collapse = sep)
   treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
@@ -155,7 +155,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
   if(merge_on != treatment){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
 
-  phyloseq_table <- data.table(psmelt(phyloseq_obj))
+  phyloseq_table <- data.table(melt_phyloseq(phyloseq_obj))
   if(merge_on != treatment){phyloseq_table[, 'Merged_Name' := do.call(paste0, list(phyloseq_table[[treatment_name]], sep, phyloseq_table[[merge_on]]))]
   } else {phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on]]]}
   otu_tab <- dcast(phyloseq_table[,c('OTU','Abundance','Merged_Name'), with=FALSE], Merged_Name ~ OTU, value.var = 'Abundance', fun.aggregate = mean)
@@ -186,3 +186,27 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   return(phyloseq_obj)
 }
 
+#' Melt a phyloseq object data.table.
+#'
+#' melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, and sample_Data into a single into a data.table.
+#' @useDynLib phylosmith
+#' @usage melt_phyloseq(phyloseq_obj)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @keywords manip
+#' @seealso \code{\link[phyloseq:psmelt]{psmelt()}}
+#' @import data.table
+#' @export
+
+melt_phyloseq <- function(phyloseq_obj){
+  melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE))
+  colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
+  taxa <- data.table(phyloseq_obj@tax_table, OTU = taxa_names(phyloseq_obj))
+  sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))
+  sample_data[, Sample := sample_names(phyloseq_obj)]
+
+  melted_phyloseq <- merge(melted_phyloseq, sample_data, by = "Sample")
+  melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")
+  melted_phyloseq <- melted_phyloseq[order(melted_phyloseq$Abundance, decreasing = TRUE), ]
+
+  return(melted_phyloseq)
+}

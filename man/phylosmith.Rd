@@ -20,13 +20,13 @@ phylosmith is a conglomeration of functions written to process and analyze \code
 \code{\link{abundance_lines_ggplot}} create a ggplot object of the abundance data as a line graph
 
 \code{\link{abundance_heatmap_ggplot}} create a ggplot object of the heatmaps of the abndance table
-\code{\link{order_phyloseq_metadata}} sets the orders of the factors in a sample_data column (for ordering graphs)
+\code{\link{order_treatment}} sets the orders of the factors in a sample_data column (for ordering graphs)
 
 \code{\link{co_occurrence}} calculate Spearman-rank co-occurrence between taxa
 
 \code{\link{bootstrap_rho}} runs permutations of the otu_table to calculate a significant rho value
 
-\code{\link{combine_treatments}} combines multiple columns in meta-data into a single column
+\code{\link{merge_treatments}} combines multiple columns in meta-data into a single column
 
 \code{\link{curate_co_occurrence}} subsets the co-occurence table to specific taxa
 

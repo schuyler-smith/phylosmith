@@ -70,7 +70,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment, replicates = 'independent', p
   if(replicates == 'independent'){
     replicate_indices <- 1:ncol(phyloseq_obj@otu_table)
   } else {
-    phyloseq_obj_reps <- combine_treatments(phyloseq_obj, c(treatment, replicates))
+    phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment, replicates))
     replicate_name <- paste(c(treatment, replicates), collapse = sep)
     replicates <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
     replicate_indices <- lapply(replicates, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})

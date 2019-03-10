@@ -4,7 +4,7 @@
 \alias{taxa_filter}
 \title{Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.}
 \usage{
-taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, 
+taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL,
 frequency = 0, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
