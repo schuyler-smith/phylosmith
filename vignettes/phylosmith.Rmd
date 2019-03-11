@@ -10,8 +10,7 @@ vignette: >
 ---
 
 ```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.width=16, fig.height=8)
-library(phyloseq)
+knitr::opts_chunk$set(fig.width=8, fig.height=4, output.lines=6)
 library(phylosmith)
 data(soil_column)
 ```
@@ -34,32 +33,32 @@ library(phylosmith)
 ## Data Parsing
 Call			 | Use
 ---------------- | ------------------------------------------------
-merge_treatments | combines multiple columns in meta-data into a single column
-find_common_taxa | find taxa common to each treatment
-find_unique_taxa | find taxa unique to each treatment
-merge_asvs       | combine ASVs to lowest common biological sequence
-merge_samples | combines samples based on common factor within sample_data
-order_phyloseq_metadata | sets the orders of the factors in a sample_data column (for ordering graphs)
-relative_abundance | transform abundance data to relative abundance
-taxa_filter | filter taxa by proportion of samples seen in
+[find_common_taxa](#find_common_taxa) | find taxa common to each treatment
+[find_unique_taxa](#find_unique_taxa) | find taxa unique to each treatment
+[merge_asvs](#merge_asvs)       | combine ASVs to lowest common biological sequence
+[merge_samples](#merge_samples) | combines samples based on common factor within sample_data
+[merge_treatments](#merge_treatments) | combines multiple columns in meta-data into a single column
+[order_phyloseq_metadata](#order_phyloseq_metadata) | sets the orders of the factors in a sample_data column (for ordering graphs)
+[relative_abundance](#relative_abundance) | transform abundance data to relative abundance
+[taxa_filter](#taxa_filter) | filter taxa by proportion of samples seen in
 
 ## Graphs
 Call			 | Use
 ---------------- | ------------------------------------------------
-abundance_heatmap_ggplot | create a ggplot object of the heatmaps of the abndance table
-abundance_lines_ggplot | create a ggplot object of the abundance data as a line graph
-network_phyloseq | creates a network of the co-occurrence of taxa
-nmds_phyloseq_ggplot  | create a ggplot object of the NMDS from a phyloseq object
-phylogeny_bars_ggplot | create a ggplot barplot object of the compositons of each sample at a taxonomic level
-taxa_abundance_bars_ggplot | create a ggplot object of the abundance of taxa in each sample
-tsne_phyloseq_ggplot  | create a ggplot object of the t-SNE from a phyloseq object
+[abundance_heatmap_ggplot](#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
+[abundance_lines_ggplot](#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
+[network_phyloseq](#network_phyloseq) | creates a network of the co-occurrence of taxa
+[nmds_phyloseq_ggplot](#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
+[phylogeny_bars_ggplot](#phylogeny_bars_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[taxa_abundance_bars_ggplot](#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
+[tsne_phyloseq_ggplot](#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
 
 ## Calculations
 Call			 | Use
 ---------------- | ------------------------------------------------
-co_occurrence | calculate co-occurrence between taxa
-curate_cooccurrence | subsets the co-occurence table to specific taxa
-bootstrap_rho | runs permutations of the otu_table to calculate a significant $\rho$ value
+[bootstrap_rho](#bootstrap_rho) | runs permutations of the otu_table to calculate a significant $\rho$ value
+[co_occurrence](#co_occurrence) | calculate co-occurrence between taxa
+[curate_cooccurrence](#curate_cooccurrence) | subsets the co-occurence table to specific taxa
 
 ## Datasets
 Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 
@@ -69,7 +68,160 @@ Then I decided that I should include a real example of microbiome data (`soil_co
 But then I figured everyone looks at microbes and science-related data all day, and maybe some people might want something a little more fun than that or `iris`-es.. so I put together `mtg_legacy`. `mtg_legacy` is a compilation of decks from the Legacy format of the Trading Card game Magic the Gathering. In this dataset I have pooled the top 8 decklists from major tournaments around the world from July, 2018, to March, 2019 (the era post Deathrite Shaman banning.. R.I.P.).
 
 # Function Documentation
+
+## Data Parsing
+
+### find_common_taxa()
+<a name="find_common_taxa"></a>
+
+Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a vector of taxa names that are all seen in `n` groups.
+
+***Usage***
+```r
+find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`n` | Number of treatment groups that need to share the taxa to be considered a common taxa.
+
+***Examples***
+
+```{r find_common_taxa}
+find_common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control', n = 'all')[1:30]
+```
+
+### find_unique_taxa()
+<a name="find_unique_taxa"></a>
+
+Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a list of vectors of taxa names that are only seen in each group.
+
+***Usage***
+```r
+find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+
+***Examples***
+```{r find_unique_taxa, eval=FALSE}
+find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
+```
+```{r find_unique_taxa_run, echo=FALSE}
+sapply(find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control'), head)
+```
+
+### merge_samples()
+<a name="merge_samples"></a>
+
+Merges samples that match on the given criteria (`merge_on`). Any sample_data factors that do not match will be set to `NA`. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis. 
+
+***Usage***
+```r
+merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+
+***Examples***
+```{r samples_otu, echo=FALSE}
+taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')@otu_table[1:6,1:4]
+```
+```{r merge_samples}
+merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
+```
+```{r merge_samples_otu, echo=FALSE}
+merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[1:6,]
+```
+
+### merge_treatments()
+<a name="merge_treatments"></a>
+
+Combines multiple columns from the sample-data into a single column. Doing this can make it easier to subset and look at the data on multiple factors. If you looked at the last example from `taxa_filter` you may have noticed there was an additional sample variable after the function ran. That is becasue when multiple `treatment` are given, it uses this function to combine them for subsetting.
+
+***Usage***
+```r
+merge_treatments(phyloseq_obj, ...)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample.
+`...` | any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
+
+***Examples***
+```{r merge_treatments}
+merge_treatments(soil_column, 'Matrix', 2, 'Day')@sam_data[1:4,]
+```
+
+### order_treatment()
+<a name="order_treatment"></a>
+
+This can be used to reassing the order of the levels of a factor in the sample-data.
+
+***Useful for:***
+
+  * managing order variables appear in figures
+
+***Usage***
+```r
+order_treatment(phyloseq_obj, treatment, order)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}.
+`order` | The order of factors in \code{treatment} column as a vector of strings.
+
+***Examples***
+```{r order_treatment}
+levels(soil_column@sam_data$Day)
+ordered_days <- order_treatment(soil_column, 'Day', c(0, 10, 24, 38, 59, 80, 108))
+levels(ordered_days@sam_data$Day)
+```
+
+### relative_abundance()
+<a name="relative_abundance"></a>
+
+This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
+
+***Usage***
+```r
+relative_abundance(phyloseq_obj)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object that contains `otu_table` count data.
+
+***Examples***
+
+```{r relative_abundance}
+phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
+```
+
 ### taxa_filter()
+<a name="taxa_filter"></a>
+
 This is a robust function that is implemented in nearly every other function of this package. It uses many of the subsetting processes distributed within `phyloseq`, but strives to make them a more user-friendly and combined into a one-stop function. The function works in several steps.
 
   * Checks to see if `treatments` were specified. If so, it splits the phyloseq into separate objects for each treatment to process.
@@ -78,18 +230,22 @@ This is a robust function that is implemented in nearly every other function of 
   * If `drop_samples` is `TRUE` then remove any samples that have 0 taxa observed after filtering (this is a very situational need)
 
 If `frequency` is set to 0 (default), then the function removes any taxa with no abundance in any sample.
+
 ***Useful for:***
+
   * subsetting by sample_data factors
   * removing low-presence taxa
   * removing high-presence taxa
+
 ***Usage***
 ```r
 taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE)
 ```
+
 ***Arguments***
 
 Call | Description
----------------- | ------------------------------------------------
+-------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
 `treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 `subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
@@ -97,6 +253,7 @@ Call | Description
 `below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
 `drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
 ***Examples***
+
 The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
 ```{r check_data}
 soil_column
@@ -124,84 +281,233 @@ In `soil_column`, the actual experimental conditions are a combination of the `M
 taxa_filter(soil_column, frequency = 0.80, treatment = c('Matrix', 'Treatment'))
 ```
 
-### merge_treatments()
-Combines multiple columns from the sample-data into a single column. Doing this can make it easier to subset and look at the data on multiple factors. If you looked at the last example from `taxa_filter` you may have noticed there was an additional sample variable after the function ran. That is becasue when multiple `treatment` are given, it uses this function to combine them for subsetting.
+## Graphs
+
+### abundance_heatmap_ggplot()
+<a name="abundance_heatmap_ggplot"></a>
+
+Create a ggplot object heatmap of abundances of each taxa for each sample.
+
 ***Usage***
 ```r
-merge_treatments(phyloseq_obj, ...)
+abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
 ```
+
 ***Arguments***
 
-Call | Ddescription
----------------- | ------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample.
-`...` | any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`classification` | Column name as a string or number in the tax_table for the factor to use for node colors.
+`transformation` | Transformation to be used on the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt".
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r merge_treatments}
-merge_treatments(soil_column, 'Matrix', 2, 'Day')@sam_data[1:4,]
+```{r }
+abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), transformation = 'log')
 ```
 
-### merge_samples()
-This function merges samples that match on the given criteria (`merge_on`). Any sample_data factors that do not match will be set to `NA`. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis. 
+### abundance_lines_ggplot()
+<a name="abundance_lines_ggplot"></a>
+
+Create a ggplot object line graph of abundances across samples
+
 ***Usage***
 ```r
-merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default')
 ```
 ***Arguments***
 
 Call | Description
----------------- | ------------------------------------------------
-`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`classification` | Column name as a string or number in the tax_table for the factor to use for node colors.
+`points` | Whether or not to display point on the lines for each data-point.
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r merge_samples}
-# merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
+```{r abundance_lines_ggplot}
+abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'))
 ```
 
-### order_treatment()
+### network_phyloseq()
+<a name="network_phyloseq"></a>
 
+Create a ggplot object of the co-occurrence network.
+
+***Usage***
+```r
+network_phyloseq(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default', cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
+```
 ***Arguments***
 
 Call | Description
----------------- | ------------------------------------------------
-`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`treatment` | Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}.
-`order` | The order of factors in \code{treatment} column as a vector of strings.
-
-This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`co_occurrence_table` | 
+`classification` | Column name as a string or number in the tax_table for the factor to use for node colors.
+`node_colors` | Name of a color set from the RColorBrewer package or a vector palete of R accepted colors.
+cluster if TRUE, will use igraph's cluster_fast_greedy method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the phyloseq_obj.
+`cluster_colors` | Name of a color set from the RColorBrewer package or a vector palete of R accepted colors to use for the clusters.
+`buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
 
 ***Examples***
-
-```{r order_treatment}
-levels(soil_column@sam_data$Day)
-ordered_days <- order_treatment(soil_column, 'Day', c(0, 10, 24, 38, 59, 80, 108))
-levels(ordered_days@sam_data$Day)
+```{r prep_network_phyloseq, echo=FALSE}
+network_soil_column <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure')
+network_soil_column <- conglomerate_taxa(network_soil_column, 'phylum', taxa_are_ordered = FALSE)
+```
+```{r network_phyloseq}
+network_phyloseq(network_soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'phylum')
 ```
 
-### relative_abundance()
+### nmds_phyloseq_ggplot()
+<a name="nmds_phyloseq_ggplot"></a>
 
+Creates a ggplot object of the NMDS ordination of samples.
+
+***Usage***
+```r
+nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
+```
 ***Arguments***
 
 Call | Description
----------------- | ------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object that contains `otu_table` count data.
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
+`labels` | Column name as a string or number in the sample_data to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
+`verbose` | Whether or not to print the metaMDS stress convergence to console (TRUE) or not (FALSE).
 
-This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
+***Examples***
+```{r prep_nmds_phyloseq_ggplot, echo=FALSE}
+nmds_soil_column <- conglomerate_taxa(soil_column, 'genus')
+```
+```{r nmds_phyloseq_ggplot}
+nmds_phyloseq_ggplot(nmds_soil_column, c('Matrix', 'Treatment'), circle = TRUE, labels = 'Day', verbose = FALSE)
+```
+
+### phylogeny_bars_ggplot()
+<a name="phylogeny_bars_ggplot"></a>
+
+Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample. 
+
+***Usage***
+```r
+phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default')
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a string or number in the tax_table for the factor to use for node colors.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`merge` | If `FALSE`, will show separation of individuals within each `classification`.
+`relative_abundance` | If `TRUE`, transforms the abundance data into relative abundance by sample.
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
 
 ***Examples***
 
-```{r relative_abundance}
-phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
+```{phylogeny_bars_ggplot}
+phylogeny_bars_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), merge = TRUE)
 ```
+
+### taxa_abundance_bars_ggplot()
+<a name="taxa_abundance_bars_ggplot"></a>
+
+Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data. 
+
+***Usage***
+```r
+taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a string or number in the tax_table for the factor to use for node colors.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`transformation` | Transformation to be used on the data. "none", "mean", "median", "sd", "log", "log10"
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r prep-taxa_abundance_bars_ggplot}
+ta_soil_column <- taxa_filter(soil_column, c('Matrix', 'Treatment'), frequency = .7)
+```
+```{r taxa_abundance_bars_ggplot}
+taxa_abundance_bars_ggplot(ta_soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Control', transformation = 'mean')
+```
+
+### tsne_phyloseq_ggplot()
+<a name="tsne_phyloseq_ggplot"></a>
+
+Creates 
+
+***Usage***
+```r
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+***Examples***
+
+## Calculations
+
+### bootstrap_rho()
+<a name="bootstrap_rho"></a>
+
+***Usage***
+```r
+bootstrap_rho(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+***Examples***
+
+### curate_cooccurrence()
+<a name="curate_cooccurrence"></a>
+
+***Usage***
+```r
+curate_cooccurrence(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+***Examples***
 
 ### co_occurrence()
+<a name="co_occurrence"></a>
 
 This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input. 
 
+***Usage***
+```r
+
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+
+***Examples***
 ```r
 data(mock_phyloseq)
 FastCoOccur(mock_phyloseq, "day", 0.05)

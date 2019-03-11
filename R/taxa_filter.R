@@ -155,7 +155,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
   if(merge_on != treatment){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
 
-  phyloseq_table <- data.table(melt_phyloseq(phyloseq_obj))
+  phyloseq_table <- melt_phyloseq(phyloseq_obj)
   if(merge_on != treatment){phyloseq_table[, 'Merged_Name' := do.call(paste0, list(phyloseq_table[[treatment_name]], sep, phyloseq_table[[merge_on]]))]
   } else {phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on]]]}
   otu_tab <- dcast(phyloseq_table[,c('OTU','Abundance','Merged_Name'), with=FALSE], Merged_Name ~ OTU, value.var = 'Abundance', fun.aggregate = mean)
@@ -178,9 +178,9 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% treatment_classes))')))},
      error = function(e){phyloseq_obj <- sub_phy},
      finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
-  phyloseq_obj <- phyloseq(otu_table(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name'), taxa_are_rows = FALSE),
-     phyloseq_obj@tax_table,
-     phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
+  phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
+                 phyloseq_obj@tax_table,
+                 phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
   return(phyloseq_obj)
@@ -198,7 +198,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 #' @export
 
 melt_phyloseq <- function(phyloseq_obj){
-  melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE))
+  melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE), id.vars = 1)
   colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
   taxa <- data.table(phyloseq_obj@tax_table, OTU = taxa_names(phyloseq_obj))
   sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))
@@ -209,4 +209,35 @@ melt_phyloseq <- function(phyloseq_obj){
   melted_phyloseq <- melted_phyloseq[order(melted_phyloseq$Abundance, decreasing = TRUE), ]
 
   return(melted_phyloseq)
+}
+
+
+#' Conglomerate taxa by sample on a given classification level
+#'
+#' Conglomerate taxa by sample on a given classification level from the tax_table.
+#' @useDynLib phylosmith
+#' @usage conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
+#' @param taxa_are_ordered Whether the order of factors in the tax_table represent a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will only return the factor given by \code{classification}.
+#' @keywords manip
+#' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
+#' @import data.table
+#' @export
+
+conglomerate_taxa <- function(phyloseq_obj, classification, taxa_are_ordered = TRUE){
+  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+
+  if(taxa_are_ordered){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
+  } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
+
+  phyloseq_table <- melt_phyloseq(phyloseq_obj)
+  otus <- eval(parse(text=paste0("dcast(phyloseq_table, with=FALSE , Sample ~ ", paste(colnames(phyloseq_obj@tax_table), collapse = '+'), ", value.var = 'Abundance', fun = sum)")))
+  otus <- as.matrix(otus, rownames = 1)
+  taxa <- eval(parse(text=paste0("setkey(unique(phyloseq_table[, c('", paste(colnames(phyloseq_obj@tax_table), collapse = "', '"), "')]), ", paste(colnames(phyloseq_obj@tax_table), collapse = ', '), ")")))
+  taxa <- as.matrix(taxa, rownames = colnames(otus))
+  
+  phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa), sample_data(phyloseq_obj@sam_data))
+  
+  return(phyloseq_obj)
 }
