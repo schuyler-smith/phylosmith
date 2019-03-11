@@ -272,6 +272,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
+  if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = FALSE)}
   treatment_name <- paste(treatment, collapse = sep)
   abundance <- 'Abundance'
 

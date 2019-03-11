@@ -77,11 +77,11 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
 #' @export
 
 merge_treatments <- function(phyloseq_obj, ...){
-  treatments <- c(...)
+  treatments <- list(...)
   treatments <- sapply(treatments, FUN = function(treatment){
-  if(is.numeric(treatment)){
-    return(colnames(phyloseq_obj@sam_data[,treatment]))
-    } else {return(treatment)}
+    if(is.numeric(treatment)){
+      return(colnames(phyloseq_obj@sam_data[,treatment]))
+      } else {return(treatment)}
   })
   treatment_classes <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
   treatment_name <- paste(treatments, collapse = sep)

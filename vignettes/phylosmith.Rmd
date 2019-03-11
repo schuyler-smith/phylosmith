@@ -113,11 +113,8 @@ Call | Description
 `subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 
 ***Examples***
-```{r find_unique_taxa, eval=FALSE}
+```{r find_unique_taxa}
 find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
-```
-```{r find_unique_taxa_run, echo=FALSE}
-sapply(find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control'), head)
 ```
 
 ### merge_samples()
@@ -146,7 +143,7 @@ taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')@otu_table[1:6,
 merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
 ```
 ```{r merge_samples_otu, echo=FALSE}
-merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[1:6,]
+merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[c('OTU_5', 'OTU_6', 'OTU_8', 'OTU_12', 'OTU_14', 'OTU_18'),]
 ```
 
 ### merge_treatments()
@@ -359,12 +356,9 @@ cluster if TRUE, will use igraph's cluster_fast_greedy method. Alternatively, yo
 `buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
 
 ***Examples***
-```{r prep_network_phyloseq, echo=FALSE}
-network_soil_column <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure')
-network_soil_column <- conglomerate_taxa(network_soil_column, 'phylum', taxa_are_ordered = FALSE)
-```
-```{r network_phyloseq}
-network_phyloseq(network_soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'phylum')
+```{r network_phyloseq, eval=FALSE}
+network <- network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'genus')
+network + theme(legend.position = "none")
 ```
 
 ### nmds_phyloseq_ggplot()
@@ -388,11 +382,9 @@ Call | Description
 `verbose` | Whether or not to print the metaMDS stress convergence to console (TRUE) or not (FALSE).
 
 ***Examples***
-```{r prep_nmds_phyloseq_ggplot, echo=FALSE}
-nmds_soil_column <- conglomerate_taxa(soil_column, 'genus')
-```
+
 ```{r nmds_phyloseq_ggplot}
-nmds_phyloseq_ggplot(nmds_soil_column, c('Matrix', 'Treatment'), circle = TRUE, labels = 'Day', verbose = FALSE)
+nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'), circle = TRUE, labels = 'Day', verbose = FALSE)
 ```
 
 ### phylogeny_bars_ggplot()
@@ -444,55 +436,64 @@ Call | Description
 
 ***Examples***
 
-```{r prep-taxa_abundance_bars_ggplot}
-ta_soil_column <- taxa_filter(soil_column, c('Matrix', 'Treatment'), frequency = .7)
-```
 ```{r taxa_abundance_bars_ggplot}
-taxa_abundance_bars_ggplot(ta_soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Control', transformation = 'mean')
+taxa_abundance_bars_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Control', transformation = 'mean')
 ```
 
 ### tsne_phyloseq_ggplot()
 <a name="tsne_phyloseq_ggplot"></a>
 
-Creates 
+Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.
 
 ***Usage***
 ```r
-tsne_phyloseq_ggplot(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default')
 ```
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`perplexity` | similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see Rtsne for interpretation)
+`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
+`labels` | Column name as a string or number in the sample_data to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the RColorBrewer package or a vector palete of R-accepted colors.
+
 ***Examples***
+
+```{r tsne_phyloseq_ggplot}
+tsne_phyloseq_ggplot(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10, labels = 'Day')
+```
 
 ## Calculations
 
 ### bootstrap_rho()
 <a name="bootstrap_rho"></a>
 
+Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
+
 ***Usage***
 ```r
-bootstrap_rho(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 100, cores = 0)
 ```
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`replicates` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
+`permutations` | Number of iterations to compute.
+`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
+
 ***Examples***
 
-### curate_cooccurrence()
-<a name="curate_cooccurrence"></a>
-
-***Usage***
-```r
-curate_cooccurrence(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```{r bootstrap_rho}
+bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
+hist(bootstrapped_rhos)
+quantile(bootstrapped_rhos, c(.025, .975))
 ```
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-***Examples***
 
 ### co_occurrence()
 <a name="co_occurrence"></a>
@@ -501,15 +502,43 @@ This function is an implementation of the pair-wise Spearman rank correlation th
 
 ***Usage***
 ```r
-
+co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 ```
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`p` | The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to `p`.
+`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP 
 
 ***Examples***
+
+```{r co_occurrence}
+co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
+co_occurrence_table
+```
+
+### curate_cooccurrence()
+<a name="curate_cooccurrence"></a>
+
+Orders and subsets co-occurrence tables to a given set of OTUs. The input vector of OTU names will be used to subet the table, and then the table will be arranged so that one of the given OTU names in the pair-wise combination is always on the left column. This may have a niche, and may not be exported in later versions.
+
+***Usage***
 ```r
-data(mock_phyloseq)
-FastCoOccur(mock_phyloseq, "day", 0.05)
+curate_co_occurrence(co_occurrence_table, taxa_of_interest, number_of_treatments = 1)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the `phyloseq_obj`, computed using `co_occurrence`.
+`taxa_of_interest` | A list or vector of taxa names, like those generated with `find_unique_taxa`.
+`number_of_treatments` | How many treatments should the taxa of interest be seen in? Requires `integer` or 'all' (default = 1).
+
+***Examples***
+
+```{r curate_cooccurrence}
+
 ```
