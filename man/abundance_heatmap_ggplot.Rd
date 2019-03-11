@@ -10,7 +10,7 @@ transformation = 'none', colors = 'default')
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.}
+\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor.}
 
 \item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 

@@ -183,7 +183,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = FALSE)
-  if(transformation == 'relative_abundance'){phyloseq_obj <- relative_abundance(phyloseq_obj)}
+  if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
   # graph_data <- tax_glom(phyloseq_obj, taxrank = classification)
