@@ -37,14 +37,12 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   return(as.data.table(co_occurrence))
 }
 
-
-
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith
 #'
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #' @useDynLib phylosmith
-#' @usage bootstrap_rho(phyloseq_obj, treatment = NULL, replicates = 'independent', permutations = 100,
-#' cores = 0)
+#' @usage bootstrap_rho(phyloseq_obj, treatment = NULL, 
+#' replicates = 'independent', permutations = 100, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param replicates Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
@@ -58,7 +56,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 #' @seealso \code{\link{co_occurrence}}
 #' @export
 
-# sourceCpp('src/FastCoOccur_rho_Rcpp.cpp')
+# sourceCpp('src/co_occurrence_Rcpp.cpp')
 
 bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independent', permutations = 100, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0;
@@ -74,7 +72,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
     replicate_name <- paste(c(treatment), collapse = sep)
     replicates <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
     replicate_indices <- lapply(replicates, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
-  } else if(replicates != 'independent' & !(is.null(treatment)))
+  } else if(replicates != 'independent' & !(is.null(treatment))){
     phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment, replicates))
     replicate_name <- paste(c(treatment, replicates), collapse = sep)
     replicates <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
@@ -116,7 +114,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
 #' @keywords nonparametric
 #' @seealso \code{\link{bootstrap_rho}} \code{\link{phylosmith}}
 
-# sourceCpp("src/co_occurrence_rho_Rcpp.cpp")
+# sourceCpp("src/co_occurrence_Rcpp.cpp")
 
 co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05; cores = 0
