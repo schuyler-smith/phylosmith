@@ -142,7 +142,6 @@ co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
 #' @import RcppArmadillo
 #' @import RcppParallel
 #' @seealso \code{\link{co_occurrence}}
-#' @export
 
 curate_co_occurrence <- function(co_occurrence_table, taxa_of_interest, number_of_treatments = 1){
   sub_co_occurrence <- co_occurrence_table[(co_occurrence_table[[2]] %in% taxa_of_interest | co_occurrence_table[[3]] %in% taxa_of_interest),]

@@ -518,23 +518,5 @@ co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treat
 co_occurrence_table
 ```
 
-### curate_cooccurrence()
-<a name="curate_cooccurrence"></a>
-
-Orders and subsets co-occurrence tables to a given set of OTUs. The input vector of OTU names will be used to subet the table, and then the table will be arranged so that one of the given OTU names in the pair-wise combination is always on the left column. This may have a niche, and may not be exported in later versions.
-
-***Usage***
-```r
-curate_co_occurrence(co_occurrence_table, taxa_of_interest, number_of_treatments = 1)
-```
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the `phyloseq_obj`, computed using `co_occurrence`.
-`taxa_of_interest` | A list or vector of taxa names, like those generated with `find_unique_taxa`.
-`number_of_treatments` | How many treatments should the taxa of interest be seen in? Requires `integer` or 'all' (default = 1).
-
-***Examples***
 
 
