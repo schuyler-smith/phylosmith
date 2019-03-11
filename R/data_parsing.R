@@ -1,4 +1,4 @@
-#' Conglomerate taxa by sample on a given classification level
+#' Conglomerate taxa by sample on a given classification level. Function from the phylosmith-package.
 #'
 #' Conglomerate taxa by sample on a given classification level from the tax_table.
 #' @useDynLib phylosmith
@@ -102,7 +102,7 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   return(unique_taxa)
 }
 
-#' Melt a phyloseq object data.table.
+#' Melt a phyloseq object into a data.table. Function from the phylosmith-package.
 #'
 #' melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, and sample_Data into a single into a data.table.
 #' @useDynLib phylosmith
@@ -137,6 +137,7 @@ melt_phyloseq <- function(phyloseq_obj){
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @param merge_on Defines which variable the data is merged according to. This needs to be a column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @keywords manip
+#' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
 #' @export
 
 merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){

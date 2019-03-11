@@ -33,12 +33,13 @@ library(phylosmith)
 ## Data Parsing
 Call			 | Use
 ---------------- | ------------------------------------------------
+[conglomerate_taxa](#conglomerate_taxa) | merges OTUs that have same classification
 [find_common_taxa](#find_common_taxa) | find taxa common to each treatment
 [find_unique_taxa](#find_unique_taxa) | find taxa unique to each treatment
-[merge_asvs](#merge_asvs)       | combine ASVs to lowest common biological sequence
+[melt_phyloseq](#melt_phyloseq) | melts a phyloseq object into a data.table
 [merge_samples](#merge_samples) | combines samples based on common factor within sample_data
-[merge_treatments](#merge_treatments) | combines multiple columns in meta-data into a single column
-[order_phyloseq_metadata](#order_phyloseq_metadata) | sets the orders of the factors in a sample_data column (for ordering graphs)
+[merge_treatments](#merge_treatments) | combines multiple columns in meta-data into a new column
+[order_phyloseq_metadata](#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
 [relative_abundance](#relative_abundance) | transform abundance data to relative abundance
 [taxa_filter](#taxa_filter) | filter taxa by proportion of samples seen in
 
@@ -58,7 +59,6 @@ Call			 | Use
 ---------------- | ------------------------------------------------
 [bootstrap_rho](#bootstrap_rho) | runs permutations of the otu_table to calculate a significant $\rho$ value
 [co_occurrence](#co_occurrence) | calculate co-occurrence between taxa
-[curate_cooccurrence](#curate_cooccurrence) | subsets the co-occurence table to specific taxa
 
 ## Datasets
 Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 
@@ -68,6 +68,27 @@ Then I decided that I should include a real example of microbiome data (`soil_co
 # Function Documentation
 
 ## Data Parsing
+
+### conglomerate_taxa()
+<a name="conglomerate_taxa"></a>
+
+A re-write of the `tax_glom()` function in Phyloseq. This implementation runs faster with the use of `data.table`.
+
+***Usage***
+```r
+conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a string or number in the tax_table for the factor to conglomerate by.
+`taxa_are_ordered` | Whether the order of factors in the tax_table represent a decreasing heirarchy (`TRUE`) or are independant (`FALSE`). If `FALSE`, will only return the factor given by `classification`.
+
+
+***Examples***
+
 
 ### find_common_taxa()
 <a name="find_common_taxa"></a>
@@ -114,6 +135,23 @@ Call | Description
 ```{r find_unique_taxa}
 find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
 ```
+
+### melt_phyloseq()
+<a name="melt_phyloseq"></a>
+
+A re-write of the `tax_glom()` function in Phyloseq. This implementation runs faster with the use of `data.table`.
+
+***Usage***
+```r
+melt_phyloseq(phyloseq_obj)
+```
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object.
+
+***Examples***
 
 ### merge_samples()
 <a name="merge_samples"></a>
