@@ -202,7 +202,7 @@ melt_phyloseq <- function(phyloseq_obj){
   colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
   taxa <- data.table(phyloseq_obj@tax_table, OTU = taxa_names(phyloseq_obj))
   sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))
-  sample_data[, Sample := sample_names(phyloseq_obj)]
+  sample_data[, 'Sample' := sample_names(phyloseq_obj)]
 
   melted_phyloseq <- merge(melted_phyloseq, sample_data, by = "Sample")
   melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")

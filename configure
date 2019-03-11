@@ -2485,14 +2485,15 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
-	OPENMP_CXXFLAGS=
-	# Check whether --enable-openmp was given.
+
+OPENMP_CXXFLAGS=
+# Check whether --enable-openmp was given.
 if test "${enable_openmp+set}" = set; then :
   enableval=$enable_openmp;
 fi
 
-	if test "$enable_openmp" != no; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CXX option to support OpenMP" >&5
+if test "$enable_openmp" != no; then
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CXX option to support OpenMP" >&5
 $as_echo_n "checking for $CXX option to support OpenMP... " >&6; }
 if ${ac_cv_prog_cxx_openmp+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -2511,13 +2512,13 @@ if ac_fn_cxx_try_link "$LINENO"; then :
   ac_cv_prog_cxx_openmp='none needed'
 else
   ac_cv_prog_cxx_openmp='unsupported'
-	  for ac_option in -fopenmp -xopenmp -qopenmp \
-	                       -openmp -mp -omp -qsmp=omp -homp \
-			   -fopenmp=libomp \
-	                       -Popenmp --openmp; do
-	    ac_save_CXXFLAGS=$CXXFLAGS
-	    CXXFLAGS="$CXXFLAGS $ac_option"
-	    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  for ac_option in -fopenmp -xopenmp -qopenmp \
+                       -openmp -mp -omp -qsmp=omp -homp \
+		   -fopenmp=libomp \
+                       -Popenmp --openmp; do
+    ac_save_CXXFLAGS=$CXXFLAGS
+    CXXFLAGS="$CXXFLAGS $ac_option"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 #ifndef _OPENMP
@@ -2532,24 +2533,24 @@ if ac_fn_cxx_try_link "$LINENO"; then :
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-	    CXXFLAGS=$ac_save_CXXFLAGS
-	    if test "$ac_cv_prog_cxx_openmp" != unsupported; then
-	      break
-	    fi
-	  done
+    CXXFLAGS=$ac_save_CXXFLAGS
+    if test "$ac_cv_prog_cxx_openmp" != unsupported; then
+      break
+    fi
+  done
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cxx_openmp" >&5
 $as_echo "$ac_cv_prog_cxx_openmp" >&6; }
-	case $ac_cv_prog_cxx_openmp in #(
-	  "none needed" | unsupported)
-	;; #(
-	  *)
-	OPENMP_CXXFLAGS=$ac_cv_prog_cxx_openmp ;;
-	esac
-	fi
+case $ac_cv_prog_cxx_openmp in #(
+  "none needed" | unsupported)
+;; #(
+  *)
+OPENMP_CXXFLAGS=$ac_cv_prog_cxx_openmp ;;
+esac
+fi
 
 
 ac_config_files="$ac_config_files src/Makevars"
