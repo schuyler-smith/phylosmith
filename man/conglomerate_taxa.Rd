@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_parsing.R
 \name{conglomerate_taxa}
 \alias{conglomerate_taxa}
-\title{Conglomerate taxa by sample on a given classification level}
+\title{Conglomerate taxa by sample on a given classification level. Function from the phylosmith-package.}
 \usage{
 conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)
 }

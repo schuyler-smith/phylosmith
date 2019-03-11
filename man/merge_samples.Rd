@@ -18,4 +18,7 @@ merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
 \description{
 This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.
 }
+\seealso{
+\code{\link[phyloseq:merge_samples]{merge_samples()}}
+}
 \keyword{manip}

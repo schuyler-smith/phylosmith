@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_parsing.R
 \name{melt_phyloseq}
 \alias{melt_phyloseq}
-\title{Melt a phyloseq object data.table.}
+\title{Melt a phyloseq object into a data.table. Function from the phylosmith-package.}
 \usage{
 melt_phyloseq(phyloseq_obj)
 }
