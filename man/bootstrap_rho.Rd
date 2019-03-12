@@ -5,7 +5,7 @@
 \title{Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith}
 \usage{
 bootstrap_rho(phyloseq_obj, treatment = NULL, 
-replicates = 'independent', permutations = 100, cores = 0)
+replicates = 'independent', permutations = 100)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -15,8 +15,6 @@ replicates = 'independent', permutations = 100, cores = 0)
 \item{replicates}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
-
-\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.}
 }
 \description{
 Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.

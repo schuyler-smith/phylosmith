@@ -42,12 +42,11 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #' @useDynLib phylosmith
 #' @usage bootstrap_rho(phyloseq_obj, treatment = NULL, 
-#' replicates = 'independent', permutations = 100, cores = 0)
+#' replicates = 'independent', permutations = 100)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param replicates Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations \code{numeric} Number of iterations to compute.
-#' @param cores \code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 #' @keywords nonparametric
 #' @import data.table
 #' @import RcppArmadillo
@@ -65,6 +64,12 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   if(is.numeric(replicates)){replicates <- colnames(phyloseq_obj@sam_data[,replicates])}
 
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, frequency = 0)
+  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  treatment_name <- paste(treatment, collapse = sep)
+  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
+
   if(replicates == 'independent' & is.null(treatment)){
     replicate_indices <- 1:ncol(phyloseq_obj@otu_table)
   } else if(replicates == 'independent' & !(is.null(treatment))){
@@ -79,7 +84,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
     replicate_indices <- lapply(replicates, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
   }
 
-  rhos<-list()
+  rhos<-data.table(rho = factor(), count = numeric())
   n <- nrow(phyloseq_obj@otu_table)
   permuted_phyloseq_obj <- phyloseq_obj
 
@@ -88,49 +93,14 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
       for(indices in replicate_indices){
         permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
       }
-      rhos[[i]] <- co_occurrence_rho(permuted_phyloseq_obj, treatment, cores = cores)
+      rhos <- rbindlist(list(rhos, data.table(table(round(co_occurrence_rho_Rcpp(permuted_phyloseq_obj@otu_table, treatment_indices, treatment_classes),3)))))[, lapply(.SD, sum, na.rm = TRUE), by = rho]
     }},
-    interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', length(rhos), ' permutations.'); return(rhos)})
+    interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', i, ' permutations.'); return(rhos)})
 
-  rhos <- unlist(rhos)
-  # if(p == 0){
   return(rhos)
 } #else {
 #   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
 # }
-
-
-#' pair-wise Spearman rank co-occurrence, written in efficient c++ code.
-#'
-#' A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
-#' @useDynLib phylosmith
-#' @usage co_occurrence_rho(phyloseq_obj, treatment, cores = 0)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @param cores Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
-#' @import RcppArmadillo
-#' @import RcppParallel
-#' @import RcppProgress
-#' @keywords nonparametric
-#' @seealso \code{\link{bootstrap_rho}} \code{\link{phylosmith}}
-
-# sourceCpp("src/co_occurrence_Rcpp.cpp")
-
-co_occurrence_rho <- function(phyloseq_obj, treatment, cores = 0){
-  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05; cores = 0
-  options(warnings=-1)
-
-  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  treatment_name <- paste(treatment, collapse = sep)
-
-  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
-
-  if(cores == 0){cores <- parallel::detectCores()}
-  rhos <- co_occurrence_rho_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatment_classes, cores)
-  return(rhos)
-}
 
 #' Curate co-occurrence data. Function from the phylosmith-package.
 #'

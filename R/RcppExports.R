@@ -21,11 +21,10 @@ co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, p_
 #' @param otu_table An \code{otu_table} in the format from \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param treatment_indices A \code{list} with c++ indices for the \code{treatment_names} corresponding to which treatment each column in the \code{otu_table} belongs to.
 #' @param treatment_names A \code{Vector} containing the treatment names corresponding to the \code{treatment_indices}.
-#' @param ncores \code{int} for how many cores to use to multithread the calculations.
 #' @return A \code{vector} with rho values for each pair-wise correlation.
 #' @seealso \code{\link{bootstrap_rho}}
-co_occurrence_rho_Rcpp <- function(otu_table, treatment_indices, treatment_names, ncores) {
-    .Call('_phylosmith_co_occurrence_rho_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, ncores)
+co_occurrence_rho_Rcpp <- function(otu_table, treatment_indices, treatment_names) {
+    .Call('_phylosmith_co_occurrence_rho_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names)
 }
 
 #' @author Schuyler D. Smith

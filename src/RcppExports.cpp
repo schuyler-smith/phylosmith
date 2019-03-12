@@ -22,16 +22,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // co_occurrence_rho_Rcpp
-std::vector<double> co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, const int ncores);
-RcppExport SEXP _phylosmith_co_occurrence_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP ncoresSEXP) {
+std::vector<double> co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names);
+RcppExport SEXP _phylosmith_co_occurrence_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
-    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(co_occurrence_rho_Rcpp(otu_table, treatment_indices, treatment_names, ncores));
+    rcpp_result_gen = Rcpp::wrap(co_occurrence_rho_Rcpp(otu_table, treatment_indices, treatment_names));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -62,7 +61,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 5},
-    {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
+    {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 3},
     {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {"_phylosmith_match_sequences", (DL_FUNC) &_phylosmith_match_sequences, 2},
     {NULL, NULL, 0}
