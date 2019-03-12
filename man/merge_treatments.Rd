@@ -9,7 +9,7 @@ merge_treatments(phyloseq_obj, ...)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample.}
 
-\item{...}{any number of column names as strings or numbers in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.}
+\item{...}{any number of column names as \code{string}s or \code{numeric}s in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.}
 }
 \description{
 Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.

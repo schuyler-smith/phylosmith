@@ -10,7 +10,7 @@ co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
 \item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to \code{p}.}
 

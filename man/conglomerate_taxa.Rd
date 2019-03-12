@@ -9,7 +9,7 @@ conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
 
-\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.}
+\item{classification}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.}
 
 \item{hierarchical}{Whether the order of factors in the tax_table represent a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will only return the factor given by \code{classification}.}
 }

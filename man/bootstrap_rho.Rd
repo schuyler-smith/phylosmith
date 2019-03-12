@@ -10,9 +10,9 @@ replicates = 'independent', permutations = 100, cores = 0)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{replicates}{Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
+\item{replicates}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
 

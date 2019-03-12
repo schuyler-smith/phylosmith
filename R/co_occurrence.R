@@ -4,7 +4,7 @@
 #' @useDynLib phylosmith
 #' @usage co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
-#' @param treatment Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param p \code{numeric} The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to \code{p}.
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 #' @aliases FastCoOccur
@@ -44,8 +44,8 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 #' @usage bootstrap_rho(phyloseq_obj, treatment = NULL, 
 #' replicates = 'independent', permutations = 100, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
-#' @param treatment Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @param replicates Column name as a string or numeric in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param replicates Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations \code{numeric} Number of iterations to compute.
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 #' @keywords nonparametric
@@ -106,7 +106,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
 #' @useDynLib phylosmith
 #' @usage co_occurrence_rho(phyloseq_obj, treatment, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param cores Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 #' @import RcppArmadillo
 #' @import RcppParallel
