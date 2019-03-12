@@ -20,7 +20,7 @@ A re-write of the `tax_glom()` function in Phyloseq. This implementation runs fa
 <br>
 ***Usage***
 ```r
-conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)
+conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
 ```
 
 <br>
@@ -30,12 +30,12 @@ Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
 `classification` | Column name as a string or number in the tax_table for the factor to conglomerate by.
-`taxa_are_ordered` | Whether the order of factors in the tax_table represent a decreasing heirarchy (`TRUE`) or are independant (`FALSE`). If `FALSE`, will only return the factor given by `classification`.
+`hierarchical` | Whether the order of factors in the tax_table represent a decreasing hierarchy (`TRUE`) or are independant (`FALSE`). If `FALSE`, will only return the factor given by `classification`.
 
 ***Examples***
 ```{r conglomerate_taxa}
 soil_column
-conglomerate_taxa(soil_column, classification = 'phylum', taxa_are_ordered = TRUE)
+conglomerate_taxa(soil_column, classification = 'phylum', hierarchical = TRUE)
 ```
 
 <br>

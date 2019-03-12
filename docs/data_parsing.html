@@ -470,7 +470,7 @@ div.tocify {
 <p><a name="conglomerate_taxa"></a></p>
 <p>A re-write of the <code>tax_glom()</code> function in Phyloseq. This implementation runs faster with the use of <code>data.table</code>.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)</code></pre>
+<pre class="r"><code>conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -493,8 +493,8 @@ div.tocify {
 <td>Column name as a string or number in the tax_table for the factor to conglomerate by.</td>
 </tr>
 <tr class="odd">
-<td><code>taxa_are_ordered</code></td>
-<td>Whether the order of factors in the tax_table represent a decreasing heirarchy (<code>TRUE</code>) or are independant (<code>FALSE</code>). If <code>FALSE</code>, will only return the factor given by <code>classification</code>.</td>
+<td><code>hierarchical</code></td>
+<td>Whether the order of factors in the tax_table represent a decreasing hierarchy (<code>TRUE</code>) or are independant (<code>FALSE</code>). If <code>FALSE</code>, will only return the factor given by <code>classification</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -504,7 +504,7 @@ div.tocify {
 ## otu_table()   OTU Table:         [ 920 taxa and 481 samples ]
 ## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
 ## tax_table()   Taxonomy Table:    [ 920 taxa by 6 taxonomic ranks ]</code></pre>
-<pre class="r"><code>conglomerate_taxa(soil_column, classification = &#39;phylum&#39;, taxa_are_ordered = TRUE)</code></pre>
+<pre class="r"><code>conglomerate_taxa(soil_column, classification = &#39;phylum&#39;, hierarchical = TRUE)</code></pre>
 <pre><code>## phyloseq-class experiment-level object
 ## otu_table()   OTU Table:         [ 43 taxa and 481 samples ]
 ## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]

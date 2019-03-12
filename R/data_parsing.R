@@ -2,19 +2,19 @@
 #'
 #' Conglomerate taxa by sample on a given classification level from the tax_table.
 #' @useDynLib phylosmith
-#' @usage conglomerate_taxa(phyloseq_obj, classification, taxa_are_ordered = TRUE)
+#' @usage conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
-#' @param taxa_are_ordered Whether the order of factors in the tax_table represent a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will only return the factor given by \code{classification}.
+#' @param hierarchical Whether the order of factors in the tax_table represent a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will only return the factor given by \code{classification}.
 #' @keywords manip
 #' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
 #' @import data.table
 #' @export
 
-conglomerate_taxa <- function(phyloseq_obj, classification, taxa_are_ordered = TRUE){
+conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE){
   if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
 
-  if(taxa_are_ordered){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
+  if(hierarchical){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
   } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
 
   phyloseq_table <- melt_phyloseq(phyloseq_obj)

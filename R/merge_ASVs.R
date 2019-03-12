@@ -7,7 +7,6 @@
 #' @keywords manip
 #' @import RcppArmadillo
 #' @import RcppParallel
-#' @export
 #' @examples
 #' data(mock_phyloseq); data(mock_phyloseq_2)
 #' merge_asvs(mock_phyloseq, mock_phyloseq_2)
