@@ -18,9 +18,4 @@ They are not biologicall accurate, and don't
 represent anything meaningful beyond being
 functional phyloseq objects.
 }
-\examples{
-data(mock_phyloseq)
-otus <- otu_table(mock_phyloseq)
-sample_information <- sample_data(mock_phyloseq)
-}
 \keyword{datasets}

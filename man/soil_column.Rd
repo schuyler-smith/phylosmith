@@ -14,11 +14,6 @@ data(soil_column)
 \description{
 Soil Column 16S Data - OTUs
 }
-\examples{
-data(soil_column)
-otu_table(soil_column)
-sample_data(soil_column)
-}
 \references{
 \url{https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full}
 }

@@ -57,7 +57,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 
 # sourceCpp('src/co_occurrence_Rcpp.cpp')
 
-bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independent', permutations = 100, cores = 0){
+bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independent', permutations = 100){
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0;
   options(warnings=-1)
 
