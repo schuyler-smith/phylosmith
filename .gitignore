@@ -37,4 +37,4 @@ src-x64/
 phylosmith*.tar.gz
 configure.ac
 docs/*_cache
-docs/*_files
+
