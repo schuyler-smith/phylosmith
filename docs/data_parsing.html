@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+<meta name="date" content="2019-03-12" />
+
+<title>Data Parsing</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li>
+  <a href="data_parsing.html">
+    <span class="fa fa-file"></span>
+     
+    Data Parsing
+  </a>
+</li>
+<li>
+  <a href="graphs.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphs
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Parsing</h1>
+<h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
+<h4 class="date"><em>2019-03-12</em></h4>
+
+</div>
+
+
+<p><br></p>
+<div id="conglomerate_taxa" class="section level2">
+<h2>conglomerate_taxa</h2>
+<p><a name="conglomerate_taxa"></a></p>
+<p>A re-write of the <code>tax_glom()</code> function in Phyloseq. This implementation runs faster with the use of <code>data.table</code>.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the tax_table for the factor to conglomerate by.</td>
+</tr>
+<tr class="odd">
+<td><code>hierarchical</code></td>
+<td>Whether the order of factors in the tax_table represent a decreasing hierarchy (<code>TRUE</code>) or are independant (<code>FALSE</code>). If <code>FALSE</code>, will only return the factor given by <code>classification</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>soil_column</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 920 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 920 taxa by 6 taxonomic ranks ]</code></pre>
+<pre class="r"><code>conglomerate_taxa(soil_column, classification = &#39;phylum&#39;, hierarchical = TRUE)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 43 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 43 taxa by 2 taxonomic ranks ]</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="find_common_taxa" class="section level2">
+<h2>find_common_taxa</h2>
+<p><a name="find_common_taxa"></a></p>
+<p>Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a <code>vector</code> of taxa names that are all seen in <code>n</code> groups.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = &#39;all&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>n</code></td>
+<td>Number of treatment groups that need to share the taxa to be considered a common taxa.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>find_common_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Control&#39;, n = &#39;all&#39;)[1:35]</code></pre>
+<pre><code>##  [1] &quot;OTU_100&quot; &quot;OTU_101&quot; &quot;OTU_104&quot; &quot;OTU_105&quot; &quot;OTU_110&quot; &quot;OTU_115&quot; &quot;OTU_118&quot;
+##  [8] &quot;OTU_119&quot; &quot;OTU_12&quot;  &quot;OTU_120&quot; &quot;OTU_123&quot; &quot;OTU_124&quot; &quot;OTU_125&quot; &quot;OTU_127&quot;
+## [15] &quot;OTU_128&quot; &quot;OTU_131&quot; &quot;OTU_133&quot; &quot;OTU_134&quot; &quot;OTU_135&quot; &quot;OTU_14&quot;  &quot;OTU_141&quot;
+## [22] &quot;OTU_144&quot; &quot;OTU_146&quot; &quot;OTU_150&quot; &quot;OTU_151&quot; &quot;OTU_153&quot; &quot;OTU_160&quot; &quot;OTU_162&quot;
+## [29] &quot;OTU_164&quot; &quot;OTU_166&quot; &quot;OTU_169&quot; &quot;OTU_174&quot; &quot;OTU_177&quot; &quot;OTU_179&quot; &quot;OTU_18&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="find_unique_taxa" class="section level2">
+<h2>find_unique_taxa</h2>
+<p><a name="find_unique_taxa"></a></p>
+<p>Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a <code>list</code> of <code>vector</code>s of taxa names that are only seen in each group.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>find_unique_taxa(phyloseq_obj, treatment, subset = NULL)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>find_unique_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Control&#39;)</code></pre>
+<pre><code>## $Manure_Control
+##  [1] &quot;OTU_84&quot;  &quot;OTU_136&quot; &quot;OTU_167&quot; &quot;OTU_173&quot; &quot;OTU_200&quot; &quot;OTU_369&quot; &quot;OTU_378&quot;
+##  [8] &quot;OTU_387&quot; &quot;OTU_392&quot; &quot;OTU_393&quot; &quot;OTU_394&quot; &quot;OTU_395&quot; &quot;OTU_401&quot; &quot;OTU_407&quot;
+## [15] &quot;OTU_409&quot; &quot;OTU_416&quot; &quot;OTU_417&quot; &quot;OTU_424&quot; &quot;OTU_425&quot; &quot;OTU_426&quot; &quot;OTU_431&quot;
+## [22] &quot;OTU_434&quot; &quot;OTU_436&quot; &quot;OTU_441&quot; &quot;OTU_444&quot; &quot;OTU_459&quot; &quot;OTU_461&quot; &quot;OTU_466&quot;
+## [29] &quot;OTU_469&quot; &quot;OTU_471&quot; &quot;OTU_474&quot; &quot;OTU_475&quot; &quot;OTU_476&quot; &quot;OTU_477&quot; &quot;OTU_478&quot;
+## [36] &quot;OTU_481&quot; &quot;OTU_485&quot; &quot;OTU_490&quot; &quot;OTU_493&quot; &quot;OTU_494&quot; &quot;OTU_507&quot; &quot;OTU_737&quot;
+## [43] &quot;OTU_745&quot; &quot;OTU_786&quot; &quot;OTU_787&quot;
+## 
+## $Soil_Control
+##  [1] &quot;OTU_9&quot;   &quot;OTU_36&quot;  &quot;OTU_49&quot;  &quot;OTU_76&quot;  &quot;OTU_80&quot;  &quot;OTU_103&quot; &quot;OTU_111&quot;
+##  [8] &quot;OTU_112&quot; &quot;OTU_113&quot; &quot;OTU_147&quot; &quot;OTU_154&quot; &quot;OTU_158&quot; &quot;OTU_165&quot; &quot;OTU_189&quot;
+## [15] &quot;OTU_215&quot; &quot;OTU_219&quot; &quot;OTU_221&quot; &quot;OTU_226&quot; &quot;OTU_229&quot; &quot;OTU_238&quot; &quot;OTU_240&quot;
+## [22] &quot;OTU_243&quot; &quot;OTU_246&quot; &quot;OTU_247&quot; &quot;OTU_249&quot; &quot;OTU_258&quot; &quot;OTU_260&quot; &quot;OTU_265&quot;
+## [29] &quot;OTU_275&quot; &quot;OTU_290&quot; &quot;OTU_291&quot; &quot;OTU_306&quot; &quot;OTU_311&quot; &quot;OTU_315&quot; &quot;OTU_316&quot;
+## [36] &quot;OTU_318&quot; &quot;OTU_320&quot; &quot;OTU_323&quot; &quot;OTU_326&quot; &quot;OTU_328&quot; &quot;OTU_333&quot; &quot;OTU_334&quot;
+## [43] &quot;OTU_336&quot; &quot;OTU_337&quot; &quot;OTU_365&quot; &quot;OTU_384&quot; &quot;OTU_389&quot; &quot;OTU_438&quot; &quot;OTU_486&quot;
+## [50] &quot;OTU_492&quot; &quot;OTU_513&quot; &quot;OTU_545&quot; &quot;OTU_546&quot; &quot;OTU_555&quot; &quot;OTU_573&quot; &quot;OTU_577&quot;
+## [57] &quot;OTU_581&quot; &quot;OTU_586&quot; &quot;OTU_601&quot; &quot;OTU_604&quot; &quot;OTU_607&quot; &quot;OTU_649&quot; &quot;OTU_655&quot;
+## [64] &quot;OTU_671&quot; &quot;OTU_700&quot; &quot;OTU_746&quot; &quot;OTU_764&quot; &quot;OTU_784&quot; &quot;OTU_788&quot; &quot;OTU_789&quot;
+## [71] &quot;OTU_791&quot; &quot;OTU_794&quot; &quot;OTU_805&quot; &quot;OTU_823&quot; &quot;OTU_843&quot; &quot;OTU_858&quot; &quot;OTU_905&quot;
+## 
+## $Water_Control
+##  [1] &quot;OTU_2&quot;   &quot;OTU_3&quot;   &quot;OTU_13&quot;  &quot;OTU_21&quot;  &quot;OTU_195&quot; &quot;OTU_203&quot; &quot;OTU_213&quot;
+##  [8] &quot;OTU_214&quot; &quot;OTU_216&quot; &quot;OTU_227&quot; &quot;OTU_257&quot; &quot;OTU_266&quot; &quot;OTU_274&quot; &quot;OTU_300&quot;
+## [15] &quot;OTU_367&quot; &quot;OTU_429&quot; &quot;OTU_463&quot; &quot;OTU_496&quot; &quot;OTU_500&quot; &quot;OTU_552&quot; &quot;OTU_593&quot;
+## [22] &quot;OTU_596&quot; &quot;OTU_609&quot; &quot;OTU_622&quot; &quot;OTU_626&quot; &quot;OTU_630&quot; &quot;OTU_633&quot; &quot;OTU_634&quot;
+## [29] &quot;OTU_666&quot; &quot;OTU_680&quot; &quot;OTU_682&quot; &quot;OTU_684&quot; &quot;OTU_687&quot; &quot;OTU_694&quot; &quot;OTU_695&quot;
+## [36] &quot;OTU_703&quot; &quot;OTU_704&quot; &quot;OTU_705&quot; &quot;OTU_708&quot; &quot;OTU_711&quot; &quot;OTU_738&quot; &quot;OTU_748&quot;
+## [43] &quot;OTU_749&quot; &quot;OTU_752&quot; &quot;OTU_782&quot; &quot;OTU_793&quot; &quot;OTU_797&quot; &quot;OTU_798&quot; &quot;OTU_807&quot;
+## [50] &quot;OTU_814&quot; &quot;OTU_815&quot; &quot;OTU_819&quot; &quot;OTU_824&quot; &quot;OTU_829&quot; &quot;OTU_831&quot; &quot;OTU_832&quot;
+## [57] &quot;OTU_838&quot; &quot;OTU_849&quot; &quot;OTU_861&quot; &quot;OTU_881&quot; &quot;OTU_883&quot; &quot;OTU_884&quot; &quot;OTU_890&quot;
+## [64] &quot;OTU_918&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="melt_phyloseq" class="section level2">
+<h2>melt_phyloseq</h2>
+<p><a name="melt_phyloseq"></a></p>
+<p>A re-write of the <code>tax_glom()</code> function in Phyloseq. This implementation runs faster with the use of <code>data.table</code>.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>melt_phyloseq(phyloseq_obj)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>melt_phyloseq(soil_column)</code></pre>
+<pre><code>##             OTU Sample Abundance Matrix Treatment Day   domain
+##      1: OTU_697   S_88     14648  Water   Control  38 Bacteria
+##      2: OTU_676   S_85     12559  Water   Control  38 Bacteria
+##      3: OTU_911   S_38     12076  Water    Manure  10 Bacteria
+##      4: OTU_697   S_94      8733  Water   Control  38 Bacteria
+##      5: OTU_911   S_37      7479  Water    Manure  10 Bacteria
+##     ---                                                       
+## 442516:  OTU_99   S_95         0  Water    Manure  38 Bacteria
+## 442517:  OTU_99   S_96         0  Water    Manure  38 Bacteria
+## 442518:  OTU_99   S_97         0  Water    Manure  38 Bacteria
+## 442519:  OTU_99   S_98         0  Water    Manure  38 Bacteria
+## 442520:  OTU_99   S_99         0  Water    Manure  38 Bacteria
+##                  phylum              class              order
+##      1:  Proteobacteria Betaproteobacteria    Burkholderiales
+##      2:  Proteobacteria Betaproteobacteria    Burkholderiales
+##      3: Verrucomicrobia   Verrucomicrobiae Verrucomicrobiales
+##      4:  Proteobacteria Betaproteobacteria    Burkholderiales
+##      5: Verrucomicrobia   Verrucomicrobiae Verrucomicrobiales
+##     ---                                                      
+## 442516:  Actinobacteria     Actinobacteria    Actinomycetales
+## 442517:  Actinobacteria     Actinobacteria    Actinomycetales
+## 442518:  Actinobacteria     Actinobacteria    Actinomycetales
+## 442519:  Actinobacteria     Actinobacteria    Actinomycetales
+## 442520:  Actinobacteria     Actinobacteria    Actinomycetales
+##                      family                         genus
+##      1:    Oxalobacteraceae unclassified_Oxalobacteraceae
+##      2:      Comamonadaceae                   Curvibacter
+##      3: Verrucomicrobiaceae               Prosthecobacter
+##      4:    Oxalobacteraceae unclassified_Oxalobacteraceae
+##      5: Verrucomicrobiaceae               Prosthecobacter
+##     ---                                                  
+## 442516:     Kineosporiaceae                   Kineosporia
+## 442517:     Kineosporiaceae                   Kineosporia
+## 442518:     Kineosporiaceae                   Kineosporia
+## 442519:     Kineosporiaceae                   Kineosporia
+## 442520:     Kineosporiaceae                   Kineosporia</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="merge_samples" class="section level2">
+<h2>merge_samples</h2>
+<p><a name="merge_samples"></a></p>
+<p>Merges samples that match on the given criteria (<code>merge_on</code>). Any sample_data factors that do not match will be set to <code>NA</code>. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>merge_on</code></td>
+<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre><code>## OTU Table:          [6 taxa and 4 samples]
+##                      taxa are rows
+##        S_0 S_1 S_2 S_3
+## OTU_5  392 314 127 265
+## OTU_6  277 143 104 155
+## OTU_8   11   3   1   2
+## OTU_12   6  27   7  14
+## OTU_14   0   0   1   1
+## OTU_18  43  49  24  25</code></pre>
+<pre class="r"><code>merge_samples(soil_column, treatment = &#39;Matrix&#39;, subset = &#39;Manure&#39;, merge_on = &#39;Day&#39;)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 399 taxa and 1 samples ]
+## sample_data() Sample Data:       [ 1 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
+<pre><code>## OTU Table:          [6 taxa and 1 samples]
+##                      taxa are rows
+##        Manure_0
+## OTU_5    274.50
+## OTU_6    169.75
+## OTU_8      4.25
+## OTU_12    13.50
+## OTU_14     0.50
+## OTU_18    35.25</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="merge_treatments" class="section level2">
+<h2>merge_treatments</h2>
+<p><a name="merge_treatments"></a></p>
+<p>Combines multiple columns from the sample-data into a single column. Doing this can make it easier to subset and look at the data on multiple factors. If you looked at the last example from <code>taxa_filter</code> you may have noticed there was an additional sample variable after the function ran. That is becasue when multiple <code>treatment</code> are given, it uses this function to combine them for subsetting.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>merge_treatments(phyloseq_obj, ...)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample.</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>any number of column names as <code>string</code>s or <code>numeric</code>s in the  that are to be combined.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>merge_treatments(soil_column, &#39;Matrix&#39;, 2, &#39;Day&#39;)@sam_data[1:4,]</code></pre>
+<pre><code>##       Matrix Treatment Day Matrix_Treatment_Day
+## S_0   Manure   Control   0     Manure_Control_0
+## S_1   Manure   Control   0     Manure_Control_0
+## S_10   Water   Control  10     Water_Control_10
+## S_100  Water    Manure  38      Water_Manure_38</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="order_treatment" class="section level2">
+<h2>order_treatment</h2>
+<p><a name="order_treatment"></a></p>
+<p>This can be used to reassing the order of the levels of a factor in the sample-data.</p>
+<p><strong><em>Useful for:</em></strong></p>
+<ul>
+<li>managing order which variables appear in figures</li>
+</ul>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>order_treatment(phyloseq_obj, treatment, order)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the .</td>
+</tr>
+<tr class="odd">
+<td><code>order</code></td>
+<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>levels(soil_column@sam_data$Day)</code></pre>
+<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;108&quot; &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;</code></pre>
+<pre class="r"><code>ordered_days &lt;- order_treatment(soil_column, &#39;Day&#39;, c(0, 10, 24, 38, 59, 80, 108))
+levels(ordered_days@sam_data$Day)</code></pre>
+<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;  &quot;108&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="relative_abundance" class="section level2">
+<h2>relative_abundance</h2>
+<p><a name="relative_abundance"></a></p>
+<p>This is a simple function to convert the the <code>otu_table</code> count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>relative_abundance(phyloseq_obj)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object that contains <code>otu_table</code> count data.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]</code></pre>
+<pre><code>##   S_0   S_1  S_10 S_100 S_101 
+##     1     1     1     1     1</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_filter" class="section level2">
+<h2>taxa_filter</h2>
+<p><a name="taxa_filter"></a></p>
+<p>This is a robust function that is implemented in nearly every other function of this package. It uses many of the subsetting processes distributed within <code>phyloseq</code>, but strives to make them a more user-friendly and combined into a one-stop function. The function works in several steps.</p>
+<ul>
+<li>Checks to see if <code>treatments</code> were specified. If so, it splits the phyloseq into separate objects for each treatment to process.</li>
+<li>Check to see which taxa are seen in a proportion of samples across each phyloseq object &gt; <code>frequency</code> (filtering out taxa seen in few samples) and then merge back to one object</li>
+<li>If <code>subset</code> is declared, remove all <code>treatment</code> outside of the <code>subset</code></li>
+<li>If <code>drop_samples</code> is <code>TRUE</code> then remove any samples that have 0 taxa observed after filtering (this is a very situational need)</li>
+</ul>
+<p>If <code>frequency</code> is set to 0 (default), then the function removes any taxa with no abundance in any sample.</p>
+<p><strong><em>Useful for:</em></strong></p>
+<ul>
+<li>subsetting by sample_data factors</li>
+<li>removing low-presence taxa</li>
+<li>removing high-presence taxa</li>
+</ul>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>frequency</code></td>
+<td>The proportion of samples the taxa is found in.</td>
+</tr>
+<tr class="odd">
+<td><code>below</code></td>
+<td>Does frequency define the minimum () or maximum () proportion of samples the taxa is found in.</td>
+</tr>
+<tr class="even">
+<td><code>drop_samples</code></td>
+<td>Should the function remove samples that that are empty after removing taxa filtered by frequency ().</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<p><br></p>
+<hr />
+<p><br></p>
+<p>The <code>soil_column</code> data has 18,441 OTUs listed in its <code>taxa_table</code>.</p>
+<pre class="r"><code>soil_column</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 920 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 920 taxa by 6 taxonomic ranks ]</code></pre>
+<p>However, 339 of those taxa are not actually seen in any of the samples.</p>
+<pre class="r"><code>length(phyloseq::taxa_sums(soil_column)[phyloseq::taxa_sums(soil_column) == 0])</code></pre>
+<pre><code>## [1] 30</code></pre>
+<p><code>taxa_filter</code> with <code>frequency = 0</code> will remove those taxa.</p>
+<pre class="r"><code>taxa_filter(soil_column, frequency = 0)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 890 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 890 taxa by 6 taxonomic ranks ]</code></pre>
+<p>Say that we wanted to only look at taxa that are seen in 80% of the samples.</p>
+<pre class="r"><code>taxa_filter(soil_column, frequency = 0.80)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 86 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 86 taxa by 6 taxonomic ranks ]</code></pre>
+<p>But if we want taxa that are seen in 80% of any 1 teatment group;</p>
+<pre class="r"><code>taxa_filter(soil_column, frequency = 0.80, treatment = &#39;Treatment&#39;)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 109 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 109 taxa by 6 taxonomic ranks ]</code></pre>
+<p>It returns a larger number of taxa, since they need to be seen in less samples overall.</p>
+<p>In <code>soil_column</code>, the actual experimental conditions are a combination of the <code>Matrix</code> and <code>Treatment</code> columns, and the function can handle that too.</p>
+<pre class="r"><code>taxa_filter(soil_column, frequency = 0.80, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;))</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 349 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 4 sample variables ]
+## tax_table()   Taxonomy Table:    [ 349 taxa by 6 taxonomic ranks ]</code></pre>
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Student - Bioinformatics and Computational Biology<br>
+Iowa State University.  Ames, IA.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

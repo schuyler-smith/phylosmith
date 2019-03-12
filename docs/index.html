@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+
+<title>phylosmith</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li>
+  <a href="data_parsing.html">
+    <span class="fa fa-file"></span>
+     
+    Data Parsing
+  </a>
+</li>
+<li>
+  <a href="graphs.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphs
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">phylosmith</h1>
+<h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
+
+</div>
+
+
+<p><br></p>
+<p><a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a conglomeration of functions written to process and analyze <code>phyloseq-class</code> objects. <a href="https://joey711.github.io/phyloseq/" targe="_blank" >Phyloseq</a> objects are a great data-standard for microbiome, gene-expression, and many other data types.</p>
+<p>A lot of these functions are just to make “data-wrangling” easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication as some may require parameter optimization.</p>
+<p><br></p>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<pre class="r"><code>library(devtools)
+install_github(&#39;schuyler-smith/phylosmith&#39;)
+library(phylosmith)</code></pre>
+<p>*for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select <code>add rtools to system PATH</code>.</p>
+<p><br></p>
+</div>
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<p><br></p>
+<div id="data-parsingdapa" class="section level3">
+<h3><a href="data_parsing.html">Data Parsing</a></h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="data_parsing.html#conglomerate_taxa">conglomerate_taxa</a></td>
+<td>merges OTUs that have same classification</td>
+</tr>
+<tr class="even">
+<td><a href="data_parsing.html#find_common_taxa">find_common_taxa</a></td>
+<td>find taxa common to each treatment</td>
+</tr>
+<tr class="odd">
+<td><a href="data_parsing.html#find_unique_taxa">find_unique_taxa</a></td>
+<td>find taxa unique to each treatment</td>
+</tr>
+<tr class="even">
+<td><a href="data_parsing.html#melt_phyloseq">melt_phyloseq</a></td>
+<td>melts a phyloseq object into a data.table</td>
+</tr>
+<tr class="odd">
+<td><a href="data_parsing.html#merge_samples">merge_samples</a></td>
+<td>combines samples based on common factor within sample_data</td>
+</tr>
+<tr class="even">
+<td><a href="data_parsing.html#merge_treatments">merge_treatments</a></td>
+<td>combines multiple columns in meta-data into a new column</td>
+</tr>
+<tr class="odd">
+<td><a href="data_parsing.html#order_phyloseq_metadata">order_phyloseq_metadata</a></td>
+<td>sets the order of the factors in a sample_data column</td>
+</tr>
+<tr class="even">
+<td><a href="data_parsing.html#relative_abundance">relative_abundance</a></td>
+<td>transform abundance data to relative abundance</td>
+</tr>
+<tr class="odd">
+<td><a href="data_parsing.html#taxa_filter">taxa_filter</a></td>
+<td>filter taxa by proportion of samples seen in</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="graphsgrap" class="section level3">
+<h3><a href="graphs.html">Graphs</a></h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="graphs.html#abundance_heatmap_ggplot">abundance_heatmap_ggplot</a></td>
+<td>create a ggplot object of the heatmaps of the abndance table</td>
+</tr>
+<tr class="even">
+<td><a href="graphs#abundance_lines_ggplot">abundance_lines_ggplot</a></td>
+<td>create a ggplot object of the abundance data as a line graph</td>
+</tr>
+<tr class="odd">
+<td><a href="graphs#network_phyloseq">network_phyloseq</a></td>
+<td>creates a network of the co-occurrence of taxa</td>
+</tr>
+<tr class="even">
+<td><a href="graphs#nmds_phyloseq_ggplot">nmds_phyloseq_ggplot</a></td>
+<td>create a ggplot object of the NMDS from a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td><a href="graphs#phylogeny_bars_ggplot">phylogeny_bars_ggplot</a></td>
+<td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
+</tr>
+<tr class="even">
+<td><a href="graphs#taxa_abundance_bars_ggplot">taxa_abundance_bars_ggplot</a></td>
+<td>create a ggplot object of the abundance of taxa in each sample</td>
+</tr>
+<tr class="odd">
+<td><a href="graphs#tsne_phyloseq_ggplot">tsne_phyloseq_ggplot</a></td>
+<td>create a ggplot object of the t-SNE from a phyloseq object</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="calculationscalc" class="section level3">
+<h3><a href="calculations.html">Calculations</a></h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="calculations#bootstrap_rho">bootstrap_rho</a></td>
+<td>runs permutations of the otu_table to calculate a significant <span class="math inline">\(\rho\)</span> value</td>
+</tr>
+<tr class="even">
+<td><a href="calculations#co_occurrence">co_occurrence</a></td>
+<td>calculate co-occurrence between taxa</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
+<p>Originally I had created 2 mock phyloseq objects (<code>mock_phyloseq</code> and <code>mock_phyloseq2</code>) that had no real-world data but served to show simple examples of how the functions worked.</p>
+<p>Then I decided that I should include a real example of microbiome data (<code>soil_column</code>) becasue it’s always nice to see real examples. <code>soil_column</code> is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a> from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.</p>
+</div>
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Student - Bioinformatics and Computational Biology<br>
+Iowa State University.  Ames, IA.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
