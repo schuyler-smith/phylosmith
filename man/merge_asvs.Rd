@@ -14,6 +14,6 @@ Takes any number of phyloseq objects that have \code{\link[phyloseq:taxa_names]{
 }
 \examples{
 data(mock_phyloseq); data(mock_phyloseq_2)
-merge_asvs(mock_phyloseq, mock_phyloseq_2)
+phylosmith:::merge_asvs(mock_phyloseq, mock_phyloseq_2)
 }
 \keyword{manip}

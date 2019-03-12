@@ -486,11 +486,11 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td><code>phyloseq_obj</code></td>
-<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
 </tr>
 <tr class="even">
 <td><code>classification</code></td>
-<td>Column name as a string or number in the tax_table for the factor to conglomerate by.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the tax_table for the factor to conglomerate by.</td>
 </tr>
 <tr class="odd">
 <td><code>hierarchical</code></td>
@@ -516,7 +516,7 @@ div.tocify {
 <div id="find_common_taxa" class="section level2">
 <h2>find_common_taxa</h2>
 <p><a name="find_common_taxa"></a></p>
-<p>Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a vector of taxa names that are all seen in <code>n</code> groups.</p>
+<p>Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a <code>vector</code> of taxa names that are all seen in <code>n</code> groups.</p>
 <p><br> <strong><em>Usage</em></strong></p>
 <pre class="r"><code>find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = &#39;all&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
@@ -538,11 +538,11 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
-<td>Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 <tr class="even">
 <td><code>n</code></td>
@@ -564,7 +564,7 @@ div.tocify {
 <div id="find_unique_taxa" class="section level2">
 <h2>find_unique_taxa</h2>
 <p><a name="find_unique_taxa"></a></p>
-<p>Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a list of vectors of taxa names that are only seen in each group.</p>
+<p>Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a <code>list</code> of <code>vector</code>s of taxa names that are only seen in each group.</p>
 <p><br> <strong><em>Usage</em></strong></p>
 <pre class="r"><code>find_unique_taxa(phyloseq_obj, treatment, subset = NULL)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
@@ -586,11 +586,11 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
-<td>Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 </tbody>
 </table>
@@ -721,15 +721,15 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
-<td>Column name as a string or number in the . This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the . This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 <tr class="even">
 <td><code>merge_on</code></td>
-<td>Defines which variable the data is merged according to. This needs to be a column name as a string or number in the . This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 </tbody>
 </table>
@@ -786,7 +786,7 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>...</code></td>
-<td>any number of column names as strings or numbers in the  that are to be combined.</td>
+<td>any number of column names as <code>string</code>s or <code>numeric</code>s in the  that are to be combined.</td>
 </tr>
 </tbody>
 </table>
@@ -830,11 +830,11 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
-<td>Column name as a string or number in the .</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the .</td>
 </tr>
 <tr class="odd">
 <td><code>order</code></td>
-<td>The order of factors in  column as a vector of strings.</td>
+<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s.</td>
 </tr>
 </tbody>
 </table>
@@ -915,11 +915,11 @@ levels(ordered_days@sam_data$Day)</code></pre>
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
-<td>Column name as a string or number in the . This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the . This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 <tr class="even">
 <td><code>frequency</code></td>

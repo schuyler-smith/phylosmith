@@ -9,7 +9,7 @@
 #' @import RcppParallel
 #' @examples
 #' data(mock_phyloseq); data(mock_phyloseq_2)
-#' merge_asvs(mock_phyloseq, mock_phyloseq_2)
+#' phylosmith:::merge_asvs(mock_phyloseq, mock_phyloseq_2)
 
 
 # sourceCpp("src/rcpp_seq_match.cpp")
