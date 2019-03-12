@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-03-11" />
+<meta name="date" content="2019-03-12" />
 
 <title>Calculations</title>
 
@@ -442,6 +442,12 @@ div.tocify {
      
   </a>
 </li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -453,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Calculations</h1>
 <h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
-<h4 class="date"><em>2019-03-11</em></h4>
+<h4 class="date"><em>2019-03-12</em></h4>
 
 </div>
 
@@ -501,9 +507,9 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code># bootstrapped_rhos &lt;- bootstrap_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), permutations = 5)
-# hist(bootstrapped_rhos)
-# quantile(bootstrapped_rhos, c(.025, .975))</code></pre>
+<pre class="r"><code>bootstrapped_rhos &lt;- bootstrap_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), permutations = 5)
+hist(bootstrapped_rhos)
+quantile(bootstrapped_rhos, c(.025, .975))</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -546,8 +552,8 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code># co_occurrence_table &lt;- co_occurrence(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), p = 0.05)
-# co_occurrence_table</code></pre>
+<pre class="r"><code>co_occurrence_table &lt;- co_occurrence(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), p = 0.05)
+co_occurrence_table</code></pre>
 </div>
 
 <p><br>

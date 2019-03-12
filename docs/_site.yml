@@ -27,6 +27,8 @@ navbar:
       href: http://germslab.org/
     - icon: fa-envelope fa-lg
       href: mailto:sdsmith@iastate.edu
+    - icon: fa-university
+      href: https://www.bcb.iastate.edu/people/schuyler-smith
 
 
 output:

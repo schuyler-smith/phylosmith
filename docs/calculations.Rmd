@@ -36,10 +36,10 @@ Call | Description
 
 ***Examples***
 
-```{r bootstrap_rho}
-# bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
-# hist(bootstrapped_rhos)
-# quantile(bootstrapped_rhos, c(.025, .975))
+```{r bootstrap_rho, eval=FALSE}
+bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
+hist(bootstrapped_rhos)
+quantile(bootstrapped_rhos, c(.025, .975))
 ```
 
 <br>
@@ -70,7 +70,7 @@ Call | Description
 
 ***Examples***
 
-```{r co_occurrence}
-# co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
-# co_occurrence_table
+```{r co_occurrence, eval=FALSE}
+co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
+co_occurrence_table
 ```
