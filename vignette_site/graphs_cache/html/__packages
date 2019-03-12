@@ -1,0 +1,10 @@
+base
+devtools
+usethis
+Rcpp
+phyloseq
+data.table
+stringr
+ggplot2
+rmarkdown
+phylosmith
