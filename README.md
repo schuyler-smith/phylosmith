@@ -1,6 +1,6 @@
 
 ## `phylosmith`
-[vignette][https://schuyler-smith.github.io/phylosmith/]
+[vignette](https://schuyler-smith.github.io/phylosmith/)
 
 [![Travis Build
 Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith)
@@ -19,38 +19,38 @@ library(phylosmith)
 
 ## Functions
 
-### [Data Parsing][https://schuyler-smith.github.io/phylosmith/data_parsing.html]
+### [Data Parsing](https://schuyler-smith.github.io/phylosmith/data_parsing.html)
 
 Call			     | Description
 -------------------- | ------------------------------------------------------------
-[conglomerate_taxa][file:///home/schuyler/Dropbox/repos/phylosmith_vignette/site/data_parsing.html#conglomerate_taxa]   |  conglomerate taxa by sample on a given classification level
-[find_common_taxa][https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_common_taxa] | find taxa common to each treatment
-[find_unique_taxa][https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_unique_taxa] | find taxa unique to each treatment
-[melt_phyloseq][https://schuyler-smith.github.io/phylosmith/data_parsing.html#melt_phyloseq]   |   Melt a phyloseq object into a data.table.
-[merge_samples][https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_samples]   |   Merge samples based on common factor within sample_data
-[merge_treatments][https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_treatments] | combines multiple columns in meta-data into a single column
-[order_treatment][https://schuyler-smith.github.io/phylosmith/data_parsing.html#order_treatment] | sets the orders of the factors in a sample_data column (for ordering graphs)
-[relative_abundance][https://schuyler-smith.github.io/phylosmith/data_parsing.html#relative_abundance] | transform abundance data to relative abundance
-[taxa_filter][https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_filter] | filter taxa by proportion of samples seen in
+[https://schuyler-smith.github.io/phylosmith/data_parsing.html#conglomerate_taxa][conglomerate_taxa)  |  conglomerate taxa by sample on a given classification level
+[find_common_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_common_taxa) | find taxa common to each treatment
+[find_unique_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_unique_taxa) | find taxa unique to each treatment
+[melt_phyloseq](https://schuyler-smith.github.io/phylosmith/data_parsing.html#melt_phyloseq)   |   Melt a phyloseq object into a data.table.
+[merge_samples](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_samples)   |   Merge samples based on common factor within sample_data
+[merge_treatments](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a single column
+[order_treatment](https://schuyler-smith.github.io/phylosmith/data_parsing.html#order_treatment) | sets the orders of the factors in a sample_data column (for ordering graphs)
+[relative_abundance](https://schuyler-smith.github.io/phylosmith/data_parsing.html#relative_abundance) | transform abundance data to relative abundance
+[taxa_filter](https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in
 
-### [Graphs][https://schuyler-smith.github.io/phylosmith/graphs.html]
-
-Call                 | Description
--------------------- | ------------------------------------------------------------
-[abundance_heatmap_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_heatmap_ggplot] | create a ggplot object of the heatmaps of the abndance table
-[abundance_lines_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_lines_ggplot] | create a ggplot object of the abundance data as a line graph
-[network_phyloseq][https://schuyler-smith.github.io/phylosmith/graphs.html#network_phyloseq] | creates a ggplot object of the co-occurrence network of taxa
-[nmds_phyloseq_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#nmds_phyloseq_ggplot]  | create a ggplot object of the NMDS from a phyloseq object
-[phylogeny_bars_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_bars_ggplot] | create a ggplot barplot object of the compositons of each sample at a taxonomic level
-[taxa_abundance_bars_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#taxa_abundance_bars_ggplot] | create a ggplot object of the abundance of taxa in each sample
-[tsne_phyloseq_ggplot][https://schuyler-smith.github.io/phylosmith/graphs.html#tsne_phyloseq_ggplot]  | create a ggplot object of the t-SNE from a phyloseq object
-
-### [Calculations][https://schuyler-smith.github.io/phylosmith/calculations.html]
+### [Graphs](https://schuyler-smith.github.io/phylosmith/graphs.html)
 
 Call                 | Description
 -------------------- | ------------------------------------------------------------
-[co_occurrence][https://schuyler-smith.github.io/phylosmith/calculations.html#bootstrap_rho] | calculate co-occurrence between taxa
-[bootstrap_rho][https://schuyler-smith.github.io/phylosmith/calculations.html#co_occurrence] | runs permutations of the otu_table to calculate a significant $\rho$ value
+[abundance_heatmap_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
+[abundance_lines_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
+[network_phyloseq](https://schuyler-smith.github.io/phylosmith/graphs.html#network_phyloseq) | creates a ggplot object of the co-occurrence network of taxa
+[nmds_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
+[phylogeny_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_bars_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[taxa_abundance_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
+[tsne_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
+
+### [Calculations](https://schuyler-smith.github.io/phylosmith/calculations.html)
+
+Call                 | Description
+-------------------- | ------------------------------------------------------------
+[co_occurrence](https://schuyler-smith.github.io/phylosmith/calculations.html#bootstrap_rho) | calculate co-occurrence between taxa
+[bootstrap_rho](https://schuyler-smith.github.io/phylosmith/calculations.html#co_occurrence) | runs permutations of the otu_table to calculate a significant $\rho$ value
 
 ## Datasets
 
