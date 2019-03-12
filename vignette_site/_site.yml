@@ -1,5 +1,5 @@
 name: phylosmith
-output_dir: '.'
+output_dir: ../docs
 navbar:
   title: phylosmith
   type: inverse
@@ -25,11 +25,10 @@ navbar:
       href: http://github.com/schuyler-smith
     - icon: fa-flask
       href: http://germslab.org/
-    - icon: fa-envelope fa-lg
-      href: mailto:sdsmith@iastate.edu
     - icon: fa-university
       href: https://www.bcb.iastate.edu/people/schuyler-smith
-
+    - icon: fa-envelope fa-lg
+      href: mailto:sdsmith@iastate.edu
 
 output:
   html_document:
