@@ -1,0 +1,76 @@
+---
+title: "Calculations"
+author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
+date: "`r Sys.Date()`"
+---
+
+```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.width=8, fig.height=4, output.lines=6, cache = TRUE)
+library(phylosmith)
+data(soil_column)
+```
+
+<br>
+
+## bootstrap_rho
+<a name="bootstrap_rho"></a>
+
+Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
+
+<br>
+***Usage***
+```r
+bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 100, cores = 0)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`replicates` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
+`permutations` | Number of iterations to compute.
+`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
+
+***Examples***
+
+```{r bootstrap_rho}
+# bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
+# hist(bootstrapped_rhos)
+# quantile(bootstrapped_rhos, c(.025, .975))
+```
+
+<br>
+
+***
+
+<br>
+
+## co_occurrence
+<a name="co_occurrence"></a>
+
+This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input. 
+
+<br>
+***Usage***
+```r
+co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
+```
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`p` | The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to `p`.
+`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP 
+
+***Examples***
+
+```{r co_occurrence}
+# co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
+# co_occurrence_table
+```

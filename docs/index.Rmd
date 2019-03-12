@@ -1,0 +1,67 @@
+---
+title: "phylosmith"
+author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
+---
+
+<br>
+
+<a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a conglomeration of functions written to process and analyze `phyloseq-class` objects. <a href="https://joey711.github.io/phyloseq/" targe="_blank" >Phyloseq</a> objects are a great data-standard for microbiome, gene-expression, and many other data types.
+
+A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication as some may require parameter optimization.
+
+<br>
+
+# Installation
+```r
+library(devtools)
+install_github('schuyler-smith/phylosmith')
+library(phylosmith)
+```
+\*for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select `add rtools to system PATH`.
+
+<br>
+
+# Functions
+
+<br>
+
+### [Data Parsing][dapa]
+Call | Description
+-------------------- | ------------------------------------------------------------
+[conglomerate_taxa](data_parsing.html#conglomerate_taxa) | merges OTUs that have same classification
+[find_common_taxa](data_parsing.html#find_common_taxa) | find taxa common to each treatment
+[find_unique_taxa](data_parsing.html#find_unique_taxa) | find taxa unique to each treatment
+[melt_phyloseq](data_parsing.html#melt_phyloseq) | melts a phyloseq object into a data.table
+[merge_samples](data_parsing.html#merge_samples) | combines samples based on common factor within sample_data
+[merge_treatments](data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a new column
+[order_phyloseq_metadata](data_parsing.html#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
+[relative_abundance](data_parsing.html#relative_abundance) | transform abundance data to relative abundance
+[taxa_filter](data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in
+
+### [Graphs][grap]
+Call | Description
+-------------------- | ------------------------------------------------------------
+[abundance_heatmap_ggplot](graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
+[abundance_lines_ggplot](graphs#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
+[network_phyloseq](graphs#network_phyloseq) | creates a network of the co-occurrence of taxa
+[nmds_phyloseq_ggplot](graphs#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
+[phylogeny_bars_ggplot](graphs#phylogeny_bars_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[taxa_abundance_bars_ggplot](graphs#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
+[tsne_phyloseq_ggplot](graphs#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
+
+### [Calculations][calc]
+Call | Description
+-------------------- | ------------------------------------------------------------
+[bootstrap_rho](calculations#bootstrap_rho) | runs permutations of the otu_table to calculate a significant $\rho$ value
+[co_occurrence](calculations#co_occurrence) | calculate co-occurrence between taxa
+
+### Datasets
+Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 
+
+Then I decided that I should include a real example of microbiome data (`soil_column`) becasue it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.
+
+
+[dapa]:data_parsing.html
+[grap]:graphs.html
+[calc]:calculations.html
+

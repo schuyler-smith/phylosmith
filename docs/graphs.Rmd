@@ -1,0 +1,256 @@
+---
+title: "Graphs"
+author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
+date: "`r Sys.Date()`"
+---
+
+```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.width=16, fig.height=8, output.lines=6, cache = TRUE)
+library(phylosmith)
+library(ggplot2)
+data(soil_column)
+```
+
+<br>
+
+## abundance_heatmap_ggplot
+<a name="abundance_heatmap_ggplot"></a>
+
+Create a ggplot object heatmap of abundances of each taxa for each sample.
+
+<br>
+***Usage***
+```r
+abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
+`transformation` | Transformation to be used on the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt".
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+```{r }
+abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), transformation = 'log')
+```
+
+<br>
+
+***
+
+<br>
+
+## abundance_lines_ggplot
+<a name="abundance_lines_ggplot"></a>
+
+Create a ggplot object line graph of abundances across samples
+
+<br>
+***Usage***
+```r
+abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`relative_abundance` | If `TRUE`, transforms the abundance data into relative abundance by sample.
+`points` | Whether or not to display point on the lines for each data-point.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+```{r abundance_lines_ggplot}
+abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+```
+
+<br>
+
+***
+
+<br>
+
+## network_phyloseq
+<a name="network_phyloseq"></a>
+
+Create a ggplot object of the co-occurrence network.
+
+<br>
+***Usage***
+```r
+network_phyloseq(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default', cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`co_occurrence_table` | 
+`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
+`node_colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+cluster if TRUE, will use `igraph`'s `cluster_fast_greedy` method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the `phyloseq_obj`.
+`cluster_colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+`buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
+
+***Examples***
+```{r network_phyloseq, eval=F}
+network <- network_phyloseq(taxa_filter(soil_column, frequency = 0.8), treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'genus')
+network + theme(legend.position = "none")
+```
+
+<br>
+
+***
+
+<br>
+
+## nmds_phyloseq_ggplot
+<a name="nmds_phyloseq_ggplot"></a>
+
+Creates a ggplot object of the NMDS ordination of samples.
+
+<br>
+***Usage***
+```r
+nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
+`labels` | Column name as a `string` or `numeric` in the sample_data to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+`verbose` | Whether or not to print the `vegan::metaMDS` stress convergence to console (TRUE) or not (FALSE).
+
+***Examples***
+
+```{r nmds_phyloseq_ggplot}
+nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
+```
+
+<br>
+
+***
+
+<br>
+
+## phylogeny_bars_ggplot
+<a name="phylogeny_bars_ggplot"></a>
+
+Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample. 
+
+<br>
+***Usage***
+```r
+phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`merge` | If `FALSE`, will show separation of individuals within each `classification`.
+`relative_abundance` | If `TRUE`, transforms the abundance data into relative abundance by sample.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r phylogeny_bars_ggplot}
+phylogeny_bars_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), merge = TRUE, relative_abundance = TRUE)
+```
+
+<br>
+
+***
+
+<br>
+
+## taxa_abundance_bars_ggplot
+<a name="taxa_abundance_bars_ggplot"></a>
+
+Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data. 
+
+<br>
+***Usage***
+```r
+taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`transformation` | Transformation to be used on the data. "none", "mean", "median", "sd", "log", "log10"
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r taxa_abundance_bars_ggplot}
+taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Control', transformation = 'mean')
+```
+
+<br>
+
+***
+
+<br>
+
+## tsne_phyloseq_ggplot
+<a name="tsne_phyloseq_ggplot"></a>
+
+Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.
+
+<br>
+***Usage***
+```r
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`perplexity` | similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see Rtsne for interpretation)
+`circle` | Whether to add a `stat_elipse` around each `treatment` factor on the graph.
+`labels` | Column name as a `string` or `numeric` in the `sample_data` to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r tsne_phyloseq_ggplot}
+tsne_phyloseq_ggplot(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10)
+```

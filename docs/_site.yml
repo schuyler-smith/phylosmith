@@ -1,0 +1,43 @@
+name: phylosmith
+output_dir: .
+navbar:
+  title: phylosmith
+  type: inverse
+  left:
+    - text: Overview
+      icon: fa-home
+      href: index.html
+    - text: Data Parsing
+      icon: fa-file
+      href: data_parsing.html
+    - text: Graphs
+      icon: fa-bar-chart
+      href: graphs.html
+    - text: Calculations
+      icon: fa-calculator
+      href: calculations.html
+    - text: Source Code
+      icon: fa-code
+      href: https://github.com/schuyler-smith/phylosmith/tree/master/R
+  
+  right:
+    - icon: fa-github fa-lg
+      href: http://github.com/schuyler-smith
+    - icon: fa-flask
+      href: http://germslab.org/
+    - icon: fa-envelope fa-lg
+      href: mailto:sdsmith@iastate.edu
+
+
+output:
+  html_document:
+    lib_dir: site_libs
+    theme: cerulean
+    highlight: textmate
+    include:
+      after_body: footer.html
+    css: styles.css
+    toc: true
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
