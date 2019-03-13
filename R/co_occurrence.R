@@ -37,15 +37,15 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   return(as.data.table(co_occurrence))
 }
 
-#' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith
+#' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. Function from the phylosmith-package.
 #'
 #' Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
 #' @useDynLib phylosmith
-#' @usage bootstrap_rho(phyloseq_obj, treatment = NULL, 
-#' replicates = 'independent', permutations = 100)
+#' @usage bootstrap_rho(phyloseq_obj, treatment = NULL,
+#' replicate_samples = 'independent', permutations = 100)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @param replicates Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
+#' @param replicate_samples Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.
 #' @param permutations \code{numeric} Number of iterations to compute.
 #' @keywords nonparametric
 #' @import data.table
@@ -57,12 +57,12 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 
 # sourceCpp('src/co_occurrence_Rcpp.cpp')
 
-bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independent', permutations = 100){
-  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicates = 'independent'; permutations = 10; p = 0; cores = 0;
+bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'independent', permutations = 100){
+  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicate_samples = 'independent'; permutations = 10; p = 0; cores = 0;
   options(warnings=-1)
 
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(replicates)){replicates <- colnames(phyloseq_obj@sam_data[,replicates])}
+  if(is.numeric(replicate_samples)){replicate_samples <- colnames(phyloseq_obj@sam_data[,replicate_samples])}
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, frequency = 0)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
@@ -70,21 +70,21 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
   treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
   treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
 
-  if(replicates == 'independent' & is.null(treatment)){
+  if(replicate_samples == 'independent' & is.null(treatment)){
     replicate_indices <- 1:ncol(phyloseq_obj@otu_table)
-  } else if(replicates == 'independent' & !(is.null(treatment))){
+  } else if(replicate_samples == 'independent' & !(is.null(treatment))){
     phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment))
     replicate_name <- paste(c(treatment), collapse = sep)
-    replicates <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
-    replicate_indices <- lapply(replicates, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
-  } else if(replicates != 'independent' & !(is.null(treatment))){
-    phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment, replicates))
-    replicate_name <- paste(c(treatment, replicates), collapse = sep)
-    replicates <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
-    replicate_indices <- lapply(replicates, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
+    replicate_samples <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
+    replicate_indices <- lapply(replicate_samples, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
+  } else if(replicate_samples != 'independent' & !(is.null(treatment))){
+    phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment, replicate_samples))
+    replicate_name <- paste(c(treatment, replicate_samples), collapse = sep)
+    replicate_samples <- as.character(unique(phyloseq_obj_reps@sam_data[[replicate_name]]))
+    replicate_indices <- lapply(replicate_samples, FUN = function(trt){which(as.character(phyloseq_obj_reps@sam_data[[replicate_name]]) %in% trt)})
   }
 
-  rhos<-data.table(rho = factor(), count = numeric())
+  rhos <- data.table(Treatment = factor(levels = treatment_classes), rho = numeric(), Count = numeric())
   n <- nrow(phyloseq_obj@otu_table)
   permuted_phyloseq_obj <- phyloseq_obj
 
@@ -93,11 +93,14 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicates = 'independ
       for(indices in replicate_indices){
         permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
       }
-      rhos <- rbindlist(list(rhos, data.table(table(round(co_occurrence_rho_Rcpp(permuted_phyloseq_obj@otu_table, treatment_indices, treatment_classes),3)))))[, lapply(.SD, sum, na.rm = TRUE), by = rho]
+      co_occurence_table <- data.table(co_occurrence_rho_Rcpp(permuted_phyloseq_obj@otu_table, treatment_indices, treatment_classes))
+      co_occurence_table[, rho  := round(.SD, 3), .SDcols = 'rho']
+      co_occurence_table[, Count := .N, by = .(Treatment, rho)]
+      rhos <- rbindlist(list(rhos, co_occurence_table))[, lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
     }},
     interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', i, ' permutations.'); return(rhos)})
 
-  return(rhos)
+  return(setkey(rhos, Treatment, rho))
 } #else {
 #   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
 # }
@@ -132,7 +135,30 @@ curate_co_occurrence <- function(co_occurrence_table, taxa_of_interest, number_o
   return(arranged_co_ocurrence)
 }
 
+#' Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence. Function from the phylosmith-package.
+#'
+#' Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence.
+#' @useDynLib phylosmith
+#' @usage quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = TRUE)
+#' @param bootstrapped_rhos A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+#' @param p The significance threshold for setting cutoffs.
+#' @param by_treatment Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
+#' @import data.table
+#' @seealso \code{\link[=bootstrap_rho]{bootstrap_rho}}
+#' @export
+#'
 
+quantile_bootstrapped_rhos <- function(bootstrapped_rhos, p = 0.05, by_treatment = TRUE){
+  if(by_treatment){
+    bootstrapped_rhos[, Proportion := Count/sum(Count), by = Treatment]
+    quantiles <- bootstrapped_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p/2))], upper = rho[sum(cumsum(Proportion) <= (1-(p/2)))]), by = Treatment]
+  } else {
+    bootstrapped_rhos <- bootstrapped_rhos[,-1][, lapply(.SD, sum, na.rm = TRUE), by = rho]
+    bootstrapped_rhos[, Proportion := Count/sum(Count)]
+    quantiles <- bootstrapped_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p/2))], upper = rho[sum(cumsum(Proportion) <= (1-(p/2)))])]
+  }
+  return(quantiles)
+}
 
 #  ###RAM check .. because apparently some people have 36,000 genes in their studies...
 #  n <- nrow(phyloseq_obj@otu_table)

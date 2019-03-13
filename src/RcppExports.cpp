@@ -22,7 +22,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // co_occurrence_rho_Rcpp
-std::vector<double> co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names);
+Rcpp::DataFrame co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names);
 RcppExport SEXP _phylosmith_co_occurrence_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

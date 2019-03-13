@@ -2,17 +2,17 @@
 % Please edit documentation in R/co_occurrence.R
 \name{bootstrap_rho}
 \alias{bootstrap_rho}
-\title{Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. phylosmith}
+\title{Bootstraps the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
-bootstrap_rho(phyloseq_obj, treatment = NULL, 
-replicates = 'independent', permutations = 100)
+bootstrap_rho(phyloseq_obj, treatment = NULL,
+replicate_samples = 'independent', permutations = 100)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
 
-\item{replicates}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
+\item{replicate_samples}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
 }

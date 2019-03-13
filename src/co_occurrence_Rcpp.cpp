@@ -148,22 +148,6 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 		);
 }
 
-
-// CHECK FOR TIED RANKS
-
-// for(int trt=0; trt<n_treatments; ++trt){
-// 	has_ties = false;
-// 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
-// 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
-// 	map<double, int> countMap;
-// 		arma::rowvec ranks = treatment_matrix.row(8);
-// 		for(auto & elem : ranks){
-// 			auto result = countMap.insert(pair<double, int>(elem, 1));
-// 			if(result.second == false){result.first->second++;}
-// 		}
-// 		for(auto & elem : countMap){if(elem.first != 0 && elem.second > 1){has_ties = true;}}
-// }
-
 //' @author Schuyler D. Smith
 //' @title Co-occurrence rho calculations
 //' @description Calculates the pair-wise Spearman rank correlation without testing for significance.
@@ -173,7 +157,7 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 //' @return A \code{vector} with rho values for each pair-wise correlation.
 //' @seealso \code{\link{bootstrap_rho}}
 // [[Rcpp::export]]
-std::vector<double> co_occurrence_rho_Rcpp(
+Rcpp::DataFrame co_occurrence_rho_Rcpp(
 	Rcpp::NumericMatrix otu_table, 
 	Rcpp::List treatment_indices, 
 	Rcpp::StringVector treatment_names){
@@ -187,6 +171,7 @@ std::vector<double> co_occurrence_rho_Rcpp(
 	int ties = 1;
 
 	// return vectors
+	vector<string> treatments;
 	vector<double> rho_values;
 
 	// bool has_ties;
@@ -237,16 +222,17 @@ std::vector<double> co_occurrence_rho_Rcpp(
 					vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
 					rho = pearsoncoeff(X, Y);
 				} else {
-					continue; 
+					rho = 0; 
 				}
-				if(rho != 0){
-					rho_values.push_back(rho);
-				}
+				treatments.push_back(Rcpp::as<string> (treatment_names[trt]));
+				rho_values.push_back(rho);
 			}	
 		}}
 	}
-
-	return(rho_values);
+	return Rcpp::DataFrame::create(
+		Rcpp::Named("Treatment") = treatments,
+		Rcpp::Named("rho") = rho_values
+		);
 }
 
 //' @author Schuyler D. Smith
@@ -446,3 +432,20 @@ double pvalue( double t, double df )
 {
   return betai(0.5*df,0.5,df/(df+t*t));
 }
+
+
+
+// CHECK FOR TIED RANKS
+
+// for(int trt=0; trt<n_treatments; ++trt){
+// 	has_ties = false;
+// 	arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
+// 	arma::mat treatment_matrix = rank_table.cols(treatment_columns);
+// 	map<double, int> countMap;
+// 		arma::rowvec ranks = treatment_matrix.row(8);
+// 		for(auto & elem : ranks){
+// 			auto result = countMap.insert(pair<double, int>(elem, 1));
+// 			if(result.second == false){result.first->second++;}
+// 		}
+// 		for(auto & elem : countMap){if(elem.first != 0 && elem.second > 1){has_ties = true;}}
+// }

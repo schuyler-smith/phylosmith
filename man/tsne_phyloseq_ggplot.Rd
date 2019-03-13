@@ -21,7 +21,7 @@ labels = FALSE, colors = 'default')
 \item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
+Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a treatment or set of treatments.
 }
 \seealso{
 \code{\link[=Rtsne]{Rtsne}}

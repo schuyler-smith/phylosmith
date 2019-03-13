@@ -20,7 +20,7 @@ Used to determine a cutoff for which $\rho$ vlaues are not likely to have occure
 <br>
 ***Usage***
 ```r
-bootstrap_rho(phyloseq_obj, treatment, replicates = 'independent', permutations = 100, cores = 0)
+bootstrap_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutations = 100, cores = 0)
 ```
 
 <br>
@@ -30,7 +30,7 @@ Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
 `treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
-`replicates` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
+`replicate_samples` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
 `permutations` | Number of iterations to compute.
 `cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 

@@ -89,6 +89,46 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
   return(g)
 }
 
+#' Create a ggplot object of the distribution of rho values from bootstrap_rho(). Function from the phylosmith-package.
+#'
+#' Plots the output of \code{\link[=bootstrap_rho]{bootstrap_rho}} into a histogram with the distributions shown by treatment. This is a visualization tool to help show how the bootstrapping worked, and to see where the cutoffs lie.
+#' @useDynLib phylosmith
+#' @usage histogram_bootstrapped_rhos(bootstrapped_rhos, p = 0.05,
+#' zeros = FALSE, x_scale = 0.25, colors = 'default')
+#' @param bootstrapped_rhos A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+#' @param p The significance threshold for setting cutoffs.
+#' @param zeros In some cases either where a treatment is underpowered (few samples) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (\code{FALSE}).
+#' @param x_breaks What intervals to set the ticks on the x-axis.
+#' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
+#' @import ggplot2
+#' @seealso \code{\link[=bootstrap_rho]{bootstrap_rho}}
+#' @export
+#' 
+
+histogram_bootstrapped_rhos <- function(bootstrapped_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = 'default'){
+  color_count <- length(unique(bootstrapped_rhos[,Treatment]))
+  graph_colors <- phylosmith:::create_palette(color_count, colors)
+  
+  bootstrapped_rhos[, Proportion := Count/sum(Count), by = Treatment]
+  
+  bootstrapped_rhos[, bin := findInterval(rho, seq(-1, 1, .03)), by = Treatment]
+  bootstrapped_rhos <- bootstrapped_rhos[, list(rho = mean(rho), Count = sum(Count), Proportion = sum(Proportion)), by = .(Treatment, bin)]
+  
+  quantiles <- bootstrapped_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p/2))], upper = rho[sum(cumsum(Proportion) <= (1-(p/2)))]), by = Treatment]
+  if(!(zeros)){bootstrapped_rhos <- bootstrapped_rhos[rho != 0]}
+  g <- ggplot(bootstrapped_rhos, aes(x = rho, y = Proportion, fill = Treatment)) +
+    scale_x_continuous(breaks = seq(-1, 1, x_breaks)) +
+    scale_fill_manual(values = graph_colors) + 
+    theme_light() +
+    geom_vline(data = quantiles, xintercept = c(quantiles$lower, quantiles$upper), color = c(graph_colors, graph_colors), size = 1.5, alpha = 0.8) + 
+    geom_bar(stat = 'identity', position = position_dodge(width = .02), width = .05)
+  for(i in 1:nrow(quantiles)){
+    g <- g + geom_text(data = quantiles, x = quantiles$lower[i]-.03, label = paste0(round(quantiles$lower[i],2)), y = (.075 + (i*.015)), color = graph_colors[i], size = 5) +
+      geom_text(data = quantiles, x = quantiles$upper[i]+.03, label = paste0(round(quantiles$upper[i],2)), y = (.075 + (i*.015)), color = graph_colors[i], size = 5)
+  }
+  return(g)
+}
+
 #' Create an object of the abundance barplots from a phyloseq object. Function from the phylosmith-package.
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
@@ -322,7 +362,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
 
 #' Create a ggplot object using t-SNE from a phyloseq object. Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the t-SNE of a treatment or set of treatments.
+#' Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
 #' labels = FALSE, colors = 'default')
