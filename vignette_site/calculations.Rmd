@@ -38,8 +38,8 @@ Call | Description
 
 ```{r bootstrap_rho, eval=FALSE}
 bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
-hist(bootstrapped_rhos)
-quantile(bootstrapped_rhos, c(.025, .975))
+histogram_bootstrapped_rhos(bootstrapped_rhos)
+quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)
 ```
 
 <br>
