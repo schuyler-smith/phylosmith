@@ -167,10 +167,9 @@ quantile_permuted_rhos <- function(permuted_rhos, p = 0.05, by_treatment = TRUE)
 #' Plots the output of \code{\link[=permute_rho]{permute_rho}} into a histogram with the distributions shown by treatment. This is a visualization tool to help show how the permutation worked, and to see where the cutoffs lie.
 #' @useDynLib phylosmith
 #' @usage histogram_permuted_rhos(permuted_rhos, p = NULL,
-#' zeros = FALSE, x_breaks = 0.25, colors = 'default')
+#' x_breaks = 0.25, colors = 'default')
 #' @param permuted_rhos A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
 #' @param p The significance threshold for setting cutoffs.
-#' @param zeros In some cases either where a treatment is underpowered (few samples) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (\code{FALSE}).
 #' @param x_breaks What intervals to set the ticks on the x-axis.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
@@ -178,7 +177,7 @@ quantile_permuted_rhos <- function(permuted_rhos, p = 0.05, by_treatment = TRUE)
 #' @export
 #'
 
-histogram_permuted_rhos <- function(permuted_rhos, p = NULL, zeros = FALSE, x_breaks = 0.25, colors = 'default'){
+histogram_permuted_rhos <- function(permuted_rhos, p = NULL, x_breaks = 0.25, colors = 'default'){
   color_count <- length(unique(permuted_rhos[,Treatment]))
   graph_colors <- create_palette(color_count, colors)
 
@@ -187,9 +186,6 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL, zeros = FALSE, x_br
 
   permuted_rhos[, bin := findInterval(rho, seq(-1, 1, .03)), by = Treatment]
   permuted_rhos <- permuted_rhos[, list(rho = mean(rho), Count = sum(Count), Proportion = sum(Proportion)), by = .(Treatment, bin)]
-
-
-  if(!(zeros)){permuted_rhos <- permuted_rhos[rho != 0]}
 
   g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
   if(!(is.null(p))){

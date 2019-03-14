@@ -588,7 +588,7 @@ permuted_rhos</code></pre>
 <p><a name="histogram_permuted_rhos"></a></p>
 <p>Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -611,14 +611,10 @@ permuted_rhos</code></pre>
 <td>The significance threshold for setting cutoffs.</td>
 </tr>
 <tr class="odd">
-<td><code>zeros</code></td>
-<td>In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (<code>FALSE</code>).</td>
-</tr>
-<tr class="even">
 <td><code>x_breaks</code></td>
 <td>What intervals to set the ticks on the x-axis.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>colors</code></td>
 <td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
 </tr>

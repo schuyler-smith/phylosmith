@@ -5,14 +5,12 @@
 \title{Create a ggplot object of the distribution of rho values from permute_rho(). Function from the phylosmith-package.}
 \usage{
 histogram_permuted_rhos(permuted_rhos, p = NULL,
-zeros = FALSE, x_breaks = 0.25, colors = 'default')
+x_breaks = 0.25, colors = 'default')
 }
 \arguments{
 \item{permuted_rhos}{A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.}
 
 \item{p}{The significance threshold for setting cutoffs.}
-
-\item{zeros}{In some cases either where a treatment is underpowered (few samples) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (\code{FALSE}).}
 
 \item{x_breaks}{What intervals to set the ticks on the x-axis.}
 
