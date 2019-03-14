@@ -465,6 +465,63 @@ div.tocify {
 
 
 <p><br></p>
+<div id="co_occurrence" class="section level2">
+<h2>co_occurrence</h2>
+<p><a name="co_occurrence"></a></p>
+<p>This function is an implementation of the pair-wise Spearman rank correlation that you can call in <code>R</code>. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input.</p>
+<p>Because of how I implemented the multithreading, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>p</code></td>
+<td>The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to <code>p</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cores</code></td>
+<td>Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>co_occurrence_table &lt;- co_occurrence(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), p = 0.05)
+co_occurrence_table</code></pre>
+<pre><code>##              Treatment   OTU_1   OTU_2       rho            p
+##      1: Manure_Control   OTU_5   OTU_8 1.0000000 2.220446e-16
+##      2: Manure_Control OTU_211 OTU_331 1.0000000 2.220446e-16
+##      3: Manure_Control   OTU_5  OTU_74 1.0000000 2.220446e-16
+##      4: Manure_Control OTU_211 OTU_376 1.0000000 2.220446e-16
+##      5: Manure_Control   OTU_5  OTU_79 1.0000000 2.220446e-16
+##     ---                                                      
+## 327338:   Water_Manure OTU_210 OTU_712 0.2609110 1.200403e-02
+## 327339:   Water_Manure OTU_210 OTU_792 0.2499008 1.628602e-02
+## 327340:   Water_Manure OTU_210 OTU_836 0.4771401 1.518810e-06
+## 327341:   Water_Manure OTU_210 OTU_846 0.5054081 2.771382e-07
+## 327342:   Water_Manure OTU_210 OTU_342 0.2789028 7.098031e-03</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
 <div id="permute_rho" class="section level2">
 <h2>permute_rho</h2>
 <p><a name="permute_rho"></a></p>
@@ -526,13 +583,12 @@ permuted_rhos</code></pre>
 <hr />
 <p><br></p>
 </div>
-<div id="co_occurrence" class="section level2">
-<h2>co_occurrence</h2>
-<p><a name="co_occurrence"></a></p>
-<p>This function is an implementation of the pair-wise Spearman rank correlation that you can call in <code>R</code>. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input.</p>
-<p>Because of how I implemented the multithreading, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.</p>
+<div id="histogram_permuted_rhos" class="section level2">
+<h2>histogram_permuted_rhos</h2>
+<p><a name="histogram_permuted_rhos"></a></p>
+<p>Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)</code></pre>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -547,38 +603,30 @@ permuted_rhos</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>phyloseq_obj</code></td>
-<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+<td><code>permuted_rhos</code></td>
+<td>A  output from .</td>
 </tr>
 <tr class="even">
-<td><code>treatment</code></td>
-<td>Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+<td><code>p</code></td>
+<td>The significance threshold for setting cutoffs.</td>
 </tr>
 <tr class="odd">
-<td><code>p</code></td>
-<td>The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to <code>p</code>.</td>
+<td><code>zeros</code></td>
+<td>In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (<code>FALSE</code>).</td>
 </tr>
 <tr class="even">
-<td><code>cores</code></td>
-<td>Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP</td>
+<td><code>x_breaks</code></td>
+<td>What intervals to set the ticks on the x-axis.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
 </tr>
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>co_occurrence_table &lt;- co_occurrence(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), p = 0.05)
-co_occurrence_table</code></pre>
-<pre><code>##              Treatment   OTU_1   OTU_2       rho            p
-##      1: Manure_Control   OTU_5   OTU_8 1.0000000 2.220446e-16
-##      2: Manure_Control OTU_211 OTU_331 1.0000000 2.220446e-16
-##      3: Manure_Control   OTU_5  OTU_74 1.0000000 2.220446e-16
-##      4: Manure_Control OTU_211 OTU_376 1.0000000 2.220446e-16
-##      5: Manure_Control   OTU_5  OTU_79 1.0000000 2.220446e-16
-##     ---                                                      
-## 327338:   Water_Manure OTU_210 OTU_712 0.2609110 1.200403e-02
-## 327339:   Water_Manure OTU_210 OTU_792 0.2499008 1.628602e-02
-## 327340:   Water_Manure OTU_210 OTU_836 0.4771401 1.518810e-06
-## 327341:   Water_Manure OTU_210 OTU_846 0.5054081 2.771382e-07
-## 327342:   Water_Manure OTU_210 OTU_342 0.2789028 7.098031e-03</code></pre>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05)</code></pre>
+<p><img src="calculations_files/figure-html/histogram_permuted_rhos-1.png" width="768" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -627,54 +675,6 @@ co_occurrence_table</code></pre>
 <pre class="r"><code>quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)</code></pre>
 <pre><code>##     lower upper
 ## 1: -0.056 0.637</code></pre>
-<p><br></p>
-<hr />
-<p><br></p>
-</div>
-<div id="histogram_permuted_rhos" class="section level2">
-<h2>histogram_permuted_rhos</h2>
-<p><a name="histogram_permuted_rhos"></a></p>
-<p>Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.</p>
-<p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
-<p><br> <strong><em>Arguments</em></strong></p>
-<table>
-<colgroup>
-<col width="25%" />
-<col width="74%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Call</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>permuted_rhos</code></td>
-<td>A  output from .</td>
-</tr>
-<tr class="even">
-<td><code>p</code></td>
-<td>The significance threshold for setting cutoffs.</td>
-</tr>
-<tr class="odd">
-<td><code>zeros</code></td>
-<td>In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (<code>FALSE</code>).</td>
-</tr>
-<tr class="even">
-<td><code>x_breaks</code></td>
-<td>What intervals to set the ticks on the x-axis.</td>
-</tr>
-<tr class="odd">
-<td><code>colors</code></td>
-<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
-</tr>
-</tbody>
-</table>
-<p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05)</code></pre>
-<p><img src="calculations_files/figure-html/histogram_permuted_rhos-1.png" width="768" /></p>
 <p><br></p>
 <hr />
 <p><br></p>

@@ -51,8 +51,8 @@ Call                 | Description
 -------------------- | ------------------------------------------------------------
 [co_occurrence](https://schuyler-smith.github.io/phylosmith/calculations.html#permute_rho) | calculate co-occurrence between taxa
 [permute_rho](https://schuyler-smith.github.io/phylosmith/calculations.html#co_occurrence) | runs permutations of the otu_table to calculate a significant $\rho$ value
-[quantile_permuted_rhos](https://schuyler-smith.github.io/phylosmith/calculations.html##quantile_permuted_rhos) | calculate quantiles for the permuted $\rho$ values from the Spearman-rank co-occurrence
 [histogram_permuted_rhos](https://schuyler-smith.github.io/phylosmith/calculations.html##histogram_permuted_rhos) | Create a ggplot object of the distribution of $\rho$ values.
+[quantile_permuted_rhos](https://schuyler-smith.github.io/phylosmith/calculations.html##quantile_permuted_rhos) | calculate quantiles for the permuted $\rho$ values from the Spearman-rank co-occurrence
 
 ## Datasets
 

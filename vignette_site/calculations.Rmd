@@ -12,42 +12,6 @@ data(soil_column)
 
 <br>
 
-## permute_rho
-<a name="permute_rho"></a>
-
-Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
-
-The permutation returns a large table of rho-values, so RAM becomes a bottle-neck resource. To deal with this, the results are merged into a single frequency table, which saves an enormous amount of memory. Unfortunately, this doesn't allow for simple and intuitive multithreading. Because of that, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.
-
-<br>
-***Usage***
-```r
-permute_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutations = 100, cores = 0)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
-`replicate_samples` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
-`permutations` | Number of iterations to compute.
-`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
-
-***Examples***
-
-```{r permute_rho}
-permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
-permuted_rhos
-```
-
-<br>
-
-***
-
-<br>
 
 ## co_occurrence
 <a name="co_occurrence"></a>
@@ -84,30 +48,35 @@ co_occurrence_table
 
 <br>
 
-## quantile_permuted_rhos
-<a name="quantile_permuted_rhos"></a>
+## permute_rho
+<a name="permute_rho"></a>
 
-Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.
+Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
+
+The permutation returns a large table of rho-values, so RAM becomes a bottle-neck resource. To deal with this, the results are merged into a single frequency table, which saves an enormous amount of memory. Unfortunately, this doesn't allow for simple and intuitive multithreading. Because of that, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.
 
 <br>
 ***Usage***
 ```r
-quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
+permute_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutations = 100, cores = 0)
 ```
+
 <br>
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
-`p` | The significance threshold for setting cutoffs.
-`by_treatment` | Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`replicate_samples` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
+`permutations` | Number of iterations to compute.
+`cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
 
 ***Examples***
 
-```{r quantile_permuted_rhos}
-quantile_permuted_rhos(permuted_rhos, p = 0.05)
-quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)
+```{r permute_rho}
+permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
+permuted_rhos
 ```
 
 <br>
@@ -148,3 +117,36 @@ histogram_permuted_rhos(permuted_rhos, p = 0.05)
 ***
 
 <br>
+
+## quantile_permuted_rhos
+<a name="quantile_permuted_rhos"></a>
+
+Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.
+
+<br>
+***Usage***
+```r
+quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
+```
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
+`p` | The significance threshold for setting cutoffs.
+`by_treatment` | Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
+
+***Examples***
+
+```{r quantile_permuted_rhos}
+quantile_permuted_rhos(permuted_rhos, p = 0.05)
+quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)
+```
+
+<br>
+
+***
+
+<br>
+
