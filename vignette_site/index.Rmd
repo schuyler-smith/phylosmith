@@ -52,10 +52,10 @@ Call | Description
 ### [Calculations][calc]
 Call | Description
 -------------------- | ------------------------------------------------------------
-[bootstrap_rho](calculations#bootstrap_rho) | runs permutations of the otu_table to calculate a significant $\rho$ value
+[permute_rho](calculations#permute_rho) | runs permutations of the otu_table to calculate a significant $\rho$ value
 [co_occurrence](calculations#co_occurrence) | calculate co-occurrence between taxa
-[quantile_bootstrapped_rhos](calculations#quantile_bootstrapped_rhos) | calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence
-[histogram_bootstrapped_rhos](calculations#histogram_bootstrapped_rhos) | Create a ggplot object of the distribution of rho values.
+[quantile_permuted_rhos](calculations#quantile_permuted_rhos) | calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence
+[histogram_permuted_rhos](calculations#histogram_permuted_rhos) | Create a ggplot object of the distribution of rho values.
 
 ### Datasets
 Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 

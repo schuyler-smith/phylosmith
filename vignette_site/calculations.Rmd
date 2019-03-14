@@ -12,15 +12,15 @@ data(soil_column)
 
 <br>
 
-## bootstrap_rho
-<a name="bootstrap_rho"></a>
+## permute_rho
+<a name="permute_rho"></a>
 
 Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
 
 <br>
 ***Usage***
 ```r
-bootstrap_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutations = 100, cores = 0)
+permute_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutations = 100, cores = 0)
 ```
 
 <br>
@@ -36,9 +36,9 @@ Call | Description
 
 ***Examples***
 
-```{r bootstrap_rho}
-bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
-bootstrapped_rhos
+```{r permute_rho}
+permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
+permuted_rhos
 ```
 
 <br>
@@ -80,30 +80,30 @@ co_occurrence_table
 
 <br>
 
-## quantile_bootstrapped_rhos
-<a name="quantile_bootstrapped_rhos"></a>
+## quantile_permuted_rhos
+<a name="quantile_permuted_rhos"></a>
 
-Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.
+Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.
 
 <br>
 ***Usage***
 ```r
-quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = TRUE)
+quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
 ```
 <br>
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`bootstrapped_rhos` | A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
 `p` | The significance threshold for setting cutoffs.
 `by_treatment` | Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
 
 ***Examples***
 
-```{r quantile_bootstrapped_rhos}
-quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)
-quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = FALSE)
+```{r quantile_permuted_rhos}
+quantile_permuted_rhos(permuted_rhos, p = 0.05)
+quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)
 ```
 
 <br>
@@ -112,22 +112,22 @@ quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = FALSE)
 
 <br>
 
-## histogram_bootstrapped_rhos
-<a name="histogram_bootstrapped_rhos"></a>
+## histogram_permuted_rhos
+<a name="histogram_permuted_rhos"></a>
 
 Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.
 
 <br>
 ***Usage***
 ```r
-histogram_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = 'default')
+histogram_permuted_rhos(permuted_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = 'default')
 ```
 <br>
 ***Arguments***
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`bootstrapped_rhos` | A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
 `p` | The significance threshold for setting cutoffs.
 `zeros` | In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (`FALSE`).
 `x_breaks` | What intervals to set the ticks on the x-axis.
@@ -135,8 +135,8 @@ Call | Description
 
 ***Examples***
 
-```{r histogram_bootstrapped_rhos}
-histogram_bootstrapped_rhos(bootstrapped_rhos[Treatment %in% c('Soil_Manure', 'Water_Manure')], p = 0.05)
+```{r histogram_permuted_rhos}
+histogram_permuted_rhos(permuted_rhos[Treatment %in% c('Soil_Manure', 'Water_Manure')], p = 0.05)
 ```
 
 <br>

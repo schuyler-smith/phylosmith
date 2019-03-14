@@ -465,12 +465,12 @@ div.tocify {
 
 
 <p><br></p>
-<div id="bootstrap_rho" class="section level2">
-<h2>bootstrap_rho</h2>
-<p><a name="bootstrap_rho"></a></p>
+<div id="permute_rho" class="section level2">
+<h2>permute_rho</h2>
+<p><a name="permute_rho"></a></p>
 <p>Used to determine a cutoff for which <span class="math inline">\(\rho\)</span> vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of <span class="math inline">\(\rho\)</span> values that can be used to determing the significance.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>bootstrap_rho(phyloseq_obj, treatment, replicate_samples = &#39;independent&#39;, permutations = 100, cores = 0)</code></pre>
+<pre class="r"><code>permute_rho(phyloseq_obj, treatment, replicate_samples = &#39;independent&#39;, permutations = 100, cores = 0)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -507,20 +507,20 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>bootstrapped_rhos &lt;- bootstrap_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), &#39;Day&#39;, permutations = 5)
-bootstrapped_rhos</code></pre>
-<pre><code>##            Treatment    rho   Count
-##    1: Manure_Control    NaN  792020
-##    2: Manure_Control -1.000 1062605
-##    3: Manure_Control -0.949 1210320
-##    4: Manure_Control -0.943 1026045
-##    5: Manure_Control -0.894 2577620
-##   ---                              
-## 7171:   Water_Manure  0.996      10
-## 7172:   Water_Manure  0.997       5
-## 7173:   Water_Manure  0.998       1
-## 7174:   Water_Manure  0.999       1
-## 7175:   Water_Manure  1.000       2</code></pre>
+<pre class="r"><code>permuted_rhos &lt;- permute_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), &#39;Day&#39;, permutations = 5)
+permuted_rhos</code></pre>
+<pre><code>##            Treatment    rho Count
+##    1: Manure_Control    NaN  1990
+##    2: Manure_Control -1.000  2305
+##    3: Manure_Control -0.949  2460
+##    4: Manure_Control -0.943  2265
+##    5: Manure_Control -0.894  3590
+##   ---                            
+## 7169:   Water_Manure  0.995     1
+## 7170:   Water_Manure  0.996     1
+## 7171:   Water_Manure  0.997     3
+## 7172:   Water_Manure  0.998     1
+## 7173:   Water_Manure  1.000     6</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -581,12 +581,12 @@ co_occurrence_table</code></pre>
 <hr />
 <p><br></p>
 </div>
-<div id="quantile_bootstrapped_rhos" class="section level2">
-<h2>quantile_bootstrapped_rhos</h2>
-<p><a name="quantile_bootstrapped_rhos"></a></p>
-<p>Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.</p>
+<div id="quantile_permuted_rhos" class="section level2">
+<h2>quantile_permuted_rhos</h2>
+<p><a name="quantile_permuted_rhos"></a></p>
+<p>Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = TRUE)</code></pre>
+<pre class="r"><code>quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -601,7 +601,7 @@ co_occurrence_table</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>bootstrapped_rhos</code></td>
+<td><code>permuted_rhos</code></td>
 <td>A  output from .</td>
 </tr>
 <tr class="even">
@@ -615,26 +615,26 @@ co_occurrence_table</code></pre>
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)</code></pre>
-<pre><code>##         Treatment  lower  upper
-## 1: Manure_Control -0.056 -0.056
-## 2:   Soil_Control -0.001 -0.001
-## 3:  Water_Control -0.001 -0.001
-## 4:    Soil_Manure -0.001 -0.001
-## 5:   Water_Manure -0.001 -0.001</code></pre>
-<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = FALSE)</code></pre>
-<pre><code>##     lower  upper
-## 1: -0.056 -0.056</code></pre>
+<pre class="r"><code>quantile_permuted_rhos(permuted_rhos, p = 0.05)</code></pre>
+<pre><code>##         Treatment  lower upper
+## 1: Manure_Control -0.600 0.800
+## 2:   Soil_Control -0.390 0.728
+## 3:  Water_Control -0.425 0.646
+## 4:    Soil_Manure -0.471 0.663
+## 5:   Water_Manure -0.400 0.617</code></pre>
+<pre class="r"><code>quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)</code></pre>
+<pre><code>##     lower upper
+## 1: -0.056 0.637</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="histogram_bootstrapped_rhos" class="section level2">
-<h2>histogram_bootstrapped_rhos</h2>
-<p><a name="histogram_bootstrapped_rhos"></a></p>
+<div id="histogram_permuted_rhos" class="section level2">
+<h2>histogram_permuted_rhos</h2>
+<p><a name="histogram_permuted_rhos"></a></p>
 <p>Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>histogram_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -649,7 +649,7 @@ co_occurrence_table</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>bootstrapped_rhos</code></td>
+<td><code>permuted_rhos</code></td>
 <td>A  output from .</td>
 </tr>
 <tr class="even">
@@ -671,8 +671,8 @@ co_occurrence_table</code></pre>
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>histogram_bootstrapped_rhos(bootstrapped_rhos[Treatment %in% c(&#39;Soil_Manure&#39;, &#39;Water_Manure&#39;)], p = 0.05)</code></pre>
-<p><img src="calculations_files/figure-html/histogram_bootstrapped_rhos-1.png" width="768" /></p>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos[Treatment %in% c(&#39;Soil_Manure&#39;, &#39;Water_Manure&#39;)], p = 0.05)</code></pre>
+<p><img src="calculations_files/figure-html/histogram_permuted_rhos-1.png" width="768" /></p>
 <p><br></p>
 <hr />
 <p><br></p>

@@ -20,6 +20,6 @@ co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 }
 \seealso{
-\code{\link{bootstrap_rho}} \code{\link{phylosmith}}
+\code{\link{permute_rho}} \code{\link{phylosmith}}
 }
 \keyword{nonparametric}

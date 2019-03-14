@@ -154,13 +154,15 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 //' @param otu_table An \code{otu_table} in the format from \code{\link[phyloseq:otu_table]{phyloseq}}
 //' @param treatment_indices A \code{list} with c++ indices for the \code{treatment_names} corresponding to which treatment each column in the \code{otu_table} belongs to.
 //' @param treatment_names A \code{Vector} containing the treatment names corresponding to the \code{treatment_indices}.
+//' @param ncores \code{int} for how many cores to use to multithread the calculations.
 //' @return A \code{vector} with rho values for each pair-wise correlation.
-//' @seealso \code{\link{bootstrap_rho}}
+//' @seealso \code{\link{permute_rho}}
 // [[Rcpp::export]]
 Rcpp::DataFrame co_occurrence_rho_Rcpp(
 	Rcpp::NumericMatrix otu_table, 
 	Rcpp::List treatment_indices, 
-	Rcpp::StringVector treatment_names){
+	Rcpp::StringVector treatment_names,
+	const int ncores){
 
 	arma::mat rank_table = Rcpp::as<arma::mat>(clone(otu_table));
 	int n_treatments = treatment_names.length();
@@ -211,6 +213,10 @@ Rcpp::DataFrame co_occurrence_rho_Rcpp(
 		// has_ties = false;
 		arma::uvec treatment_columns = Rcpp::as<arma::uvec>(treatment_indices[trt]);
 		arma::mat treatment_matrix = rank_table.cols(treatment_columns);
+		#ifdef _OPENMP
+			#pragma omp parallel for num_threads(ncores)
+	  		// #pragma omp parallel for
+		#endif
 		for(int taxa1=0; taxa1<n_taxa-1; ++taxa1){
 			if(!Progress::check_abort()){
 			arma::rowvec taxa1_ranks = treatment_matrix.row(taxa1);
@@ -224,8 +230,13 @@ Rcpp::DataFrame co_occurrence_rho_Rcpp(
 				} else {
 					rho = 0; 
 				}
+				#ifdef _OPENMP
+			  		#pragma omp critical
+				#endif
+				{
 				treatments.push_back(Rcpp::as<string> (treatment_names[trt]));
-				rho_values.push_back(rho);
+				rho_values.push_back(rho);					
+				}
 			}	
 		}}
 	}
