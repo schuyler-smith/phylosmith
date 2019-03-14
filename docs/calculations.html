@@ -469,6 +469,7 @@ div.tocify {
 <h2>permute_rho</h2>
 <p><a name="permute_rho"></a></p>
 <p>Used to determine a cutoff for which <span class="math inline">\(\rho\)</span> vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of <span class="math inline">\(\rho\)</span> values that can be used to determing the significance.</p>
+<p>The permutation returns a large table of rho-values, so RAM becomes a bottle-neck resource. To deal with this, the results are merged into a single frequency table, which saves an enormous amount of memory. Unfortunately, this doesn’t allow for simple and intuitive multithreading. Because of that, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.</p>
 <p><br> <strong><em>Usage</em></strong></p>
 <pre class="r"><code>permute_rho(phyloseq_obj, treatment, replicate_samples = &#39;independent&#39;, permutations = 100, cores = 0)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
@@ -529,6 +530,7 @@ permuted_rhos</code></pre>
 <h2>co_occurrence</h2>
 <p><a name="co_occurrence"></a></p>
 <p>This function is an implementation of the pair-wise Spearman rank correlation that you can call in <code>R</code>. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input.</p>
+<p>Because of how I implemented the multithreading, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.</p>
 <p><br> <strong><em>Usage</em></strong></p>
 <pre class="r"><code>co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
@@ -671,7 +673,7 @@ co_occurrence_table</code></pre>
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>histogram_permuted_rhos(permuted_rhos[Treatment %in% c(&#39;Soil_Manure&#39;, &#39;Water_Manure&#39;)], p = 0.05)</code></pre>
+<pre class="r"><code>histogram_permuted_rhos(permuted_rhos, p = 0.05)</code></pre>
 <p><img src="calculations_files/figure-html/histogram_permuted_rhos-1.png" width="768" /></p>
 <p><br></p>
 <hr />

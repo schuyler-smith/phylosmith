@@ -140,7 +140,7 @@ Call | Description
 ***Examples***
 
 ```{r histogram_permuted_rhos}
-histogram_permuted_rhos(permuted_rhos[Treatment %in% c('Soil_Manure', 'Water_Manure')], p = 0.05)
+histogram_permuted_rhos(permuted_rhos, p = 0.05)
 ```
 
 <br>
