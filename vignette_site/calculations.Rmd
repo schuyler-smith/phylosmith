@@ -17,6 +17,8 @@ data(soil_column)
 
 Used to determine a cutoff for which $\rho$ vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of $\rho$ values that can be used to determing the significance.
 
+The permutation returns a large table of rho-values, so RAM becomes a bottle-neck resource. To deal with this, the results are merged into a single frequency table, which saves an enormous amount of memory. Unfortunately, this doesn't allow for simple and intuitive multithreading. Because of that, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.
+
 <br>
 ***Usage***
 ```r
@@ -51,6 +53,8 @@ permuted_rhos
 <a name="co_occurrence"></a>
 
 This function is an implementation of the pair-wise Spearman rank correlation that you can call in `R`. The results should be identical. <a href="https://github.com/germs-lab/FastCoOccur" target="_blank" >FastCoOccur</a> was originally written by <a href="https://github.com/metajinomics" target="_blank" >Jin Choi</a> in C++ to be called from the command-line. I rewrote the routine, implementing the <a href="http://www.rcpp.org/" target="_blank" >Rcpp</a> API, so that it could be called within R, and with a phyloseq-object as the input. 
+
+Because of how I implemented the multithreading, there is a large diminishing return to the number of cores used. I found the optimal to be around 4 CPUs, depending on the size of your dataset.
 
 <br>
 ***Usage***

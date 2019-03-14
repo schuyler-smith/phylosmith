@@ -188,17 +188,21 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL, zeros = FALSE, x_br
   permuted_rhos[, bin := findInterval(rho, seq(-1, 1, .03)), by = Treatment]
   permuted_rhos <- permuted_rhos[, list(rho = mean(rho), Count = sum(Count), Proportion = sum(Proportion)), by = .(Treatment, bin)]
 
+
   if(!(zeros)){permuted_rhos <- permuted_rhos[rho != 0]}
-  g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment)) +
-    scale_x_continuous(breaks = seq(-1, 1, x_breaks)) +
+
+  g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
+  if(!(is.null(p))){
+    g <- g + geom_vline(data = quantiles, xintercept = c(quantiles$lower, quantiles$upper), color = c(graph_colors, graph_colors), size = 1.5, alpha = 0.8)
+  }
+  g <- g + scale_x_continuous(breaks = seq(-1, 1, x_breaks)) +
     scale_fill_manual(values = graph_colors) +
     theme_light() +
-    geom_vline(data = quantiles, xintercept = c(quantiles$lower, quantiles$upper), color = c(graph_colors, graph_colors), size = 1.5, alpha = 0.8) +
     geom_bar(stat = 'identity', position = position_dodge(width = .02), width = .05)
   if(!(is.null(p))){
     for(i in 1:nrow(quantiles)){
-      g <- g + geom_text(data = quantiles, x = quantiles$lower[i]-.03, label = paste0(round(quantiles$lower[i],2)), y = (.075 + (i*.015)), color = graph_colors[i], size = 5) +
-        geom_text(data = quantiles, x = quantiles$upper[i]+.03, label = paste0(round(quantiles$upper[i],2)), y = (.075 + (i*.015)), color = graph_colors[i], size = 5)
+      g <- g + geom_text(data = quantiles, x = quantiles$lower[i]-.15, label = paste0(round(quantiles$lower[i],2)), y = (.015 + (i*.005)), color = graph_colors[i], size = 5) +
+        geom_text(data = quantiles, x = quantiles$upper[i]+.15, label = paste0(round(quantiles$upper[i],2)), y = (.015 + (i*.005)), color = graph_colors[i], size = 5)
     }
   }
   return(g)
