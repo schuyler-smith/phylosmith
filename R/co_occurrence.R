@@ -96,6 +96,7 @@ bootstrap_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'i
       co_occurence_table <- data.table(co_occurrence_rho_Rcpp(permuted_phyloseq_obj@otu_table, treatment_indices, treatment_classes))
       co_occurence_table[, rho  := round(.SD, 3), .SDcols = 'rho']
       co_occurence_table[, Count := .N, by = .(Treatment, rho)]
+      co_occurence_table <- unique(co_occurence_table)
       rhos <- rbindlist(list(rhos, co_occurence_table))[, lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
     }},
     interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', i, ' permutations.'); return(rhos)})

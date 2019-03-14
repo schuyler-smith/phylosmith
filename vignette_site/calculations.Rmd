@@ -36,10 +36,9 @@ Call | Description
 
 ***Examples***
 
-```{r bootstrap_rho, eval=FALSE}
-bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), permutations = 5)
-histogram_bootstrapped_rhos(bootstrapped_rhos)
-quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)
+```{r bootstrap_rho}
+bootstrapped_rhos <- bootstrap_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
+bootstrapped_rhos
 ```
 
 <br>
@@ -70,7 +69,78 @@ Call | Description
 
 ***Examples***
 
-```{r co_occurrence, eval=FALSE}
+```{r co_occurrence}
 co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
 co_occurrence_table
 ```
+
+<br>
+
+***
+
+<br>
+
+## quantile_bootstrapped_rhos
+<a name="quantile_bootstrapped_rhos"></a>
+
+Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.
+
+<br>
+***Usage***
+```r
+quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = TRUE)
+```
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`bootstrapped_rhos` | A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+`p` | The significance threshold for setting cutoffs.
+`by_treatment` | Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
+
+***Examples***
+
+```{r quantile_bootstrapped_rhos}
+quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)
+quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = FALSE)
+```
+
+<br>
+
+***
+
+<br>
+
+## histogram_bootstrapped_rhos
+<a name="histogram_bootstrapped_rhos"></a>
+
+Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.
+
+<br>
+***Usage***
+```r
+histogram_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = 'default')
+```
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`bootstrapped_rhos` | A \code{data.table} output from \code{\link[=bootstrap_rho]{bootstrap_rho}}.
+`p` | The significance threshold for setting cutoffs.
+`zeros` | In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (`FALSE`).
+`x_breaks` | What intervals to set the ticks on the x-axis.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r histogram_bootstrapped_rhos}
+histogram_bootstrapped_rhos(bootstrapped_rhos[Treatment %in% c('Soil_Manure', 'Water_Manure')], p = 0.05)
+```
+
+<br>
+
+***
+
+<br>

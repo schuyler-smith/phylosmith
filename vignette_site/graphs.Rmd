@@ -254,3 +254,9 @@ Call | Description
 ```{r tsne_phyloseq_ggplot}
 tsne_phyloseq_ggplot(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10)
 ```
+
+<br>
+
+***
+
+<br>

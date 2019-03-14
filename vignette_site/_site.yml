@@ -19,7 +19,7 @@ navbar:
     - text: Source Code
       icon: fa-code
       href: https://github.com/schuyler-smith/phylosmith/
-  
+
   right:
     - icon: fa-github fa-lg
       href: http://github.com/schuyler-smith
@@ -39,6 +39,6 @@ output:
       after_body: footer.html
     css: styles.css
     toc: true
-    toc_float: 
+    toc_float:
       collapsed: false
       smooth_scroll: false

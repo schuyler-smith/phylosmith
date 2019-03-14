@@ -338,3 +338,9 @@ In `soil_column`, the actual experimental conditions are a combination of the `M
 ```{r taxa_filter_4}
 taxa_filter(soil_column, frequency = 0.80, treatment = c('Matrix', 'Treatment'))
 ```
+
+<br>
+
+***
+
+<br>

@@ -51,6 +51,8 @@ Call                 | Description
 -------------------- | ------------------------------------------------------------
 [co_occurrence](https://schuyler-smith.github.io/phylosmith/calculations.html#bootstrap_rho) | calculate co-occurrence between taxa
 [bootstrap_rho](https://schuyler-smith.github.io/phylosmith/calculations.html#co_occurrence) | runs permutations of the otu_table to calculate a significant $\rho$ value
+[quantile_bootstrapped_rhos](https://schuyler-smith.github.io/phylosmith/calculations.html##quantile_bootstrapped_rhos) | calculate quantiles for the bootstrapped $\rho$ values from the Spearman-rank co-occurrence
+[histogram_bootstrapped_rhos](https://schuyler-smith.github.io/phylosmith/calculations.html##histogram_bootstrapped_rhos) | Create a ggplot object of the distribution of $\rho$ values.
 
 ## Datasets
 

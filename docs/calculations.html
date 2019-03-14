@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-03-12" />
+<meta name="date" content="2019-03-14" />
 
 <title>Calculations</title>
 
@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Calculations</h1>
 <h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
-<h4 class="date"><em>2019-03-12</em></h4>
+<h4 class="date"><em>2019-03-14</em></h4>
 
 </div>
 
@@ -470,7 +470,7 @@ div.tocify {
 <p><a name="bootstrap_rho"></a></p>
 <p>Used to determine a cutoff for which <span class="math inline">\(\rho\)</span> vlaues are not likely to have occured by random chance. This will create permutations of all combinations of abundances and calculate the pair-wise Spearman rank co-occurence for each. The return will be a distribution of <span class="math inline">\(\rho\)</span> values that can be used to determing the significance.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>bootstrap_rho(phyloseq_obj, treatment, replicates = &#39;independent&#39;, permutations = 100, cores = 0)</code></pre>
+<pre class="r"><code>bootstrap_rho(phyloseq_obj, treatment, replicate_samples = &#39;independent&#39;, permutations = 100, cores = 0)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -493,7 +493,7 @@ div.tocify {
 <td>Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
 </tr>
 <tr class="odd">
-<td><code>replicates</code></td>
+<td><code>replicate_samples</code></td>
 <td>Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.</td>
 </tr>
 <tr class="even">
@@ -507,9 +507,20 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>bootstrapped_rhos &lt;- bootstrap_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), permutations = 5)
-hist(bootstrapped_rhos)
-quantile(bootstrapped_rhos, c(.025, .975))</code></pre>
+<pre class="r"><code>bootstrapped_rhos &lt;- bootstrap_rho(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), &#39;Day&#39;, permutations = 5)
+bootstrapped_rhos</code></pre>
+<pre><code>##            Treatment    rho   Count
+##    1: Manure_Control    NaN  792020
+##    2: Manure_Control -1.000 1062605
+##    3: Manure_Control -0.949 1210320
+##    4: Manure_Control -0.943 1026045
+##    5: Manure_Control -0.894 2577620
+##   ---                              
+## 7171:   Water_Manure  0.996      10
+## 7172:   Water_Manure  0.997       5
+## 7173:   Water_Manure  0.998       1
+## 7174:   Water_Manure  0.999       1
+## 7175:   Water_Manure  1.000       2</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -554,6 +565,117 @@ quantile(bootstrapped_rhos, c(.025, .975))</code></pre>
 <p><strong><em>Examples</em></strong></p>
 <pre class="r"><code>co_occurrence_table &lt;- co_occurrence(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), p = 0.05)
 co_occurrence_table</code></pre>
+<pre><code>##              Treatment   OTU_1   OTU_2       rho            p
+##      1: Manure_Control   OTU_5   OTU_8 1.0000000 2.220446e-16
+##      2: Manure_Control OTU_211 OTU_331 1.0000000 2.220446e-16
+##      3: Manure_Control   OTU_5  OTU_74 1.0000000 2.220446e-16
+##      4: Manure_Control OTU_211 OTU_376 1.0000000 2.220446e-16
+##      5: Manure_Control   OTU_5  OTU_79 1.0000000 2.220446e-16
+##     ---                                                      
+## 327338:   Water_Manure OTU_210 OTU_712 0.2609110 1.200403e-02
+## 327339:   Water_Manure OTU_210 OTU_792 0.2499008 1.628602e-02
+## 327340:   Water_Manure OTU_210 OTU_836 0.4771401 1.518810e-06
+## 327341:   Water_Manure OTU_210 OTU_846 0.5054081 2.771382e-07
+## 327342:   Water_Manure OTU_210 OTU_342 0.2789028 7.098031e-03</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="quantile_bootstrapped_rhos" class="section level2">
+<h2>quantile_bootstrapped_rhos</h2>
+<p><a name="quantile_bootstrapped_rhos"></a></p>
+<p>Calculate quantiles for the bootstrapped rho values from the Spearman-rank co-occurrence. Can be done by treatments or for the overall data. This looks at both tails of the distribution, so it will show the p/2 cutoffs on both ends.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = TRUE)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bootstrapped_rhos</code></td>
+<td>A  output from .</td>
+</tr>
+<tr class="even">
+<td><code>p</code></td>
+<td>The significance threshold for setting cutoffs.</td>
+</tr>
+<tr class="odd">
+<td><code>by_treatment</code></td>
+<td>Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05)</code></pre>
+<pre><code>##         Treatment  lower  upper
+## 1: Manure_Control -0.056 -0.056
+## 2:   Soil_Control -0.001 -0.001
+## 3:  Water_Control -0.001 -0.001
+## 4:    Soil_Manure -0.001 -0.001
+## 5:   Water_Manure -0.001 -0.001</code></pre>
+<pre class="r"><code>quantile_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, by_treatment = FALSE)</code></pre>
+<pre><code>##     lower  upper
+## 1: -0.056 -0.056</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="histogram_bootstrapped_rhos" class="section level2">
+<h2>histogram_bootstrapped_rhos</h2>
+<p><a name="histogram_bootstrapped_rhos"></a></p>
+<p>Creates a ggplot object of the histogram of the rho values by treatment. This is a visualization tool to explain how to find cutoffs, but will also calculate the cutoffs.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>histogram_bootstrapped_rhos(bootstrapped_rhos, p = 0.05, zeros = FALSE, x_breaks = 0.25, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>bootstrapped_rhos</code></td>
+<td>A  output from .</td>
+</tr>
+<tr class="even">
+<td><code>p</code></td>
+<td>The significance threshold for setting cutoffs.</td>
+</tr>
+<tr class="odd">
+<td><code>zeros</code></td>
+<td>In some cases either where a treatment is underpowered (few samples that are homogenous) there may be an extreme number of 0 values for rho, which can affect the scale an make the distribution curves look poor for treatments that are okay. The 0-rhos are still included in the calculations, but not displayed on the graph (<code>FALSE</code>).</td>
+</tr>
+<tr class="even">
+<td><code>x_breaks</code></td>
+<td>What intervals to set the ticks on the x-axis.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>histogram_bootstrapped_rhos(bootstrapped_rhos[Treatment %in% c(&#39;Soil_Manure&#39;, &#39;Water_Manure&#39;)], p = 0.05)</code></pre>
+<p><img src="calculations_files/figure-html/histogram_bootstrapped_rhos-1.png" width="768" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
 </div>
 
 <p><br>
