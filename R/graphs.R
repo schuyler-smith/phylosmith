@@ -31,6 +31,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   graph_data <- data.table(psmelt(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
   graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
+  set(graph_data, which(graph_data[['Abundance']] == 0), 'Abundance', NA)
 
   g <- ggplot(graph_data, aes_string('Sample', classification, fill = 'Abundance')) +
     geom_tile(color = "white", size = 0.25) +
