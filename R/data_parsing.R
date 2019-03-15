@@ -22,9 +22,9 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   otus <- as.matrix(otus, rownames = 1)
   taxa <- eval(parse(text=paste0("setkey(unique(phyloseq_table[, c('", paste(colnames(phyloseq_obj@tax_table), collapse = "', '"), "')]), ", paste(colnames(phyloseq_obj@tax_table), collapse = ', '), ")")))
   taxa <- as.matrix(taxa, rownames = colnames(otus))
-  
+
   phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa), sample_data(phyloseq_obj@sam_data))
-  
+
   return(phyloseq_obj)
 }
 
@@ -117,8 +117,10 @@ melt_phyloseq <- function(phyloseq_obj){
   melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE), id.vars = 1)
   colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
   taxa <- data.table(phyloseq_obj@tax_table, OTU = taxa_names(phyloseq_obj))
-  sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))
-  sample_data[, 'Sample' := sample_names(phyloseq_obj)]
+  sample_data <- NULL
+  if(!(is.null(phyloseq_obj@sam_data))){sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))}
+  if(is.null(sample_data)){sample_data <- data.table(Sample = sample_names(phyloseq_obj))
+  } else {sample_data[, 'Sample' := sample_names(phyloseq_obj)]}
 
   melted_phyloseq <- merge(melted_phyloseq, sample_data, by = "Sample")
   melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")
