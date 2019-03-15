@@ -233,13 +233,14 @@ merge_treatments <- function(phyloseq_obj, ...){
 #' @usage order_treatment(phyloseq_obj, treatment, order)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}.
-#' @param order The order of factors in \code{treatment} column as a vector of strings.
+#' @param order The order of factors in \code{treatment} column as a vector of strings. If assinged "numeric" will set ascending numerical order.
 #' @keywords manip
 #' @import data.table
 #' @export
 
 order_treatment <- function(phyloseq_obj, treatment, order){
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(order == 'numeric'){order <- sort(as.numeric(unique(as.character(phyloseq_obj@sam_data[[treatment]]))))}
   phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
   return(phyloseq_obj)
 }
