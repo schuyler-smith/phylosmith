@@ -214,9 +214,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 
 merge_treatments <- function(phyloseq_obj, ...){
   treatments <- list(...)
-  treatments <-
-
-
+  treatments <- check_numeric_treatment(phyloseq_obj, treatments)
   treatment_classes <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
   treatment_name <- paste(treatments, collapse = sep)
   order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(phyloseq_obj@sam_data[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = sep)})
@@ -314,14 +312,13 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
 #' @export
 
 taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE){
-  # data("mock_phyloseq")
   # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
 
   if(!(is.null(treatment))){
-    check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))

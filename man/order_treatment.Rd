@@ -11,7 +11,7 @@ order_treatment(phyloseq_obj, treatment, order)
 
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}.}
 
-\item{order}{The order of factors in \code{treatment} column as a vector of strings.}
+\item{order}{The order of factors in \code{treatment} column as a vector of strings. If assinged "numeric" will set ascending numerical order.}
 }
 \description{
 Reorders the levels of a metadata column in a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}}.
