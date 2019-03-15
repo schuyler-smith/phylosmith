@@ -15,8 +15,8 @@
 
 abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default'){
   options(warn = -1)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(transformation == 'relative_abundance'){phyloseq_obj <- relative_abundance(phyloseq_obj)}
@@ -62,8 +62,8 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 
 abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
   options(warn = -1)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
@@ -115,8 +115,8 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
 
 network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
                              cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   if(!(is.null(classification))){node_classes = sort(unique(phyloseq_obj@tax_table[,classification]))}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
@@ -183,7 +183,7 @@ network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_o
 
 nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE){
   options(warn = -1)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
@@ -240,8 +240,8 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 
 phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default'){
   options(warn = -1)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(merge){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
@@ -285,8 +285,8 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
 
 taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default'){
   options(warn = -1)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   treatment_name <- paste(treatment, collapse = sep)
@@ -341,8 +341,8 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
 
 tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default'){
   options(warn = -1)
-  if (is.numeric(treatment)) {treatment <- colnames(phyloseq_obj@sam_data[, treatment])}
-  if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  labels <- check_numeric_treatment(phyloseq_obj, labels)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
 

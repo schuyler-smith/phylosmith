@@ -23,7 +23,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   options(warnings=-1)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   treatment_name <- paste(treatment, collapse = sep)
 
   treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
@@ -61,8 +61,8 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
   # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicate_samples = 'independent'; permutations = 10; p = 0; cores = 0;
   options(warnings=-1)
 
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
-  if(is.numeric(replicate_samples)){replicate_samples <- colnames(phyloseq_obj@sam_data[,replicate_samples])}
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  replicate_samples <- check_numeric_treatment(phyloseq_obj, replicate_samples)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, frequency = 0)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
