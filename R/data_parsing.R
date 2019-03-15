@@ -258,6 +258,44 @@ relative_abundance <- function(phyloseq_obj){
   return(phyloseq_obj)
 }
 
+#' Compute proportions for taxa.
+#'
+#' Computes the proportion of a taxa classification by sample across treatments treatment.
+#' @useDynLib phylosmith
+#' @usage taxa_proportions(phyloseq_obj, classification, treatment = NA)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported by sample.
+#' @keywords manip
+#' @import data.table
+#' @export
+
+taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
+  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]
+
+  if(any(!(is.na(treatment)))){
+    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
+    treatment_name <- paste(treatment, collapse = sep)
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data[, treatment_name])
+  } else {phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)}
+
+  class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj, classification))
+  if(any(!(is.na(treatment)))){
+    class_table <- class_table[, -2]
+    class_table[, Abundance := sum(Abundance), by = c(treatment_name, classification)]
+    class_table <- unique(class_table)
+    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = treatment_name]
+    class_table <- class_table[ ,c(3,4,5)]
+    eval(parse(text=paste0('setkey(class_table, ', treatment_name, ')')))
+  } else {
+    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = Sample]
+    class_table <- class_table[ ,c(2,4,5)]
+    setkey(class_table, Sample)
+  }
+  return(class_table)
+}
+
 #' Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.
 #'
 #' This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
