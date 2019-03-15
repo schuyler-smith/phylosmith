@@ -12,8 +12,13 @@
 #' @export
 
 conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE){
-  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
+  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
+  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
+  if(!(is.null(phyloseq_obj@sam_data))){sam <- phyloseq_obj@sam_data} else {sam <- FALSE}
 
+  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
+
+  if(is.numeric(classification)){classification <- colnames(phyloseq_obj@tax_table[,classification])}
   if(hierarchical){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
   } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
 
@@ -23,7 +28,11 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   taxa <- eval(parse(text=paste0("setkey(unique(phyloseq_table[, c('", paste(colnames(phyloseq_obj@tax_table), collapse = "', '"), "')]), ", paste(colnames(phyloseq_obj@tax_table), collapse = ', '), ")")))
   taxa <- as.matrix(taxa, rownames = colnames(otus))
 
-  phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa), sample_data(phyloseq_obj@sam_data))
+  phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa))
+
+  if(!(is.logical(sam))){phyloseq_obj@sam_data <- sam}
+  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
+  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
 
   return(phyloseq_obj)
 }
