@@ -5,9 +5,9 @@
 #' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
 #' transformation = 'none', colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor.
 #' @param transformation Transformation to be used on the data. "none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse" and "sqrt"
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
@@ -28,9 +28,10 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 
   if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,1], phyloseq_obj@sam_data[,treatment_name])
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
-  graph_data <- data.table(psmelt(graph_data))
+  graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
+  setkey(graph_data, Sample, Abundance)
   set(graph_data, which(graph_data[['Abundance']] == 0), 'Abundance', NA)
 
   g <- ggplot(graph_data, aes_string('Sample', classification, fill = 'Abundance')) +

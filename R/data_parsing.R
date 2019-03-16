@@ -126,7 +126,7 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
 melt_phyloseq <- function(phyloseq_obj){
   melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE), id.vars = 1)
   colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
-  taxa <- data.table(phyloseq_obj@tax_table, OTU = taxa_names(phyloseq_obj))
+  taxa <- data.table(as(phyloseq_obj@tax_table, 'matrix'), OTU = taxa_names(phyloseq_obj))
   sample_data <- NULL
   if(!(is.null(phyloseq_obj@sam_data))){sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))}
   if(is.null(sample_data)){sample_data <- data.table(Sample = sample_names(phyloseq_obj))
@@ -153,15 +153,16 @@ melt_phyloseq <- function(phyloseq_obj){
 #' @export
 
 merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
+  options(warn = -1)
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
+  original_levels <- lapply(phyloseq_obj@sam_data, levels)
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
 
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
   merge_on <- paste(merge_on, collapse = sep)
   merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
-  if(any(merge_on != treatment)){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
   phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on)
@@ -169,6 +170,7 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
 
   treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
   treatment_classes <- eval(parse(text=paste0('treatment_classes[grepl("', paste0(subset), '", treatment_classes)]')))
+  if(any(merge_on != treatment)){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
 
   phyloseq_table <- melt_phyloseq(phyloseq_obj)
   if(any(merge_on != treatment)){phyloseq_table[, 'Merged_Name' := do.call(paste0, list(phyloseq_table[[treatment_name]], sep, phyloseq_table[[merge_on]]))]
@@ -196,6 +198,9 @@ merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = tre
   phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
                            phyloseq_obj@tax_table,
                            phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
+  for(i in 1:length(original_levels)){
+    if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
+  }
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
   return(phyloseq_obj)
@@ -237,7 +242,7 @@ merge_treatments <- function(phyloseq_obj, ...){
 
 order_treatment <- function(phyloseq_obj, treatment, order){
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(order[1] == 'numeric'){order <- sort(as.numeric(unique(as.character(phyloseq_obj@sam_data[[treatment]]))))}
+  if(order[1] == 'numeric'){order <- as.character(sort(as.numeric(unique(as.character(phyloseq_obj@sam_data[[treatment]])))))}
   phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
   return(phyloseq_obj)
 }
@@ -252,8 +257,9 @@ order_treatment <- function(phyloseq_obj, treatment, order){
 #' @export
 
 relative_abundance <- function(phyloseq_obj){
-  options(warnings=-1)
-  phyloseq_obj <- transform_sample_counts(phyloseq_obj, function(sample) sample/sum(sample))
+  abundance_table <- phyloseq_obj@otu_table
+  abundance_table <- apply(abundance_table, 2, FUN = function(c){c/sum(c)})
+  phyloseq_obj@otu_table <- otu_table(abundance_table, taxa_are_rows = TRUE)
   return(phyloseq_obj)
 }
 
@@ -313,6 +319,8 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
 
 taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE){
   # phyloseq_obj = mock_phyloseq; frequency = 0; treatment = c("treatment", "day"); subset = "5"; below = FALSE; drop_samples = FALSE
+  original_levels <- lapply(phyloseq_obj@sam_data, levels)
+
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
@@ -346,7 +354,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
     } else {
       phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) >= cutoff}, TRUE)
       phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x, na.rm = TRUE) != 0}, TRUE)
-      }
+    }
   }
   if(!(is.null(subset))){
     phyloseq_obj <- prune_samples(sample_names(phyloseq_obj)[unname(apply(phyloseq_obj@sam_data[,c(treatment, treatment_name)], 1, function(x){any(x %in% subset)}))], phyloseq_obj)
@@ -354,6 +362,9 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   }
   if(drop_samples == TRUE){
     phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
+  }
+  for(i in 1:length(original_levels)){
+    if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
   }
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
