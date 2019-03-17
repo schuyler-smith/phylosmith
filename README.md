@@ -23,11 +23,11 @@ library(phylosmith)
 
 Call			     | Description
 -------------------- | ------------------------------------------------------------
+[conglomerate_samples](https://schuyler-smith.github.io/phylosmith/data_parsing.html#conglomerate_samples)   |   Merge samples based on common factor within sample_data
 [conglomerate_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#conglomerate_taxa)  |  conglomerate taxa by sample on a given classification level
 [find_common_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_common_taxa) | find taxa common to each treatment
 [find_unique_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#find_unique_taxa) | find taxa unique to each treatment
 [melt_phyloseq](https://schuyler-smith.github.io/phylosmith/data_parsing.html#melt_phyloseq)   |   Melt a phyloseq object into a data.table.
-[merge_samples](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_samples)   |   Merge samples based on common factor within sample_data
 [merge_treatments](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a single column
 [order_treatment](https://schuyler-smith.github.io/phylosmith/data_parsing.html#order_treatment) | sets the orders of the factors in a sample_data column (for ordering graphs)
 [relative_abundance](https://schuyler-smith.github.io/phylosmith/data_parsing.html#relative_abundance) | transform abundance data to relative abundance

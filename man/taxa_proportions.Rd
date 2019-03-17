@@ -11,7 +11,7 @@ taxa_proportions(phyloseq_obj, classification, treatment = NA)
 
 \item{classification}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported by sample.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported for the entire dataset. If set to "sample" it will repoort proportions by sample.}
 }
 \description{
 Computes the proportion of a taxa classification by sample across treatments treatment.

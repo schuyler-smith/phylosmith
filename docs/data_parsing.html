@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-03-14" />
+<meta name="date" content="2019-03-17" />
 
 <title>Data Parsing</title>
 
@@ -459,12 +459,77 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data Parsing</h1>
 <h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
-<h4 class="date"><em>2019-03-14</em></h4>
+<h4 class="date"><em>2019-03-17</em></h4>
 
 </div>
 
 
 <p><br></p>
+<div id="conglomerate_samples" class="section level2">
+<h2>conglomerate_samples</h2>
+<p><a name="conglomerate_samples"></a></p>
+<p>Merges samples that match on the given criteria (<code>merge_on</code>). Any sample_data factors that do not match will be set to <code>NA</code>. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>merge_on</code></td>
+<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre><code>## OTU Table:          [6 taxa and 4 samples]
+##                      taxa are rows
+##        S_0 S_1 S_2 S_3
+## OTU_5  392 314 127 265
+## OTU_6  277 143 104 155
+## OTU_8   11   3   1   2
+## OTU_12   6  27   7  14
+## OTU_14   0   0   1   1
+## OTU_18  43  49  24  25</code></pre>
+<pre class="r"><code>conglomerate_samples(soil_column, treatment = &#39;Matrix&#39;, subset = &#39;Manure&#39;, merge_on = &#39;Day&#39;)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 399 taxa and 1 samples ]
+## sample_data() Sample Data:       [ 1 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
+<pre><code>## OTU Table:          [6 taxa and 1 samples]
+##                      taxa are rows
+##        Manure_0
+## OTU_5    274.50
+## OTU_6    169.75
+## OTU_8      4.25
+## OTU_12    13.50
+## OTU_14     0.50
+## OTU_18    35.25</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
 <div id="conglomerate_taxa" class="section level2">
 <h2>conglomerate_taxa</h2>
 <p><a name="conglomerate_taxa"></a></p>
@@ -696,71 +761,6 @@ div.tocify {
 <hr />
 <p><br></p>
 </div>
-<div id="merge_samples" class="section level2">
-<h2>merge_samples</h2>
-<p><a name="merge_samples"></a></p>
-<p>Merges samples that match on the given criteria (<code>merge_on</code>). Any sample_data factors that do not match will be set to <code>NA</code>. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis.</p>
-<p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)</code></pre>
-<p><br> <strong><em>Arguments</em></strong></p>
-<table>
-<colgroup>
-<col width="25%" />
-<col width="74%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Call</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>phyloseq_obj</code></td>
-<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
-</tr>
-<tr class="even">
-<td><code>treatment</code></td>
-<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
-</tr>
-<tr class="odd">
-<td><code>subset</code></td>
-<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
-</tr>
-<tr class="even">
-<td><code>merge_on</code></td>
-<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
-</tr>
-</tbody>
-</table>
-<p><strong><em>Examples</em></strong></p>
-<pre><code>## OTU Table:          [6 taxa and 4 samples]
-##                      taxa are rows
-##        S_0 S_1 S_2 S_3
-## OTU_5  392 314 127 265
-## OTU_6  277 143 104 155
-## OTU_8   11   3   1   2
-## OTU_12   6  27   7  14
-## OTU_14   0   0   1   1
-## OTU_18  43  49  24  25</code></pre>
-<pre class="r"><code>merge_samples(soil_column, treatment = &#39;Matrix&#39;, subset = &#39;Manure&#39;, merge_on = &#39;Day&#39;)</code></pre>
-<pre><code>## phyloseq-class experiment-level object
-## otu_table()   OTU Table:         [ 399 taxa and 1 samples ]
-## sample_data() Sample Data:       [ 1 samples by 3 sample variables ]
-## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
-<pre><code>## OTU Table:          [6 taxa and 1 samples]
-##                      taxa are rows
-##        Manure_0
-## OTU_5    274.50
-## OTU_6    169.75
-## OTU_8      4.25
-## OTU_12    13.50
-## OTU_14     0.50
-## OTU_18    35.25</code></pre>
-<p><br></p>
-<hr />
-<p><br></p>
-</div>
 <div id="merge_treatments" class="section level2">
 <h2>merge_treatments</h2>
 <p><a name="merge_treatments"></a></p>
@@ -834,7 +834,7 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td><code>order</code></td>
-<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s.</td>
+<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s. If assigned “numeric” will set ascending numerical order.</td>
 </tr>
 </tbody>
 </table>

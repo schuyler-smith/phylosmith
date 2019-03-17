@@ -157,7 +157,8 @@ network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_o
 
   g <- ggraph(layout) + theme_graph() + coord_fixed()
   if(length(cluster) > 1){g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y', alpha = 0.4, group = 'Community'), fill = community_colors[hulls$Community])}
-  g <- g + geom_edge_link(color = 'grey70') +
+  g <- g + geom_edge_link(color = c('pink1', 'grey70')[sapply(E(attributes(layout)$graph)$weight, FUN = function(x){
+    rep(as.numeric(as.logical(sign(x)+1)+1), 100)})]) +
     guides(colour = FALSE, alpha = FALSE)
   if(is.null(classification)){g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', fill = node_colors, size=5)
   } else {g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', size=5) +

@@ -12,6 +12,44 @@ data(soil_column)
 
 <br>
 
+## conglomerate_samples
+<a name="conglomerate_samples"></a>
+
+Merges samples that match on the given criteria (`merge_on`). Any sample_data factors that do not match will be set to `NA`. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis. 
+
+<br>
+***Usage***
+```r
+conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+
+***Examples***
+```{r samples_otu, echo=FALSE}
+taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')@otu_table[1:6,1:4]
+```
+```{r conglomerate_samples}
+conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
+```
+```{r conglomerate_samples_otu, echo=FALSE}
+conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[c('OTU_5', 'OTU_6', 'OTU_8', 'OTU_12', 'OTU_14', 'OTU_18'),]
+```
+
+<br>
+
+***
+
+<br>
+
 ## conglomerate_taxa
 <a name="conglomerate_taxa"></a>
 
@@ -128,44 +166,6 @@ Call | Description
 ***Examples***
 ```{r melt_phyloseq}
 melt_phyloseq(soil_column)
-```
-
-<br>
-
-***
-
-<br>
-
-## merge_samples
-<a name="merge_samples"></a>
-
-Merges samples that match on the given criteria (`merge_on`). Any sample_data factors that do not match will be set to `NA`. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis. 
-
-<br>
-***Usage***
-```r
-merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
-`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
-
-***Examples***
-```{r samples_otu, echo=FALSE}
-taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')@otu_table[1:6,1:4]
-```
-```{r merge_samples}
-merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
-```
-```{r merge_samples_otu, echo=FALSE}
-merge_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[c('OTU_5', 'OTU_6', 'OTU_8', 'OTU_12', 'OTU_14', 'OTU_18'),]
 ```
 
 <br>

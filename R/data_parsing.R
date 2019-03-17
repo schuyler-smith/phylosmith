@@ -1,3 +1,71 @@
+#' Merge samples based on common factor within sample_data. Function from the phylosmith-package.
+#'
+#' This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.
+#' @useDynLib phylosmith
+#' @usage conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+#' @param merge_on Defines which variable the data is merged according to. This needs to be a column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @keywords manip
+#' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
+#' @export
+
+conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
+  options(warn = -1)
+  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
+  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
+  original_levels <- lapply(phyloseq_obj@sam_data, levels)
+  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
+  merge_on <- paste(merge_on, collapse = sep)
+  merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
+
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
+  phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on)
+  treatment_name <- paste(treatment, collapse = sep)
+
+  treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_classes <- eval(parse(text=paste0('treatment_classes[grepl("', paste0(subset), '", treatment_classes)]')))
+  if(any(merge_on != treatment)){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
+
+  phyloseq_table <- melt_phyloseq(phyloseq_obj)
+  if(any(merge_on != treatment)){phyloseq_table[, 'Merged_Name' := do.call(paste0, list(phyloseq_table[[treatment_name]], sep, phyloseq_table[[merge_on]]))]
+  } else {phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on]]]}
+  otu_tab <- dcast(phyloseq_table[,c('OTU','Abundance','Merged_Name'), with=FALSE], Merged_Name ~ OTU, value.var = 'Abundance', fun.aggregate = mean)
+
+  sub_phy <- do.call(merge_phyloseq,
+                     sapply(treatment_classes, FUN = function(group){
+                       group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', treatment_name, ' == "', group, '")')))
+                       if(nsamples(group_phy) > 1){sub_phy <- phyloseq::merge_samples(group_phy, merge_on)
+                       merge_names <- rownames(sub_phy@sam_data)
+                       if(any(group != merge_names)){sample_names(sub_phy) <- paste0(group, sep, merge_names)}
+                       sam <- as(sub_phy@sam_data, 'data.frame')
+                       sam[,treatment_name] <- group
+                       for(i in treatment){
+                         sam[,i] <- unique(group_phy@sam_data[,i])}
+                       sam[, merge_on] <- factor(merge_names, levels = levels(phyloseq_obj@sam_data[[merge_on]]))
+                       sub_phy@sam_data <- sample_data(sam)}
+                       return(sub_phy)
+                     })
+  )
+  phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% treatment_classes))')))},
+                           error = function(e){phyloseq_obj <- sub_phy},
+                           finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
+  phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
+                           phyloseq_obj@tax_table,
+                           phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
+  for(i in 1:length(original_levels)){
+    if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
+  }
+  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
+  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
+  return(phyloseq_obj)
+}
+
+
 #' Conglomerate taxa by sample on a given classification level. Function from the phylosmith-package.
 #'
 #' Conglomerate taxa by sample on a given classification level from the tax_table.
@@ -139,73 +207,6 @@ melt_phyloseq <- function(phyloseq_obj){
   return(melted_phyloseq)
 }
 
-#' Merge samples based on common factor within sample_data. Function from the phylosmith-package.
-#'
-#' This function takes a phyloseq object and merges the samples that meet the specified criteria into a single sample. This is meant for replicates, or samples statistically proven to not be significantly different and should be used with caution as it may be a misleading representation of the data.
-#' @useDynLib phylosmith
-#' @usage merge_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-#' @param merge_on Defines which variable the data is merged according to. This needs to be a column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @keywords manip
-#' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
-#' @export
-
-merge_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_on = treatment){
-  options(warn = -1)
-  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
-  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
-  original_levels <- lapply(phyloseq_obj@sam_data, levels)
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
-
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
-  merge_on <- paste(merge_on, collapse = sep)
-  merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on]]))))
-
-  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
-  phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on)
-  treatment_name <- paste(treatment, collapse = sep)
-
-  treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_classes <- eval(parse(text=paste0('treatment_classes[grepl("', paste0(subset), '", treatment_classes)]')))
-  if(any(merge_on != treatment)){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
-
-  phyloseq_table <- melt_phyloseq(phyloseq_obj)
-  if(any(merge_on != treatment)){phyloseq_table[, 'Merged_Name' := do.call(paste0, list(phyloseq_table[[treatment_name]], sep, phyloseq_table[[merge_on]]))]
-  } else {phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on]]]}
-  otu_tab <- dcast(phyloseq_table[,c('OTU','Abundance','Merged_Name'), with=FALSE], Merged_Name ~ OTU, value.var = 'Abundance', fun.aggregate = mean)
-
-  sub_phy <- do.call(merge_phyloseq,
-                     sapply(treatment_classes, FUN = function(group){
-                       group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', treatment_name, ' == "', group, '")')))
-                       if(nsamples(group_phy) > 1){sub_phy <- phyloseq::merge_samples(group_phy, merge_on)
-                       merge_names <- rownames(sub_phy@sam_data)
-                       if(any(group != merge_names)){sample_names(sub_phy) <- paste0(group, sep, merge_names)}
-                       sam <- as(sub_phy@sam_data, 'data.frame')
-                       sam[,treatment_name] <- group
-                       for(i in treatment){
-                         sam[,i] <- unique(group_phy@sam_data[,i])}
-                       sam[, merge_on] <- factor(merge_names, levels = levels(phyloseq_obj@sam_data[[merge_on]]))
-                       sub_phy@sam_data <- sample_data(sam)}
-                       return(sub_phy)
-                     })
-  )
-  phyloseq_obj <- tryCatch({phyloseq_obj <- eval(parse(text=paste0('subset_samples(phyloseq_obj, !(', treatment_name,' %in% treatment_classes))')))},
-                           error = function(e){phyloseq_obj <- sub_phy},
-                           finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
-  phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
-                           phyloseq_obj@tax_table,
-                           phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
-  for(i in 1:length(original_levels)){
-    if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
-  }
-  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
-  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
-  return(phyloseq_obj)
-}
-
 #' Combine meta-data columns. Function from the phylosmith-package.
 #'
 #' Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
@@ -270,7 +271,7 @@ relative_abundance <- function(phyloseq_obj){
 #' @usage taxa_proportions(phyloseq_obj, classification, treatment = NA)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported by sample.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported for the entire dataset. If set to "sample" it will repoort proportions by sample.
 #' @keywords manip
 #' @import data.table
 #' @export
@@ -279,24 +280,28 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
   classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]
 
-  if(any(!(is.na(treatment)))){
+  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
     phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data[, treatment_name])
-  } else {phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)}
-
+  } else {
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
+  }
   class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj, classification))
-  if(any(!(is.na(treatment)))){
+  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
     class_table <- class_table[, -2]
     class_table[, Abundance := sum(Abundance), by = c(treatment_name, classification)]
     class_table <- unique(class_table)
     class_table[, Proportion := round(Abundance/sum(Abundance),3), by = treatment_name]
     class_table <- class_table[ ,c(3,4,5)]
     eval(parse(text=paste0('setkey(class_table, ', treatment_name, ')')))
-  } else {
+  } else if('sample' %in% treatment){
     class_table[, Proportion := round(Abundance/sum(Abundance),3), by = Sample]
     class_table <- class_table[ ,c(2,4,5)]
     setkey(class_table, Sample)
+  } else if(any(is.na(treatment))){
+    class_table <- class_table[ ,c(3,4)][, lapply(.SD, sum, na.rm = TRUE), by = classification]
+    class_table <- class_table[, Proportion := round(Abundance/sum(Abundance),3)][,-2]
   }
   return(class_table)
 }
