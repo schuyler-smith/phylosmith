@@ -20,20 +20,18 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
   if(is.null(phyloseq_obj@sam_data)){
     stop("conglomerate_samples(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("conglomerate_samples(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
+  merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
   if(any(!(merge_on %in% colnames(phyloseq_obj@sam_data)))){
     stop("conglomerate_samples(): `merge_on` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
-
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   original_levels <- lapply(phyloseq_obj@sam_data, levels)
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
-
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
   merge_on_name <- paste(merge_on, collapse = sep)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
@@ -100,6 +98,7 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   if(is.null(phyloseq_obj@tax_table)){
     stop("conglomerate_taxa(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
   }
+  classification <- check_numeric_classification(phyloseq_obj, classification)
   if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
     stop("conglomerate_taxa(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
@@ -111,7 +110,6 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   if(!(is.null(phyloseq_obj@sam_data))){sam <- phyloseq_obj@sam_data} else {sam <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
 
-  classification <- check_numeric_classification(phyloseq_obj, classification)
   if(hierarchical){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
   } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
 
@@ -149,14 +147,13 @@ find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
   if(is.null(phyloseq_obj@sam_data)){
     stop("find_common_taxa(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("find_common_taxa(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(n)) & n != 'all'){
     stop("find_common_taxa(): `n` must be either 'all' or a numeric value less than the number of treatments being compared", call. = FALSE)
   }
-
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
@@ -193,10 +190,10 @@ find_unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   if(is.null(phyloseq_obj@sam_data)){
     stop("find_unique_taxa(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("find_unique_taxa(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
@@ -265,11 +262,11 @@ merge_treatments <- function(phyloseq_obj, ...){
   if(is.null(phyloseq_obj@sam_data)){
     stop("merge_treatments(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
-  treatments <- c(...)
+  treatments <- list(...)
+  treatments <- check_numeric_treatment(phyloseq_obj, treatments)
   if(any(!(treatments %in% colnames(phyloseq_obj@sam_data)))){
     stop("merge_treatments(): `treatments` must be at least two column names, or indices, from the sample_data()", call. = FALSE)
   }
-  treatments <- check_numeric_treatment(phyloseq_obj, treatments)
   treatment_classes <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
   treatment_name <- paste(treatments, collapse = sep)
   order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(phyloseq_obj@sam_data[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = sep)})
@@ -297,13 +294,10 @@ order_treatment <- function(phyloseq_obj, treatment, order){
   if(is.null(phyloseq_obj@sam_data)){
     stop("order_treatment(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(length(treatment) > 1 | !(treatment %in% colnames(phyloseq_obj@sam_data))){
     stop("order_treatment(): `treatment` must be a single column name, or index, from the sample_data()", call. = FALSE)
   }
-  if(length(order) < 2 & order[1] != 'numeric'){
-    stop("order_treatment(): `order` must be a vector of treatment factors as characters, or 'numeric' if factors are numbers", call. = FALSE)
-  }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(order[1] == 'numeric'){order <- as.character(sort(as.numeric(unique(as.character(phyloseq_obj@sam_data[[treatment]])))))}
   phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
   return(phyloseq_obj)
@@ -326,64 +320,6 @@ relative_abundance <- function(phyloseq_obj){
   abundance_table <- apply(abundance_table, 2, FUN = function(c){c/sum(c)})
   phyloseq_obj@otu_table <- otu_table(abundance_table, taxa_are_rows = TRUE)
   return(phyloseq_obj)
-}
-
-#' Compute proportions for taxa.
-#'
-#' Computes the proportion of a taxa classification by sample across treatments treatment.
-#' @useDynLib phylosmith
-#' @usage taxa_proportions(phyloseq_obj, classification, treatment = NA)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported for the entire dataset. If set to "sample" it will repoort proportions by sample.
-#' @keywords manip
-#' @import data.table
-#' @export
-
-taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
-  if(!inherits(phyloseq_obj, "phyloseq")){
-    stop("taxa_proportions(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
-  }
-  if(is.null(phyloseq_obj@tax_table)){
-    stop("taxa_proportions(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
-  }
-  if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
-    stop("taxa_proportions(): `classification` must be a column from the the tax_table()", call. = FALSE)
-  }
-  if(!(is.na(treatment)) & is.null(phyloseq_obj@sam_data)){
-    stop("taxa_proportions(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
-  }
-  if(!(is.na(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
-    stop("taxa_proportions(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
-  }
-
-  classification <- check_numeric_classification(phyloseq_obj, classification)
-  phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]
-
-  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
-    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
-    treatment_name <- paste(treatment, collapse = sep)
-    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data[, treatment_name])
-  } else {
-    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
-  }
-  class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj, classification))
-  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
-    class_table <- class_table[, -2]
-    class_table[, Abundance := sum(Abundance), by = c(treatment_name, classification)]
-    class_table <- unique(class_table)
-    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = treatment_name]
-    class_table <- class_table[ ,c(3,4,5)]
-    eval(parse(text=paste0('setkey(class_table, ', treatment_name, ')')))
-  } else if('sample' %in% treatment){
-    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = Sample]
-    class_table <- class_table[ ,c(2,4,5)]
-    setkey(class_table, Sample)
-  } else if(any(is.na(treatment))){
-    class_table <- class_table[ ,c(3,4)][, lapply(.SD, sum, na.rm = TRUE), by = classification]
-    class_table <- class_table[, Proportion := round(Abundance/sum(Abundance),3)][,-2]
-  }
-  return(class_table)
 }
 
 #' Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.
@@ -409,6 +345,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   if(is.null(phyloseq_obj@sam_data)){
     stop("taxa_filter(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(!(is.null(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("taxa_filter(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
@@ -428,7 +365,6 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
 
   if(!(is.null(treatment))){
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
@@ -471,4 +407,61 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
   return(phyloseq_obj)
+}
+
+#' Compute proportions for taxa.
+#'
+#' Computes the proportion of a taxa classification. Function from the phylosmith-package.
+#' @useDynLib phylosmith
+#' @usage taxa_proportions(phyloseq_obj, classification, treatment = NA)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the prportions to be reported on.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported for the entire dataset. If set to "sample" it will repoort proportions by sample.
+#' @keywords manip
+#' @import data.table
+#' @export
+
+taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("taxa_proportions(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@tax_table)){
+    stop("taxa_proportions(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
+  }
+  classification <- check_numeric_classification(phyloseq_obj, classification)
+  if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+    stop("taxa_proportions(): `classification` must be a column from the the tax_table()", call. = FALSE)
+  }
+  if(any(!(is.na(treatment))) & is.null(phyloseq_obj@sam_data)){
+    stop("taxa_proportions(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
+  }
+  if(any(!(is.na(treatment))) & any(!(treatment %in% c('sample', colnames(phyloseq_obj@sam_data))))){
+    stop("taxa_proportions(): `treatment` must be either NA, 'sample', or at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]
+
+  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
+    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
+    treatment_name <- paste(treatment, collapse = sep)
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data[, treatment_name])
+  } else {
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
+  }
+  class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj, classification))
+  if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
+    class_table <- class_table[, -2]
+    class_table[, Abundance := sum(Abundance), by = c(treatment_name, classification)]
+    class_table <- unique(class_table)
+    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = treatment_name]
+    class_table <- class_table[ ,c(3,4,5)]
+    eval(parse(text=paste0('setkey(class_table, ', treatment_name, ')')))
+  } else if('sample' %in% treatment){
+    class_table[, Proportion := round(Abundance/sum(Abundance),3), by = Sample]
+    class_table <- class_table[ ,c(2,4,5)]
+    setkey(class_table, Sample)
+  } else if(any(is.na(treatment))){
+    class_table <- class_table[ ,c(3,4)][, lapply(.SD, sum, na.rm = TRUE), by = classification]
+    class_table <- class_table[, Proportion := round(Abundance/sum(Abundance),3)][,-2]
+  }
+  return(class_table)
 }

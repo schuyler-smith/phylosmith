@@ -2,10 +2,13 @@
 title: "Data Parsing"
 author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
 date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.width=8, fig.height=4, output.lines=6, cache = TRUE)
+knitr::opts_chunk$set(fig.width=8, fig.height=4, cache = TRUE)
 library(phylosmith)
 data(soil_column)
 ```
@@ -35,13 +38,13 @@ Call | Description
 
 ***Examples***
 ```{r samples_otu, echo=FALSE}
-taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')@otu_table[1:6,1:4]
+taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')
 ```
 ```{r conglomerate_samples}
 conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
 ```
 ```{r conglomerate_samples_otu, echo=FALSE}
-conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')@otu_table[c('OTU_5', 'OTU_6', 'OTU_8', 'OTU_12', 'OTU_14', 'OTU_18'),]
+conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
 ```
 
 <br>
@@ -195,7 +198,7 @@ Call | Description
 
 ***Examples***
 ```{r merge_treatments}
-merge_treatments(soil_column, 'Matrix', 2, 'Day')@sam_data[1:4,]
+merge_treatments(soil_column, 'Matrix', 2, 'Day')
 ```
 
 <br>
@@ -230,7 +233,7 @@ Call | Description
 ***Examples***
 ```{r order_treatment}
 levels(soil_column@sam_data$Day)
-ordered_days <- order_treatment(soil_column, 'Day', c(0, 10, 24, 38, 59, 80, 108))
+ordered_days <- order_treatment(soil_column, 'Day', 'numeric')
 levels(ordered_days@sam_data$Day)
 ```
 
@@ -294,6 +297,7 @@ taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below 
 ```
 
 <br>
+
 ***Arguments***
 
 Call | Description
@@ -304,14 +308,8 @@ Call | Description
 `frequency` | The proportion of samples the taxa is found in.
 `below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
 `drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
+
 ***Examples***
-
-<br>
-
-***
-
-<br>
-
 The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
 ```{r check_data}
 soil_column
@@ -337,6 +335,42 @@ It returns a larger number of taxa, since they need to be seen in less samples o
 In `soil_column`, the actual experimental conditions are a combination of the `Matrix` and `Treatment` columns, and the function can handle that too.
 ```{r taxa_filter_4}
 taxa_filter(soil_column, frequency = 0.80, treatment = c('Matrix', 'Treatment'))
+```
+
+<br>
+
+***
+
+<br>
+
+## taxa_proportions
+<a name="taxa_proportions"></a>
+
+Computes the proportion of a taxa classification. This can be done by treatment, sample, or across the dataset.
+
+***Usage***
+```r
+taxa_proportions(phyloseq_obj, classification, treatment = NA)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the tax_table for the prportions to be reported on.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+
+***Examples***
+```{r taxa_proportions_treatment}
+taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
+```
+```{r taxa_proportions_sample}
+taxa_proportions(soil_column, 'phylum', treatment = 'sample')
+```
+```{r taxa_proportions_whole}
+taxa_proportions(soil_column, 'phylum', treatment = NA)
 ```
 
 <br>

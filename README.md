@@ -31,6 +31,7 @@ Call			     | Description
 [merge_treatments](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a single column
 [order_treatment](https://schuyler-smith.github.io/phylosmith/data_parsing.html#order_treatment) | sets the orders of the factors in a sample_data column (for ordering graphs)
 [relative_abundance](https://schuyler-smith.github.io/phylosmith/data_parsing.html#relative_abundance) | transform abundance data to relative abundance
+[taxa_proportions](https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_proportions) | computes the proportion of a taxa classification
 [taxa_filter](https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in
 
 ### [Graphs](https://schuyler-smith.github.io/phylosmith/graphs.html)

@@ -8,11 +8,13 @@
 #'
 
 check_numeric_treatment <- function(phyloseq_obj, treatments){
-  unlist(sapply(treatments, FUN = function(treatment){
+  treatments <- as.list(treatments)
+  treatments <- unlist(sapply(treatments, FUN = function(treatment){
     if(is.numeric(treatment)){
       return(colnames(phyloseq_obj@sam_data[,treatment]))
     } else {return(treatment)}
   }))
+  return(treatments)
 }
 
 #' Converts numeric values to column names in tax_table
@@ -24,12 +26,14 @@ check_numeric_treatment <- function(phyloseq_obj, treatments){
 #' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
 #'
 
-check_numeric_classification <- function(phyloseq_obj, classification){
-  unlist(sapply(classification, FUN = function(class){
-    if(is.numeric(class)){
-      return(colnames(phyloseq_obj@tax_table[,class]))
-    } else {return(class)}
+check_numeric_classification <- function(phyloseq_obj, classifications){
+  classifications <- as.list(classifications)
+  classifications <- unlist(sapply(classifications, FUN = function(classification){
+    if(is.numeric(classification)){
+      return(colnames(phyloseq_obj@sam_data[,classification]))
+    } else {return(classification)}
   }))
+  return(classifications)
 }
 
 #' Internal function for creating color palettes for graphs. Function from the phylosmith-package.

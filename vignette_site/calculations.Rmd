@@ -2,16 +2,18 @@
 title: "Calculations"
 author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
 date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.width=8, fig.height=4, output.lines=6, cache = TRUE)
+knitr::opts_chunk$set(fig.width=8, fig.height=4, cache = TRUE)
 library(phylosmith)
 data(soil_column)
 ```
 
 <br>
-
 
 ## co_occurrence
 <a name="co_occurrence"></a>
@@ -38,6 +40,7 @@ Call | Description
 ***Examples***
 
 ```{r co_occurrence}
+soil_column <- taxa_filter(soil_column, 'Treatment', 'Manure')
 co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
 co_occurrence_table
 ```

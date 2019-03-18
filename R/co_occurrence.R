@@ -22,6 +22,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
     stop("co_occurrence(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
   }
@@ -39,7 +40,6 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   options(warnings=-1)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   treatment_name <- paste(treatment, collapse = sep)
 
   treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
@@ -77,12 +77,14 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("permute_rho(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
     stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
   }
   if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("permute_rho(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
+  replicate_samples <- check_numeric_treatment(phyloseq_obj, replicate_samples)
   if(replicate_samples != 'independent' & is.null(phyloseq_obj@sam_data)){
     stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `replicate_samples` argument is used", call. = FALSE)
   }
@@ -98,9 +100,6 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
          "\n(upper limit is set by the cores available on machine used to execute code)" , call. = FALSE)
   }
   options(warnings=-1)
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  replicate_samples <- check_numeric_treatment(phyloseq_obj, replicate_samples)
-
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, frequency = 0)
   if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
   treatment_name <- paste(treatment, collapse = sep)

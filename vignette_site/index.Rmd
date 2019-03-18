@@ -1,6 +1,9 @@
 ---
 title: "phylosmith"
 author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
+output:
+  html_document:
+    df_print: paged
 ---
 
 <br>
@@ -36,6 +39,7 @@ Call | Description
 [merge_treatments](data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a new column
 [order_phyloseq_metadata](data_parsing.html#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
 [relative_abundance](data_parsing.html#relative_abundance) | transform abundance data to relative abundance
+[taxa_proportions](data_parsing.html#taxa_proportions) | computes the proportion of a taxa classification
 [taxa_filter](data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in
 
 ### [Graphs][grap]
