@@ -28,11 +28,11 @@ library(phylosmith)
 ### [Data Parsing][dapa]
 Call | Description
 -------------------- | ------------------------------------------------------------
+[conglomerate_samples](data_parsing.html#conglomerate_samples) | combines samples based on common factor within sample_data
 [conglomerate_taxa](data_parsing.html#conglomerate_taxa) | merges OTUs that have same classification
 [find_common_taxa](data_parsing.html#find_common_taxa) | find taxa common to each treatment
 [find_unique_taxa](data_parsing.html#find_unique_taxa) | find taxa unique to each treatment
 [melt_phyloseq](data_parsing.html#melt_phyloseq) | melts a phyloseq object into a data.table
-[merge_samples](data_parsing.html#merge_samples) | combines samples based on common factor within sample_data
 [merge_treatments](data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a new column
 [order_phyloseq_metadata](data_parsing.html#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
 [relative_abundance](data_parsing.html#relative_abundance) | transform abundance data to relative abundance
