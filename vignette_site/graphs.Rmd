@@ -23,7 +23,7 @@ Create a ggplot object heatmap of abundances of each taxa for each sample.
 <br>
 ***Usage***
 ```r
-abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
+abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
 ```
 
 <br>
@@ -201,7 +201,7 @@ Creates a ggplot object of the side-by-side bar plots of a classification level 
 <br>
 ***Usage***
 ```r
-taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default')
+taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
 ```
 
 <br>

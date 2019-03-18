@@ -2,7 +2,7 @@
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates heatmaps of the abundances across samples.
 #' @useDynLib phylosmith
-#' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
+#' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
 #' transformation = 'none', colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor.
@@ -13,15 +13,15 @@
 #' @import ggplot2
 #' @export
 
-abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default'){
+abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default'){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("abundance_heatmap_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(classification != 'none' & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
     stop("abundance_heatmap_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(any(classification != 'none' & !(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
     stop("abundance_heatmap_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
   if(is.null(phyloseq_obj@sam_data)){
@@ -36,7 +36,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   }
   options(warn = -1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
+  if(!(is.null(classification))){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(transformation == 'relative_abundance'){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
@@ -44,7 +44,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   if(colors == 'default'){colors <- 'YlOrRd'}
   graph_colors <- create_palette(color_count, colors)
 
-  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
+  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
@@ -66,7 +66,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.
 #' @useDynLib phylosmith
-#' @usage abundance_lines_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
+#' @usage abundance_lines_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
 #' relative_abundance = FALSE, points = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
@@ -78,15 +78,15 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 #' @import ggplot2
 #' @export
 
-abundance_lines_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
+abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("abundance_lines_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(classification != 'none' & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
     stop("abundance_lines_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(any(classification != 'none' & !(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
     stop("abundance_lines_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
   if(is.null(phyloseq_obj@sam_data)){
@@ -104,11 +104,11 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = 'none', treatm
   }
   options(warn = -1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
+  if(!(is.null(classification))){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
+  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- data.table(melt_phyloseq(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))

@@ -4,7 +4,7 @@
 \alias{abundance_heatmap_ggplot}
 \title{Create a ggplot object of the heatmap of the abundance table from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-abundance_heatmap_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
+abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
 transformation = 'none', colors = 'default')
 }
 \arguments{
