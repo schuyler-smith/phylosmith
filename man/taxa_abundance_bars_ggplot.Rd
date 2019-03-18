@@ -4,7 +4,7 @@
 \alias{taxa_abundance_bars_ggplot}
 \title{Create a ggplot object of the abundance barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment,
+taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment,
 subset = NULL, transformation = 'none', colors = 'default')
 }
 \arguments{

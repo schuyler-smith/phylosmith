@@ -19,7 +19,23 @@
 # sourceCpp("src/co_occurrence_Rcpp.cpp")
 
 co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
-  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); p = 0.05
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
+    stop("co_occurrence(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("co_occurrence(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
+    stop("co_occurrence(): `p` must be a numeric value between 0 and 1", call. = FALSE)
+  }
+  if(!(is.numeric(cores)) | !(cores >= 0 & cores <= (parallel::detectCores() -1))){
+    stop("co_occurrence(): `cores` must be a numeric value between 0 and ",
+         (parallel::detectCores() -1),
+         "\n(upper limit is set by the cores available on machine used to execute code)" , call. = FALSE)
+  }
   options(warnings=-1)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
@@ -58,9 +74,30 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 # sourceCpp('src/co_occurrence_Rcpp.cpp')
 
 permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'independent', permutations = 100, cores = 0){
-  # phyloseq_obj = mock_phyloseq; treatment = c("treatment", "day"); replicate_samples = 'independent'; permutations = 10; p = 0; cores = 0;
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("permute_rho(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
+    stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("permute_rho(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(replicate_samples != 'independent' & is.null(phyloseq_obj@sam_data)){
+    stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `replicate_samples` argument is used", call. = FALSE)
+  }
+  if(replicate_samples != 'independent' & any(!(replicate_samples %in% colnames(phyloseq_obj@sam_data)))){
+    stop("permute_rho(): `replicate_samples` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.numeric(permutations)) | !(permutations >= 0)){
+    stop("permute_rho(): `permutations` must be a numeric value greater than 0", call. = FALSE)
+  }
+  if(!(is.numeric(cores)) | !(cores >= 0 & cores <= (parallel::detectCores() -1))){
+    stop("permute_rho(): `cores` must be a numeric value between 0 and ",
+         (parallel::detectCores() -1),
+         "\n(upper limit is set by the cores available on machine used to execute code)" , call. = FALSE)
+  }
   options(warnings=-1)
-
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   replicate_samples <- check_numeric_treatment(phyloseq_obj, replicate_samples)
 
@@ -121,6 +158,15 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
 #'
 
 quantile_permuted_rhos <- function(permuted_rhos, p = 0.05, by_treatment = TRUE){
+  if(!(is.data.frame(permuted_rhos))){
+    stop("quantile_permuted_rhos(): `permuted_rhos` must be at data.frame object", call. = FALSE)
+  }
+  if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
+    stop("quantile_permuted_rhos(): `p` must be a numeric value between 0 and 1", call. = FALSE)
+  }
+  if(!(is.logical(by_treatment))){
+    stop("quantile_permuted_rhos(): `by_treatment` must must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
   if(by_treatment){
     permuted_rhos[, Proportion := Count/sum(Count), by = Treatment]
     quantiles <- permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p/2))], upper = rho[sum(cumsum(Proportion) <= (1-(p/2)))]), by = Treatment]
@@ -148,6 +194,15 @@ quantile_permuted_rhos <- function(permuted_rhos, p = 0.05, by_treatment = TRUE)
 #'
 
 histogram_permuted_rhos <- function(permuted_rhos, p = NULL, x_breaks = 0.25, colors = 'default'){
+  if(!(is.data.frame(permuted_rhos))){
+    stop("histogram_permuted_rhos(): `permuted_rhos` must be at data.frame object", call. = FALSE)
+  }
+  if(!(is.null(p)) & (!(is.numeric(p)) | !(p >= -0 & p <= 1))){
+    stop("histogram_permuted_rhos(): `p` must be a numeric value between 0 and 1", call. = FALSE)
+  }
+  if(!(is.numeric(x_breaks)) | !(x_breaks >= -1 & x_breaks <= 1)){
+    stop("histogram_permuted_rhos(): `x_breaks` must be a numeric value between -1 and 1", call. = FALSE)
+  }
   color_count <- length(unique(permuted_rhos[,Treatment]))
   graph_colors <- create_palette(color_count, colors)
 

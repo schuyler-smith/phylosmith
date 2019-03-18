@@ -4,7 +4,7 @@
 \alias{nmds_phyloseq_ggplot}
 \title{Create a ggplot object of the NMDS from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE,
+nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = NA,
 colors = 'default', verbose = TRUE)
 }
 \arguments{

@@ -329,6 +329,9 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment
   if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
     stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
+  if(!(is.null(classification)) & !(classification %in% colnames(phyloseq_obj@tax_table))){
+    stop("phylogeny_bars_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
+  }
   if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("phylogeny_bars_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
@@ -392,11 +395,14 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL, trea
   if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
     stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
-    stop("taxa_abundance_bars_ggplot(): argument given to `transformation` not able to be applied by this function, please see help files for list of acceptable values", call. = FALSE)
+  if(!(is.null(classification)) & !(classification %in% colnames(phyloseq_obj@tax_table))){
+    stop("phylogeny_bars_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
-  if(!(transformation %in% c('none', "mean", "median", "sd", "log", "log10"))){
-    stop("taxa_abundance_bars_ggplot(): `merge` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("taxa_abundance_bars_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(transformation %in% c("none", "mean", "median", "sd", "log", "log10"))){
+    stop("taxa_abundance_bars_ggplot(): argument given to `transformation` not able to be applied by this function, please see help files for list of acceptable values", call. = FALSE)
   }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)

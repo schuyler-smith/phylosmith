@@ -4,7 +4,7 @@
 \alias{phylogeny_bars_ggplot}
 \title{Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
+phylogeny_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
 merge = TRUE, relative_abundance = TRUE, colors = 'default')
 }
 \arguments{

@@ -5,7 +5,7 @@
 \title{Create a ggplot object using t-SNE from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
-labels = FALSE, colors = 'default')
+labels = NA, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}

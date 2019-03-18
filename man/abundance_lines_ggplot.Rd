@@ -4,7 +4,7 @@
 \alias{abundance_lines_ggplot}
 \title{Create a ggplot object of the abundance table from a phyloseq object. Function from the phylosmith-package.}
 \usage{
-abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
+abundance_lines_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
 relative_abundance = FALSE, points = TRUE, colors = 'default')
 }
 \arguments{
