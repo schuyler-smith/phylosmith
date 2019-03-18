@@ -94,6 +94,18 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
 #' @export
 
 conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("conglomerate_taxa(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@tax_table)){
+    stop("conglomerate_taxa(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
+  }
+  if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+    stop("conglomerate_taxa(): `classification` must be a column within the tax_table()", call. = FALSE)
+  }
+  if(!(is.logical(hierarchical))){
+    stop("conglomerate_taxa(): `hierarchical` must be either `TRUE` or `FALSE`", call. = FALSE)
+  }
   if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   if(!(is.null(phyloseq_obj@sam_data))){sam <- phyloseq_obj@sam_data} else {sam <- FALSE}
@@ -133,28 +145,33 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
 #' @export
 
 find_common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
-  #phyloseq_obj=mock_phyloseq; treatment=c(2,3); subset = "control"; n = 2
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("find_common_taxa(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@tax_table)){
+    stop("find_common_taxa(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@tax_table)))){
+    stop("find_common_taxa(): `treatment` must be at least one column within the sample_data()", call. = FALSE)
+  }
+  if(!(is.numeric(n)) | n != 'all'){
+    stop("find_common_taxa(): `n` must be either 'all' or a numeric value less than the number of treatments being compared", call. = FALSE)
+  }
 
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
   treatment_classes <- unique(phyloseq_obj@sam_data[[treatment_name]])
-
+  if(n == 'all'){n <- length(treatment_classes)}
+  if(n > length(treatment_classes)){
+    stop("find_common_taxa(): `n` must be either 'all' or a numeric value less than the number of treatments being compared", call. = FALSE)
+  }
   seen_taxa <- lapply(treatment_classes, FUN = function(trt){
     taxa_names(taxa_filter(phyloseq_obj, treatment = treatment_name, subset = trt, frequency = 0))
   }); names(seen_taxa) <- treatment_classes
-
   taxa_counts <- table(unlist(seen_taxa))
-  if(n != 'all'){
-    if(!(is.numeric(n))){
-      message("n must be an integer.")
-      return(NA)
-    }
-    shared_taxa <- names(taxa_counts[taxa_counts == round(n)])
-  } else {
-    shared_taxa <- names(taxa_counts[taxa_counts == length(treatment_classes)])
-  }
+  shared_taxa <- names(taxa_counts[taxa_counts == round(n)])
   return(shared_taxa)
 }
 
