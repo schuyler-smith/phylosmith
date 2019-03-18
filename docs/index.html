@@ -78,7 +78,9 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
+</head>
 
+<body>
 
 <style type = "text/css">
 .main-container {
@@ -196,6 +198,8 @@ $(document).ready(function () {
   menuAnchor.closest('li.dropdown').addClass('active');
 });
 </script>
+
+<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -360,16 +364,6 @@ div.tocify {
 
 </style>
 
-
-
-</head>
-
-<body>
-
-
-<div class="container-fluid main-container">
-
-
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
 <div class="col-xs-12 col-sm-4 col-md-3">
@@ -465,7 +459,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">phylosmith</h1>
-<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
+<h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
 
 </div>
 
@@ -500,44 +494,44 @@ library(phylosmith)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="data_parsing.html#conglomerate_samples">conglomerate_samples</a></td>
-<td>combines samples based on common factor within sample_data</td>
-</tr>
-<tr class="even">
-<td><a href="data_parsing.html#conglomerate_taxa">conglomerate_taxa</a></td>
-<td>merges OTUs that have same classification</td>
-</tr>
-<tr class="odd">
-<td><a href="data_parsing.html#find_common_taxa">find_common_taxa</a></td>
+<td><a href="data_parsing.html#common_taxa">common_taxa</a></td>
 <td>find taxa common to each treatment</td>
 </tr>
 <tr class="even">
-<td><a href="data_parsing.html#find_unique_taxa">find_unique_taxa</a></td>
-<td>find taxa unique to each treatment</td>
+<td><a href="data_parsing.html#conglomerate_samples">conglomerate_samples</a></td>
+<td>combines samples based on common factor within sample_data</td>
 </tr>
 <tr class="odd">
+<td><a href="data_parsing.html#conglomerate_taxa">conglomerate_taxa</a></td>
+<td>merges OTUs that have same classification</td>
+</tr>
+<tr class="even">
 <td><a href="data_parsing.html#melt_phyloseq">melt_phyloseq</a></td>
 <td>melts a phyloseq object into a data.table</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="data_parsing.html#merge_treatments">merge_treatments</a></td>
 <td>combines multiple columns in meta-data into a new column</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="data_parsing.html#order_phyloseq_metadata">order_phyloseq_metadata</a></td>
 <td>sets the order of the factors in a sample_data column</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="data_parsing.html#relative_abundance">relative_abundance</a></td>
 <td>transform abundance data to relative abundance</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="data_parsing.html#taxa_proportions">taxa_proportions</a></td>
 <td>computes the proportion of a taxa classification</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="data_parsing.html#taxa_filter">taxa_filter</a></td>
 <td>filter taxa by proportion of samples seen in</td>
+</tr>
+<tr class="even">
+<td><a href="data_parsing.html#unique_taxa">unique_taxa</a></td>
+<td>find taxa unique to each treatment</td>
 </tr>
 </tbody>
 </table>

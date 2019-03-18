@@ -15,6 +15,38 @@ data(soil_column)
 
 <br>
 
+## common_taxa
+<a name="common_taxa"></a>
+
+Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a `vector` of taxa names that are all seen in `n` groups.
+
+<br>
+***Usage***
+```r
+common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`n` | Number of treatment groups that need to share the taxa to be considered a common taxa.
+
+***Examples***
+```{r common_taxa}
+common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control', n = 'all')[1:35]
+```
+
+<br>
+
+***
+
+<br>
+
 ## conglomerate_samples
 <a name="conglomerate_samples"></a>
 
@@ -77,69 +109,6 @@ Call | Description
 ```{r conglomerate_taxa}
 soil_column
 conglomerate_taxa(soil_column, classification = 'phylum', hierarchical = TRUE)
-```
-
-<br>
-
-***
-
-<br>
-
-## find_common_taxa
-<a name="find_common_taxa"></a>
-
-Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a `vector` of taxa names that are all seen in `n` groups.
-
-<br>
-***Usage***
-```r
-find_common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
-`n` | Number of treatment groups that need to share the taxa to be considered a common taxa.
-
-***Examples***
-```{r find_common_taxa}
-find_common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control', n = 'all')[1:35]
-```
-
-<br>
-
-***
-
-<br>
-
-## find_unique_taxa
-<a name="find_unique_taxa"></a>
-
-Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a `list` of `vector`s of taxa names that are only seen in each group.
-
-<br>
-***Usage***
-```r
-find_unique_taxa(phyloseq_obj, treatment, subset = NULL)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
-
-***Examples***
-```{r find_unique_taxa}
-find_unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
 ```
 
 <br>
@@ -378,3 +347,35 @@ taxa_proportions(soil_column, 'phylum', treatment = NA)
 ***
 
 <br>
+
+## unique_taxa
+<a name="unique_taxa"></a>
+
+Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a `list` of `vector`s of taxa names that are only seen in each group.
+
+<br>
+***Usage***
+```r
+unique_taxa(phyloseq_obj, treatment, subset = NULL)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+
+***Examples***
+```{r unique_taxa}
+unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
+```
+
+<br>
+
+***
+
+<br>
+
