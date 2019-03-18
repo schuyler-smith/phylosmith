@@ -8,11 +8,11 @@
 #'
 
 check_numeric_treatment <- function(phyloseq_obj, treatments){
-  sapply(treatments, FUN = function(treatment){
+  unlist(sapply(treatments, FUN = function(treatment){
     if(is.numeric(treatment)){
       return(colnames(phyloseq_obj@sam_data[,treatment]))
     } else {return(treatment)}
-  })
+  }))
 }
 
 #' Converts numeric values to column names in tax_table
@@ -25,11 +25,11 @@ check_numeric_treatment <- function(phyloseq_obj, treatments){
 #'
 
 check_numeric_classification <- function(phyloseq_obj, classification){
-  sapply(classification, FUN = function(class){
+  unlist(sapply(classification, FUN = function(class){
     if(is.numeric(class)){
       return(colnames(phyloseq_obj@tax_table[,class]))
     } else {return(class)}
-  })
+  }))
 }
 
 #' Internal function for creating color palettes for graphs. Function from the phylosmith-package.

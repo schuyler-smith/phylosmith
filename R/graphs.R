@@ -14,6 +14,24 @@
 #' @export
 
 abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default'){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("abundance_heatmap_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(classification != 'none' & is.null(phyloseq_obj@tax_table)){
+    stop("abundance_heatmap_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
+  }
+  if(any(classification != 'none' & !(classification %in% colnames(phyloseq_obj@tax_table)))){
+    stop("abundance_heatmap_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("abundance_heatmap_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("abundance_heatmap_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(transformation %in% c("none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse", "sqrt"))){
+    stop("abundance_heatmap_ggplot(): argument given to `transformation` not able to be applied by this function, please see help files for list of acceptable values", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   classification <- check_numeric_classification(phyloseq_obj, classification)
@@ -26,7 +44,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
   if(colors == 'default'){colors <- 'YlOrRd'}
   graph_colors <- create_palette(color_count, colors)
 
-  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,1], phyloseq_obj@sam_data[,treatment_name])
+  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
@@ -41,7 +59,6 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     if(transformation %in% c('none', 'relative_abundance')){scale_fill_gradientn(colors = graph_colors)
     } else {scale_fill_gradientn(colors = graph_colors, trans = transformation)}
-
   return(g)
 }
 
@@ -49,31 +66,53 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = 'none', trea
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates line graphs across samples.
 #' @useDynLib phylosmith
-#' @usage abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
+#' @usage abundance_lines_ggplot(phyloseq_obj, classification = 'none', treatment, subset = NULL,
 #' relative_abundance = FALSE, points = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param relative_abundance If \code{TRUE}, transforms the abundance data into relative abundance by sample.
 #' @param points if \code{FALSE}, will not diplay the data-points.
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
-abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
+abundance_lines_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default'){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("abundance_lines_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(classification != 'none' & is.null(phyloseq_obj@tax_table)){
+    stop("abundance_lines_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
+  }
+  if(any(classification != 'none' & !(classification %in% colnames(phyloseq_obj@tax_table)))){
+    stop("abundance_lines_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("abundance_lines_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("abundance_lines_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.logical(relative_abundance))){
+    stop("abundance_lines_ggplot(): `relative_abundance` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
+  if(!(is.logical(points))){
+    stop("abundance_lines_ggplot(): `points` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)
+  if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  # graph_data <- tax_glom(phyloseq_obj, taxrank = classification)
-  graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])
-  graph_data <- data.table(psmelt(graph_data))
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
+  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
+  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
+  graph_data <- data.table(melt_phyloseq(graph_data))
+  graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -87,7 +126,6 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
     scale_colour_manual(values = graph_colors)
   if(points == TRUE){g <- g + geom_point(size = 1.8, aes_string(color = classification))}
   if(relative_abundance == TRUE){g <- g + ylab('Relative Abundance')}
-
   return(g)
 }
 
@@ -95,14 +133,14 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage network_phyloseq(phyloseq_obj, treatment = NULL, subset = NULL,
-#' co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
+#' @usage network_phyloseq(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL,
+#' co_occurrence_table = NULL, node_colors = 'default',
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no table is given, it will be computed with the \code{phyloseq_obj}, using the given \code{treatment} and \code{p} = 0.05.
-#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param node_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param cluster if \code{TRUE}, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
 #' @param cluster_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the clusters.
@@ -114,8 +152,32 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification, treatment, subs
 #' @importFrom sf st_as_sf st_buffer
 #' @export
 
-network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default',
+network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, node_colors = 'default',
                              cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("network_phyloseq(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("network_phyloseq(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@tax_table)){
+    stop("network_phyloseq(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
+  }
+  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+    stop("network_phyloseq(): `classification` must be a column name, or index, from the tax_table()", call. = FALSE)
+  }
+  if(!(is.null(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("network_phyloseq(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.null(co_occurrence_table)) & !(is.data.frame(co_occurrence_table))){
+    stop("network_phyloseq(): `co_occurrence_table` must be at data.frame object", call. = FALSE)
+  }
+  if(!(is.logical(cluster))){
+    stop("network_phyloseq(): `cluster` must be either `TRUE` or `FALSE`", call. = FALSE)
+  }
+  if(!(is.numeric(buffer)) | !(buffer >= 0)){
+    stop("network_phyloseq(): `buffer` must be a numeric value >= 0", call. = FALSE)
+  }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   classification <- check_numeric_classification(phyloseq_obj, classification)
   if(!(is.null(classification))){node_classes = sort(unique(phyloseq_obj@tax_table[,classification]))}
@@ -163,7 +225,6 @@ network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_o
   if(is.null(classification)){g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', fill = node_colors, size=5)
   } else {g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', size=5) +
     scale_fill_manual(values = node_colors)}
-
   return(g)
 }
 
@@ -171,7 +232,7 @@ network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_o
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE,
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = NA,
 #' colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
@@ -183,10 +244,28 @@ network_phyloseq <- function(phyloseq_obj, treatment = NULL, subset = NULL, co_o
 #' @importFrom vegan metaMDS scores
 #' @export
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE){
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels = NA, colors = 'default', verbose = TRUE){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("nmds_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("nmds_phyloseq_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("nmds_phyloseq_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.logical(circle))){
+    stop("nmds_phyloseq_ggplot(): `circle` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
+  if(!(is.na(labels)) & any(!(labels %in% colnames(phyloseq_obj@sam_data)))){
+    stop("nmds_phyloseq_ggplot(): `labels` must be a column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.logical(verbose))){
+    stop("nmds_phyloseq_ggplot(): `verbose` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(is.numeric(labels)){labels <- colnames(phyloseq_obj@sam_data[,labels])}
+  labels <- check_numeric_treatment(phyloseq_obj, labels)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
 
@@ -228,7 +307,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
 #' @useDynLib phylosmith
-#' @usage phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL,
+#' @usage phylogeny_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
 #' merge = TRUE, relative_abundance = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
@@ -240,19 +319,38 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #' @import ggplot2
 #' @export
 
-phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default'){
+phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default'){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("phylogeny_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+    stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("phylogeny_bars_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.logical(merge))){
+    stop("phylogeny_bars_ggplot(): `merge` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
+  if(!(is.logical(relative_abundance))){
+    stop("phylogeny_bars_ggplot(): `relative_abundance` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  if(merge){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
+  if(!(is.null(classification)) & merge){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  # graph_data <- tax_glom(phyloseq_obj, taxrank = classification)
-  graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])
-  graph_data <- data.table(psmelt(graph_data))
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = sample_names(phyloseq_obj))
+  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
+  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
+  graph_data <- melt_phyloseq(graph_data)
+  graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -261,12 +359,11 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
     theme_bw() +
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     guides(colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
-    facet_grid(treatment_name, scales = "free", space = "free") +
-    scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
-  if(merge == TRUE){g <- g + geom_bar(aes_string(color = classification, fill = classification), stat = 'identity', position = 'stack', size = 0.2)
+        scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
+  if(!(is.null(treatment))){g <- g + facet_grid(treatment_name, scales = "free", space = "free")}
+  if(merge){g <- g + geom_bar(aes_string(color = classification, fill = classification), stat = 'identity', position = 'stack', size = 0.2)
   } else {g <- g + geom_bar(stat = "identity", position = "stack", size = 0.12, color = 'black')}
-  if(relative_abundance == TRUE){g <- g + ylab('Relative Abundance')}
-
+  if(relative_abundance){g <- g + ylab('Relative Abundance')}
   return(g)
 }
 
@@ -274,41 +371,57 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification, treatment, subse
 #'
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage taxa_abundance_bars_ggplot(phyloseq_obj, classification = 'none', treatment,
+#' @usage taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment,
 #' subset = NULL, transformation = 'none', colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-#' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param transformation Transformation to be used on the data. "none", "mean", "median", "sd", "log", "log10"
 #' @param colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.
 #' @import ggplot2
 #' @export
 
-taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', treatment, subset = NULL, transformation = 'none', colors = 'default'){
+taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default'){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+    stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("taxa_abundance_bars_ggplot(): argument given to `transformation` not able to be applied by this function, please see help files for list of acceptable values", call. = FALSE)
+  }
+  if(!(transformation %in% c('none', "mean", "median", "sd", "log", "log10"))){
+    stop("taxa_abundance_bars_ggplot(): `merge` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   classification <- check_numeric_classification(phyloseq_obj, classification)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  if(classification != 'none'){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
+  if(!(is.null(classification))){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
   treatment_name <- paste(treatment, collapse = sep)
   abundance <- 'Abundance'
 
-  if(classification == 'none'){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,1], phyloseq_obj@sam_data[,treatment_name])
+  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
-  graph_data <- data.table(psmelt(graph_data))
+  graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = unique(graph_data[[classification]]))
-  graph_data <- graph_data[, -'Sample']
+  if(transformation == 'none'){abundance <- 'Abundance'
+  graph_data <- graph_data[, sum(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'mean'){abundance <- 'Mean_Abundance'
-    graph_data <- graph_data[, mean(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  graph_data <- graph_data[, mean(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'median'){abundance <- 'Median_Abundance'
-    graph_data <- graph_data[, stats::median(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  graph_data <- graph_data[, stats::median(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'sd'){abundance <- 'StdDev_Abundance'
-    graph_data <- graph_data[, stats::sd(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  graph_data <- graph_data[, stats::sd(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'log'){abundance <- 'log_Abundance'
-    graph_data <- graph_data[, log(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  graph_data <- graph_data[, log(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'log10'){abundance <- 'log10_Abundance'
-    graph_data <- graph_data[, log10(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  graph_data <- graph_data[, log10(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
 
   color_count <- length(unique(graph_data[[treatment_name]]))
   graph_colors <- create_palette(color_count, colors)
@@ -319,7 +432,6 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
     theme(axis.text.x = element_text(angle = -35, hjust = 0)) +
     guides(colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
     scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
-
   return(g)
 }
 
@@ -328,7 +440,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
 #' Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
-#' labels = FALSE, colors = 'default')
+#' labels = NA, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param perplexity similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)
@@ -341,20 +453,35 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = 'none', tr
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 
-tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default'){
+tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = NA, colors = 'default'){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("tsne_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
+  }
+  if(is.null(phyloseq_obj@sam_data)){
+    stop("tsne_phyloseq_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
+  }
+  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+    stop("tsne_phyloseq_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.numeric(perplexity)) | perplexity <= 1){
+    stop("tsne_phyloseq_ggplot(): `perplexity` must be a numeric value greater than 1", call. = FALSE)
+  }
+  if(!(is.logical(circle))){
+    stop("tsne_phyloseq_ggplot(): `circle` must be either `TRUE`, or `FALSE`", call. = FALSE)
+  }
+  if(!(is.na(labels)) & any(!(labels %in% colnames(phyloseq_obj@sam_data)))){
+    stop("tsne_phyloseq_ggplot(): `labels` must be a column name, or index, from the sample_data()", call. = FALSE)
+  }
   options(warn = -1)
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
   labels <- check_numeric_treatment(phyloseq_obj, labels)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
-
-  tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
-
   Treatment <- phyloseq_obj@sam_data[[treatment_name]]
-
   color_count <- length(unique(Treatment))
   graph_colors <- create_palette(color_count, colors)
 
+  tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
   tSNE1 <- tsne$Y[,1]
   tSNE2 <- tsne$Y[,2]
   ord <- data.table(tSNE1, tSNE2, Treatment)

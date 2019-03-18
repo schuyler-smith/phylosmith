@@ -350,6 +350,9 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
   if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
     stop("taxa_proportions(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
+  if(!(is.na(treatment)) & is.null(phyloseq_obj@sam_data)){
+    stop("taxa_proportions(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
+  }
   if(!(is.na(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
     stop("taxa_proportions(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
