@@ -305,7 +305,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
 #' @useDynLib phylosmith
 #' @usage phylogeny_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
-#' merge = TRUE, relative_abundance = TRUE, colors = 'default')
+#' merge = TRUE, relative_abundance = FALSE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
@@ -316,7 +316,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
 #' @import ggplot2
 #' @export
 
-phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default'){
+phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default'){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("phylogeny_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
@@ -350,6 +350,7 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[, c(treatment, treatment_name)])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
   graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
 
   color_count <- length(unique(graph_data[[classification]]))

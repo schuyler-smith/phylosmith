@@ -164,7 +164,7 @@ Creates a ggplot object of the stacked bar plots of a classification level in th
 <br>
 ***Usage***
 ```r
-phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = TRUE, colors = 'default')
+phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default')
 ```
 
 <br>

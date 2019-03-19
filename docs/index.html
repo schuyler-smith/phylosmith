@@ -78,9 +78,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -198,8 +196,6 @@ $(document).ready(function () {
   menuAnchor.closest('li.dropdown').addClass('active');
 });
 </script>
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -364,6 +360,16 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
 <div class="col-xs-12 col-sm-4 col-md-3">
@@ -459,7 +465,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">phylosmith</h1>
-<h4 class="author"><em><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></em></h4>
+<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
 
 </div>
 
@@ -503,7 +509,7 @@ library(phylosmith)</code></pre>
 </tr>
 <tr class="odd">
 <td><a href="data_parsing.html#conglomerate_taxa">conglomerate_taxa</a></td>
-<td>merges OTUs that have same classification</td>
+<td>combines taxa that have same classification</td>
 </tr>
 <tr class="even">
 <td><a href="data_parsing.html#melt_phyloseq">melt_phyloseq</a></td>
