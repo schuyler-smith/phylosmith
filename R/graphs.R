@@ -48,6 +48,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL, treatm
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
   graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
   setkey(graph_data, Sample, Abundance)
   set(graph_data, which(graph_data[['Abundance']] == 0), 'Abundance', NA)
@@ -112,6 +113,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatmen
   } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
   graph_data <- data.table(melt_phyloseq(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
+  set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
   graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
 
   color_count <- length(unique(graph_data[[classification]]))
@@ -180,7 +182,6 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(!(is.numeric(buffer)) | !(buffer >= 0)){
     stop("network_phyloseq(): `buffer` must be a numeric value >= 0", call. = FALSE)
   }
-  if(!(is.null(classification))){node_classes = sort(unique(phyloseq_obj@tax_table[,classification]))}
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
 
@@ -189,9 +190,12 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(!is.null(subset)){co_occurrence_table <- co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]}
   colnames(co_occurrence_table)[colnames(co_occurrence_table) == 'rho'] <- 'weight'
 
-  nodes <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
-  nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table),
-                      'Abundance' = taxa_sums(relative_abundance(phyloseq_obj)), nodes)
+  if(!(is.null(classification))){
+    nodes <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
+    nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table), nodes)
+    set(nodes, which(is.na(nodes[[classification]])), classification, 'Unclassified')
+    node_classes <- sort(unique(nodes[[classification]]))
+  } else {nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table))}
   nodes <- nodes[nodes[['Node_Name']] %in% c(as.character(co_occurrence_table$OTU_1), as.character(co_occurrence_table$OTU_2)),]
 
   net <- graph_from_data_frame(d=co_occurrence_table, vertices=nodes, directed=F)
@@ -426,6 +430,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL, trea
   graph_data <- graph_data[, log(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
   if(transformation == 'log10'){abundance <- 'log10_Abundance'
   graph_data <- graph_data[, log10(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
+  set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
 
   color_count <- length(unique(graph_data[[treatment_name]]))
   graph_colors <- create_palette(color_count, colors)
