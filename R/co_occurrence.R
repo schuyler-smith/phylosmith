@@ -196,8 +196,10 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL, x_breaks = 0.25, co
   if(!(is.data.frame(permuted_rhos))){
     stop("histogram_permuted_rhos(): `permuted_rhos` must be at data.frame object", call. = FALSE)
   }
-  if(!(is.null(p)) & (!(is.numeric(p)) | !(p >= -0 & p <= 1))){
-    stop("histogram_permuted_rhos(): `p` must be a numeric value between 0 and 1", call. = FALSE)
+  if(!(is.null(p))){
+    if(!(is.numeric(p)) | !(p >= -0 & p <= 1)){
+      stop("histogram_permuted_rhos(): `p` must be a numeric value between 0 and 1", call. = FALSE)
+    }
   }
   if(!(is.numeric(x_breaks)) | !(x_breaks >= -1 & x_breaks <= 1)){
     stop("histogram_permuted_rhos(): `x_breaks` must be a numeric value between -1 and 1", call. = FALSE)

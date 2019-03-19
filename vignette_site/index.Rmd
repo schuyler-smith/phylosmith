@@ -33,7 +33,7 @@ Call | Description
 -------------------- | ------------------------------------------------------------
 [common_taxa](data_parsing.html#common_taxa) | find taxa common to each treatment
 [conglomerate_samples](data_parsing.html#conglomerate_samples) | combines samples based on common factor within sample_data
-[conglomerate_taxa](data_parsing.html#conglomerate_taxa) | merges OTUs that have same classification
+[conglomerate_taxa](data_parsing.html#conglomerate_taxa) | combines taxa that have same classification
 [melt_phyloseq](data_parsing.html#melt_phyloseq) | melts a phyloseq object into a data.table
 [merge_treatments](data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a new column
 [order_phyloseq_metadata](data_parsing.html#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
