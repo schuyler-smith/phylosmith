@@ -622,8 +622,8 @@ div.tocify {
 </table>
 <p>cluster if TRUE, will use <code>igraph</code>’s <code>cluster_fast_greedy</code> method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the <code>phyloseq_obj</code>. <code>cluster_colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors. <code>buffer</code> | Amount of space beyond the points to extend the cluster (aesthetic argument).</p>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>network &lt;- network_phyloseq(taxa_filter(soil_column, frequency = 0.8), treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil_Manure&#39;, co_occurrence_table = NULL, classification = &#39;genus&#39;)
-network + theme(legend.position = &quot;none&quot;)</code></pre>
+<pre class="r"><code>network_phyloseq(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil_Manure&#39;, co_occurrence_table = NULL, classification = &#39;phylum&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/network_phyloseq-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>

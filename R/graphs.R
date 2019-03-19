@@ -184,7 +184,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(is.null(co_occurrence_table)){co_occurrence_table <- co_occurrence(phyloseq_obj, treatment)}
+  if(is.null(co_occurrence_table)){co_occurrence_table <- co_occurrence(phyloseq_obj, treatment)[rho >= 0.8 | rho <= -0.8]}
   co_occurrence_table <- co_occurrence_table[,c('OTU_1','OTU_2','Treatment','rho','p')]
   if(!is.null(subset)){co_occurrence_table <- co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]}
   colnames(co_occurrence_table)[colnames(co_occurrence_table) == 'rho'] <- 'weight'
@@ -221,7 +221,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(length(cluster) > 1){g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y', alpha = 0.4, group = 'Community'), fill = community_colors[hulls$Community])}
   g <- g + geom_edge_link(color = c('pink1', 'grey70')[sapply(E(attributes(layout)$graph)$weight, FUN = function(x){
     rep(as.numeric(as.logical(sign(x)+1)+1), 100)})]) +
-    guides(colour = FALSE, alpha = FALSE)
+    guides(colour = FALSE, alpha = FALSE, fill = guide_legend(ncol = ceiling(length(unique(classification))/30)))
   if(is.null(classification)){g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', fill = node_colors, size=5)
   } else {g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', size=5) +
     scale_fill_manual(values = node_colors)}
@@ -273,7 +273,6 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   graph_colors <- create_palette(color_count, colors)
 
   MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100, trace = verbose)
-
   NMDS1 <- data.table(scores(MDS))$NMDS1
   NMDS2 <- data.table(scores(MDS))$NMDS2
   ord <- data.table(NMDS1,NMDS2,Treatment)

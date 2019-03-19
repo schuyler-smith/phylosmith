@@ -150,7 +150,6 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
   if(!(is.null(phyloseq_obj@sam_data))){sam <- phyloseq_obj@sam_data} else {sam <- FALSE}
   phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
-
   if(hierarchical){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
   } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
 
@@ -161,7 +160,6 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   taxa <- as.matrix(taxa, rownames = colnames(otus))
 
   phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa))
-
   if(!(is.logical(sam))){phyloseq_obj@sam_data <- sam}
   if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
   if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}

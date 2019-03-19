@@ -111,9 +111,8 @@ cluster if TRUE, will use `igraph`'s `cluster_fast_greedy` method. Alternatively
 `buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
 
 ***Examples***
-```{r network_phyloseq, eval=F}
-network <- network_phyloseq(taxa_filter(soil_column, frequency = 0.8), treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'genus')
-network + theme(legend.position = "none")
+```{r network_phyloseq}
+network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'phylum')
 ```
 
 <br>
