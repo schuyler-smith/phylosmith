@@ -346,8 +346,8 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
-  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
+  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[, c(treatment, treatment_name)])
+  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[, c(treatment, treatment_name)])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
   graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
