@@ -5,7 +5,7 @@
 \title{Create an object of the abundance barplots from a phyloseq object. Function from the phylosmith-package.}
 \usage{
 network_phyloseq(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL,
-co_occurrence_table = NULL, node_colors = 'default',
+co_occurrence_table = NULL, nodes_of_interest = NULL, node_colors = 'default',
 cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 }
 \arguments{
@@ -18,6 +18,8 @@ cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 \item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
 
 \item{co_occurrence_table}{Table of the co-occurrence of taxa/genes in the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no table is given, it will be computed with the \code{phyloseq_obj}, using the given \code{treatment} and \code{p} = 0.05.}
+
+\item{nodes_of_interest}{A vector of names of classes within the \code{classification} to be labeled.}
 
 \item{node_colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.}
 

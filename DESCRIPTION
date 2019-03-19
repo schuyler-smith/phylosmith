@@ -21,11 +21,12 @@ Imports:
     ggplot2,
     igraph,
     ggraph,
+    ggrepel,
     sp,
     sf,
     vegan,
     Rtsne,
-    stringr
+    stringr,
 Remotes: 
     joey711/phyloseq
 LinkingTo: 

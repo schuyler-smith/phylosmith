@@ -136,13 +136,14 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatmen
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
 #' @usage network_phyloseq(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL,
-#' co_occurrence_table = NULL, node_colors = 'default',
+#' co_occurrence_table = NULL, nodes_of_interest = NULL, node_colors = 'default',
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.
 #' @param treatment Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no table is given, it will be computed with the \code{phyloseq_obj}, using the given \code{treatment} and \code{p} = 0.05.
+#' @param nodes_of_interest A vector of names of classes within the \code{classification} to be labeled.
 #' @param node_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors.
 #' @param cluster if \code{TRUE}, will use igraph's \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the \code{taxa_names} in the \code{phyloseq_obj}.
 #' @param cluster_colors Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted colors to use for the clusters.
@@ -154,7 +155,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatmen
 #' @importFrom sf st_as_sf st_buffer
 #' @export
 
-network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, node_colors = 'default',
+network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, nodes_of_interest = NULL, node_colors = 'default',
                              cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("network_phyloseq(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
@@ -176,12 +177,15 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(!(is.null(co_occurrence_table)) & !(is.data.frame(co_occurrence_table))){
     stop("network_phyloseq(): `co_occurrence_table` must be at data.frame object", call. = FALSE)
   }
-  if(!(is.logical(cluster))){
-    stop("network_phyloseq(): `cluster` must be either `TRUE` or `FALSE`", call. = FALSE)
+  if(!(is.null(nodes_of_interest))){
+    if(!(is.vector(nodes_of_interest))){
+      stop("network_phyloseq(): `nodes_of_interest` must be at vector of strings", call. = FALSE)
+    }
   }
   if(!(is.numeric(buffer)) | !(buffer >= 0)){
     stop("network_phyloseq(): `buffer` must be a numeric value >= 0", call. = FALSE)
   }
+  node_classes <- sort(unique(phyloseq_obj@tax_table[,classification]))
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
 
@@ -194,7 +198,6 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
     nodes <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
     nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table), nodes)
     set(nodes, which(is.na(nodes[[classification]])), classification, 'Unclassified')
-    node_classes <- sort(unique(nodes[[classification]]))
   } else {nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table))}
   nodes <- nodes[nodes[['Node_Name']] %in% c(as.character(co_occurrence_table$OTU_1), as.character(co_occurrence_table$OTU_2)),]
 
@@ -204,6 +207,9 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
 
   if(cluster == TRUE){cluster_table <- co_occurrence_table; cluster_table[['weight']] <- abs(cluster_table[['weight']])
     cluster <- cluster_fast_greedy(simplify(graph_from_data_frame(d=cluster_table, vertices=nodes, directed=F), remove.multiple = F, remove.loops = T))$membership}
+  if(length(cluster) > 1 & length(cluster) != nrow(nodes)){
+    stop("network_phyloseq(): `cluster` must be either `TRUE`,`FALSE`, or a vector of memborship for each node", call. = FALSE)
+  }
   if(length(cluster) > 1){communities <- data.table(layout[,1:2])
     circles <- as(st_buffer(st_as_sf(communities, coords = c('x','y')), dist = buffer, nQuadSegs = 15), 'Spatial')
     circle_coords <- data.frame()
@@ -225,10 +231,18 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(length(cluster) > 1){g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y', alpha = 0.4, group = 'Community'), fill = community_colors[hulls$Community])}
   g <- g + geom_edge_link(color = c('pink1', 'grey70')[sapply(E(attributes(layout)$graph)$weight, FUN = function(x){
     rep(as.numeric(as.logical(sign(x)+1)+1), 100)})]) +
-    guides(colour = FALSE, alpha = FALSE, fill = guide_legend(ncol = ceiling(length(unique(classification))/30)))
+    guides(colour = FALSE, alpha = FALSE, fill = guide_legend(ncol = ceiling(length(node_classes)/30)))
   if(is.null(classification)){g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', fill = node_colors, size=5)
   } else {g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', size=5) +
     scale_fill_manual(values = node_colors)}
+  if(!is.null(nodes_of_interest)){
+    coi <- subset(layout, apply(layout, 1, function(class){any(class %in% nodes_of_interest)}))
+    coi <- subset(layout, apply(layout, 1, function(class){any(class %in% nodes_of_interest)}))
+    g <- g + ggrepel::geom_label_repel(data = coi, aes_string(x = 'x', y = 'y', fill = classification),
+         label = unname(apply(coi, 1, function(class){class[which(class %in% nodes_of_interest)]})),
+         box.padding = unit(0.8, "lines"), point.padding = unit(0.1, "lines"),
+         size = 5,  show.legend = FALSE)
+  }
   return(g)
 }
 
@@ -410,13 +424,11 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL, trea
   }
   options(warn = -1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  if(!(is.null(classification))){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)}
+  if(!(is.null(classification))){phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, hierarchical = FALSE)
+  } else{classification <- 'OTU'}
   treatment_name <- paste(treatment, collapse = sep)
-  abundance <- 'Abundance'
 
-  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
-  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
-  graph_data <- melt_phyloseq(graph_data)
+  graph_data <- melt_phyloseq(phyloseq_obj)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = unique(graph_data[[classification]]))
   if(transformation == 'none'){abundance <- 'Abundance'
   graph_data <- graph_data[, sum(Abundance), by = c(treatment_name, classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]}
