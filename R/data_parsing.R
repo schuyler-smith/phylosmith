@@ -7,7 +7,6 @@
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @param n Number of treatment groups that need to share the taxa to be considered a common taxa.
-#' @keywords manip
 #' @seealso \code{\link{unique_taxa}}
 #' @export
 
@@ -50,7 +49,6 @@ common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 #' @param merge_on Defines which variable the data is merged according to. This needs to be a column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
-#' @keywords manip
 #' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
 #' @export
 
@@ -127,7 +125,6 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
 #' @param hierarchical Whether the order of factors in the tax_table represent a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will only return the factor given by \code{classification}.
-#' @keywords manip
 #' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
 #' @import data.table
 #' @export
@@ -172,7 +169,6 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
 #' @useDynLib phylosmith
 #' @usage melt_phyloseq(phyloseq_obj)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @keywords manip
 #' @seealso \code{\link[phyloseq:psmelt]{psmelt()}}
 #' @import data.table
 #' @export
@@ -207,7 +203,6 @@ melt_phyloseq <- function(phyloseq_obj){
 #' @usage merge_treatments(phyloseq_obj, ...)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample.
 #' @param ... any number of column names as \code{string}s or \code{numeric}s in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
-#' @keywords manip
 #' @import data.table
 #' @export
 
@@ -239,7 +234,6 @@ merge_treatments <- function(phyloseq_obj, ...){
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param order The order of factors in \code{treatment} column as a vector of strings. If assinged "numeric" will set ascending numerical order.
-#' @keywords manip
 #' @import data.table
 #' @export
 
@@ -265,7 +259,6 @@ order_treatment <- function(phyloseq_obj, treatment, order){
 #' @useDynLib phylosmith
 #' @usage relative_abundance(phyloseq_obj)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @keywords manip
 #' @export
 
 relative_abundance <- function(phyloseq_obj){
@@ -290,7 +283,6 @@ relative_abundance <- function(phyloseq_obj){
 #' @param frequency The proportion of samples the taxa is found in.
 #' @param below Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
 #' @param drop_samples Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
-#' @keywords manip
 #' @import data.table
 #' @export
 
@@ -373,7 +365,6 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param classification Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the prportions to be reported on.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column. If \code{NA}, then proprtions will be reported for the entire dataset. If set to "sample" it will repoort proportions by sample.
-#' @keywords manip
 #' @import data.table
 #' @export
 
@@ -430,7 +421,6 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-#' @keywords manip
 #' @seealso \code{\link{common_taxa}}
 #' @export
 
