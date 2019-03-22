@@ -18,17 +18,17 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL, treatm
     stop("abundance_heatmap_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(access(phyloseq_obj, 'tax_table'))){
     stop("abundance_heatmap_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(!(is.null(classification)) & any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table'))))){
     stop("abundance_heatmap_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("abundance_heatmap_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("abundance_heatmap_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(transformation %in% c("none", "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh", "boxcox", "exp", "identity", "logit", "probability", "probit", "reciprocal", "reverse", "sqrt"))){
@@ -44,12 +44,12 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL, treatm
   if(colors == 'default'){colors <- 'YlOrRd'}
   graph_colors <- create_palette(color_count, colors)
 
-  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
-  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
+  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'sam_data')[,treatment_name])
+  } else {graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table')[,classification], access(phyloseq_obj, 'sam_data')[,treatment_name])}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
   set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(access(phyloseq_obj, 'sam_data')))
   setkey(graph_data, Sample, Abundance)
   set(graph_data, which(graph_data[['Abundance']] == 0), 'Abundance', NA)
 
@@ -84,17 +84,17 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatmen
     stop("abundance_lines_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(access(phyloseq_obj, 'tax_table'))){
     stop("abundance_lines_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(!(is.null(classification)) & any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table'))))){
     stop("abundance_lines_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("abundance_lines_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("abundance_lines_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.logical(relative_abundance))){
@@ -109,12 +109,12 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL, treatmen
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data[,treatment_name])
-  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table[,classification], phyloseq_obj@sam_data[,treatment_name])}
+  if(!(is.null(classification))){classification <- 'OTU'; graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'sam_data')[,treatment_name])
+  } else {graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table')[,classification], access(phyloseq_obj, 'sam_data')[,treatment_name])}
   graph_data <- data.table(melt_phyloseq(graph_data))
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
   set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(access(phyloseq_obj, 'sam_data')))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -160,18 +160,18 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("network_phyloseq(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("network_phyloseq(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@tax_table)){
+  if(is.null(access(phyloseq_obj, 'tax_table'))){
     stop("network_phyloseq(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(!(is.null(classification)) & any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(!(is.null(classification)) & any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table'))))){
     stop("network_phyloseq(): `classification` must be a column name, or index, from the tax_table()", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(!(is.null(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(!(is.null(treatment)) & any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("network_phyloseq(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.null(co_occurrence_table)) & !(is.data.frame(co_occurrence_table))){
@@ -185,7 +185,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(!(is.numeric(buffer)) | !(buffer >= 0)){
     stop("network_phyloseq(): `buffer` must be a numeric value >= 0", call. = FALSE)
   }
-  node_classes <- sort(unique(phyloseq_obj@tax_table[,classification]))
+  node_classes <- sort(unique(access(phyloseq_obj, 'tax_table')[,classification]))
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
 
@@ -195,10 +195,10 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   colnames(co_occurrence_table)[colnames(co_occurrence_table) == 'rho'] <- 'weight'
 
   if(!(is.null(classification))){
-    nodes <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
-    nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table), nodes)
+    nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
+    nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')), nodes)
     set(nodes, which(is.na(nodes[[classification]])), classification, 'Unclassified')
-  } else {nodes <- data.table('Node_Name' = rownames(phyloseq_obj@tax_table))}
+  } else {nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')))}
   nodes <- nodes[nodes[['Node_Name']] %in% c(as.character(co_occurrence_table$OTU_1), as.character(co_occurrence_table$OTU_2)),]
 
   net <- graph_from_data_frame(d=co_occurrence_table, vertices=nodes, directed=F)
@@ -266,18 +266,18 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("nmds_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("nmds_phyloseq_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("nmds_phyloseq_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.logical(circle))){
     stop("nmds_phyloseq_ggplot(): `circle` must be either `TRUE`, or `FALSE`", call. = FALSE)
   }
   labels <- check_numeric_treatment(phyloseq_obj, labels)
-  if(!(is.na(labels)) & any(!(labels %in% colnames(phyloseq_obj@sam_data)))){
+  if(!(is.na(labels)) & any(!(labels %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("nmds_phyloseq_ggplot(): `labels` must be a column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.logical(verbose))){
@@ -286,16 +286,16 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   options(warn = -1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
-  Treatment <- phyloseq_obj@sam_data[[treatment_name]]
+  Treatment <- access(phyloseq_obj, 'sam_data')[[treatment_name]]
   color_count <- length(unique(Treatment))
   graph_colors <- create_palette(color_count, colors)
 
-  MDS <- metaMDS(t(phyloseq_obj@otu_table), autotransform = FALSE, distance = "bray", k = 3, trymax = 100, trace = verbose)
+  MDS <- metaMDS(t(access(phyloseq_obj, 'otu_table')), autotransform = FALSE, distance = "bray", k = 3, trymax = 100, trace = verbose)
   NMDS1 <- data.table(scores(MDS))$NMDS1
   NMDS2 <- data.table(scores(MDS))$NMDS2
   ord <- data.table(NMDS1,NMDS2,Treatment)
   ord <- subset(ord, !is.na(Treatment))
-  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := phyloseq_obj@sam_data[[labels]]]')))}
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, 'sam_data')[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(NMDS1, NMDS2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
@@ -338,18 +338,18 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("phylogeny_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(access(phyloseq_obj, 'tax_table'))){
     stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(!(is.null(classification)) & !(classification %in% colnames(phyloseq_obj@tax_table))){
+  if(!(is.null(classification)) & !(classification %in% colnames(access(phyloseq_obj, 'tax_table')))){
     stop("phylogeny_bars_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("phylogeny_bars_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.logical(merge))){
@@ -364,12 +364,12 @@ phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL, treatment
   if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
   treatment_name <- paste(treatment, collapse = sep)
 
-  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data)
-  } else {graph_data <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)}
+  if(is.null(classification)){classification <- 'OTU'; graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'sam_data'))
+  } else {graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))}
   graph_data <- melt_phyloseq(graph_data)
   graph_data[[classification]] <- factor(graph_data[[classification]], levels = rev(unique(graph_data[[classification]])))
   set(graph_data, which(is.na(graph_data[[classification]])), classification, 'Unclassified')
-  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(phyloseq_obj@sam_data))
+  graph_data[['Sample']] <- factor(graph_data[['Sample']], levels = rownames(access(phyloseq_obj, 'sam_data')))
 
   color_count <- length(unique(graph_data[[classification]]))
   graph_colors <- create_palette(color_count, colors)
@@ -405,18 +405,18 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL, trea
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(!(is.null(classification)) & is.null(phyloseq_obj@tax_table)){
+  if(!(is.null(classification)) & is.null(access(phyloseq_obj, 'tax_table'))){
     stop("taxa_abundance_bars_ggplot(): `phyloseq_obj` must contain tax_table() information if `classification` argument is used", call. = FALSE)
   }
-  if(!(is.null(classification)) & !(classification %in% colnames(phyloseq_obj@tax_table))){
+  if(!(is.null(classification)) & !(classification %in% colnames(access(phyloseq_obj, 'tax_table')))){
     stop("phylogeny_bars_ggplot(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("taxa_abundance_bars_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(transformation %in% c("none", "mean", "median", "sd", "log", "log10"))){
@@ -478,11 +478,11 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("tsne_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("tsne_phyloseq_ggplot(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("tsne_phyloseq_ggplot(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(perplexity)) | perplexity <= 1){
@@ -492,22 +492,22 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
     stop("tsne_phyloseq_ggplot(): `circle` must be either `TRUE`, or `FALSE`", call. = FALSE)
   }
   labels <- check_numeric_treatment(phyloseq_obj, labels)
-  if(!(is.na(labels)) & any(!(labels %in% colnames(phyloseq_obj@sam_data)))){
+  if(!(is.na(labels)) & any(!(labels %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("tsne_phyloseq_ggplot(): `labels` must be a column name, or index, from the sample_data()", call. = FALSE)
   }
   options(warn = -1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   treatment_name <- paste(treatment, collapse = sep)
-  Treatment <- phyloseq_obj@sam_data[[treatment_name]]
+  Treatment <- access(phyloseq_obj, 'sam_data')[[treatment_name]]
   color_count <- length(unique(Treatment))
   graph_colors <- create_palette(color_count, colors)
 
-  tsne <- Rtsne(vegdist(t(phyloseq_obj@otu_table), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
+  tsne <- Rtsne(vegdist(t(access(phyloseq_obj, 'otu_table')), method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
   tSNE1 <- tsne$Y[,1]
   tSNE2 <- tsne$Y[,2]
   ord <- data.table(tSNE1, tSNE2, Treatment)
   ord <- subset(ord, !is.na(Treatment))
-  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := phyloseq_obj@sam_data[[labels]]]')))}
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, 'sam_data')[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(tSNE1, tSNE2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +

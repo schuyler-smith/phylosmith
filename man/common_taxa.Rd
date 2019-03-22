@@ -21,4 +21,3 @@ Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are s
 \seealso{
 \code{\link{unique_taxa}}
 }
-\keyword{manip}

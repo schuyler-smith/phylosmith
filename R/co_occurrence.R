@@ -23,10 +23,10 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
     stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
+  if(!(is.null(treatment)) & is.null(access(phyloseq_obj, 'sam_data'))){
     stop("co_occurrence(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
   }
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("co_occurrence(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
@@ -42,13 +42,13 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
   treatment_name <- paste(treatment, collapse = sep)
 
-  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
+  treatment_classes <- as.character(unique(access(phyloseq_obj, 'sam_data')[[treatment_name]]))
+  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(access(phyloseq_obj, 'sam_data')[[treatment_name]]) %in% trt)-1})
   if(is.null(treatment)){treatment_classes <- 'Experiment_Wide'
   treatment_indices <- list(1:nsamples(phyloseq_obj)-1)}
 
   if(cores == 0){cores <- (parallel::detectCores() -1)}
-  co_occurrence <- co_occurrence_Rcpp(phyloseq_obj@otu_table, treatment_indices, treatment_classes, p, cores)
+  co_occurrence <- co_occurrence_Rcpp(access(phyloseq_obj, 'otu_table'), treatment_indices, treatment_classes, p, cores)
   return(as.data.table(co_occurrence))
 }
 
@@ -78,17 +78,17 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
     stop("permute_rho(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(!(is.null(treatment)) & is.null(phyloseq_obj@sam_data)){
+  if(!(is.null(treatment)) & is.null(access(phyloseq_obj, 'sam_data'))){
     stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
   }
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("permute_rho(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   replicate_samples <- check_numeric_treatment(phyloseq_obj, replicate_samples)
-  if(replicate_samples != 'independent' & is.null(phyloseq_obj@sam_data)){
+  if(replicate_samples != 'independent' & is.null(access(phyloseq_obj, 'sam_data'))){
     stop("permute_rho(): `phyloseq_obj` must contain sample_data() information if `replicate_samples` argument is used", call. = FALSE)
   }
-  if(replicate_samples != 'independent' & any(!(replicate_samples %in% colnames(phyloseq_obj@sam_data)))){
+  if(replicate_samples != 'independent' & any(!(replicate_samples %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("permute_rho(): `replicate_samples` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(permutations)) | !(permutations >= 0)){
@@ -101,13 +101,13 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
   }
   options(warnings=-1)
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, frequency = 0)
-  if(is.numeric(treatment)){treatment <- colnames(phyloseq_obj@sam_data[,treatment])}
+  if(is.numeric(treatment)){treatment <- colnames(access(phyloseq_obj, 'sam_data')[,treatment])}
   treatment_name <- paste(treatment, collapse = sep)
-  treatment_classes <- as.character(unique(phyloseq_obj@sam_data[[treatment_name]]))
-  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(phyloseq_obj@sam_data[[treatment_name]]) %in% trt)-1})
+  treatment_classes <- as.character(unique(access(phyloseq_obj, 'sam_data')[[treatment_name]]))
+  treatment_indices <- lapply(treatment_classes, FUN = function(trt){which(as.character(access(phyloseq_obj, 'sam_data')[[treatment_name]]) %in% trt)-1})
 
   if(replicate_samples == 'independent' & is.null(treatment)){
-    replicate_indices <- 1:ncol(phyloseq_obj@otu_table)
+    replicate_indices <- 1:ncol(access(phyloseq_obj, 'otu_table'))
   } else if(replicate_samples == 'independent' & !(is.null(treatment))){
     phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment))
     replicate_name <- paste(c(treatment), collapse = sep)
@@ -121,24 +121,24 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
   }
 
   rhos <- data.table(Treatment = factor(levels = treatment_classes), rho = numeric(), Count = numeric())
-  n <- nrow(phyloseq_obj@otu_table)
+  n <- nrow(access(phyloseq_obj, 'otu_table'))
   permuted_phyloseq_obj <- phyloseq_obj
   if(cores == 0){cores <- (parallel::detectCores() -1)}
 
   tryCatch({
     for(i in 1:permutations){
       for(indices in replicate_indices){
-        permuted_phyloseq_obj@otu_table[,indices] <- phyloseq_obj@otu_table[sample(1:n, n),indices]
+        otu_table(permuted_phyloseq_obj)[,indices] <- access(phyloseq_obj, 'otu_table')[sample(1:n, n),indices]
       }
-      co_occurence_table <- data.table(co_occurrence_rho_Rcpp(permuted_phyloseq_obj@otu_table, treatment_indices, treatment_classes, cores))
+      co_occurence_table <- data.table(co_occurrence_rho_Rcpp(permuted_access(phyloseq_obj, 'otu_table'), treatment_indices, treatment_classes, cores))
       co_occurence_table[, rho  := round(.SD, 3), .SDcols = 'rho']
       co_occurence_table[, Count := .N, by = .(Treatment, rho)]
       co_occurence_table <- unique(co_occurence_table)
       rhos <- rbindlist(list(rhos, co_occurence_table))[, lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
     }},
     interrupt = function(interrupt){rhos <- rhos[-length(rhos)]; message('Interrupted after ', i, ' permutations.'); return(rhos)})
-
-  return(setkey(rhos, Treatment, rho))
+  setkey(rhos, Treatment, rho)
+  return(rhos)
 } #else {
 #   return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
 # }

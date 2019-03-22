@@ -14,20 +14,20 @@ common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("common_taxa(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("common_taxa(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("common_taxa(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(n)) & n != 'all'){
     stop("common_taxa(): `n` must be either 'all' or a numeric value less than the number of treatments being compared", call. = FALSE)
   }
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
-  treatment_classes <- unique(phyloseq_obj@sam_data[[treatment_name]])
+  treatment_classes <- unique(access(phyloseq_obj, 'sam_data')[[treatment_name]])
   if(n == 'all'){n <- length(treatment_classes)}
   if(n > length(treatment_classes)){
     stop("common_taxa(): `n` must be either 'all' or a numeric value less than the number of treatments being compared", call. = FALSE)
@@ -56,29 +56,29 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("conglomerate_samples(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("conglomerate_samples(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("conglomerate_samples(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
-  if(any(!(merge_on %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(merge_on %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("conglomerate_samples(): `merge_on` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
-  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
-  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
-  original_levels <- lapply(phyloseq_obj@sam_data, levels)
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  if(!(is.null(access(phyloseq_obj, 'phy_tree')))){phylo_tree <- access(phyloseq_obj, 'phy_tree')} else {phylo_tree <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'refseq')))){refseq <- access(phyloseq_obj, 'refseq')} else {refseq <- FALSE}
+  original_levels <- lapply(access(phyloseq_obj, 'sam_data'), levels)
+  phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
   merge_on_name <- paste(merge_on, collapse = sep)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
   phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on_name)
   treatment_name <- paste(treatment, collapse = sep)
-  merge_sample_levels <- as.character(unique(sort(unlist(phyloseq_obj@sam_data[[merge_on_name]]))))
+  merge_sample_levels <- as.character(unique(sort(unlist(access(phyloseq_obj, 'sam_data')[[merge_on_name]]))))
 
-  treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
+  treatment_classes <- sort(unique(access(phyloseq_obj, 'sam_data')[[treatment_name]]))
   treatment_classes <- eval(parse(text=paste0('treatment_classes[grepl("', paste0(subset), '", treatment_classes)]')))
   if(any(merge_on != treatment)){merge_sample_levels <- paste(sapply(treatment_classes,rep,times=length(merge_sample_levels)), rep(merge_sample_levels, length(treatment_classes)), sep = sep)}
 
@@ -91,14 +91,14 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
                      sapply(treatment_classes, FUN = function(group){
                        group_phy <- eval(parse(text=paste0('subset_samples(taxa_filter(phyloseq_obj, treatment), ', treatment_name, ' == "', group, '")')))
                        if(nsamples(group_phy) > 1){sub_phy <- merge_samples(group_phy, merge_on_name)
-                       merge_names <- rownames(sub_phy@sam_data)
+                       merge_names <- rownames(access(sub_phy, 'sam_data'))
                        if(any(group != merge_names)){sample_names(sub_phy) <- paste0(group, sep, merge_names)}
-                       sam <- as(sub_phy@sam_data, 'data.frame')
+                       sam <- as(access(sub_phy, 'sam_data'), 'data.frame')
                        sam[,treatment_name] <- group
                        for(i in treatment){
                          sam[,i] <- unique(group_phy@sam_data[,i])}
-                       sam[, merge_on_name] <- factor(merge_names, levels = levels(phyloseq_obj@sam_data[[merge_on_name]]))
-                       sub_phy@sam_data <- sample_data(sam)}
+                       sam[, merge_on_name] <- factor(merge_names, levels = levels(access(phyloseq_obj, 'sam_data')[[merge_on_name]]))
+                       sample_data(sub_phy) <- sample_data(sam)}
                        return(sub_phy)
                      })
   )
@@ -106,13 +106,13 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
                            error = function(e){phyloseq_obj <- sub_phy},
                            finally = {merge_phyloseq(phyloseq_obj, sub_phy)})
   phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
-                           phyloseq_obj@tax_table,
-                           phyloseq_obj@sam_data[order(factor(rownames(phyloseq_obj@sam_data), levels = merge_sample_levels)),])
+                           access(phyloseq_obj, 'tax_table'),
+                           access(phyloseq_obj, 'sam_data')[order(factor(rownames(access(phyloseq_obj, 'sam_data')), levels = merge_sample_levels)),])
   for(i in 1:length(original_levels)){
     if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
   }
-  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
-  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
+  if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
+  if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
   return(phyloseq_obj)
 }
 
@@ -133,33 +133,33 @@ conglomerate_taxa <- function(phyloseq_obj, classification, hierarchical = TRUE)
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("conglomerate_taxa(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@tax_table)){
+  if(is.null(access(phyloseq_obj, 'tax_table'))){
     stop("conglomerate_taxa(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table'))))){
     stop("conglomerate_taxa(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
   if(!(is.logical(hierarchical))){
     stop("conglomerate_taxa(): `hierarchical` must be either `TRUE` or `FALSE`", call. = FALSE)
   }
-  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
-  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
-  if(!(is.null(phyloseq_obj@sam_data))){sam <- phyloseq_obj@sam_data} else {sam <- FALSE}
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
-  if(hierarchical){phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,1:which(rank_names(phyloseq_obj) %in% classification)]
-  } else {phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]}
+  if(!(is.null(access(phyloseq_obj, 'phy_tree')))){phylo_tree <- access(phyloseq_obj, 'phy_tree')} else {phylo_tree <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'refseq')))){refseq <- access(phyloseq_obj, 'refseq')} else {refseq <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'sam_data')))){sam <- access(phyloseq_obj, 'sam_data')} else {sam <- FALSE}
+  phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'))
+  if(hierarchical){tax_table(phyloseq_obj) <- access(phyloseq_obj, 'tax_table')[,1:which(rank_names(phyloseq_obj) %in% classification)]
+  } else {tax_table(phyloseq_obj) <- access(phyloseq_obj, 'tax_table')[,classification]}
 
   phyloseq_table <- melt_phyloseq(phyloseq_obj)
-  otus <- eval(parse(text=paste0("dcast(phyloseq_table, with=FALSE , Sample ~ ", paste(colnames(phyloseq_obj@tax_table), collapse = '+'), ", value.var = 'Abundance', fun = sum)")))
+  otus <- eval(parse(text=paste0("dcast(phyloseq_table, with=FALSE , Sample ~ ", paste(colnames(access(phyloseq_obj, 'tax_table')), collapse = '+'), ", value.var = 'Abundance', fun = sum)")))
   otus <- as.matrix(otus, rownames = 1)
-  taxa <- eval(parse(text=paste0("setkey(unique(phyloseq_table[, c('", paste(colnames(phyloseq_obj@tax_table), collapse = "', '"), "')]), ", paste(colnames(phyloseq_obj@tax_table), collapse = ', '), ")")))
+  taxa <- eval(parse(text=paste0("setkey(unique(phyloseq_table[, c('", paste(colnames(access(phyloseq_obj, 'tax_table')), collapse = "', '"), "')]), ", paste(colnames(access(phyloseq_obj, 'tax_table')), collapse = ', '), ")")))
   taxa <- as.matrix(taxa, rownames = colnames(otus))
 
   phyloseq_obj <- phyloseq(otu_table(t(otus), taxa_are_rows = TRUE), tax_table(taxa))
-  if(!(is.logical(sam))){phyloseq_obj@sam_data <- sam}
-  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
-  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
+  if(!(is.logical(sam))){sample_data(phyloseq_obj) <- sam}
+  if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
+  if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
   return(phyloseq_obj)
 }
 
@@ -177,21 +177,21 @@ melt_phyloseq <- function(phyloseq_obj){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("melt_phyloseq(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@tax_table) & is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'tax_table')) & is.null(access(phyloseq_obj, 'sam_data'))){
     stop("melt_phyloseq(): `phyloseq_obj` must contain either tax_table() and/or sample_data() information", call. = FALSE)
   }
-  melted_phyloseq <- melt.data.table(data.table(as(phyloseq_obj@otu_table, "matrix"), keep.rownames = TRUE), id.vars = 1)
+  melted_phyloseq <- melt.data.table(data.table(as(access(phyloseq_obj, 'otu_table'), "matrix"), keep.rownames = TRUE), id.vars = 1)
   colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
-  if(!(is.null(phyloseq_obj@tax_table))){
-    taxa <- data.table(as(phyloseq_obj@tax_table, 'matrix'), OTU = taxa_names(phyloseq_obj))
+  if(!(is.null(access(phyloseq_obj, 'tax_table')))){
+    taxa <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'), OTU = taxa_names(phyloseq_obj))
   }
   sample_data <- NULL
-  if(!(is.null(phyloseq_obj@sam_data))){sample_data <- data.table(data.frame(phyloseq_obj@sam_data, stringsAsFactors = FALSE))}
+  if(!(is.null(access(phyloseq_obj, 'sam_data')))){sample_data <- data.table(data.frame(access(phyloseq_obj, 'sam_data'), stringsAsFactors = FALSE))}
   if(is.null(sample_data)){sample_data <- data.table(Sample = sample_names(phyloseq_obj))
   } else {sample_data[, 'Sample' := sample_names(phyloseq_obj)]}
 
   melted_phyloseq <- merge(melted_phyloseq, sample_data, by = "Sample")
-  if(!(is.null(phyloseq_obj@tax_table))){melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")}
+  if(!(is.null(access(phyloseq_obj, 'tax_table')))){melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")}
   melted_phyloseq <- melted_phyloseq[order(melted_phyloseq$Abundance, decreasing = TRUE), ]
   return(melted_phyloseq)
 }
@@ -210,19 +210,19 @@ merge_treatments <- function(phyloseq_obj, ...){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("merge_treatments(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("merge_treatments(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatments <- list(...)
   treatments <- check_numeric_treatment(phyloseq_obj, treatments)
-  if(any(!(treatments %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatments %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("merge_treatments(): `treatments` must be at least two column names, or indices, from the sample_data()", call. = FALSE)
   }
-  treatment_classes <- setDT(as(phyloseq_obj@sam_data[,colnames(phyloseq_obj@sam_data) %in% treatments], "data.frame"))
+  treatment_classes <- setDT(as(access(phyloseq_obj, 'sam_data')[,colnames(access(phyloseq_obj, 'sam_data')) %in% treatments], "data.frame"))
   treatment_name <- paste(treatments, collapse = sep)
-  order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(phyloseq_obj@sam_data[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = sep)})
+  order <- apply(eval(parse(text=paste0("expand.grid(", paste0(paste0("levels(factor(access(phyloseq_obj, 'sam_data')[['", treatments, "']]))", collapse = ', ')), ")"))), 1, FUN = function(combination){paste0(combination, collapse = sep)})
   eval(parse(text=paste0("treatment_classes[, '",treatment_name,"' := as.character(paste(", paste(treatments, collapse = ', '), ', sep = sep), by = treatment_classes)]')))
-  phyloseq_obj@sam_data[[treatment_name]] <- factor(treatment_classes[[treatment_name]], levels = order)
+  sample_data(phyloseq_obj)[[treatment_name]] <- factor(treatment_classes[[treatment_name]], levels = order)
   return(phyloseq_obj)
 }
 
@@ -241,15 +241,15 @@ order_treatment <- function(phyloseq_obj, treatment, order){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("order_treatment(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("order_treatment(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(length(treatment) > 1 | !(treatment %in% colnames(phyloseq_obj@sam_data))){
+  if(length(treatment) > 1 | !(treatment %in% colnames(access(phyloseq_obj, 'sam_data')))){
     stop("order_treatment(): `treatment` must be a single column name, or index, from the sample_data()", call. = FALSE)
   }
-  if(order[1] == 'numeric'){order <- as.character(sort(as.numeric(unique(as.character(phyloseq_obj@sam_data[[treatment]])))))}
-  phyloseq_obj@sam_data[[treatment]] <- factor(phyloseq_obj@sam_data[[treatment]], levels = order)
+  if(order[1] == 'numeric'){order <- as.character(sort(as.numeric(unique(as.character(access(phyloseq_obj, 'sam_data')[[treatment]])))))}
+  sample_data(phyloseq_obj)[[treatment]] <- factor(access(phyloseq_obj, 'sam_data')[[treatment]], levels = order)
   return(phyloseq_obj)
 }
 
@@ -265,9 +265,9 @@ relative_abundance <- function(phyloseq_obj){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("relative_abundance(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  abundance_table <- phyloseq_obj@otu_table
+  abundance_table <- access(phyloseq_obj, 'otu_table')
   abundance_table <- apply(abundance_table, 2, FUN = function(c){c/sum(c)})
-  phyloseq_obj@otu_table <- otu_table(abundance_table, taxa_are_rows = TRUE)
+  otu_table(phyloseq_obj) <- otu_table(abundance_table, taxa_are_rows = TRUE)
   return(phyloseq_obj)
 }
 
@@ -290,11 +290,11 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("taxa_filter(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("taxa_filter(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(!(is.null(treatment)) & any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(!(is.null(treatment)) & any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("taxa_filter(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
   if(!(is.numeric(frequency)) | !(frequency >= 0 & frequency <= 1)){
@@ -306,16 +306,16 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   if(!(is.logical(drop_samples))){
     stop("taxa_filter(): `drop_samples` must be either `TRUE` or `FALSE`", call. = FALSE)
   }
-  original_levels <- lapply(phyloseq_obj@sam_data, levels)
+  original_levels <- lapply(access(phyloseq_obj, 'sam_data'), levels)
 
-  if(!(is.null(phyloseq_obj@phy_tree))){phylo_tree <- phyloseq_obj@phy_tree} else {phylo_tree <- FALSE}
-  if(!(is.null(phyloseq_obj@refseq))){refseq <- phyloseq_obj@refseq} else {refseq <- FALSE}
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  if(!(is.null(access(phyloseq_obj, 'phy_tree')))){phylo_tree <- access(phyloseq_obj, 'phy_tree')} else {phylo_tree <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'refseq')))){refseq <- access(phyloseq_obj, 'refseq')} else {refseq <- FALSE}
+  phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
 
   if(!(is.null(treatment))){
     phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
-    treatment_classes <- sort(unique(phyloseq_obj@sam_data[[treatment_name]]))
+    treatment_classes <- sort(unique(access(phyloseq_obj, 'sam_data')[[treatment_name]]))
 
     if(below == TRUE){
       phyloseq_obj <- do.call(merge_phyloseq,
@@ -334,7 +334,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
                                 return(sub_phy)}))
     }
   } else {
-    cutoff <- floor(ncol(phyloseq_obj@otu_table) * frequency)
+    cutoff <- floor(ncol(access(phyloseq_obj, 'otu_table')) * frequency)
     if(below == TRUE){
       phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x != 0, na.rm = TRUE) <= cutoff}, TRUE)
     } else {
@@ -343,7 +343,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
     }
   }
   if(!(is.null(subset))){
-    phyloseq_obj <- prune_samples(sample_names(phyloseq_obj)[unname(apply(phyloseq_obj@sam_data[,c(treatment, treatment_name)], 1, function(x){any(x %in% subset)}))], phyloseq_obj)
+    phyloseq_obj <- prune_samples(sample_names(phyloseq_obj)[unname(apply(access(phyloseq_obj, 'sam_data')[,c(treatment, treatment_name)], 1, function(x){any(x %in% subset)}))], phyloseq_obj)
     phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){sum(x, na.rm = TRUE) > 0}, TRUE)
   }
   if(drop_samples == TRUE){
@@ -352,8 +352,8 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   for(i in 1:length(original_levels)){
     if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
   }
-  if(!(is.logical(phylo_tree))){phyloseq_obj@phy_tree <- phylo_tree}
-  if(!(is.logical(refseq))){phyloseq_obj@refseq <- refseq}
+  if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
+  if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
   return(phyloseq_obj)
 }
 
@@ -372,27 +372,27 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("taxa_proportions(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@tax_table)){
+  if(is.null(access(phyloseq_obj, 'tax_table'))){
     stop("taxa_proportions(): `phyloseq_obj` must contain tax_table() information", call. = FALSE)
   }
   classification <- check_numeric_classification(phyloseq_obj, classification)
-  if(any(!(classification %in% colnames(phyloseq_obj@tax_table)))){
+  if(any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table'))))){
     stop("taxa_proportions(): `classification` must be a column from the the tax_table()", call. = FALSE)
   }
-  if(any(!(is.na(treatment))) & is.null(phyloseq_obj@sam_data)){
+  if(any(!(is.na(treatment))) & is.null(access(phyloseq_obj, 'sam_data'))){
     stop("taxa_proportions(): `phyloseq_obj` must contain sample_data() information if `treatment` argument is used", call. = FALSE)
   }
-  if(any(!(is.na(treatment))) & any(!(treatment %in% c('sample', colnames(phyloseq_obj@sam_data))))){
+  if(any(!(is.na(treatment))) & any(!(treatment %in% c('sample', colnames(access(phyloseq_obj, 'sam_data')))))){
     stop("taxa_proportions(): `treatment` must be either NA, 'sample', or at least one column name, or index, from the sample_data()", call. = FALSE)
   }
-  phyloseq_obj@tax_table <- phyloseq_obj@tax_table[,classification]
+  tax_table(phyloseq_obj) <- access(phyloseq_obj, 'tax_table')[,classification]
 
   if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
-    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data[, treatment_name])
+    phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data')[, treatment_name])
   } else {
-    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table)
+    phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'))
   }
   class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj, classification))
   if(any(!(is.na(treatment))) & !('sample' %in% treatment)){
@@ -428,17 +428,17 @@ unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
   if(!inherits(phyloseq_obj, "phyloseq")){
     stop("unique_taxa(): `phyloseq_obj` must be a phyloseq-class object", call. = FALSE)
   }
-  if(is.null(phyloseq_obj@sam_data)){
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
     stop("unique_taxa(): `phyloseq_obj` must contain sample_data() information", call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(any(!(treatment %in% colnames(phyloseq_obj@sam_data)))){
+  if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
     stop("unique_taxa(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
   }
-  phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data)
+  phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'), access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
-  treatment_classes <- unique(phyloseq_obj@sam_data[[treatment_name]])
+  treatment_classes <- unique(access(phyloseq_obj, 'sam_data')[[treatment_name]])
 
   seen_taxa <- lapply(treatment_classes, FUN = function(trt){
     taxa_names(taxa_filter(phyloseq_obj, treatment = treatment_name, subset = trt, frequency = 0))

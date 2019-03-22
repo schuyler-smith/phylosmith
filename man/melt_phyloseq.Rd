@@ -15,4 +15,3 @@ melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, and sam
 \seealso{
 \code{\link[phyloseq:psmelt]{psmelt()}}
 }
-\keyword{manip}

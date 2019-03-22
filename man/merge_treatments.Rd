@@ -14,4 +14,3 @@ merge_treatments(phyloseq_obj, ...)
 \description{
 Combines multiple columns of a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}} into a single-variable column.
 }
-\keyword{manip}

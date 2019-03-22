@@ -7,11 +7,11 @@
 #' @param treatments Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #'
 
-check_numeric_treatment <- function(phyloseq_obj, treatments){
-  treatments <- as.list(treatments)
+check_numeric_treatment <- function(phyloseq_obj, ...){
+  treatments <- list(...)
   treatments <- unlist(sapply(treatments, FUN = function(treatment){
     if(is.numeric(treatment)){
-      return(colnames(phyloseq_obj@sam_data[,treatment]))
+      return(colnames(access(phyloseq_obj, 'sam_data')[,treatment]))
     } else {return(treatment)}
   }))
   return(treatments)
@@ -26,11 +26,11 @@ check_numeric_treatment <- function(phyloseq_obj, treatments){
 #' @param classifications Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
 #'
 
-check_numeric_classification <- function(phyloseq_obj, classifications){
-  classifications <- as.list(classifications)
+check_numeric_classification <- function(phyloseq_obj, ...){
+  classifications <- list(...)
   classifications <- unlist(sapply(classifications, FUN = function(classification){
     if(is.numeric(classification)){
-      return(colnames(phyloseq_obj@sam_data[,classification]))
+      return(colnames(access(phyloseq_obj, 'tax_table')[,classification]))
     } else {return(classification)}
   }))
   return(classifications)

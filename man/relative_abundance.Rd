@@ -12,4 +12,3 @@ relative_abundance(phyloseq_obj)
 \description{
 Transform abundance data into relative abundance, i.e. proportional data. This is an alternative method of normalization and may not be appropriate for all datasets, particularly if your sequencing depth varies between samples.
 }
-\keyword{manip}

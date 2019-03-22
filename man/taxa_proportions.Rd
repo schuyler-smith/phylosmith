@@ -16,4 +16,3 @@ taxa_proportions(phyloseq_obj, classification, treatment = NA)
 \description{
 Computes the proportion of a taxa classification. Function from the phylosmith-package.
 }
-\keyword{manip}

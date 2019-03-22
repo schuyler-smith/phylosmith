@@ -19,4 +19,3 @@ Conglomerate taxa by sample on a given classification level from the tax_table.
 \seealso{
 \code{\link[phyloseq:tax_glom]{tax_glom()}}
 }
-\keyword{manip}

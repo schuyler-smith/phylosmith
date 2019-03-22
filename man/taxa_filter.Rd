@@ -23,4 +23,3 @@ frequency = 0, below = FALSE, drop_samples = FALSE)
 \description{
 This function takes a phyloseq object and finds which taxa are seen in a given proportion of samples, either in the entire dataset, by treatment, or a particular treatment of interest.
 }
-\keyword{manip}

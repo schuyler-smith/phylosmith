@@ -19,4 +19,3 @@ This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds wh
 \seealso{
 \code{\link{common_taxa}}
 }
-\keyword{manip}

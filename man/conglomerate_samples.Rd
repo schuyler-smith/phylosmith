@@ -21,4 +21,3 @@ This function takes a phyloseq object and merges the samples that meet the speci
 \seealso{
 \code{\link[phyloseq:merge_samples]{merge_samples()}}
 }
-\keyword{manip}

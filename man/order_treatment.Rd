@@ -16,4 +16,3 @@ order_treatment(phyloseq_obj, treatment, order)
 \description{
 Reorders the levels of a metadata column in a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}}.
 }
-\keyword{manip}
