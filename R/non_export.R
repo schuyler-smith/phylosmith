@@ -2,9 +2,9 @@
 #'
 #' Converts numeric values to column names in sample_data.
 #' @useDynLib phylosmith
-#' @usage check_numeric_treatment(phyloseq_obj, treatments)
+#' @usage check_numeric_treatment(phyloseq_obj, ...)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param treatments Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
+#' @param ... Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.
 #'
 
 check_numeric_treatment <- function(phyloseq_obj, ...){
@@ -21,9 +21,9 @@ check_numeric_treatment <- function(phyloseq_obj, ...){
 #'
 #' Converts numeric values to column names in tax_table.
 #' @useDynLib phylosmith
-#' @usage check_numeric_classification(phyloseq_obj, classifications)
+#' @usage check_numeric_classification(phyloseq_obj, ...)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-#' @param classifications Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
+#' @param ... Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate by.
 #'
 
 check_numeric_classification <- function(phyloseq_obj, ...){

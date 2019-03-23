@@ -126,7 +126,7 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, replicate_samples = 'ind
   if(cores == 0){cores <- (parallel::detectCores() -1)}
 
   tryCatch({
-    for(i in 1:permutations){
+    for(i in seq(permutations)){
       for(indices in replicate_indices){
         otu_table(permuted_phyloseq_obj)[,indices] <- access(phyloseq_obj, 'otu_table')[sample(1:n, n),indices]
       }
@@ -222,7 +222,7 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL, x_breaks = 0.25, co
     theme_light() +
     geom_bar(stat = 'identity', position = position_dodge(width = .02), width = .05)
   if(!(is.null(p))){
-    for(i in 1:nrow(quantiles)){
+    for(i in seq(nrow(quantiles))){
       g <- g + geom_text(data = quantiles, x = quantiles$lower[i]-.15, label = paste0(round(quantiles$lower[i],2)), y = (.015 + (i*.005)), color = graph_colors[i], size = 5) +
         geom_text(data = quantiles, x = quantiles$upper[i]+.15, label = paste0(round(quantiles$upper[i],2)), y = (.015 + (i*.005)), color = graph_colors[i], size = 5)
     }

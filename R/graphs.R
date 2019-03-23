@@ -213,7 +213,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL, treatment = NU
   if(length(cluster) > 1){communities <- data.table(layout[,1:2])
     circles <- as(st_buffer(st_as_sf(communities, coords = c('x','y')), dist = buffer, nQuadSegs = 15), 'Spatial')
     circle_coords <- data.frame()
-    for(i in 1:nrow(communities)){
+    for(i in seq(nrow(communities))){
       circle_coords <- rbind(circle_coords, circles@polygons[[i]]@Polygons[[1]]@coords)
     }; colnames(circle_coords) <- c('x', 'y')
     communities[, 'Community' := factor(cluster, levels = sort(unique(cluster)))]
@@ -295,7 +295,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE, labels 
   NMDS2 <- data.table(scores(MDS))$NMDS2
   ord <- data.table(NMDS1,NMDS2,Treatment)
   ord <- subset(ord, !is.na(Treatment))
-  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, 'sam_data')[[labels]]]')))}
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, "sam_data")[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(NMDS1, NMDS2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +
@@ -507,7 +507,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10, circ
   tSNE2 <- tsne$Y[,2]
   ord <- data.table(tSNE1, tSNE2, Treatment)
   ord <- subset(ord, !is.na(Treatment))
-  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, 'sam_data')[[labels]]]')))}
+  if(is.character(labels)){eval(parse(text=paste0('ord[, ',labels,' := access(phyloseq_obj, "sam_data")[[labels]]]')))}
 
   g <- ggplot(data = ord, aes(tSNE1, tSNE2))
   if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black', aes(fill = Treatment), show.legend = FALSE) +

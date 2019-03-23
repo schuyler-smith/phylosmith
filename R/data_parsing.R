@@ -108,7 +108,7 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL, merge_o
   phyloseq_obj <- phyloseq(otu_table(t(as.matrix(otu_tab[order(factor(otu_tab$Merged_Name, levels = merge_sample_levels)),], rownames = 'Merged_Name')), taxa_are_rows = TRUE),
                            access(phyloseq_obj, 'tax_table'),
                            access(phyloseq_obj, 'sam_data')[order(factor(rownames(access(phyloseq_obj, 'sam_data')), levels = merge_sample_levels)),])
-  for(i in 1:length(original_levels)){
+  for(i in seq_along(original_levels)){
     if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
   }
   if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
@@ -349,7 +349,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL, frequency
   if(drop_samples == TRUE){
     phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
   }
-  for(i in 1:length(original_levels)){
+  for(i in seq_along(original_levels)){
     if(!(is.null(unname(unlist(original_levels[i]))))){phyloseq_obj <- order_treatment(phyloseq_obj, names(original_levels)[i], unname(unlist(original_levels[i])))}
   }
   if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
