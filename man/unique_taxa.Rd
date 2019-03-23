@@ -7,14 +7,23 @@
 unique_taxa(phyloseq_obj, treatment, subset = NULL)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
+information about each sample, and it must contain 
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+taxa/gene.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+multiple columns and they will be combined into a new column.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
+\item{subset}{A factor within the \code{treatment}. This will remove any 
+samples that to not contain this factor. This can be a vector of multiple 
+factors to subset on.}
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are taxa that are unique to a specific subset of the data.
+This function takes a \code{\link[phyloseq]{phyloseq-class}} object and 
+finds which taxa are taxa that are unique to a specific subset of the data.
 }
 \seealso{
 \code{\link{common_taxa}}

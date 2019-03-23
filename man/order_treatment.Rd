@@ -7,12 +7,20 @@
 order_treatment(phyloseq_obj, treatment, order)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
+information about each sample, and it must contain 
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+taxa/gene.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
+\code{\link[phyloseq:sample_data]{sample_data}}.}
 
-\item{order}{The order of factors in \code{treatment} column as a vector of strings. If assinged "numeric" will set ascending numerical order.}
+\item{order}{The order of factors in \code{treatment} column as a vector of 
+strings. If assinged "numeric" will set ascending numerical order.}
 }
 \description{
-Reorders the levels of a metadata column in a \code{\link[phyloseq]{phyloseq-class}} object \code{\link[phyloseq:sample_data]{sample_data}}.
+Reorders the levels of a metadata column in a 
+\code{\link[phyloseq]{phyloseq-class}} object 
+\code{\link[phyloseq:sample_data]{sample_data}}.
 }

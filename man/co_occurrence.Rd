@@ -10,14 +10,21 @@ co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+multiple columns and they will be combined into a new column.}
 
-\item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to \code{p}.}
+\item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences 
+will have a p-value less than or equal to \code{p}.}
 
-\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.}
+\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise 
+permutations. Default (0) uses max cores available. Parallelization not 
+available for systems running MacOS without openMP configuration.}
 }
 \description{
-A rewrite of the pair-wise Spearman rank co-occurrence routine written by \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
+A rewrite of the pair-wise Spearman rank co-occurrence routine written by 
+\href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
+ been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 }
 \seealso{
 \code{\link{permute_rho}} \code{\link{phylosmith}}

@@ -7,12 +7,20 @@
 classify_ARG_mechanisms(phyloseq_obj, genes, obo = NULL)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
+information about each sample, and it must contain 
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+taxa/gene.}
 
-\item{genes}{Column name or number in the \code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or ARO accession number.}
+\item{genes}{Column name or number in the 
+\code{\link[phyloseq:tax_table]{tax_table}} where ARGs are as gene names or 
+ARO accession number.}
 
 \item{obo}{an object processed with \code{\link{processOBO}}.}
 }
 \description{
-Classifies ARGs mechanism of function from the \href{https://card.mcmaster.ca/home}{CARD database} using either accession number or gene name.
+Classifies ARGs mechanism of function from the 
+\href{https://card.mcmaster.ca/home}{CARD database} using either accession 
+number or gene name.
 }

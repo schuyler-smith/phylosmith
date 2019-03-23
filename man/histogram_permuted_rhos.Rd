@@ -8,16 +8,22 @@ histogram_permuted_rhos(permuted_rhos, p = NULL,
 x_breaks = 0.25, colors = 'default')
 }
 \arguments{
-\item{permuted_rhos}{A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.}
+\item{permuted_rhos}{A \code{data.table} output from 
+\code{\link[=permute_rho]{permute_rho}}.}
 
 \item{p}{The significance threshold for setting cutoffs.}
 
 \item{x_breaks}{What intervals to set the ticks on the x-axis.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
+\item{colors}{Name of a color set from the 
+\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted 
+colors.}
 }
 \description{
-Plots the output of \code{\link[=permute_rho]{permute_rho}} into a histogram with the distributions shown by treatment. This is a visualization tool to help show how the permutation worked, and to see where the cutoffs lie.
+Plots the output of \code{\link[=permute_rho]{permute_rho}} into a 
+histogram with the distributions shown by treatment. This is a 
+visualization tool to help show how the permutation worked, and to see 
+where the cutoffs lie.
 }
 \seealso{
 \code{\link[=permute_rho]{permute_rho}}

@@ -10,5 +10,6 @@ processOBO(OBO_filepath)
 \item{OBO_filepath}{filepath to the aro.obo file.}
 }
 \description{
-Converts the aro.obo file from the \href{https://card.mcmaster.ca/home}{CARD database} into a data.table.
+Converts the aro.obo file from the 
+\href{https://card.mcmaster.ca/home}{CARD database} into a data.table.
 }

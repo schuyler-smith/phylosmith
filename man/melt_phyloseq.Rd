@@ -7,10 +7,15 @@
 melt_phyloseq(phyloseq_obj)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}} with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
+must contain \code{\link[phyloseq:sample_data]{sample_data()}} with 
+information about each sample, and it must contain 
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+taxa/gene.}
 }
 \description{
-melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, and sample_Data into a single into a data.table.
+melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, 
+and sample_Data into a single into a data.table.
 }
 \seealso{
 \code{\link[phyloseq:psmelt]{psmelt()}}

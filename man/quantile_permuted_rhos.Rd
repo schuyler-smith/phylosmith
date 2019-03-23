@@ -7,14 +7,18 @@
 quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
 }
 \arguments{
-\item{permuted_rhos}{A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.}
+\item{permuted_rhos}{A \code{data.table} output from 
+\code{\link[=permute_rho]{permute_rho}}.}
 
 \item{p}{The significance threshold for setting cutoffs.}
 
-\item{by_treatment}{Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.}
+\item{by_treatment}{Whether to find the rho cutoffs for each treatment 
+individually or for the entire experiment. Suggested to do by treatment 
+first, to see if there is any treatments that are outliers.}
 }
 \description{
-Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence.
+Calculate quantiles for the permuted rho values from the Spearman-rank
+co-occurrence.
 }
 \seealso{
 \code{\link[=permute_rho]{permute_rho}}

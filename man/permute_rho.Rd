@@ -10,16 +10,23 @@ replicate_samples = 'independent', permutations = 100, cores = 0)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+multiple columns and they will be combined into a new column.}
 
-\item{replicate_samples}{Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which samples are non-independent of each other.}
+\item{replicate_samples}{Column name as a \code{string} or \code{numeric} 
+in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which 
+samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
 
-\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.}
+\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise 
+permutations. Default (0) uses max cores available. Parallelization not 
+available for systems running MacOS without openMP configuration.}
 }
 \description{
-Permutes the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff.
+Permutes the pair-wise Spearman rank co-occurrence, to determine a 
+significant rho-cutoff.
 }
 \seealso{
 \code{\link{co_occurrence}}
