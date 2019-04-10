@@ -5,4 +5,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .travis.yml
+.Rprofile
 ^vignette_site$

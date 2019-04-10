@@ -323,7 +323,7 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
     permuted_rhos <- permuted_rhos[, list(
         rho = mean(rho),
         Count = sum(Count),
-        Proportion = sum(Proportion)), by = .('Treatment', 'bin')]
+        Proportion = sum(Proportion)), by = .(Treatment, bin)]
 
     g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
     if(!(is.null(p))){
