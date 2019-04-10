@@ -312,8 +312,7 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
     color_count <- length(unique(permuted_rhos[['Treatment']]))
     graph_colors <- create_palette(color_count, colors)
 
-    permuted_rhos[, Proportion :=
-                    with(permuted_rhos, Count)/sum(with(permuted_rhos, Count)),
+    permuted_rhos[, Proportion := Count/sum(Count),
                   by = Treatment]
     quantiles <- permuted_rhos[, list(
         lower = rho[sum(cumsum(Proportion) <= (p/2))],
@@ -324,7 +323,7 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
     permuted_rhos <- permuted_rhos[, list(
         rho = mean(rho),
         Count = sum(Count),
-        Proportion = sum(Proportion)), by = .(Treatment, bin)]
+        Proportion = sum(Proportion)), by = .('Treatment', 'bin')]
 
     g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
     if(!(is.null(p))){
