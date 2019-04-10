@@ -33,7 +33,7 @@ Permutes the pair-wise Spearman rank co-occurrence, to determine a
 significant rho-cutoff.
 }
 \examples{
-co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
+permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
 replicate_samples = 'Day', permutations = 1,  cores = 0)
 }
 \seealso{

@@ -24,5 +24,14 @@ string
 Converts numeric values to column names in sample_data.
 }
 \examples{
+check_numeric_treatment <- function(phyloseq_obj, ...){
+treatments <- list(...)
+treatments <- unlist(sapply(treatments, FUN = function(treatment){
+  if(is.numeric(treatment)){
+    return(colnames(access(phyloseq_obj, 'sam_data')[,treatment]))
+  } else {return(treatment)}
+}))
+return(treatments)
+}
 check_numeric_treatment(soil_column, 2)
 }

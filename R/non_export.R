@@ -12,7 +12,17 @@
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
 #' @return string
-#' @examples check_numeric_treatment(soil_column, 2)
+#' @examples
+#' check_numeric_treatment <- function(phyloseq_obj, ...){
+#' treatments <- list(...)
+#' treatments <- unlist(sapply(treatments, FUN = function(treatment){
+#'   if(is.numeric(treatment)){
+#'     return(colnames(access(phyloseq_obj, 'sam_data')[,treatment]))
+#'   } else {return(treatment)}
+#' }))
+#' return(treatments)
+#' }
+#' check_numeric_treatment(soil_column, 2)
 
 check_numeric_treatment <- function(phyloseq_obj, ...){
     treatments <- list(...)
@@ -38,7 +48,20 @@ check_numeric_treatment <- function(phyloseq_obj, ...){
 #' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate
 #' by.
 #' @return string
-#' @examples check_numeric_classification(soil_column, 2)
+#' @examples
+#'
+#' check_numeric_classification <- function(phyloseq_obj, ...){
+#' classifications <- list(...)
+#' classifications <- unlist(sapply(classifications,
+#'     FUN = function(classification){
+#'         if(is.numeric(classification)){
+#'             return(colnames(access(phyloseq_obj,
+#'             'tax_table')[,classification]))
+#'         } else {return(classification)}
+#'         }))
+#' return(classifications)
+#' }
+#' check_numeric_classification(soil_column, 2)
 
 check_numeric_classification <- function(phyloseq_obj, ...){
     classifications <- list(...)
@@ -65,7 +88,8 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 #' @import RColorBrewer
 #' @import grDevices
 #' @return palette
-#' @examples create_palette(8, 'Dark2')
+#' @examples
+#' #create_palette(8, 'Dark2')
 
 create_palette <- function(color_count, colors){
     options(warn = -1)

@@ -33,7 +33,7 @@ Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
 are shared between all of the specified treatments.
 }
 \examples{
-common_taxa(soil_solumn, treatment = 'Treatment',
+common_taxa(soil_column, treatment = 'Treatment',
 subset = 'Manure', n = 'all')
 }
 \seealso{

@@ -29,19 +29,20 @@ Imports:
     sf,
     vegan,
     Rtsne,
-    stringr,
+    stringr
 Remotes: 
     joey711/phyloseq
 LinkingTo: 
     Rcpp,
     RcppParallel,
     RcppArmadillo,
-    RcppProgress,
+    RcppProgress
 Suggests:
     knitr,
     devtools,
     rmarkdown,
-    testthat
+    testthat,
+    BiocStyle
 SystemRequirements: C++11
 NeedsCompilation: yes
 VignetteBuilder: knitr

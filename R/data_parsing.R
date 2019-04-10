@@ -21,7 +21,7 @@
 #' @seealso \code{\link{unique_taxa}}
 #' @export
 #' @return vector
-#' @examples common_taxa(soil_solumn, treatment = 'Treatment',
+#' @examples common_taxa(soil_column, treatment = 'Treatment',
 #' subset = 'Manure', n = 'all')
 
 common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){

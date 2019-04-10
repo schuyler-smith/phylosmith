@@ -21,5 +21,5 @@ palette
 This function creates color palettes for graphs.
 }
 \examples{
-create_palette(8, 'Dark2')
+#create_palette(8, 'Dark2')
 }

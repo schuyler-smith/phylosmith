@@ -104,7 +104,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 #' @export
 #' @return table
 #' @examples
-#' co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
+#' permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
 #' replicate_samples = 'Day', permutations = 1,  cores = 0)
 
 # sourceCpp('src/co_occurrence_Rcpp.cpp')
@@ -197,7 +197,7 @@ permute_rho <- function(phyloseq_obj, treatment = NULL,
             co_occurence_table <- data.table(co_occurrence_rho_Rcpp(
                 access(permuted_phyloseq_obj, 'otu_table'),
                 treatment_indices, treatment_classes, cores))
-            co_occurence_table[, rho := round(.SD, 3), .SDcols = rho]
+            co_occurence_table[, rho := round(.SD, 3), .SDcols = 'rho']
             co_occurence_table[, Count := .N, by = .(Treatment, rho)]
             co_occurence_table <- unique(co_occurence_table)
             rhos <- rbindlist(list(rhos, co_occurence_table))[,
@@ -326,7 +326,7 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
         Count = sum(Count),
         Proportion = sum(Proportion)), by = .(Treatment, bin)]
 
-    g <- ggplot(permuted_rhos, aes_string(x = 'rho', y = 'Proportion', fill = 'Treatment'))
+    g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
     if(!(is.null(p))){
         g <- g + geom_vline(data = quantiles, xintercept = c(quantiles$lower,
             quantiles$upper), color = c(graph_colors, graph_colors),

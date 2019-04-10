@@ -62,7 +62,7 @@ This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
 creates barplots of taxa by treatment.
 }
 \examples{
-network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
-subset = 'Soil_Manure', co_occurrence_table = NULL,
-classification = 'phylum')
+#network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
+#subset = 'Soil_Manure', co_occurrence_table = NULL,
+#classification = 'phylum')
 }

@@ -284,9 +284,10 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @importFrom sf st_as_sf st_buffer
 #' @export
 #' @return ggplot-object
-#' @examples network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
-#' subset = 'Soil_Manure', co_occurrence_table = NULL,
-#' classification = 'phylum')
+#' @examples
+#' #network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
+#' #subset = 'Soil_Manure', co_occurrence_table = NULL,
+#' #classification = 'phylum')
 
 network_phyloseq <- function(phyloseq_obj, classification = NULL,
     treatment = NULL, subset = NULL, co_occurrence_table = NULL,
