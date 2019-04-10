@@ -2,20 +2,27 @@
 % Please edit documentation in R/data_parsing.R
 \name{melt_phyloseq}
 \alias{melt_phyloseq}
-\title{Melt a phyloseq object into a data.table. Function from the phylosmith-package.}
+\title{Melt a phyloseq object into a data.table.
+Function from the phylosmith-package.}
 \usage{
 melt_phyloseq(phyloseq_obj)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
-must contain \code{\link[phyloseq:sample_data]{sample_data()}} with 
-information about each sample, and it must contain 
-\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}} with
+information about each sample, and it must contain
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 }
+\value{
+data.table
+}
 \description{
-melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale, 
+melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale,
 and sample_Data into a single into a data.table.
+}
+\examples{
+melt_phyloseq(soil_column)
 }
 \seealso{
 \code{\link[phyloseq:psmelt]{psmelt()}}

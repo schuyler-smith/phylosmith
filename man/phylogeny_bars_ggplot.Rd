@@ -2,26 +2,51 @@
 % Please edit documentation in R/graphs.R
 \name{phylogeny_bars_ggplot}
 \alias{phylogeny_bars_ggplot}
-\title{Create a ggplot object of the phylogenic barplots from a phyloseq object. Function from the phylosmith-package.}
+\title{Create a ggplot object of the phylogenic barplots from a phyloseq object.
+Function from the phylosmith-package.}
 \usage{
-phylogeny_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL,
-merge = TRUE, relative_abundance = FALSE, colors = 'default')
+phylogeny_bars_ggplot(phyloseq_obj, classification = NULL,
+treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE,
+colors = 'default')
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+information about each sample, and it must contain
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+taxa/gene.}
 
-\item{classification}{Column name as a string or number in the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node colors.}
+\item{classification}{Column name as a string or number in the
+\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+colors.}
 
-\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a string or number in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+multiple columns and they will be combined into a new column.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.}
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
+factors to subset on.}
 
-\item{merge}{if \code{FALSE}, will show separation of individuals within each \code{classification}.}
+\item{merge}{if \code{FALSE}, will show separation of individuals within
+each \code{classification}.}
 
-\item{relative_abundance}{If \code{TRUE}, transforms the abundance data into relative abundance by sample.}
+\item{relative_abundance}{If \code{TRUE}, transforms the abundance data
+into relative abundance by sample.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
+\item{colors}{Name of a color set from the
+\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+colors.}
+}
+\value{
+ggplot-object
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and creates phylogenic barplots.
+This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+creates phylogenic barplots.
+}
+\examples{
+phylogeny_bars_ggplot(soil_column, classification = 'phylum',
+treatment = c('Matrix', 'Treatment'), merge = TRUE,
+relative_abundance = TRUE)
 }

@@ -8,19 +8,25 @@ co_occurrence_rho_Rcpp(otu_table, treatment_indices, treatment_names,
   ncores)
 }
 \arguments{
-\item{otu_table}{An \code{otu_table} in the format from \code{\link[phyloseq:otu_table]{phyloseq}}}
+\item{otu_table}{An \code{otu_table} in the format from 
+\code{\link[phyloseq:otu_table]{phyloseq}}}
 
-\item{treatment_indices}{A \code{list} with c++ indices for the \code{treatment_names} corresponding to which treatment each column in the \code{otu_table} belongs to.}
+\item{treatment_indices}{A \code{list} with c++ indices for the 
+\code{treatment_names} corresponding to which treatment each column in the 
+\code{otu_table} belongs to.}
 
-\item{treatment_names}{A \code{Vector} containing the treatment names corresponding to the \code{treatment_indices}.}
+\item{treatment_names}{A \code{Vector} containing the treatment names 
+corresponding to the \code{treatment_indices}.}
 
-\item{ncores}{\code{int} for how many cores to use to multithread the calculations.}
+\item{ncores}{An \code{int} for how many cores to use to multithread the 
+calculations.}
 }
 \value{
 A \code{vector} with rho values for each pair-wise correlation.
 }
 \description{
-Calculates the pair-wise Spearman rank correlation without testing for significance.
+Calculates the pair-wise Spearman rank correlation without 
+testing for significance.
 }
 \seealso{
 \code{\link{permute_rho}}

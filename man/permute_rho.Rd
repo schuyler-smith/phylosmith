@@ -2,7 +2,8 @@
 % Please edit documentation in R/co_occurrence.R
 \name{permute_rho}
 \alias{permute_rho}
-\title{Permutes the pair-wise Spearman rank co-occurrence, to determine a significant rho-cutoff. Function from the phylosmith-package.}
+\title{Permutes the pair-wise Spearman rank co-occurrence, to determine a
+significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
 permute_rho(phyloseq_obj, treatment = NULL,
 replicate_samples = 'independent', permutations = 100, cores = 0)
@@ -10,23 +11,30 @@ replicate_samples = 'independent', permutations = 100, cores = 0)
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
 
-\item{replicate_samples}{Column name as a \code{string} or \code{numeric} 
-in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which 
+\item{replicate_samples}{Column name as a \code{string} or \code{numeric}
+in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which
 samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
 
-\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise 
-permutations. Default (0) uses max cores available. Parallelization not 
+\item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise
+permutations. Default (0) uses max cores available. Parallelization not
 available for systems running MacOS without openMP configuration.}
 }
+\value{
+table
+}
 \description{
-Permutes the pair-wise Spearman rank co-occurrence, to determine a 
+Permutes the pair-wise Spearman rank co-occurrence, to determine a
 significant rho-cutoff.
+}
+\examples{
+co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
+replicate_samples = 'Day', permutations = 1,  cores = 0)
 }
 \seealso{
 \code{\link{co_occurrence}}

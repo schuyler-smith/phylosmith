@@ -2,30 +2,39 @@
 % Please edit documentation in R/data_parsing.R
 \name{common_taxa}
 \alias{common_taxa}
-\title{Find taxa shared between treatments of a phyloseq object. Function from the phylosmith-package.}
+\title{Find taxa shared between treatments of a phyloseq object.
+Function from the phylosmith-package.}
 \usage{
 common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
-must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
-information about each sample, and it must contain 
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+information about each sample, and it must contain
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any 
-samples that to not contain this factor. This can be a vector of multiple 
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
 
-\item{n}{Number of treatment groups that need to share the taxa to be 
+\item{n}{Number of treatment groups that need to share the taxa to be
 considered a common taxa.}
 }
+\value{
+vector
+}
 \description{
-Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa are shared between all of the specified treatments.
+Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
+are shared between all of the specified treatments.
+}
+\examples{
+common_taxa(soil_solumn, treatment = 'Treatment',
+subset = 'Manure', n = 'all')
 }
 \seealso{
 \code{\link{unique_taxa}}

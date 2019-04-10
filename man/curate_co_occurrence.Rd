@@ -4,22 +4,25 @@
 \alias{curate_co_occurrence}
 \title{Curate co-occurrence data. Function from the phylosmith-package.}
 \usage{
-curate_co_occurrence(co_occurrence_table, taxa_of_interest, 
+curate_co_occurrence(co_occurrence_table, taxa_of_interest,
 number_of_treatments = 1)
 }
 \arguments{
-\item{co_occurrence_table}{Table of the co-occurrence of taxa/genes in the 
+\item{co_occurrence_table}{Table of the co-occurrence of taxa/genes in the
 \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}.}
 
-\item{taxa_of_interest}{A list or vector of taxa names, like those 
+\item{taxa_of_interest}{A list or vector of taxa names, like those
 generated with \code{\link{unique_taxa}}.}
 
-\item{number_of_treatments}{How many treatments should the taxa of interest 
+\item{number_of_treatments}{How many treatments should the taxa of interest
 be seen in? Requires \code{integer} or 'all' (default = 1).}
 }
+\value{
+data.table
+}
 \description{
-Used to curate a co-occurrence table from the \code{\link{co_occurrence}} 
-function. Takes a list of taxa and finds all pairs containing any of those 
+Used to curate a co-occurrence table from the \code{\link{co_occurrence}}
+function. Takes a list of taxa and finds all pairs containing any of those
 taxa.
 }
 \seealso{

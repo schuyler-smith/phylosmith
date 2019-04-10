@@ -2,26 +2,48 @@
 % Please edit documentation in R/graphs.R
 \name{tsne_phyloseq_ggplot}
 \alias{tsne_phyloseq_ggplot}
-\title{Create a ggplot object using t-SNE from a phyloseq object. Function from the phylosmith-package.}
+\title{Create a ggplot object using t-SNE from a phyloseq object.
+Function from the phylosmith-package.}
 \usage{
-tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE,
-labels = NA, colors = 'default')
+tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
+circle = TRUE, labels = NA, colors = 'default')
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+information about each sample, and it must contain
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+taxa/gene.}
 
-\item{treatment}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of multiple columns and they will be combined into a new column.}
+\item{treatment}{Column name as a string or number in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+multiple columns and they will be combined into a new column.}
 
-\item{perplexity}{similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1, see \code{\link[=Rtsne]{Rtsne}} for interpretation)}
+\item{perplexity}{similar to selecting the number of neighbors to consider
+in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1,
+see \code{\link[=Rtsne]{Rtsne}} for interpretation)}
 
-\item{circle}{Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around each of the \code{treatment} factors (\code{TRUE}).}
+\item{circle}{Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
+each of the \code{treatment} factors (\code{TRUE}).}
 
-\item{labels}{Column name as a string or number in the \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of that factor instead of circle points.}
+\item{labels}{Column name as a string or number in the
+\code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of
+that factor instead of circle points.}
 
-\item{colors}{Name of a color set from the \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted colors.}
+\item{colors}{Name of a color set from the
+\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+colors.}
+}
+\value{
+ggplot-object
 }
 \description{
-Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a treatment or set of treatments.
+Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
+treatment or set of treatments.
+}
+\examples{
+tsne_phyloseq_ggplot(soil_column,
+treatment = c('Matrix', 'Treatment'), perplexity = 10)
 }
 \seealso{
 \code{\link[=Rtsne]{Rtsne}}

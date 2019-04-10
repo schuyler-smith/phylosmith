@@ -2,24 +2,27 @@
 % Please edit documentation in R/merge_ASVs.R
 \name{merge_asvs}
 \alias{merge_asvs}
-\title{Merge amplicon sequence variants (asv). Function from the phylosmith-package.}
+\title{Merge amplicon sequence variants (asv).
+Function from the phylosmith-package.}
 \usage{
 merge_asvs(...)
 }
 \arguments{
 \item{...}{Any number of \code{\link[phyloseq]{phyloseq-class}} objects
-created with the \link[=phyloseq]{phyloseq} package (must have Amplicon 
+created with the \link[=phyloseq]{phyloseq} package (must have Amplicon
 Sequence Variants for calling taxa).}
 }
+\value{
+phyloseq-object
+}
 \description{
-Takes any number of phyloseq objects that have 
-\code{\link[phyloseq:taxa_names]{taxa_names}} declared as true biological 
-sequences or Amplicon Sequence Variants (ASVs). If a dataset has longer 
-reads than the others, it will look for the shorter sequence within the 
+Takes any number of phyloseq objects that have
+\code{\link[phyloseq:taxa_names]{taxa_names}} declared as true biological
+sequences or Amplicon Sequence Variants (ASVs). If a dataset has longer
+reads than the others, it will look for the shorter sequence within the
 longer and redeclare the ASV.
 }
 \examples{
-data(mock_phyloseq); data(mock_phyloseq_2)
 phylosmith:::merge_asvs(mock_phyloseq, mock_phyloseq_2)
 }
 \keyword{manip}

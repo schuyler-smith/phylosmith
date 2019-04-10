@@ -1,8 +1,7 @@
 #' phylosmith-package
 #'
-#' phylosmith is a conglomeration of functions written to process and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
-#'
-#'
+#' phylosmith is a conglomeration of functions written to process
+#' and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
 #'
 #'\url{https://schuyler-smith.github.io/phylosmith/}
 #'

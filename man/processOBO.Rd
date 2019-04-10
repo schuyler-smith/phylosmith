@@ -9,7 +9,10 @@ processOBO(OBO_filepath)
 \arguments{
 \item{OBO_filepath}{filepath to the aro.obo file.}
 }
+\value{
+list
+}
 \description{
-Converts the aro.obo file from the 
+Converts the aro.obo file from the
 \href{https://card.mcmaster.ca/home}{CARD database} into a data.table.
 }

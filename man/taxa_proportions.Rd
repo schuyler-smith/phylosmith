@@ -7,21 +7,29 @@
 taxa_proportions(phyloseq_obj, classification, treatment = NA)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. it 
-must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with 
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. it
+must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with
 information about each taxa/gene.}
 
-\item{classification}{Column name as a \code{string} or \code{numeric} in 
-the \code{\link[phyloseq:tax_table]{tax_table}} for the prportions to be 
+\item{classification}{Column name as a \code{string} or \code{numeric} in
+the \code{\link[phyloseq:tax_table]{tax_table}} for the prportions to be
 reported on.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
-multiple columns and they will be combined into a new column. If \code{NA}, 
-then proprtions will be reported for the entire dataset. If set to "sample" 
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+multiple columns and they will be combined into a new column. If \code{NA},
+then proprtions will be reported for the entire dataset. If set to "sample"
 it will repoort proportions by sample.}
 }
+\value{
+data.table
+}
 \description{
-Computes the proportion of a taxa classification. Function from the 
+Computes the proportion of a taxa classification. Function from the
 phylosmith-package.
+}
+\examples{
+taxa_proportions(soil_column, 'phylum', treatment = NA)
+taxa_proportions(soil_column, 'phylum', treatment = 'sample')
+taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
 }

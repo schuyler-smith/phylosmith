@@ -4,7 +4,10 @@ Version: 0.99.0
 Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for analyzing phyloseq objects.
-URL: https://github.com/schuyler-smith/phylosmith
+biocViews: Software, Sequencing, Microbiome, 
+    Metagenomics, Clustering, Classification, 
+    MultipleComparison, GeneticVariability, Visualization
+URL: https://schuyler-smith.github.io/phylosmith/
 BugReports: https://github.com/schuyler-smith/phylosmith.issues
 Depends:
     R (>= 3.5),

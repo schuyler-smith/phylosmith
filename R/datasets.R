@@ -5,7 +5,8 @@
 #' @format A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @keywords datasets
 #' @source Simulation
-#' @references \url{https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full}
+#' @references 
+#' \url{https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full}
 "soil_column"
 
 #' Mock Phyloseq Object 1

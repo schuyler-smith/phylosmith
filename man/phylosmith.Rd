@@ -6,7 +6,8 @@
 \alias{phylosmith-package}
 \title{phylosmith-package}
 \description{
-phylosmith is a conglomeration of functions written to process and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
+phylosmith is a conglomeration of functions written to process
+and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
 }
 \details{
 \url{https://schuyler-smith.github.io/phylosmith/}

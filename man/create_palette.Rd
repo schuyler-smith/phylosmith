@@ -2,17 +2,24 @@
 % Please edit documentation in R/non_export.R
 \name{create_palette}
 \alias{create_palette}
-\title{Internal function for creating color palettes for graphs. Function from the phylosmith-package.}
+\title{Internal function for creating color palettes for graphs.
+Function from the phylosmith-package.}
 \usage{
 create_palette(color_count, colors)
 }
 \arguments{
 \item{color_count}{Number of colors to choose for palette.}
 
-\item{colors}{Name of a color set from the 
+\item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
 colors.}
 }
+\value{
+palette
+}
 \description{
 This function creates color palettes for graphs.
+}
+\examples{
+create_palette(8, 'Dark2')
 }

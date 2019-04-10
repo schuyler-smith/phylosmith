@@ -2,36 +2,44 @@
 % Please edit documentation in R/data_parsing.R
 \name{conglomerate_samples}
 \alias{conglomerate_samples}
-\title{Merge samples based on common factor within sample_data. Function from the phylosmith-package.}
+\title{Merge samples based on common factor within sample_data.
+Function from the phylosmith-package.}
 \usage{
-conglomerate_samples(phyloseq_obj, treatment, subset = NULL, 
+conglomerate_samples(phyloseq_obj, treatment, subset = NULL,
 merge_on = treatment)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
-must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
-information about each sample, and it must contain 
-\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+information about each sample, and it must contain
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the
- \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any 
-samples that to not contain this factor. This can be a vector of multiple 
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
 
-\item{merge_on}{Defines which variable the data is merged according to. 
-This needs to be a column name as a \code{string} or \code{numeric} in the 
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+\item{merge_on}{Defines which variable the data is merged according to.
+This needs to be a column name as a \code{string} or \code{numeric} in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
 }
+\value{
+phyloseq-object
+}
 \description{
-This function takes a phyloseq object and merges the samples that meet the 
-specified criteria into a single sample. This is meant for replicates, or 
-samples statistically proven to not be significantly different and should 
+This function takes a phyloseq object and merges the samples that meet the
+specified criteria into a single sample. This is meant for replicates, or
+samples statistically proven to not be significantly different and should
 be used with caution as it may be a misleading representation of the data.
+}
+\examples{
+conglomerate_samples(soil_column,
+treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
 }
 \seealso{
 \code{\link[phyloseq:merge_samples]{merge_samples()}}

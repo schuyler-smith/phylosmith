@@ -2,28 +2,39 @@
 % Please edit documentation in R/co_occurrence.R
 \name{histogram_permuted_rhos}
 \alias{histogram_permuted_rhos}
-\title{Create a ggplot object of the distribution of rho values from permute_rho(). Function from the phylosmith-package.}
+\title{Create a ggplot object of the distribution of rho values from
+permute_rho(). Function from the phylosmith-package.}
 \usage{
 histogram_permuted_rhos(permuted_rhos, p = NULL,
 x_breaks = 0.25, colors = 'default')
 }
 \arguments{
-\item{permuted_rhos}{A \code{data.table} output from 
+\item{permuted_rhos}{A \code{data.table} output from
 \code{\link[=permute_rho]{permute_rho}}.}
 
 \item{p}{The significance threshold for setting cutoffs.}
 
 \item{x_breaks}{What intervals to set the ticks on the x-axis.}
 
-\item{colors}{Name of a color set from the 
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted 
+\item{colors}{Name of a color set from the
+\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
 colors.}
 }
+\value{
+ggplot
+}
 \description{
-Plots the output of \code{\link[=permute_rho]{permute_rho}} into a 
-histogram with the distributions shown by treatment. This is a 
-visualization tool to help show how the permutation worked, and to see 
+Plots the output of \code{\link[=permute_rho]{permute_rho}} into a
+histogram with the distributions shown by treatment. This is a
+visualization tool to help show how the permutation worked, and to see
 where the cutoffs lie.
+}
+\examples{
+permuted_rhos <- permute_rho(soil_column,
+treatment = c('Matrix', 'Treatment'), replicate_samples = 'Day',
+permutations = 1,  cores = 0)
+histogram_permuted_rhos(permuted_rhos)
+histogram_permuted_rhos(permuted_rhos, p = 0.01)
 }
 \seealso{
 \code{\link[=permute_rho]{permute_rho}}

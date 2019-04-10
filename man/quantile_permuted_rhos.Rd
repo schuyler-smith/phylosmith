@@ -2,23 +2,34 @@
 % Please edit documentation in R/co_occurrence.R
 \name{quantile_permuted_rhos}
 \alias{quantile_permuted_rhos}
-\title{Calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence. Function from the phylosmith-package.}
+\title{Calculate quantiles for the permuted rho values from the Spearman-rank
+co-occurrence. Function from the phylosmith-package.}
 \usage{
 quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
 }
 \arguments{
-\item{permuted_rhos}{A \code{data.table} output from 
+\item{permuted_rhos}{A \code{data.table} output from
 \code{\link[=permute_rho]{permute_rho}}.}
 
 \item{p}{The significance threshold for setting cutoffs.}
 
-\item{by_treatment}{Whether to find the rho cutoffs for each treatment 
-individually or for the entire experiment. Suggested to do by treatment 
+\item{by_treatment}{Whether to find the rho cutoffs for each treatment
+individually or for the entire experiment. Suggested to do by treatment
 first, to see if there is any treatments that are outliers.}
+}
+\value{
+data.frame
 }
 \description{
 Calculate quantiles for the permuted rho values from the Spearman-rank
 co-occurrence.
+}
+\examples{
+permuted_rhos <- permute_rho(soil_column,
+treatment = c('Matrix', 'Treatment'), replicate_samples = 'Day',
+permutations = 1,  cores = 0)
+quantile_permuted_rhos(permuted_rhos)
+quantile_permuted_rhos(permuted_rhos, by_treatment = FALSE)
 }
 \seealso{
 \code{\link[=permute_rho]{permute_rho}}

@@ -2,36 +2,45 @@
 % Please edit documentation in R/data_parsing.R
 \name{taxa_filter}
 \alias{taxa_filter}
-\title{Filter taxa based on proportion of samples they are observed in. Function from the phylosmith-package.}
+\title{Filter taxa based on proportion of samples they are observed in.
+Function from the phylosmith-package.}
 \usage{
 taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL,
 frequency = 0, below = FALSE, drop_samples = FALSE)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It 
-must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with 
-information about each sample, and it must contain 
-\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each 
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
+must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+information about each sample, and it must contain
+\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 
-\item{treatment}{Column name as a \code{string} or \code{numeric} in the 
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of 
+\item{treatment}{Column name as a \code{string} or \code{numeric} in the
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any 
-samples that to not contain this factor. This can be a vector of multiple 
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
 
 \item{frequency}{The proportion of samples the taxa is found in.}
 
-\item{below}{Does frequency define the minimum (\code{FALSE}) or maximum 
+\item{below}{Does frequency define the minimum (\code{FALSE}) or maximum
 (\code{TRUE}) proportion of samples the taxa is found in.}
 
-\item{drop_samples}{Should the function remove samples that that are empty 
+\item{drop_samples}{Should the function remove samples that that are empty
 after removing taxa filtered by frequency (\code{TRUE}).}
+}
+\value{
+phyloseq-object
 }
 \description{
 This function takes a phyloseq object and finds which taxa are seen in a
-given proportion of samples, either in the entire dataset, by treatment, or 
+given proportion of samples, either in the entire dataset, by treatment, or
 a particular treatment of interest.
+}
+\examples{
+taxa_filter(soil_column, frequency = 0.8)
+taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'),
+subset = 'Soil_Manure', frequency = 0.8)
 }
