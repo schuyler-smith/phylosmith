@@ -558,7 +558,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
 #' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates phylogenic barplots.
 #' @useDynLib phylosmith
-#' @usage phylogeny_bars_ggplot(phyloseq_obj, classification = NULL,
+#' @usage phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE,
 #' colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -585,44 +585,44 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples phylogeny_bars_ggplot(soil_column, classification = 'phylum',
+#' @examples phylogeny_profile_ggplot(soil_column, classification = 'phylum',
 #' treatment = c('Matrix', 'Treatment'), merge = TRUE,
 #' relative_abundance = TRUE)
 
-phylogeny_bars_ggplot <- function(phyloseq_obj, classification = NULL,
+phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
     treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE,
     colors = 'default'){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("phylogeny_bars_ggplot(): `phyloseq_obj` must be a phyloseq-class
+        stop("phylogeny_profile_ggplot(): `phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain
+        stop("phylogeny_profile_ggplot(): `phyloseq_obj` must contain
         sample_data() information", call. = FALSE)
     }
     classification <- check_numeric_classification(phyloseq_obj,
         classification)
     if(!(is.null(classification)) &
         is.null(access(phyloseq_obj, 'tax_table'))){
-        stop("phylogeny_bars_ggplot(): `phyloseq_obj` must contain tax_table()
+        stop("phylogeny_profile_ggplot(): `phyloseq_obj` must contain tax_table()
         information if `classification` argument is used", call. = FALSE)
     }
     if(!(is.null(classification)) & !(classification %in% colnames(
         access(phyloseq_obj, 'tax_table')))){
-        stop("phylogeny_bars_ggplot(): `classification` must be a column from
+        stop("phylogeny_profile_ggplot(): `classification` must be a column from
         the the tax_table()", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("phylogeny_bars_ggplot(): `treatment` must be at least one column
+        stop("phylogeny_profile_ggplot(): `treatment` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
     if(!(is.logical(merge))){
-        stop("phylogeny_bars_ggplot(): `merge` must be either `TRUE`, or
+        stop("phylogeny_profile_ggplot(): `merge` must be either `TRUE`, or
         `FALSE`", call. = FALSE)
     }
     if(!(is.logical(relative_abundance))){
-        stop("phylogeny_bars_ggplot(): `relative_abundance` must be either
+        stop("phylogeny_profile_ggplot(): `relative_abundance` must be either
         `TRUE`, or `FALSE`", call. = FALSE)
     }
     options(warn = -1)
@@ -733,7 +733,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
     }
     if(!(is.null(classification)) & !(classification %in% colnames(
         access(phyloseq_obj, 'tax_table')))){
-        stop("phylogeny_bars_ggplot(): `classification` must be a column from
+        stop("phylogeny_profile_ggplot(): `classification` must be a column from
         the the tax_table()", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)

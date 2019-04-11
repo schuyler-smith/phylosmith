@@ -156,15 +156,15 @@ nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbo
 
 <br>
 
-## phylogeny_bars_ggplot
-<a name="phylogeny_bars_ggplot"></a>
+## phylogeny_profile_ggplot
+<a name="phylogeny_profile_ggplot"></a>
 
 Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample. 
 
 <br>
 ***Usage***
 ```r
-phylogeny_bars_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default')
+phylogeny_profile_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default')
 ```
 
 <br>
@@ -182,8 +182,8 @@ Call | Description
 
 ***Examples***
 
-```{r phylogeny_bars_ggplot}
-phylogeny_bars_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), merge = TRUE, relative_abundance = TRUE)
+```{r phylogeny_profile_ggplot}
+phylogeny_profile_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), merge = TRUE, relative_abundance = TRUE)
 ```
 
 <br>

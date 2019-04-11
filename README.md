@@ -42,7 +42,7 @@ Call                 | Description
 [abundance_lines_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
 [network_phyloseq](https://schuyler-smith.github.io/phylosmith/graphs.html#network_phyloseq) | creates a ggplot object of the co-occurrence network of taxa
 [nmds_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
-[phylogeny_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_bars_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[phylogeny_profile_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
 [taxa_abundance_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
 [tsne_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
 
