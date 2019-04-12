@@ -70,13 +70,11 @@ Call | Description
 
 ***Examples***
 ```{r samples_otu, echo=FALSE}
-taxa_filter(soil_column, treatment = 'Matrix', subset = 'Manure')
+manure <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Manure_Control')
+manure
 ```
 ```{r conglomerate_samples}
-conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
-```
-```{r conglomerate_samples_otu, echo=FALSE}
-conglomerate_samples(soil_column, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
+conglomerate_samples(manure, treatment = c('Matrix', 'Treatment'), subset = 'Manure', merge_on = 'Day')
 ```
 
 <br>

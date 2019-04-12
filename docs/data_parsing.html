@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-04-11" />
+<meta name="date" content="2019-04-12" />
 
 <title>Data Parsing</title>
 
@@ -467,7 +467,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data Parsing</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-04-11</h4>
+<h4 class="date">2019-04-12</h4>
 
 </div>
 
@@ -561,30 +561,12 @@ div.tocify {
 <p><strong><em>Examples</em></strong></p>
 <pre><code>## phyloseq-class experiment-level object
 ## otu_table()   OTU Table:         [ 399 taxa and 4 samples ]
-## sample_data() Sample Data:       [ 4 samples by 3 sample variables ]
+## sample_data() Sample Data:       [ 4 samples by 4 sample variables ]
 ## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
-<pre class="r"><code>conglomerate_samples(soil_column, treatment = &#39;Matrix&#39;, subset = &#39;Manure&#39;, merge_on = &#39;Day&#39;)</code></pre>
-<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, ri, value = 1): invalid factor level, NA
-## generated
-
-## Warning in `[&lt;-.factor`(`*tmp*`, ri, value = 1): invalid factor level, NA
-## generated</code></pre>
-<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, iseq, value = 1): invalid factor level, NA
-## generated</code></pre>
+<pre class="r"><code>conglomerate_samples(manure, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Manure&#39;, merge_on = &#39;Day&#39;)</code></pre>
 <pre><code>## phyloseq-class experiment-level object
 ## otu_table()   OTU Table:         [ 399 taxa and 1 samples ]
-## sample_data() Sample Data:       [ 1 samples by 3 sample variables ]
-## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
-<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, ri, value = 1): invalid factor level, NA
-## generated
-
-## Warning in `[&lt;-.factor`(`*tmp*`, ri, value = 1): invalid factor level, NA
-## generated</code></pre>
-<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, iseq, value = 1): invalid factor level, NA
-## generated</code></pre>
-<pre><code>## phyloseq-class experiment-level object
-## otu_table()   OTU Table:         [ 399 taxa and 1 samples ]
-## sample_data() Sample Data:       [ 1 samples by 3 sample variables ]
+## sample_data() Sample Data:       [ 1 samples by 4 sample variables ]
 ## tax_table()   Taxonomy Table:    [ 399 taxa by 6 taxonomic ranks ]</code></pre>
 <p><br></p>
 <hr />
