@@ -868,16 +868,16 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
     options(warn = -1)
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
     treatment_name <- paste(treatment, collapse = sep)
-    Treatment <- access(phyloseq_obj, 'sam_data')[[treatment_name]]
-    color_count <- length(unique(Treatment))
+    metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
+    color_count <- length(unique(metadata[[treatment_name]]))
     graph_colors <- create_palette(color_count, colors)
 
     tsne <- Rtsne(vegdist(t(access(phyloseq_obj, 'otu_table')),
         method = 'bray'), dims = 2, theta = 0.0, perplexity = perplexity)
     tSNE1 <- tsne$Y[,1]
     tSNE2 <- tsne$Y[,2]
-    ord <- data.table(tSNE1, tSNE2, Treatment)
-    ord <- subset(ord, !is.na(Treatment))
+    ord <- data.table(tSNE1, tSNE2, metadata)
+    ord <- subset(ord, !is.na(treatment_name))
     if(is.character(labels)){
         eval(parse(text=paste0('ord[, ', labels,
             ' := access(phyloseq_obj, "sam_data")[[labels]]]')))
@@ -886,9 +886,9 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
     g <- ggplot(data = ord, aes(tSNE1, tSNE2))
     if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm",
         size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
-        aes(fill = Treatment), show.legend = FALSE) +
+        aes_string(fill = treatment_name), show.legend = FALSE) +
         scale_color_manual(values = graph_colors) + guides(color = FALSE)}
-    g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black',
+    g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black',
             size = 5, alpha = 1.0) +
         scale_fill_manual(values = graph_colors) +
         theme_light() +
