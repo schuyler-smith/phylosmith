@@ -67,8 +67,10 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
             which(as.character(access(phyloseq_obj,
                 'sam_data')[[treatment_name]]) %in% trt)-1
         })
-    if(is.null(treatment)){treatment_classes <- 'Experiment_Wide'
-    treatment_indices <- list(seq(nsamples(phyloseq_obj))-1)}
+    if(is.null(treatment)){
+        treatment_classes <- 'Experiment_Wide'
+        treatment_indices <- list(seq(nsamples(phyloseq_obj))-1)
+    }
 
     if(cores == 0){cores <- (parallel::detectCores() -1)}
     co_occurrence <- co_occurrence_Rcpp(access(phyloseq_obj, 'otu_table'),
@@ -151,15 +153,16 @@ permute_rho <- function(phyloseq_obj, treatment = NULL,
     options(warnings=-1)
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment,
         frequency = 0)
-    if(is.numeric(treatment)){treatment <- colnames(access(phyloseq_obj,
-        'sam_data')[,treatment])}
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- as.character(unique(access(phyloseq_obj,
         'sam_data')[[treatment_name]]))
     treatment_indices <- lapply(treatment_classes,
         FUN = function(trt){which(as.character(access(phyloseq_obj,
         'sam_data')[[treatment_name]]) %in% trt)-1})
-
+    if(is.null(treatment)){
+      treatment_classes <- 'Experiment_Wide'
+      treatment_indices <- list(seq(nsamples(phyloseq_obj))-1)
+    }
     if(replicate_samples == 'independent' & is.null(treatment)){
         replicate_indices <- seq(ncol(access(phyloseq_obj, 'otu_table')))
     } else if(replicate_samples == 'independent' & !(is.null(treatment))){
@@ -204,8 +207,10 @@ permute_rho <- function(phyloseq_obj, treatment = NULL,
                 lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
         }},
         interrupt = function(interrupt){
-            rhos <- rhos[-length(rhos)]; message('Interrupted after ', i,
-            ' permutations.'); return(rhos)})
+            message('Interrupted after ', i-1,' permutations completed.')
+            setkey(rhos, Treatment, rho)
+            return(rhos)
+        })
     setkey(rhos, Treatment, rho)
     return(rhos)
 } #else {
