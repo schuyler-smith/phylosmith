@@ -55,8 +55,8 @@ Melt a phyloseq object into a data.table.
 [merge_treatments](https://schuyler-smith.github.io/phylosmith/
 data_parsing.html#merge_treatments) | 
 combines multiple columns in meta-data into a single column
-[order_treatment](https://schuyler-smith.github.io/phylosmith/
-data_parsing.html#order_treatment) | 
+[set_treatment_levels](https://schuyler-smith.github.io/phylosmith/
+data_parsing.html#set_treatment_levels) | 
 sets the orders of the factors in a sample_data column (for ordering graphs)
 [relative_abundance](https://schuyler-smith.github.io/phylosmith/
 data_parsing.html#relative_abundance) | 

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-04-12" />
+<meta name="date" content="2019-04-18" />
 
 <title>Data Parsing</title>
 
@@ -467,7 +467,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data Parsing</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-04-12</h4>
+<h4 class="date">2019-04-18</h4>
 
 </div>
 
@@ -691,16 +691,16 @@ div.tocify {
 <hr />
 <p><br></p>
 </div>
-<div id="order_treatment" class="section level2">
-<h2>order_treatment</h2>
-<p><a name="order_treatment"></a></p>
+<div id="set_treatment_levels" class="section level2">
+<h2>set_treatment_levels</h2>
+<p><a name="set_treatment_levels"></a></p>
 <p>This can be used to reassing the order of the levels of a factor in the sample-data.</p>
 <p><strong><em>Useful for:</em></strong></p>
 <ul>
 <li>managing order which variables appear in figures</li>
 </ul>
 <p><strong><em>Usage</em></strong></p>
-<pre class="r"><code>order_treatment(phyloseq_obj, treatment, order)</code></pre>
+<pre class="r"><code>set_treatment_levels(phyloseq_obj, treatment, order)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -731,7 +731,7 @@ div.tocify {
 <p><strong><em>Examples</em></strong></p>
 <pre class="r"><code>levels(soil_column@sam_data$Day)</code></pre>
 <pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;108&quot; &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;</code></pre>
-<pre class="r"><code>ordered_days &lt;- order_treatment(soil_column, &#39;Day&#39;, &#39;numeric&#39;)
+<pre class="r"><code>ordered_days &lt;- set_treatment_levels(soil_column, &#39;Day&#39;, &#39;numeric&#39;)
 levels(ordered_days@sam_data$Day)</code></pre>
 <pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;  &quot;108&quot;</code></pre>
 <p><br></p>

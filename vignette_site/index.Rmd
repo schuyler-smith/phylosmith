@@ -36,7 +36,7 @@ Call | Description
 [conglomerate_taxa](data_parsing.html#conglomerate_taxa) | combines taxa that have same classification
 [melt_phyloseq](data_parsing.html#melt_phyloseq) | melts a phyloseq object into a data.table
 [merge_treatments](data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a new column
-[order_phyloseq_metadata](data_parsing.html#order_phyloseq_metadata) | sets the order of the factors in a sample_data column
+[set_treatment_levels](data_parsing.html#set_treatment_levels) | sets the order of the factors in a sample_data column
 [relative_abundance](data_parsing.html#relative_abundance) | transform abundance data to relative abundance
 [taxa_proportions](data_parsing.html#taxa_proportions) | computes the proportion of a taxa classification
 [taxa_filter](data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in

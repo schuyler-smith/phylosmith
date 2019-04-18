@@ -199,7 +199,7 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
     )
     for(i in seq_along(original_levels)){
         if(!(is.null(unname(unlist(original_levels[i]))))){
-            phyloseq_obj <- order_treatment(phyloseq_obj,
+            phyloseq_obj <- set_treatment_levels(phyloseq_obj,
                 names(original_levels)[i], unname(unlist(original_levels[i])))
         }
     }
@@ -396,13 +396,83 @@ merge_treatments <- function(phyloseq_obj, ...){
     return(phyloseq_obj)
 }
 
-#' order_treatment
+
+#' Re-orders the samples of a phyloseq object.
+#' Function from the phylosmith-package.
+#'
+#' Takes a \code{\link[phyloseq]{phyloseq-class}} object and changes the
+#' order of sample index either based on the metadata, or a given order.
+#' @useDynLib phylosmith
+#' @usage set_sample_order(phyloseq_obj, sort_on)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param sort_on Column name as a \code{string} or \code{numeric} in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}, or vector of sample names
+#' or indices in particular order.
+#' @export
+#' @return phyloseq object
+#' @examples
+#' set_sample_order(soil_column, c('Matrix', 'Treatment'))
+
+set_sample_order <- function(phyloseq_obj, sort_on){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("set_sample_order(): `phyloseq_obj` must be a phyloseq-class
+         object", call. = FALSE)
+  }
+  if(!(is.null(access(phyloseq_obj, 'phy_tree')))){
+    phylo_tree <- access(phyloseq_obj, 'phy_tree')
+  } else {phylo_tree <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'refseq')))){
+    refseq <- access(phyloseq_obj, 'refseq')
+  } else {refseq <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'sam_data')))){
+    sam <- access(phyloseq_obj, 'sam_data')
+  } else {sam <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'tax_table')))){
+    tax <- access(phyloseq_obj, 'tax_table')
+  } else {tax <- FALSE}
+  if(!(is.null(access(phyloseq_obj, 'otu_table')))){
+    otu <- access(phyloseq_obj, 'otu_table')
+  } else {otu <- FALSE}
+  metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
+  metadata <- data.table(samples = rownames(metadata), metadata)
+  if(length(sort_on) < nsamples(phyloseq_obj)){
+    sort_on <- check_numeric_treatment(phyloseq_obj, sort_on)
+    if(any(!(sort_on %in% colnames(access(phyloseq_obj, 'sam_data'))))){
+      stop("set_sample_order(): `sort_on` must be at least one column
+           name, or index, from the sample_data(), or a vector of a set
+           order of sample names or indices", call. = FALSE)
+    }
+    eval(parse(text = paste0('setkey(metadata, ', paste(sort_on, collapse = ', '), ')')))
+    } else {
+      if(is.character(sort_on)){
+        if(!(any(sort_on %in% sample_names(phyloseq_obj)))){
+          stop("set_sample_order(): `sort_on` must be at least one column
+        name, or index, from the sample_data(), or a vector of a set
+        order of sample names or indices", call. = FALSE)
+        }
+      }
+    }
+  otu <- otu[,metadata$samples]
+  metadata <- sample_data(data.frame(metadata, row.names = 1))
+
+  phyloseq_obj <- phyloseq(otu, sam)
+  if(!(is.logical(tax))){tax_table(phyloseq_obj) <- tax}
+  if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
+  if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
+  return(phyloseq_obj)
+}
+
+#' set_treatment_levels
 #'
 #' Reorders the levels of a metadata column in a
 #' \code{\link[phyloseq]{phyloseq-class}} object
 #' \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @useDynLib phylosmith
-#' @usage order_treatment(phyloseq_obj, treatment, order)
+#' @usage set_treatment_levels(phyloseq_obj, treatment, order)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -415,23 +485,23 @@ merge_treatments <- function(phyloseq_obj, ...){
 #' @import data.table
 #' @export
 #' @return phyloseq-object
-#' @examples order_treatment(soil_column, treatment = 'Matrix',
+#' @examples set_treatment_levels(soil_column, treatment = 'Matrix',
 #' order = c('Manure', 'Soil', 'Water'))
-#' order_treatment(soil_column, 'Day', 'numeric')
+#' set_treatment_levels(soil_column, 'Day', 'numeric')
 
-order_treatment <- function(phyloseq_obj, treatment, order){
+set_treatment_levels <- function(phyloseq_obj, treatment, order){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("order_treatment(): `phyloseq_obj` must be a phyloseq-class
+        stop("set_treatment_levels(): `phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("order_treatment(): `phyloseq_obj` must contain sample_data()
+        stop("set_treatment_levels(): `phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(length(treatment) > 1 |
         !(treatment %in% colnames(access(phyloseq_obj,'sam_data')))){
-        stop("order_treatment(): `treatment` must be a single column name,
+        stop("set_treatment_levels(): `treatment` must be a single column name,
             or index, from the sample_data()", call. = FALSE)
     }
     if(order[1] == 'numeric'){
@@ -599,7 +669,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     }
     for(i in seq_along(original_levels)){
         if(!(is.null(unname(unlist(original_levels[i]))))){
-            phyloseq_obj <- order_treatment(phyloseq_obj,
+            phyloseq_obj <- set_treatment_levels(phyloseq_obj,
                 names(original_levels)[i], unname(unlist(original_levels[i])))}
     }
     if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
@@ -756,3 +826,4 @@ unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
     })
     return(unique_taxa)
 }
+
