@@ -261,7 +261,8 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
     } else {refseq <- FALSE}
     if(!(is.null(access(phyloseq_obj, 'sam_data')))){
         sam <- access(phyloseq_obj, 'sam_data')
-        } else {sam <- FALSE}
+    } else {sam <- FALSE}
+    sample_order <- sample_names(phyloseq_obj)
     phyloseq_obj <- phyloseq(
         access(phyloseq_obj, 'otu_table'),
         access(phyloseq_obj, 'tax_table')
@@ -287,7 +288,7 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
     taxa <- as.matrix(taxa, rownames = colnames(otus))
 
     phyloseq_obj <- phyloseq(
-        otu_table(t(otus), taxa_are_rows = TRUE),
+        otu_table(t(otus)[,sample_order], taxa_are_rows = TRUE),
         tax_table(taxa)
     )
     if(!(is.logical(sam))){sample_data(phyloseq_obj) <- sam}
