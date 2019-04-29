@@ -7,6 +7,7 @@ CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
 CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX1XSTD`
 CXX="${CXX1X} ${CXX1XSTD}"
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX1XFLAGS`
+PKG_CPPFLAGS=-I../inst/include/
 
 AC_LANG(C++)
 AC_REQUIRE_CPP

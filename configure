@@ -1835,6 +1835,7 @@ CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
 CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX1XSTD`
 CXX="${CXX1X} ${CXX1XSTD}"
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX1XFLAGS`
+PKG_CPPFLAGS=-I../inst/include/
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -3709,3 +3710,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
+

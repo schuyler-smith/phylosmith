@@ -1,3 +1,4 @@
 #!/bin/sh
 
-rm -rf config.* src/Makevars
+rm -rf config.* 
+rm -rf src/Makevars

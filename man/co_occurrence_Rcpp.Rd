@@ -4,8 +4,8 @@
 \alias{co_occurrence_Rcpp}
 \title{Co-occurrence calculation}
 \usage{
-co_occurrence_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff,
-  ncores)
+co_occurrence_Rcpp(otu_table, treatment_indices, 
+treatment_names, p_cutoff, ncores)
 }
 \arguments{
 \item{otu_table}{An \code{otu_table} in the format from 

@@ -4,6 +4,8 @@
 #' @author Schuyler D. Smith
 #' @title Co-occurrence calculation
 #' @description Calculate the pair-wise Spearman rank correlation.
+#' @usage co_occurrence_Rcpp(otu_table, treatment_indices, 
+#' treatment_names, p_cutoff, ncores)
 #' @param otu_table An \code{otu_table} in the format from 
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param treatment_indices A \code{list} with c++ indices for the 
@@ -25,6 +27,8 @@ co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, p_
 #' @title Co-occurrence rho calculations
 #' @description Calculates the pair-wise Spearman rank correlation without 
 #' testing for significance.
+#' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices, 
+#' treatment_names, ncores)
 #' @param otu_table An \code{otu_table} in the format from 
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param treatment_indices A \code{list} with c++ indices for the 
