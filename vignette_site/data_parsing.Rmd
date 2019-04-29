@@ -174,6 +174,66 @@ merge_treatments(soil_column, 'Matrix', 2, 'Day')
 
 <br>
 
+## relative_abundance
+<a name="relative_abundance"></a>
+
+This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
+
+<br>
+***Usage***
+```r
+relative_abundance(phyloseq_obj)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object that contains `otu_table` count data.
+
+***Examples***
+
+```{r relative_abundance}
+phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
+```
+
+<br>
+
+***
+
+<br>
+
+## set_sample_order
+<a name="set_sample_order"></a>
+
+Arranged the phyloseq object so that the samples are listed in a given order, or sorted on metadata. This is most useful for visual inspection of the metadata, and having the samples presented in a correct order in ggplor figures.
+
+***Usage***
+```r
+set_sample_order(phyloseq_obj, sort_by)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`sort_by` | Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}, or vector of sample names or indices in particular order.
+
+***Examples***
+```{r set_sample_order}
+unsorted <- set_treatment_levels(soil_column, treatment = 'Day', order = 'numeric')
+as(set_sample_order(unsorted, sort_on = c('Treatment', 'Matrix', 'Day'))@sam_data, 'data.frame')
+```
+
+<br>
+
+***
+
+<br>
+
 ## set_treatment_levels
 <a name="set_treatment_levels"></a>
 
@@ -202,36 +262,6 @@ Call | Description
 levels(soil_column@sam_data$Day)
 ordered_days <- set_treatment_levels(soil_column, 'Day', 'numeric')
 levels(ordered_days@sam_data$Day)
-```
-
-<br>
-
-***
-
-<br>
-
-## relative_abundance
-<a name="relative_abundance"></a>
-
-This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
-
-<br>
-***Usage***
-```r
-relative_abundance(phyloseq_obj)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object that contains `otu_table` count data.
-
-***Examples***
-
-```{r relative_abundance}
-phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
 ```
 
 <br>

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-04-18" />
+<meta name="date" content="2019-04-29" />
 
 <title>Data Parsing</title>
 
@@ -467,7 +467,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data Parsing</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-04-18</h4>
+<h4 class="date">2019-04-29</h4>
 
 </div>
 
@@ -483,7 +483,7 @@ div.tocify {
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -531,7 +531,7 @@ div.tocify {
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -582,7 +582,7 @@ div.tocify {
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -662,7 +662,7 @@ div.tocify {
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -687,53 +687,6 @@ div.tocify {
 ## otu_table()   OTU Table:         [ 920 taxa and 481 samples ]
 ## sample_data() Sample Data:       [ 481 samples by 4 sample variables ]
 ## tax_table()   Taxonomy Table:    [ 920 taxa by 6 taxonomic ranks ]</code></pre>
-<p><br></p>
-<hr />
-<p><br></p>
-</div>
-<div id="set_treatment_levels" class="section level2">
-<h2>set_treatment_levels</h2>
-<p><a name="set_treatment_levels"></a></p>
-<p>This can be used to reassing the order of the levels of a factor in the sample-data.</p>
-<p><strong><em>Useful for:</em></strong></p>
-<ul>
-<li>managing order which variables appear in figures</li>
-</ul>
-<p><strong><em>Usage</em></strong></p>
-<pre class="r"><code>set_treatment_levels(phyloseq_obj, treatment, order)</code></pre>
-<p><br> <strong><em>Arguments</em></strong></p>
-<table>
-<colgroup>
-<col width="25%" />
-<col width="74%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Call</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>phyloseq_obj</code></td>
-<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
-</tr>
-<tr class="even">
-<td><code>treatment</code></td>
-<td>Column name as a <code>string</code> or <code>numeric</code> in the .</td>
-</tr>
-<tr class="odd">
-<td><code>order</code></td>
-<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s. If assigned “numeric” will set ascending numerical order.</td>
-</tr>
-</tbody>
-</table>
-<p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>levels(soil_column@sam_data$Day)</code></pre>
-<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;108&quot; &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;</code></pre>
-<pre class="r"><code>ordered_days &lt;- set_treatment_levels(soil_column, &#39;Day&#39;, &#39;numeric&#39;)
-levels(ordered_days@sam_data$Day)</code></pre>
-<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;  &quot;108&quot;</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -767,6 +720,94 @@ levels(ordered_days@sam_data$Day)</code></pre>
 <hr />
 <p><br></p>
 </div>
+<div id="set_sample_order" class="section level2">
+<h2>set_sample_order</h2>
+<p><a name="set_sample_order"></a></p>
+<p>Arranged the phyloseq object so that the samples are listed in a given order, or sorted on metadata. This is most useful for visual inspection of the metadata, and having the samples presented in a correct order in ggplor figures.</p>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>set_sample_order(phyloseq_obj, sort_by)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>sort_by</code></td>
+<td>Column name as a  or  in the , or vector of sample names or indices in particular order.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>unsorted &lt;- set_treatment_levels(soil_column, treatment = &#39;Day&#39;, order = &#39;numeric&#39;)
+as(set_sample_order(unsorted, sort_on = c(&#39;Treatment&#39;, &#39;Matrix&#39;, &#39;Day&#39;))@sam_data, &#39;data.frame&#39;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Matrix"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Treatment"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["Day"],"name":[3],"type":["fctr"],"align":["left"]}],"data":[{"1":"Manure","2":"Control","3":"0","_rn_":"S_0"},{"1":"Manure","2":"Control","3":"0","_rn_":"S_1"},{"1":"Manure","2":"Control","3":"0","_rn_":"S_2"},{"1":"Manure","2":"Control","3":"0","_rn_":"S_3"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_206"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_207"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_208"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_209"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_210"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_211"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_212"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_213"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_214"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_215"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_216"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_217"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_218"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_219"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_220"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_221"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_222"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_223"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_224"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_225"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_226"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_227"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_228"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_229"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_230"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_231"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_232"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_233"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_234"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_235"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_236"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_237"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_238"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_239"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_240"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_241"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_242"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_243"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_244"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_245"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_246"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_247"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_248"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_249"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_250"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_251"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_252"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_253"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_254"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_255"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_256"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_257"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_258"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_259"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_260"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_261"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_262"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_263"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_264"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_265"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_266"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_267"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_268"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_269"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_270"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_271"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_272"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_273"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_274"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_275"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_276"},{"1":"Soil","2":"Control","3":"0","_rn_":"S_277"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_350"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_351"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_352"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_353"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_354"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_355"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_356"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_357"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_358"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_359"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_360"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_361"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_362"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_363"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_364"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_365"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_366"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_367"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_368"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_369"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_370"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_371"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_372"},{"1":"Soil","2":"Control","3":"24","_rn_":"S_373"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_398"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_399"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_400"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_401"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_402"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_403"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_404"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_405"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_406"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_407"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_408"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_409"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_410"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_411"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_412"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_413"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_414"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_415"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_416"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_417"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_418"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_419"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_420"},{"1":"Soil","2":"Control","3":"59","_rn_":"S_421"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_442"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_443"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_444"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_445"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_446"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_447"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_448"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_449"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_450"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_451"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_452"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_453"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_454"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_455"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_456"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_457"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_458"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_459"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_460"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_461"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_462"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_463"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_464"},{"1":"Soil","2":"Control","3":"108","_rn_":"S_465"},{"1":"Water","2":"Control","3":"10","_rn_":"S_10"},{"1":"Water","2":"Control","3":"10","_rn_":"S_11"},{"1":"Water","2":"Control","3":"10","_rn_":"S_12"},{"1":"Water","2":"Control","3":"10","_rn_":"S_13"},{"1":"Water","2":"Control","3":"10","_rn_":"S_14"},{"1":"Water","2":"Control","3":"10","_rn_":"S_15"},{"1":"Water","2":"Control","3":"10","_rn_":"S_16"},{"1":"Water","2":"Control","3":"10","_rn_":"S_17"},{"1":"Water","2":"Control","3":"10","_rn_":"S_18"},{"1":"Water","2":"Control","3":"10","_rn_":"S_19"},{"1":"Water","2":"Control","3":"10","_rn_":"S_20"},{"1":"Water","2":"Control","3":"10","_rn_":"S_21"},{"1":"Water","2":"Control","3":"10","_rn_":"S_22"},{"1":"Water","2":"Control","3":"10","_rn_":"S_23"},{"1":"Water","2":"Control","3":"10","_rn_":"S_24"},{"1":"Water","2":"Control","3":"10","_rn_":"S_8"},{"1":"Water","2":"Control","3":"10","_rn_":"S_9"},{"1":"Water","2":"Control","3":"24","_rn_":"S_42"},{"1":"Water","2":"Control","3":"24","_rn_":"S_43"},{"1":"Water","2":"Control","3":"24","_rn_":"S_44"},{"1":"Water","2":"Control","3":"24","_rn_":"S_45"},{"1":"Water","2":"Control","3":"24","_rn_":"S_46"},{"1":"Water","2":"Control","3":"24","_rn_":"S_47"},{"1":"Water","2":"Control","3":"24","_rn_":"S_48"},{"1":"Water","2":"Control","3":"24","_rn_":"S_49"},{"1":"Water","2":"Control","3":"24","_rn_":"S_50"},{"1":"Water","2":"Control","3":"24","_rn_":"S_51"},{"1":"Water","2":"Control","3":"24","_rn_":"S_52"},{"1":"Water","2":"Control","3":"24","_rn_":"S_53"},{"1":"Water","2":"Control","3":"24","_rn_":"S_54"},{"1":"Water","2":"Control","3":"24","_rn_":"S_55"},{"1":"Water","2":"Control","3":"24","_rn_":"S_56"},{"1":"Water","2":"Control","3":"24","_rn_":"S_57"},{"1":"Water","2":"Control","3":"24","_rn_":"S_58"},{"1":"Water","2":"Control","3":"24","_rn_":"S_59"},{"1":"Water","2":"Control","3":"38","_rn_":"S_78"},{"1":"Water","2":"Control","3":"38","_rn_":"S_79"},{"1":"Water","2":"Control","3":"38","_rn_":"S_80"},{"1":"Water","2":"Control","3":"38","_rn_":"S_81"},{"1":"Water","2":"Control","3":"38","_rn_":"S_82"},{"1":"Water","2":"Control","3":"38","_rn_":"S_83"},{"1":"Water","2":"Control","3":"38","_rn_":"S_84"},{"1":"Water","2":"Control","3":"38","_rn_":"S_85"},{"1":"Water","2":"Control","3":"38","_rn_":"S_86"},{"1":"Water","2":"Control","3":"38","_rn_":"S_87"},{"1":"Water","2":"Control","3":"38","_rn_":"S_88"},{"1":"Water","2":"Control","3":"38","_rn_":"S_89"},{"1":"Water","2":"Control","3":"38","_rn_":"S_90"},{"1":"Water","2":"Control","3":"38","_rn_":"S_91"},{"1":"Water","2":"Control","3":"38","_rn_":"S_92"},{"1":"Water","2":"Control","3":"38","_rn_":"S_93"},{"1":"Water","2":"Control","3":"38","_rn_":"S_94"},{"1":"Water","2":"Control","3":"59","_rn_":"S_110"},{"1":"Water","2":"Control","3":"59","_rn_":"S_111"},{"1":"Water","2":"Control","3":"59","_rn_":"S_112"},{"1":"Water","2":"Control","3":"59","_rn_":"S_113"},{"1":"Water","2":"Control","3":"59","_rn_":"S_114"},{"1":"Water","2":"Control","3":"59","_rn_":"S_115"},{"1":"Water","2":"Control","3":"59","_rn_":"S_116"},{"1":"Water","2":"Control","3":"59","_rn_":"S_117"},{"1":"Water","2":"Control","3":"59","_rn_":"S_118"},{"1":"Water","2":"Control","3":"59","_rn_":"S_119"},{"1":"Water","2":"Control","3":"59","_rn_":"S_120"},{"1":"Water","2":"Control","3":"59","_rn_":"S_121"},{"1":"Water","2":"Control","3":"59","_rn_":"S_122"},{"1":"Water","2":"Control","3":"59","_rn_":"S_123"},{"1":"Water","2":"Control","3":"59","_rn_":"S_124"},{"1":"Water","2":"Control","3":"59","_rn_":"S_125"},{"1":"Water","2":"Control","3":"59","_rn_":"S_126"},{"1":"Water","2":"Control","3":"59","_rn_":"S_127"},{"1":"Water","2":"Control","3":"80","_rn_":"S_143"},{"1":"Water","2":"Control","3":"80","_rn_":"S_144"},{"1":"Water","2":"Control","3":"80","_rn_":"S_145"},{"1":"Water","2":"Control","3":"80","_rn_":"S_146"},{"1":"Water","2":"Control","3":"80","_rn_":"S_147"},{"1":"Water","2":"Control","3":"80","_rn_":"S_148"},{"1":"Water","2":"Control","3":"80","_rn_":"S_149"},{"1":"Water","2":"Control","3":"80","_rn_":"S_150"},{"1":"Water","2":"Control","3":"80","_rn_":"S_151"},{"1":"Water","2":"Control","3":"80","_rn_":"S_152"},{"1":"Water","2":"Control","3":"80","_rn_":"S_153"},{"1":"Water","2":"Control","3":"80","_rn_":"S_154"},{"1":"Water","2":"Control","3":"80","_rn_":"S_155"},{"1":"Water","2":"Control","3":"80","_rn_":"S_156"},{"1":"Water","2":"Control","3":"80","_rn_":"S_157"},{"1":"Water","2":"Control","3":"80","_rn_":"S_158"},{"1":"Water","2":"Control","3":"80","_rn_":"S_159"},{"1":"Water","2":"Control","3":"108","_rn_":"S_174"},{"1":"Water","2":"Control","3":"108","_rn_":"S_175"},{"1":"Water","2":"Control","3":"108","_rn_":"S_176"},{"1":"Water","2":"Control","3":"108","_rn_":"S_177"},{"1":"Water","2":"Control","3":"108","_rn_":"S_178"},{"1":"Water","2":"Control","3":"108","_rn_":"S_179"},{"1":"Water","2":"Control","3":"108","_rn_":"S_180"},{"1":"Water","2":"Control","3":"108","_rn_":"S_181"},{"1":"Water","2":"Control","3":"108","_rn_":"S_182"},{"1":"Water","2":"Control","3":"108","_rn_":"S_183"},{"1":"Water","2":"Control","3":"108","_rn_":"S_184"},{"1":"Water","2":"Control","3":"108","_rn_":"S_185"},{"1":"Water","2":"Control","3":"108","_rn_":"S_186"},{"1":"Water","2":"Control","3":"108","_rn_":"S_187"},{"1":"Water","2":"Control","3":"108","_rn_":"S_188"},{"1":"Water","2":"Control","3":"108","_rn_":"S_189"},{"1":"Water","2":"Control","3":"108","_rn_":"S_190"},{"1":"Water","2":"Control","3":"108","_rn_":"S_191"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_278"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_279"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_280"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_281"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_282"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_283"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_284"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_285"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_286"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_287"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_288"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_289"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_290"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_291"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_292"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_293"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_294"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_295"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_296"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_297"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_298"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_299"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_300"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_301"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_302"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_303"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_304"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_305"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_306"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_307"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_308"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_309"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_310"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_311"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_312"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_313"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_314"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_315"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_316"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_317"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_318"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_319"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_320"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_321"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_322"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_323"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_324"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_325"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_326"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_327"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_328"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_329"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_330"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_331"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_332"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_333"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_334"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_335"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_336"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_337"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_338"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_339"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_340"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_341"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_342"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_343"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_344"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_345"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_346"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_347"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_348"},{"1":"Soil","2":"Manure","3":"0","_rn_":"S_349"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_374"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_375"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_376"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_377"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_378"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_379"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_380"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_381"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_382"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_383"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_384"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_385"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_386"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_387"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_388"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_389"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_390"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_391"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_392"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_393"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_394"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_395"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_396"},{"1":"Soil","2":"Manure","3":"24","_rn_":"S_397"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_422"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_423"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_424"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_425"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_426"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_427"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_428"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_429"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_430"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_431"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_432"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_433"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_434"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_435"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_436"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_437"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_438"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_439"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_440"},{"1":"Soil","2":"Manure","3":"59","_rn_":"S_441"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_466"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_467"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_468"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_469"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_470"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_471"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_472"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_473"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_474"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_475"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_476"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_477"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_478"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_479"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_480"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_481"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_482"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_483"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_484"},{"1":"Soil","2":"Manure","3":"108","_rn_":"S_485"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_25"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_26"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_27"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_28"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_29"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_30"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_31"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_32"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_33"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_34"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_35"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_36"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_37"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_38"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_39"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_40"},{"1":"Water","2":"Manure","3":"10","_rn_":"S_41"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_60"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_61"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_62"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_63"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_64"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_65"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_66"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_67"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_68"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_69"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_70"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_71"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_72"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_73"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_74"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_75"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_76"},{"1":"Water","2":"Manure","3":"24","_rn_":"S_77"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_100"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_101"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_102"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_103"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_104"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_105"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_106"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_107"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_108"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_109"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_95"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_96"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_97"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_98"},{"1":"Water","2":"Manure","3":"38","_rn_":"S_99"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_128"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_129"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_130"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_131"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_132"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_133"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_134"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_135"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_136"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_137"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_138"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_139"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_140"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_141"},{"1":"Water","2":"Manure","3":"59","_rn_":"S_142"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_160"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_161"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_162"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_163"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_164"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_166"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_167"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_168"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_169"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_170"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_171"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_172"},{"1":"Water","2":"Manure","3":"80","_rn_":"S_173"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_192"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_193"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_194"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_195"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_196"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_197"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_198"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_199"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_200"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_201"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_202"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_203"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_204"},{"1":"Water","2":"Manure","3":"108","_rn_":"S_205"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="set_treatment_levels" class="section level2">
+<h2>set_treatment_levels</h2>
+<p><a name="set_treatment_levels"></a></p>
+<p>This can be used to reassing the order of the levels of a factor in the sample-data.</p>
+<p><strong><em>Useful for:</em></strong></p>
+<ul>
+<li>managing order which variables appear in figures</li>
+</ul>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>set_treatment_levels(phyloseq_obj, treatment, order)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the .</td>
+</tr>
+<tr class="odd">
+<td><code>order</code></td>
+<td>The order of factors in  column as a <code>vector</code> of <code>string</code>s. If assigned “numeric” will set ascending numerical order.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>levels(soil_column@sam_data$Day)</code></pre>
+<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;108&quot; &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;</code></pre>
+<pre class="r"><code>ordered_days &lt;- set_treatment_levels(soil_column, &#39;Day&#39;, &#39;numeric&#39;)
+levels(ordered_days@sam_data$Day)</code></pre>
+<pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;  &quot;108&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
 <div id="taxa_filter" class="section level2">
 <h2>taxa_filter</h2>
 <p><a name="taxa_filter"></a></p>
@@ -791,7 +832,7 @@ levels(ordered_days@sam_data$Day)</code></pre>
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -874,7 +915,7 @@ levels(ordered_days@sam_data$Day)</code></pre>
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -930,7 +971,7 @@ levels(ordered_days@sam_data$Day)</code></pre>
 <table>
 <colgroup>
 <col width="25%" />
-<col width="74%" />
+<col width="75%" />
 </colgroup>
 <thead>
 <tr class="header">
