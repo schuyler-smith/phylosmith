@@ -3,7 +3,9 @@
 language: r
 use_bioc: true
 bioc_required: true
-cache: packages
+cache:
+  - packages
+  - ccache
 sudo: false
 dist: trusty
 os:

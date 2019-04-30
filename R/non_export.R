@@ -80,7 +80,7 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 #'
 #' This function creates color palettes for graphs.
 #' @useDynLib phylosmith
-#' @usage create_palette(color_count, colors)
+#' @usage create_palette(color_count, colors = 'default')
 #' @param color_count Number of colors to choose for palette.
 #' @param colors Name of a color set from the
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
@@ -91,7 +91,7 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 #' @examples
 #' #create_palette(8, 'Dark2')
 
-create_palette <- function(color_count, colors){
+create_palette <- function(color_count, colors = 'default'){
     options(warn = -1)
     cbcolors <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
         "#0072B2", "#D55E00", "#CC79A7")
