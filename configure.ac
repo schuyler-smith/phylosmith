@@ -1,16 +1,49 @@
 
 AC_PREREQ(2.69)
+AC_INIT(phylosmith)
+AC_CONFIG_SRCDIR([src])
+AC_LANG(C++)
+AC_REQUIRE_CPP
 
-AC_INIT(phylosmith, m4_esyscmd_s([awk '/^Version:/ {print $2}' DESCRIPTION]))
+: ${R_HOME=$(R RHOME)}
+AC_MSG_CHECKING([R_HOME already set])
+if test -z "${R_HOME}"; then
+    AC_MSG_RESULT([No])
+    AC_MSG_ERROR([Cannot proceed.])
+fi
+AC_MSG_RESULT([${R_HOME}])
+R_BIN="${R_HOME}/bin/R"
+
+AC_MSG_CHECKING([R CXX11])
+if test -z "$CXX11"; then
+  CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
+  AC_MSG_RESULT([Setting ${CXX11}])
+else
+  AC_MSG_RESULT([Using pre-set ${CXX11}])
+fi
+
+AC_MSG_CHECKING([R CXX11STD])
+if test -z "$CXX11STD"; then
+  CXX11STD=`"${R_HOME}/bin/R" CMD config CXX11STD`
+  AC_MSG_RESULT([Setting R ${CXX11STD}])
+else
+  AC_MSG_RESULT([Using existing ${CXX11STD}])
+fi
+
+AC_MSG_CHECKING([R CXX11FLAGS])
+if test -z "$CXX11FLAGS"; then
+  CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
+  AC_MSG_RESULT([Setting R ${CXX11FLAGS}])
+else
+  AC_MSG_RESULT([Using existing ${CXX11FLAGS}])
+fi
 
 CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
 CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX1XSTD`
 CXX="${CXX1X} ${CXX1XSTD}"
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX1XFLAGS`
-PKG_CPPFLAGS=-I../inst/include/
 
-AC_LANG(C++)
-AC_REQUIRE_CPP
+LIBS="${PKG_LIBS}"
 
 OPENMP_[]_AC_LANG_PREFIX[]FLAGS=
 AC_ARG_ENABLE([openmp],
