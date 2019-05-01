@@ -94,12 +94,13 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 create_palette <- function(color_count, colors = 'default'){
     options(warn = -1)
     mycolors <- c(
-    "#A8B1CC", "#E69F00", "#56B4E9", "#009E73",
-    "#F0E442", "#0072B2", "#D55E00", "#9EDA8F",
-    "#CC79A7", "#757575", "#DE9861", "#A6CBE0",
-    "#B275D8", "#82BB47", "#F5E56C", "#949696",
-    "#4989DE", "#CE1B00", "#E2E2E2", "#2D9A08",
-    "#CC4F93", "#9598FF", "#565656", "#F7B04C")
+      "#A8B1CC", "#E69F00", "#56B4E9", "#009E73",
+      "#F0E442", "#0072B2", "#D55E00", "#9EDA8F",
+      "#CC79A7", "#757575", "#DE9861", "#A6CBE0",
+      "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
+      "#949696", "#4989DE", "#E2E2E2", "#565656",
+      "#F7B04C", "#696bb2")
+    # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
     if(colors == 'default'){
       if(color_count <= length(mycolors)){
         return(mycolors[seq(color_count)])

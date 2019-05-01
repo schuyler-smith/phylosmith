@@ -647,7 +647,7 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
     }
     graph_data <- melt_phyloseq(graph_data)
     graph_data[[classification]] <- factor(graph_data[[classification]],
-        levels = rev(unique(graph_data[[classification]])))
+        levels = sort(unique(graph_data[[classification]])))
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
     graph_data[['Sample']] <- factor(graph_data[['Sample']],
