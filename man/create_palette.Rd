@@ -5,7 +5,7 @@
 \title{Internal function for creating color palettes for graphs.
 Function from the phylosmith-package.}
 \usage{
-create_palette(color_count, colors)
+create_palette(color_count, colors = 'default')
 }
 \arguments{
 \item{color_count}{Number of colors to choose for palette.}

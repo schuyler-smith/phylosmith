@@ -94,29 +94,31 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 create_palette <- function(color_count, colors = 'default'){
     options(warn = -1)
     mycolors <- c(
-      "#A8B1CC", "#E69F00", "#56B4E9", "#009E73",
-      "#F0E442", "#0072B2", "#D55E00", "#9EDA8F",
-      "#CC79A7", "#757575", "#DE9861", "#A6CBE0",
-      "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
-      "#949696", "#4989DE", "#E2E2E2", "#565656",
-      "#F7B04C", "#696bb2")
-    # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
-    if(colors == 'default'){
-      if(color_count <= length(mycolors)){
-        return(mycolors[seq(color_count)])
-      }
+        "#A8B1CC", "#E69F00", "#56B4E9", "#009E73",
+        "#F0E442", "#0072B2", "#D55E00", "#9EDA8F",
+        "#CC79A7", "#757575", "#DE9861", "#A6CBE0",
+        "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
+        "#949696", "#4989DE", "#E2E2E2", "#565656",
+        "#F7B04C", "#696bb2")
+    # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)),
+    # col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
+    if(any(colors == 'default')){
+        colors <- mycolors
+        if(color_count <= length(colors)){
+            return(colors[seq(color_count)])
+        }
     }
-    else if(colors == 'rev' | colors == 'reverse'){
-      if(color_count <= length(mycolors)){
-        return(rev(mycolors[seq(color_count)]))
-      }
-    } else {
-      if(any(!(colors %in% colors()))){
+    if(any(colors %in% 'rev') | any(colors %in% 'reverse')){
+        colors <- rev(mycolors)
+        if(color_count <= length(mycolors)){
+            return(rev(mycolors[seq(color_count)]))
+        }
+    }
+    if(any(!(colors %in% colors()))){
         if(any(colors %in% rownames(brewer.pal.info))){
-          getPalette <- colorRampPalette(brewer.pal(min(c(color_count,
-                                                          brewer.pal.info[rownames(brewer.pal.info) == colors, 1])), colors))
+            getPalette <- colorRampPalette(brewer.pal(min(c(color_count,
+            brewer.pal.info[rownames(brewer.pal.info) == colors, 1])), colors))
         } else { getPalette <- colorRampPalette(colors)}
-      } else { getPalette <- colorRampPalette(colors)}
-      return(getPalette(color_count))
-    }
+    } else { getPalette <- colorRampPalette(colors)}
+    return(getPalette(color_count))
 }
