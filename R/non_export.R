@@ -93,12 +93,12 @@ check_numeric_classification <- function(phyloseq_obj, ...){
 
 create_palette <- function(color_count, colors = 'default'){
     options(warn = -1)
-    if(colors == 'default'){colors <- c("#A8B1CC",
-      "#E69F00", "#56B4E9", "#009E73", "#F0E442",
-      "#0072B2", "#D55E00", "#CC79A7", "#D334B8", "#52FBD7",
-      "#6C9262", "#96F589", "#28CEEF", "#35B996", "#1D08DC",
-      "#DA1135", "#59A25E", "#73091B", "#112BF2", "#E4E354",
-      "#BA2DEF", "#60BC75", "#F7A1C6", "#119B90",
+    if(colors == 'default'){colors <- c(
+      "#A8B1CC", "#E69F00", "#56B4E9", "#009E73",
+      "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+      "#59A25E", "#96F589", "#28CEEF",
+      "#1D08DC", "#DA1135", "#73091B", "#E4E354",
+      "#BD45EA", "#52FBD7", "#60BC75", "#F7A1C6",
       "#C08352", "#38E3DC", "#B43B35", "#9A8BDD")
       if(color_count <= length(colors)){
         return(colors[seq(color_count)])
