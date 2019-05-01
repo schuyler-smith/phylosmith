@@ -99,8 +99,8 @@ create_palette <- function(color_count, colors = 'default'){
         "#F0E442", "#0072B2", "#D55E00", "#9EDA8F",
         "#CC79A7", "#757575", "#DE9861", "#A6CBE0",
         "#B275D8", "#82BB47", "#F5E56C", "#949696",
-        "#4989DE", "#CE1B00", "#E2E2E2", "#57B537",
-        "#CC4F93", "#F7B04C", "#9598FF", "#565656")
+        "#4989DE", "#CE1B00", "#E2E2E2", "#2D9A08",
+        "#CC4F93", "#9598FF", "#565656", "#F7B04C")
       if(color_count <= length(colors)){
         return(colors[seq(color_count)])
       }
