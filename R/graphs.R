@@ -889,27 +889,28 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
         aes_string(fill = treatment_name), show.legend = FALSE) +
         scale_color_manual(values = graph_colors) + guides(color = FALSE)}
     g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black',
-            size = 5, alpha = 1.0) +
+            size = 7, alpha = 1.0) +
         scale_fill_manual(values = graph_colors) +
-        theme_light() +
+        theme_classic() +
         theme(
             aspect.ratio = 1,
             axis.line.x = element_line(colour = 'black', size = 1,
                 linetype = 'solid'),
             axis.line.y = element_line(colour = 'black', size = 1,
                 linetype = 'solid'),
-            axis.text.x=element_text(size = 10, face = "bold"),
-            axis.text.y=element_text(size = 10, face = "bold"),
-            axis.title.x=element_text(size = 12, face= "bold"),
-            axis.title.y=element_text(size = 12, face= "bold"),
+            axis.text.x=element_text(size = 12, face = "bold"),
+            axis.text.y=element_text(size = 12, face = "bold"),
+            axis.title.x=element_text(size = 18, face= "bold"),
+            axis.title.y=element_text(size = 18, face= "bold"),
             legend.title=element_blank(),
-            legend.text=element_text(size = 11, face = "bold"),
+            legend.text=element_text(size = 18, face = "bold"),
             legend.background = element_rect(fill = (alpha = 0))
         )
     if(is.character(labels)){
         g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'),
             label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines"),
             show.legend = FALSE)}
+    g <- g + labs(x = 't-SNE 1', y = 't-SNE 2')
     return(g)
 }
 
