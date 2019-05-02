@@ -106,7 +106,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
         fill = 'Abundance')) +
         geom_tile(color = "white", size = 0.25) +
         facet_grid(treatment_name, scales = "free", space = "free") +
-        theme_bw() +
+        theme_classic() +
         theme(
           axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
           axis.text.y = element_text(hjust = 0.95, size = 12),
@@ -232,7 +232,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
       g <- g + geom_point(size = 1.5, aes_string(color = classification))
     }
     g <- g + geom_line(size = 1.2, aes_string(color=classification))+
-      theme_bw() +
+      theme_classic() +
       theme(
         axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
         axis.text.y = element_text(hjust = 0.95, size = 12),
@@ -242,6 +242,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
         legend.text=element_text(size = 16),
         legend.background = element_rect(fill = (alpha = 0))
        ) +
+      scale_y_continuous(expand = expand_scale(mult = c(0, .002))) +
       guides(colour = guide_legend(
           ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
       facet_grid(treatment_name, scales = "free", space = "free") +
@@ -678,7 +679,7 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
 
     g <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance",
         fill = classification)) +
-        theme_bw() +
+        theme_classic() +
         theme(
           axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
           axis.text.y = element_text(size = 12),
@@ -687,6 +688,7 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
           legend.title = element_blank(),
           legend.text = element_text(size = 12)
         ) +
+        scale_y_continuous(expand = expand_scale(mult = c(0, 0.002))) +
         guides(colour = guide_legend(
             ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
         scale_fill_manual(values = graph_colors,
@@ -830,7 +832,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
           legend.text=element_text(size = 16),
           legend.title = element_text(size = 16, face = "bold"),
           legend.background = element_rect(fill = (alpha = 0))
-        ) + scale_y_continuous(expand = expand_scale(mult = c(0, .2))) +
+        ) + scale_y_continuous(expand = expand_scale(mult = c(0, 0.002))) +
         guides(colour = guide_legend(
             ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
         scale_fill_manual(values = graph_colors,
