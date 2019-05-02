@@ -40,7 +40,7 @@ Call | Description
 
 ***Examples***
 ```{r abundance_heatmap_ggplot}
-abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), transformation = 'log')
+abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), transformation = 'log10')
 ```
 
 <br>
