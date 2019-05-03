@@ -34,7 +34,7 @@ classify_ARG_classes <- function(phyloseq_obj, genes, combine = 0, obo = NULL){
         } else {res <- 'Unclassified'}
         if(combine == 0 | combine == 1){return(res)}
         if(length(str_split(res, ', ')[[1]]) >= combine){
-            res <- 'Multiple_Resistance'}
+            res <- 'Multiple Resistance'}
         return(res)
     })))
     tax_tab <- data.table(as(phyloseq_obj@tax_table, 'matrix'))
