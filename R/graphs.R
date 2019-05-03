@@ -562,6 +562,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
           axis.title.y=element_text(size = 16, face= "bold"),
           legend.title=element_blank(),
           legend.text=element_text(size = 16),
+          legend.spacing.x = unit(0.2, 'cm'),
           legend.background = element_rect(fill = (alpha = 0))
         ) + labs(x = 'NMDS 1', y = 'NMDS 2')
     if(is.character(labels)){
@@ -685,7 +686,8 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
           axis.title.x = element_blank(),
           axis.title.y = element_text(size = 16, face = 'bold'),
           legend.title = element_blank(),
-          legend.text = element_text(size = 12)
+          legend.text = element_text(size = 12),
+          legend.spacing.x = unit(0.2, 'cm')
         ) +
         scale_y_continuous(expand = expand_scale(mult = c(0, 0.002))) +
         guides(colour = guide_legend(
@@ -944,6 +946,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
             axis.title.y=element_text(size = 16, face= "bold"),
             legend.title=element_blank(),
             legend.text=element_text(size = 16),
+            legend.spacing.x = unit(0.2, 'cm'),
             legend.background = element_rect(fill = (alpha = 0))
         ) + labs(x = 't-SNE 1', y = 't-SNE 2')
     if(is.character(labels)){
