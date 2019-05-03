@@ -114,6 +114,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
           axis.title.y=element_blank(),
           legend.title=element_blank(),
           legend.text=element_text(size = 16),
+          legend.spacing.x = unit(0.2, 'cm'),
           legend.background = element_rect(fill = (alpha = 0))
         ) +
         if(transformation %in% c('none', 'relative_abundance')){

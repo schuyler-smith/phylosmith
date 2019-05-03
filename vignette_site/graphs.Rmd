@@ -112,7 +112,7 @@ Call | Description
 
 ***Examples***
 ```{r network_phyloseq}
-network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil_Manure', co_occurrence_table = NULL, classification = 'phylum')
+network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Manure', co_occurrence_table = NULL, classification = 'phylum')
 ```
 
 <br>

@@ -387,10 +387,10 @@ merge_treatments <- function(phyloseq_obj, ...){
     order <- apply(eval(parse(text = paste0("expand.grid(",
         paste0(paste0("levels(factor(access(phyloseq_obj, 'sam_data')[['",
         treatments, "']]))", collapse = ', ')), ")"))), 1,
-        FUN = function(combination){paste0(combination, collapse = sep)})
+        FUN = function(combination){paste0(combination, collapse = ' ')})
     eval(parse(text=paste0("treatment_classes[, '", treatment_name,
         "' := as.character(paste(", paste(treatments, collapse = ', '),
-        ', sep = sep), by = treatment_classes)]')))
+        ', sep = " "), by = treatment_classes)]')))
     sample_data(phyloseq_obj)[[treatment_name]] <- factor(
         treatment_classes[[treatment_name]], levels = order)
     return(phyloseq_obj)
@@ -571,7 +571,7 @@ relative_abundance <- function(phyloseq_obj){
 #' @return phyloseq-object
 #' @examples taxa_filter(soil_column, frequency = 0.8)
 #' taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'),
-#' subset = 'Soil_Manure', frequency = 0.8)
+#' subset = 'Soil Manure', frequency = 0.8)
 
 taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     frequency = 0, below = FALSE, drop_samples = FALSE){
