@@ -26,7 +26,7 @@
 
 check_numeric_treatment <- function(phyloseq_obj, ...){
     treatments <- list(...)
-    if(any(sapply(treatments, is.null)) | any(sapply(treatments, is.na))){
+    if(any(unlist(sapply(treatments, is.null))) | any(unlist(sapply(treatments, is.na)))){
       return(NULL)
     } else {
       return(unlist(sapply(treatments, FUN = function(treatment){
@@ -66,7 +66,7 @@ check_numeric_treatment <- function(phyloseq_obj, ...){
 
 check_numeric_classification <- function(phyloseq_obj, ...){
     classifications <- list(...)
-    if(any(sapply(classifications, is.null)) | any(sapply(classifications, is.na))){
+    if(any(unlist(sapply(classifications, is.null))) | any(unlist(sapply(classifications, is.na)))){
       return(NULL)
     } else {
       return(unlist(sapply(classifications, FUN = function(classification){
