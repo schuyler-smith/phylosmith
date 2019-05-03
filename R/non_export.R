@@ -26,12 +26,13 @@
 
 check_numeric_treatment <- function(phyloseq_obj, ...){
     treatments <- list(...)
-    treatments <- unlist(sapply(treatments, FUN = function(treatment){
-            if(is.numeric(treatment)){
-                return(colnames(access(phyloseq_obj, 'sam_data')[,treatment]))
-            } else {return(treatment)}
-    }))
-    return(treatments)
+    if(any(sapply(treatments, is.null))){
+      return(NULL)
+    } else {
+      return(unlist(sapply(treatments, FUN = function(treatment){
+        colnames(access(phyloseq_obj, 'sam_data')[,treatment])
+      })))
+    }
 }
 
 #' Converts numeric values to column names in tax_table
@@ -65,14 +66,13 @@ check_numeric_treatment <- function(phyloseq_obj, ...){
 
 check_numeric_classification <- function(phyloseq_obj, ...){
     classifications <- list(...)
-    classifications <- unlist(sapply(classifications,
-        FUN = function(classification){
-        if(is.numeric(classification)){
-            return(colnames(access(phyloseq_obj,
-                'tax_table')[,classification]))
-        } else {return(classification)}
-    }))
-    return(classifications)
+    if(any(sapply(classifications, is.null))){
+      return(NULL)
+    } else {
+      return(unlist(sapply(classifications, FUN = function(classification){
+            colnames(access(phyloseq_obj, 'tax_table')[,classification])
+      })))
+    }
 }
 
 #' Internal function for creating color palettes for graphs.

@@ -19,21 +19,21 @@ library(phylosmith)
 
 ## Functions
 
-### [Data Parsing](https://schuyler-smith.github.io/phylosmith/data_parsing.html)
+### [Data Wrangling](https://schuyler-smith.github.io/phylosmith/data_wrangling.html)
 
 Call			     | Description
 -------------------- | ------------------------------------------------------------
-[common_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#common_taxa) | find taxa common to each treatment
-[conglomerate_samples](https://schuyler-smith.github.io/phylosmith/data_parsing.html#conglomerate_samples)   |   Merge samples based on common factor within sample_data
-[conglomerate_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#conglomerate_taxa)  |  conglomerate taxa by sample on a given classification level
-[melt_phyloseq](https://schuyler-smith.github.io/phylosmith/data_parsing.html#melt_phyloseq)   |   Melt a phyloseq object into a data.table.
-[merge_treatments](https://schuyler-smith.github.io/phylosmith/data_parsing.html#merge_treatments) | combines multiple columns in meta-data into a single column
-[relative_abundance](https://schuyler-smith.github.io/phylosmith/data_parsing.html#relative_abundance) | transform abundance data to relative abundance
-[set_sample_order]((https://schuyler-smith.github.io/phylosmith/data_parsing.html#set_sample_order) | sets the order of the samples of a phyloseq object
-[set_treatment_levels]((https://schuyler-smith.github.io/phylosmith/data_parsing.html#set_treatment_levels) | sets the order of the factors in a sample_data column
-[taxa_proportions](https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_proportions) | computes the proportion of a taxa classification
-[taxa_filter](https://schuyler-smith.github.io/phylosmith/data_parsing.html#taxa_filter) | filter taxa by proportion of samples seen in
-[unique_taxa](https://schuyler-smith.github.io/phylosmith/data_parsing.html#unique_taxa) | find taxa unique to each treatment
+[common_taxa](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#common_taxa) | find taxa common to each treatment
+[conglomerate_samples](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#conglomerate_samples)   |   Merge samples based on common factor within sample_data
+[conglomerate_taxa](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#conglomerate_taxa)  |  conglomerate taxa by sample on a given classification level
+[melt_phyloseq](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#melt_phyloseq)   |   Melt a phyloseq object into a data.table.
+[merge_treatments](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#merge_treatments) | combines multiple columns in meta-data into a single column
+[relative_abundance](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#relative_abundance) | transform abundance data to relative abundance
+[set_sample_order]((https://schuyler-smith.github.io/phylosmith/data_wrangling.html#set_sample_order) | sets the order of the samples of a phyloseq object
+[set_treatment_levels]((https://schuyler-smith.github.io/phylosmith/data_wrangling.html#set_treatment_levels) | sets the order of the factors in a sample_data column
+[taxa_proportions](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#taxa_proportions) | computes the proportion of a taxa classification
+[taxa_filter](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#taxa_filter) | filter taxa by proportion of samples seen in
+[unique_taxa](https://schuyler-smith.github.io/phylosmith/data_wrangling.html#unique_taxa) | find taxa unique to each treatment
 
 ### [Graphs](https://schuyler-smith.github.io/phylosmith/graphs.html)
 

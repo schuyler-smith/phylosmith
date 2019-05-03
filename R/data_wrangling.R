@@ -375,8 +375,7 @@ merge_treatments <- function(phyloseq_obj, ...){
         stop("merge_treatments(): `phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
-    treatments <- list(...)
-    treatments <- check_numeric_treatment(phyloseq_obj, treatments)
+    treatments <- check_numeric_treatment(phyloseq_obj, ...)
     if(any(!(treatments %in% colnames(access(phyloseq_obj, 'sam_data'))))){
         stop("merge_treatments(): `treatments` must be at least two column
         names, or indices, from the sample_data()", call. = FALSE)

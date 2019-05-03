@@ -7,9 +7,9 @@ navbar:
     - text: Overview
       icon: fa-home
       href: index.html
-    - text: Data Parsing
+    - text: Data Wrangling
       icon: fa-file
-      href: data_parsing.html
+      href: data_wrangling.html
     - text: Graphs
       icon: fa-bar-chart
       href: graphs.html

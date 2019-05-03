@@ -1,0 +1,409 @@
+---
+title: "Data Wrangling"
+author: <a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a>
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.width=8, fig.height=4, cache = TRUE)
+library(phylosmith)
+data(soil_column)
+```
+
+<br>
+
+## common_taxa
+<a name="common_taxa"></a>
+
+Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a `vector` of taxa names that are all seen in `n` groups.
+
+<br>
+***Usage***
+```r
+common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`n` | Number of treatment groups that need to share the taxa to be considered a common taxa.
+
+***Examples***
+```{r common_taxa}
+common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control', n = 'all')[1:35]
+```
+
+<br>
+
+***
+
+<br>
+
+## conglomerate_samples
+<a name="conglomerate_samples"></a>
+
+Merges samples that match on the given criteria (`merge_on`). Any sample_data factors that do not match will be set to `NA`. otu_table counts will be reassigned as the mean of all the samples that are merged together. Use this with caution as replicate samples may be crucial to the experimental design and should be proven statistically to be similar enough to combine for downstream analysis. 
+
+<br>
+***Usage***
+```r
+conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatment)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+
+***Examples***
+```{r samples_otu, echo=FALSE}
+manure <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Manure_Control')
+manure
+```
+```{r conglomerate_samples}
+conglomerate_samples(manure, treatment = c('Matrix', 'Treatment'), subset = 'Manure', merge_on = 'Day')
+```
+
+<br>
+
+***
+
+<br>
+
+## conglomerate_taxa
+<a name="conglomerate_taxa"></a>
+
+A re-write of the `tax_glom()` function in Phyloseq. This implementation runs faster with the use of `data.table`.
+
+<br>
+***Usage***
+```r
+conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the tax_table for the factor to conglomerate by.
+`hierarchical` | Whether the order of factors in the tax_table represent a decreasing hierarchy (`TRUE`) or are independant (`FALSE`). If `FALSE`, will only return the factor given by `classification`.
+
+***Examples***
+```{r conglomerate_taxa}
+soil_column
+conglomerate_taxa(soil_column, classification = 'phylum', hierarchical = TRUE)
+```
+
+<br>
+
+***
+
+<br>
+
+## melt_phyloseq
+<a name="melt_phyloseq"></a>
+
+A re-write of the `tax_glom()` function in Phyloseq. This implementation runs faster with the use of `data.table`.
+
+<br>
+***Usage***
+```r
+melt_phyloseq(phyloseq_obj)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object.
+
+***Examples***
+```{r melt_phyloseq}
+melt_phyloseq(soil_column)
+```
+
+<br>
+
+***
+
+<br>
+
+## merge_treatments
+<a name="merge_treatments"></a>
+
+Combines multiple columns from the sample-data into a single column. Doing this can make it easier to subset and look at the data on multiple factors. If you looked at the last example from `taxa_filter` you may have noticed there was an additional sample variable after the function ran. That is becasue when multiple `treatment` are given, it uses this function to combine them for subsetting.
+
+<br>
+***Usage***
+```r
+merge_treatments(phyloseq_obj, ...)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample.
+`...` | any number of column names as `string`s or `numeric`s in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
+
+***Examples***
+```{r merge_treatments}
+merge_treatments(soil_column, 'Matrix', 2, 'Day')
+```
+
+<br>
+
+***
+
+<br>
+
+## relative_abundance
+<a name="relative_abundance"></a>
+
+This is a simple function to convert the the `otu_table` count data to relative abundance. Relative abundance sets the count sums for each sample to 1, and then assigns each taxa an abundance equal to its proportion on the total sum.
+
+<br>
+***Usage***
+```r
+relative_abundance(phyloseq_obj)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object that contains `otu_table` count data.
+
+***Examples***
+
+```{r relative_abundance}
+phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
+```
+
+<br>
+
+***
+
+<br>
+
+## set_sample_order
+<a name="set_sample_order"></a>
+
+Arranged the phyloseq object so that the samples are listed in a given order, or sorted on metadata. This is most useful for visual inspection of the metadata, and having the samples presented in a correct order in ggplor figures.
+
+***Usage***
+```r
+set_sample_order(phyloseq_obj, sort_by)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`sort_by` | Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}, or vector of sample names or indices in particular order.
+
+***Examples***
+```{r set_sample_order}
+unsorted <- set_treatment_levels(soil_column, treatment = 'Day', order = 'numeric')
+as(set_sample_order(unsorted, sort_on = c('Treatment', 'Matrix', 'Day'))@sam_data, 'data.frame')
+```
+
+<br>
+
+***
+
+<br>
+
+## set_treatment_levels
+<a name="set_treatment_levels"></a>
+
+This can be used to reassing the order of the levels of a factor in the sample-data.
+
+***Useful for:***
+
+  * managing order which variables appear in figures
+
+***Usage***
+```r
+set_treatment_levels(phyloseq_obj, treatment, order)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}.
+`order` | The order of factors in \code{treatment} column as a `vector` of `string`s. If assigned "numeric" will set ascending numerical order.
+
+***Examples***
+```{r set_treatment_levels}
+levels(soil_column@sam_data$Day)
+ordered_days <- set_treatment_levels(soil_column, 'Day', 'numeric')
+levels(ordered_days@sam_data$Day)
+```
+
+<br>
+
+***
+
+<br>
+
+## taxa_filter
+<a name="taxa_filter"></a>
+
+This is a robust function that is implemented in nearly every other function of this package. It uses many of the subsetting processes distributed within `phyloseq`, but strives to make them a more user-friendly and combined into a one-stop function. The function works in several steps.
+
+  * Checks to see if `treatments` were specified. If so, it splits the phyloseq into separate objects for each treatment to process.
+  * Check to see which taxa are seen in a proportion of samples across each phyloseq object > `frequency` (filtering out taxa seen in few samples) and then merge back to one object
+  * If `subset` is declared, remove all `treatment` outside of the `subset`
+  * If `drop_samples` is `TRUE` then remove any samples that have 0 taxa observed after filtering (this is a very situational need)
+
+If `frequency` is set to 0 (default), then the function removes any taxa with no abundance in any sample.
+
+***Useful for:***
+
+  * subsetting by sample_data factors
+  * removing low-presence taxa
+  * removing high-presence taxa
+
+***Usage***
+```r
+taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below = FALSE, drop_samples = FALSE)
+```
+
+<br>
+
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`frequency` | The proportion of samples the taxa is found in.
+`below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
+`drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
+
+***Examples***
+The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
+```{r check_data}
+soil_column
+```
+However, 339 of those taxa are not actually seen in any of the samples.
+```{r number_emtpy_taxa}
+length(phyloseq::taxa_sums(soil_column)[phyloseq::taxa_sums(soil_column) == 0])
+```
+`taxa_filter` with `frequency = 0` will remove those taxa.
+```{r taxa_filter_1}
+taxa_filter(soil_column, frequency = 0)
+```
+Say that we wanted to only look at taxa that are seen in 80% of the samples.
+```{r taxa_filter_2}
+taxa_filter(soil_column, frequency = 0.80)
+```
+But if we want taxa that are seen in 80% of any 1 teatment group;
+```{r taxa_filter_3}
+taxa_filter(soil_column, frequency = 0.80, treatment = 'Treatment')
+```
+It returns a larger number of taxa, since they need to be seen in less samples overall.
+
+In `soil_column`, the actual experimental conditions are a combination of the `Matrix` and `Treatment` columns, and the function can handle that too.
+```{r taxa_filter_4}
+taxa_filter(soil_column, frequency = 0.80, treatment = c('Matrix', 'Treatment'))
+```
+
+<br>
+
+***
+
+<br>
+
+## taxa_proportions
+<a name="taxa_proportions"></a>
+
+Computes the proportion of a taxa classification. This can be done by treatment, sample, or across the dataset.
+
+***Usage***
+```r
+taxa_proportions(phyloseq_obj, classification, treatment = NA)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`classification` | Column name as a `string` or `numeric` in the tax_table for the prportions to be reported on.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+
+***Examples***
+```{r taxa_proportions_treatment}
+taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
+```
+```{r taxa_proportions_sample}
+taxa_proportions(soil_column, 'phylum', treatment = 'sample')
+```
+```{r taxa_proportions_whole}
+taxa_proportions(soil_column, 'phylum', treatment = NA)
+```
+
+<br>
+
+***
+
+<br>
+
+## unique_taxa
+<a name="unique_taxa"></a>
+
+Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a `list` of `vector`s of taxa names that are only seen in each group.
+
+<br>
+***Usage***
+```r
+unique_taxa(phyloseq_obj, treatment, subset = NULL)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+
+***Examples***
+```{r unique_taxa}
+unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
+```
+
+<br>
+
+***
+
+<br>
+
