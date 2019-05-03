@@ -6,7 +6,7 @@
 Function from the phylosmith-package.}
 \usage{
 tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
-circle = TRUE, labels = NA, colors = 'default')
+circle = TRUE, labels = NULL, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

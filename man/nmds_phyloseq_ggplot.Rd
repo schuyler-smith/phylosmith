@@ -6,8 +6,7 @@
 Function from the phylosmith-package.}
 \usage{
 nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE,
-labels = NA,
-colors = 'default', verbose = TRUE)
+labels = NULL, colors = 'default', verbose = TRUE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

@@ -466,8 +466,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
 #' plots the NMDS of a treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE,
-#' labels = NA,
-#' colors = 'default', verbose = TRUE)
+#' labels = NULL, colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -495,7 +494,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
 #' circle = TRUE, verbose = FALSE)
 
 nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
-    labels = NA, colors = 'default', verbose = TRUE){
+    labels = NULL, colors = 'default', verbose = TRUE){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("nmds_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -514,7 +513,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
         `FALSE`", call. = FALSE)
     }
     labels <- check_numeric_treatment(phyloseq_obj, labels)
-    if(!(is.na(labels)) & any(!(labels %in% colnames(access(phyloseq_obj,
+    if(!(is.null(labels)) & any(!(labels %in% colnames(access(phyloseq_obj,
         'sam_data'))))){
         stop("nmds_phyloseq_ggplot(): `labels` must be a column name, or
         index, from the sample_data()", call. = FALSE)
@@ -847,7 +846,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 #' treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
-#' circle = TRUE, labels = NA, colors = 'default')
+#' circle = TRUE, labels = NULL, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -878,7 +877,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 
 
 tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
-    circle = TRUE, labels = NA, colors = 'default'){
+    circle = TRUE, labels = NULL, colors = 'default'){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("tsne_phyloseq_ggplot(): `phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -901,7 +900,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
         `FALSE`", call. = FALSE)
     }
     labels <- check_numeric_treatment(phyloseq_obj, labels)
-    if(!(is.na(labels)) & any(!(labels %in% colnames(
+    if(!(is.null(labels)) & any(!(labels %in% colnames(
         access(phyloseq_obj, 'sam_data'))))){
         stop("tsne_phyloseq_ggplot(): `labels` must be a column name, or
         index, from the sample_data()", call. = FALSE)

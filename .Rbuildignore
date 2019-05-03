@@ -8,6 +8,6 @@
 .Rprofile
 ^vignette_site$
 ^JOSS_paper$
-LICENSE.md
+LICENSE
 
 
