@@ -10,7 +10,7 @@ biocViews: Software, Sequencing, Microbiome,
 URL: https://schuyler-smith.github.io/phylosmith/
 BugReports: https://github.com/schuyler-smith/phylosmith.issues
 Depends:
-    R (>= 3.5),
+    R (>= 3.2),
     phyloseq
 Imports:
     RcppParallel,
