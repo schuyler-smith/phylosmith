@@ -90,8 +90,7 @@ common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
 #' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
 #' @export
 #' @return phyloseq-object
-#' @examples conglomerate_samples(soil_column,
-#' treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
+#' @examples conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
 
 conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
     merge_on = treatment){
@@ -125,7 +124,8 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
     }
     original_levels <- lapply(access(phyloseq_obj, 'sam_data'), levels)
     phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'),
-        access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
+                            access(phyloseq_obj, 'tax_table'),
+                            access(phyloseq_obj, 'sam_data'))
     merge_on_name <- paste(merge_on, collapse = sep)
 
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
@@ -138,16 +138,14 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
         'sam_data')[[treatment_name]]))
     treatment_classes <- eval(parse(text = paste0('treatment_classes[grepl("',
         paste0(subset), '", treatment_classes)]')))
-    if(any(merge_on != treatment)){
-        merge_sample_levels <- paste(sapply(treatment_classes, rep,
-            times = length(merge_sample_levels)), rep(merge_sample_levels,
-            length(treatment_classes)), sep = sep)
-    }
-
     phyloseq_table <- melt_phyloseq(phyloseq_obj)
+
     if(any(merge_on != treatment)){
+      merge_sample_levels <- paste(sapply(treatment_classes, rep,
+        times = length(merge_sample_levels)), rep(merge_sample_levels,
+        length(treatment_classes)), sep = ' ')
         phyloseq_table[, 'Merged_Name' := do.call(paste0,
-            list(phyloseq_table[[treatment_name]], sep,
+            list(phyloseq_table[[treatment_name]], ' ',
             phyloseq_table[[merge_on_name]]))]
     } else {
         phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on_name]]]
@@ -165,7 +163,7 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
                     sub_phy <- merge_samples(group_phy, merge_on_name)
                     merge_names <- rownames(access(sub_phy, 'sam_data'))
                     if(any(group != merge_names)){
-                        sample_names(sub_phy) <- paste0(group, sep,
+                        sample_names(sub_phy) <- paste0(group, ' ',
                         merge_names)
                     }
                     sam <- as(access(sub_phy, 'sam_data'), 'data.frame')
