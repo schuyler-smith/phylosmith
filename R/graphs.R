@@ -230,11 +230,12 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     g <- ggplot(graph_data, aes_string(x = 'Sample', y = 'Abundance',
         group = classification))
     if(points == TRUE){
-      g <- g + geom_point(size = 1.5, aes_string(color = classification))
+      g <- g + geom_point(size = 1.5, aes_string(color = classification), show.legend = FALSE)
     }
     g <- g + geom_line(size = 1.2, aes_string(color=classification))+
-      theme_classic() +
+      theme_bw() +
       theme(
+        strip.background = element_rect(fill = "white"),
         axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
         axis.text.y = element_text(hjust = 0.95, size = 12),
         axis.title.x=element_blank(),
@@ -244,8 +245,11 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
         legend.background = element_rect(fill = (alpha = 0))
        ) +
       scale_y_continuous(expand = expand_scale(mult = c(0, .002))) +
-      guides(colour = guide_legend(
-          ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
+      guides(
+        colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30),
+                              override.aes = list(size = 2)
+        )
+      ) +
       facet_grid(treatment_name, scales = "free", space = "free") +
       scale_colour_manual(values = graph_colors)
     if(relative_abundance == TRUE){g <- g + ylab('Relative Abundance')}
