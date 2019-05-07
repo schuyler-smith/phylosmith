@@ -40,7 +40,7 @@ Call | Description
 
 ***Examples***
 ```{r abundance_heatmap_ggplot}
-abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), transformation = 'log10')
+abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
 ```
 
 <br>
@@ -75,7 +75,7 @@ Call | Description
 
 ***Examples***
 ```{r abundance_lines_ggplot}
-abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+abundance_lines_ggplot(conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day'), classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', relative_abundance = TRUE)
 ```
 
 <br>
@@ -183,7 +183,7 @@ Call | Description
 ***Examples***
 
 ```{r phylogeny_profile_ggplot}
-phylogeny_profile_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), merge = TRUE, relative_abundance = TRUE)
+phylogeny_profile_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
 ```
 
 <br>

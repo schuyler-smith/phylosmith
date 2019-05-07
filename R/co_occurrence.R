@@ -292,9 +292,7 @@ quantile_permuted_rhos <- function(permuted_rhos, p = 0.05,
 #' @export
 #' @return ggplot
 #' @examples
-#' permuted_rhos <- permute_rho(soil_column,
-#' treatment = c('Matrix', 'Treatment'), replicate_samples = 'Day',
-#' permutations = 1,  cores = 0)
+#' permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), replicate_samples = 'Day', permutations = 1,  cores = 0)
 #' histogram_permuted_rhos(permuted_rhos)
 #' histogram_permuted_rhos(permuted_rhos, p = 0.01)
 
@@ -332,13 +330,12 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
 
     g <- ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
     if(!(is.null(p))){
-        g <- g + geom_vline(data = quantiles, xintercept = c(quantiles$lower,
-            quantiles$upper), color = c(graph_colors, graph_colors),
-            size = 1.5, alpha = 0.8)
+      g <- g + geom_vline(data = quantiles, xintercept = c(quantiles$lower, quantiles$upper),
+                          color = c(graph_colors, graph_colors),
+                          size = 1.5, alpha = 0.8)
     }
     g <- g + scale_x_continuous(breaks = seq(-1, 1, x_breaks)) +
         scale_fill_manual(values = graph_colors) +
-        theme_light() +
         geom_bar(stat = 'identity', position = position_dodge(width = .02),
             width = .05)
     if(!(is.null(p))){
@@ -351,6 +348,22 @@ histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
                 y = (.015 + (i*.005)), color = graph_colors[i], size = 5)
         }
     }
+     g <- g + theme_light() +
+       theme(
+         axis.line.x = element_line(colour = 'black', size = 1,
+                                    linetype = 'solid'),
+         axis.line.y = element_line(colour = 'black', size = 1,
+                                    linetype = 'solid'),
+         axis.text.x = element_text(size = 12, vjust = 0.7, hjust = 0, angle = -30),
+         axis.text.y = element_text(size = 12),
+         axis.title.x = element_text(size = 16, face = "bold"),
+         axis.title.y = element_text(size = 16, face = "bold"),
+         legend.text = element_text(size = 16),
+         legend.title = element_text(size = 16, face = "bold"),
+         legend.background = element_rect(fill = (alpha = 0)),
+         legend.spacing.x = unit(0.01, 'npc')
+       ) +
+       scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
     return(g)
 }
 

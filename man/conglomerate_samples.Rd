@@ -38,8 +38,7 @@ samples statistically proven to not be significantly different and should
 be used with caution as it may be a misleading representation of the data.
 }
 \examples{
-conglomerate_samples(soil_column,
-treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
+conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
 }
 \seealso{
 \code{\link[phyloseq:merge_samples]{merge_samples()}}

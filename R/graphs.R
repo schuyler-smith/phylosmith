@@ -102,25 +102,29 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
     setkey(graph_data, 'Sample', 'Abundance')
     set(graph_data, which(graph_data[['Abundance']] == 0), 'Abundance', NA)
 
-    g <- ggplot(graph_data, aes_string('Sample', classification,
-        fill = 'Abundance')) +
+    g <- ggplot(graph_data, aes_string('Sample', classification, fill = 'Abundance')) +
         geom_tile(color = "white", size = 0.25) +
-        facet_grid(treatment_name, scales = "free", space = "free") +
-        theme_classic() +
-        theme(
-          axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
-          axis.text.y = element_text(hjust = 0.95, size = 12),
-          axis.title.x=element_blank(),
-          axis.title.y=element_blank(),
-          legend.title=element_blank(),
-          legend.text=element_text(size = 16),
-          legend.spacing.x = unit(0.2, 'cm'),
-          legend.background = element_rect(fill = (alpha = 0))
-        ) +
-        if(transformation %in% c('none', 'relative_abundance')){
-            scale_fill_gradientn(colors = graph_colors)
-        } else {scale_fill_gradientn(colors = graph_colors,
-            trans = transformation)}
+        facet_grid(treatment_name, scales = "free", space = "free")
+    g <- g + theme_classic() +
+      theme(
+        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.y = element_text(hjust = 0.95, size = 12),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.title=element_blank(),
+        legend.text=element_text(size = 16),
+        legend.spacing.x = unit(0.2, 'cm'),
+        legend.background = element_rect(fill = (alpha = 0), color = 'black', size = 0.25),
+        panel.background = element_rect(color = 'black', size = 1.4),
+        strip.text.x = element_text(size = 12, face = 'bold'),
+        strip.background = element_rect(colour = 'black', size = 1.4)
+      ) +
+      scale_x_discrete(expand = expand_scale(mult = 0, add = .53)) +
+      if(transformation %in% c('none', 'relative_abundance')){
+          scale_fill_gradientn(colors = graph_colors)
+      } else {scale_fill_gradientn(colors = graph_colors,
+          trans = transformation)}
     return(g)
 }
 
@@ -156,8 +160,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples abundance_lines_ggplot(soil_column, classification = 'phylum',
-#' treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+#' @examples abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 
 abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     treatment, subset = NULL, relative_abundance = FALSE, points = TRUE,
@@ -205,7 +208,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     if(relative_abundance){phyloseq_obj <- relative_abundance(phyloseq_obj)}
     treatment_name <- paste(treatment, collapse = sep)
 
-    if(!(is.null(classification))){
+    if(is.null(classification)){
         classification <- 'OTU'
         graph_data <- phyloseq(
             access(phyloseq_obj, 'otu_table'),
@@ -227,32 +230,36 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     color_count <- length(unique(graph_data[[classification]]))
     graph_colors <- create_palette(color_count, colors)
 
-    g <- ggplot(graph_data, aes_string(x = 'Sample', y = 'Abundance',
-        group = classification))
+    g <- ggplot(graph_data, aes_string(x = 'Sample', y = 'Abundance', group = classification))
     if(points == TRUE){
       g <- g + geom_point(size = 1.5, aes_string(color = classification), show.legend = FALSE)
     }
-    g <- g + geom_line(size = 1.2, aes_string(color=classification))+
-      theme_bw() +
-      theme(
-        strip.background = element_rect(fill = "white"),
-        axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
-        axis.text.y = element_text(hjust = 0.95, size = 12),
-        axis.title.x=element_blank(),
-        axis.title.y=element_text(size = 16),
-        legend.title=element_blank(),
-        legend.text=element_text(size = 16),
-        legend.background = element_rect(fill = (alpha = 0))
-       ) +
-      scale_y_continuous(expand = expand_scale(mult = c(0, .002))) +
-      guides(
-        colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/30),
-                              override.aes = list(size = 2)
-        )
-      ) +
+    g <- g + geom_line(size = 1.2, aes_string(color = classification)) +
       facet_grid(treatment_name, scales = "free", space = "free") +
-      scale_colour_manual(values = graph_colors)
+      scale_colour_manual(values = graph_colors) +
+      guides(
+        colour = guide_legend(ncol = ceiling(length(unique(graph_data[[classification]]))/25),
+                              override.aes = list(size = 4))
+      )
     if(relative_abundance == TRUE){g <- g + ylab('Relative Abundance')}
+    g <- g + theme_bw() +
+      theme(
+        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.y = element_text(hjust = 0.95, size = 12),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 16),
+        axis.ticks.x = element_blank(),
+        legend.title = element_text(size = 16, face = 'bold'),
+        legend.text = element_text(size = 16),
+        legend.spacing.x = unit(0.05, 'cm'),
+        legend.background = element_rect(fill = (alpha = 0)),
+        panel.background = element_rect(color = 'black', size = 1.5, fill = 'white'),
+        panel.spacing = unit(.015, 'npc'),
+        strip.text.x = element_text(size = 12, face = 'bold', color = 'black'),
+        strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white')
+      ) +
+      scale_y_continuous(expand = expand_scale(mult = c(0, 0.003), add = c(0.0015, 0.001))) +
+      scale_x_discrete(expand = expand_scale(mult = 0, add = c(0.3,0.5)))
     return(g)
 }
 
@@ -426,41 +433,31 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
     if(is.null(classification) & node_colors == 'default'){
         node_colors <- 'steelblue'}
 
-    g <- ggraph(layout) + theme_graph() + coord_fixed() +
-      theme(
-        legend.title=element_blank(),
-        legend.text=element_text(size = 16)
-      )
+    g <- ggraph(layout) + theme_graph() + coord_fixed()
     if(length(cluster) > 1){
-        g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y',
-            alpha = 0.4, group = 'Community'),
-            fill = community_colors[hulls$Community])}
+      g <- g + geom_polygon(data = hulls, aes_string(x = 'x', y = 'y', alpha = 0.4, group = 'Community'), fill = community_colors[hulls$Community])}
     g <- g + geom_edge_link(color = c('pink1', 'gray22')[sapply(
-        E(attributes(layout)$graph)$weight, FUN = function(x){
-            rep(as.numeric(as.logical(sign(x)+1)+1), 100)})]) +
-        guides(colour = FALSE, alpha = FALSE,
-            fill = guide_legend(ncol = ceiling(length(node_classes)/30)))
+      E(attributes(layout)$graph)$weight,
+      FUN = function(x){
+        rep(as.numeric(as.logical(sign(x)+1)+1), 100)})]) +
+      guides(colour = FALSE, alpha = FALSE, fill = guide_legend(ncol = ceiling(length(levels(layout[[classification]]))/25)))
     if(is.null(classification)){
-        g <- g + geom_point(aes_string(x = 'x', y = 'y',
-            fill = classification), pch=21, color = 'black',
-            fill = node_colors, size=5)
+      g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black',fill = node_colors, size=5)
     } else {
-        g <- g + geom_point(aes_string(x = 'x', y = 'y',
-            fill = classification), pch=21, color = 'black', size=5) +
+      g <- g + geom_point(aes_string(x = 'x', y = 'y', fill = classification), pch=21, color = 'black', size=5) +
         scale_fill_manual(values = node_colors)}
     if(!is.null(nodes_of_interest)){
-        coi <- subset(layout, apply(layout, 1,
-            function(class){any(class %in% nodes_of_interest)}))
-        coi <- subset(layout, apply(layout, 1,
-            function(class){any(class %in% nodes_of_interest)}))
-        g <- g + ggrepel::geom_label_repel(data = coi,
-            aes_string(x = 'x', y = 'y', fill = classification),
-            label = unname(apply(coi, 1, function(class){
-                class[which(class %in% nodes_of_interest)]})),
-                box.padding = unit(0.8, "lines"),
-                point.padding = unit(0.1, "lines"), size = 5,
-                show.legend = FALSE)
+      coi <- subset(layout, apply(layout, 1, function(class){any(class %in% nodes_of_interest)}))
+      coi <- subset(layout, apply(layout, 1, function(class){any(class %in% nodes_of_interest)}))
+      g <- g + ggrepel::geom_label_repel(data = coi, aes_string(x = 'x', y = 'y', fill = classification),
+                                         label = unname(apply(coi, 1, function(class){class[which(class %in% nodes_of_interest)]})),
+                                         box.padding = unit(0.8, "lines"), point.padding = unit(0.1, "lines"), size = 5, show.legend = FALSE)
     }
+    g <- g + theme(
+      legend.text = element_text(size = 16),
+      legend.title = element_text(size = 16, face = 'bold'),
+      legend.spacing.x = unit(0.005, 'npc')
+    )
     return(g)
 }
 
@@ -546,35 +543,33 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
 
     g <- ggplot(data = ord, aes(NMDS1, NMDS2))
     if(circle == TRUE){
-        g <- g + stat_ellipse(geom = "polygon", type = "norm",
-        size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
-        aes(fill = Treatment), show.legend = FALSE) +
+      g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
+                            aes(fill = Treatment), show.legend = FALSE) +
         scale_color_manual(values = graph_colors) + guides(color = FALSE)
     }
-    g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black',
-        size = 5, alpha = 1.0) +
-        scale_fill_manual(values = graph_colors) +
-        theme_classic() +
-        theme(
-          aspect.ratio = 1,
-          axis.line.x = element_line(colour = 'black', size = 1,
-                                     linetype = 'solid'),
-          axis.line.y = element_line(colour = 'black', size = 1,
-                                     linetype = 'solid'),
-          axis.text.x=element_text(size = 12),
-          axis.text.y=element_text(size = 12),
-          axis.title.x=element_text(size = 16, face= "bold"),
-          axis.title.y=element_text(size = 16, face= "bold"),
-          legend.title=element_blank(),
-          legend.text=element_text(size = 16),
-          legend.spacing.x = unit(0.2, 'cm'),
-          legend.background = element_rect(fill = (alpha = 0))
-        ) + labs(x = 'NMDS 1', y = 'NMDS 2')
+    g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black', size = 5, alpha = 1.0) +
+      scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
-        g <- g + geom_label(aes_string(label = labels,
-            fill = 'Treatment'), label.padding = unit(0.35, "lines"),
-            label.r = unit(0.55, "lines") , show.legend = FALSE)
+      g <- g + geom_label(aes_string(label = labels,
+                                     fill = 'Treatment'), label.padding = unit(0.35, "lines"),
+                          label.r = unit(0.55, "lines") , show.legend = FALSE)
     }
+    g <- g +theme_classic() +
+      theme(
+        aspect.ratio = 1,
+        axis.line.x = element_line(colour = 'black', size = 1,
+                                   linetype = 'solid'),
+        axis.line.y = element_line(colour = 'black', size = 1,
+                                   linetype = 'solid'),
+        axis.text.x=element_text(size = 12),
+        axis.text.y=element_text(size = 12),
+        axis.title.x=element_text(size = 16, face= "bold"),
+        axis.title.y=element_text(size = 16, face= "bold"),
+        legend.title=element_text(size = 16, face = 'bold'),
+        legend.text=element_text(size = 16),
+        legend.spacing.x = unit(0.2, 'cm'),
+        legend.background = element_rect(fill = (alpha = 0))
+      ) + labs(x = 'NMDS Dimension 1', y = 'NMDS Dimension 2')
     return(g)
 }
 
@@ -682,34 +677,37 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
     color_count <- length(unique(graph_data[[classification]]))
     graph_colors <- create_palette(color_count, colors)
 
-    g <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance",
-        fill = classification)) +
-        theme_classic() +
-        theme(
-          axis.text.x = element_text(angle = -35, hjust = 0, size = 12),
-          axis.text.y = element_text(size = 12),
-          axis.title.x = element_blank(),
-          axis.title.y = element_text(size = 16, face = 'bold'),
-          legend.title = element_blank(),
-          legend.text = element_text(size = 12),
-          legend.spacing.x = unit(0.2, 'cm')
-        ) +
-        scale_y_continuous(expand = expand_scale(mult = c(0, 0.002))) +
-        guides(colour = guide_legend(
-            ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
-        scale_fill_manual(values = graph_colors,
-            aesthetics = c('color', 'fill'))
+    g <- ggplot(graph_data, aes_string(x = "Sample", y = "Abundance", fill = classification))
+    g <- g +
+      guides(colour = guide_legend(
+        ncol = ceiling(length(unique(graph_data[[classification]]))/25))) +
+      scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
     if(!(is.null(treatment))){
-        g <- g + facet_grid(treatment_name, scales = "free", space = "free")
+      g <- g + facet_grid(treatment_name, scales = "free", space = "free")
     }
     if(merge){
-        g <- g + geom_bar(aes_string(color = classification,
-            fill = classification), stat = 'identity', position = 'stack',
-        size = 0.2)
+      g <- g + geom_bar(aes_string(color = classification, fill = classification), stat = 'identity', position = 'stack', size = 0.2, width = 0.98)
     } else {
-        g <- g + geom_bar(stat = "identity", position = "stack",
-            size = 0.12, color = 'black')}
+      g <- g + geom_bar(stat = "identity", position = "stack", size = 0.12, color = 'black')}
     if(relative_abundance){g <- g + ylab('Relative Abundance')}
+
+    g <- g + theme_classic() +
+      theme(
+        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 16, face = 'bold'),
+        axis.ticks.x = element_blank(),
+        legend.title = element_text(size = 16, face = 'bold'),
+        legend.text = element_text(size = 16),
+        legend.spacing.x = unit(0.01, 'npc'),
+        panel.background = element_rect(color = 'black', size = 1.5, fill = 'black'),
+        panel.spacing = unit(0.01, 'npc'),
+        strip.text.x = element_text(size = 12, face = 'bold'),
+        strip.background = element_rect(colour = 'black', size = 1.4)
+      ) +
+      scale_y_continuous(expand = expand_scale(mult = c(0.0037, 0.003), add = c(0, 0))) +
+      scale_x_discrete(expand = expand_scale(mult = 0, add = 0.51))
     return(g)
 }
 
@@ -821,28 +819,31 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
     color_count <- length(unique(graph_data[[treatment_name]]))
     graph_colors <- create_palette(color_count, colors)
 
-    g <- ggplot(graph_data, aes_string(x = classification, y = abundance,
-        fill = treatment_name)) +
-        geom_bar(stat = "identity", position = position_dodge2(padding = 3.5),
-                 size = 0.2, color = 'black', alpha = 0.85, width=0.62) +
-        theme_light() +
-        theme(
-          axis.line.x = element_line(colour = 'black', size = 1,
-                                     linetype = 'solid'),
-          axis.line.y = element_line(colour = 'black', size = 1,
-                                     linetype = 'solid'),
-          axis.text.x=element_text(size = 12, vjust = 0.7, hjust = 0, angle = -35),
-          axis.text.y=element_text(size = 12),
-          axis.title.x=element_text(size = 16, face= "bold"),
-          axis.title.y=element_text(size = 16, face= "bold"),
-          legend.text=element_text(size = 16),
-          legend.title = element_text(size = 16, face = "bold"),
-          legend.background = element_rect(fill = (alpha = 0))
-        ) + scale_y_continuous(expand = expand_scale(mult = c(0, 0.002))) +
-        guides(colour = guide_legend(
-            ncol = ceiling(length(unique(graph_data[[classification]]))/30))) +
-        scale_fill_manual(values = graph_colors,
-            aesthetics = c('color', 'fill'))
+    graph_data[[classification]] <- factor(graph_data[[classification]], levels = sort(unique(as.character(graph_data[[classification]]))))
+
+    g <- ggplot(graph_data, aes_string(x = classification, y = abundance, fill = treatment_name))
+    g <- g +  geom_bar(stat = "identity", position = position_dodge2(padding = 3.5),
+                       size = 0.2, color = 'black', alpha = 0.85, width=0.62) +
+      guides(colour = guide_legend(
+        ncol = ceiling(length(unique(graph_data[[classification]]))/25))) +
+      scale_fill_manual(values = graph_colors,
+                        aesthetics = c('color', 'fill'))
+    g <- g + theme_light() +
+      theme(
+        axis.line.x = element_line(colour = 'black', size = 1,
+                                   linetype = 'solid'),
+        axis.line.y = element_line(colour = 'black', size = 1,
+                                   linetype = 'solid'),
+        axis.text.x = element_text(size = 12, vjust = 0.7, hjust = 0, angle = -30),
+        axis.text.y = element_text(size = 12),
+        axis.title.x = element_text(size = 16, face = "bold"),
+        axis.title.y = element_text(size = 16, face = "bold"),
+        legend.text = element_text(size = 16),
+        legend.title = element_text(size = 16, face = "bold"),
+        legend.background = element_rect(fill = (alpha = 0)),
+        legend.spacing.x = unit(0.01, 'npc')
+      ) +
+      scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
     return(g)
 }
 
@@ -932,32 +933,29 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
 
     g <- ggplot(data = ord, aes(tSNE1, tSNE2))
     if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm",
-        size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
-        aes_string(fill = treatment_name), show.legend = FALSE) +
-        scale_color_manual(values = graph_colors) + guides(color = FALSE)}
-    g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black',
-            size = 7, alpha = 1.0) +
-        scale_fill_manual(values = graph_colors) +
-        theme_classic() +
-        theme(
-            aspect.ratio = 1,
-            axis.line.x = element_line(colour = 'black', size = 1,
-                linetype = 'solid'),
-            axis.line.y = element_line(colour = 'black', size = 1,
-                linetype = 'solid'),
-            axis.text.x=element_text(size = 12),
-            axis.text.y=element_text(size = 12),
-            axis.title.x=element_text(size = 16, face= "bold"),
-            axis.title.y=element_text(size = 16, face= "bold"),
-            legend.title=element_blank(),
-            legend.text=element_text(size = 16),
-            legend.spacing.x = unit(0.2, 'cm'),
-            legend.background = element_rect(fill = (alpha = 0))
-        ) + labs(x = 't-SNE 1', y = 't-SNE 2')
+      size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
+      aes_string(fill = treatment_name), show.legend = FALSE) +
+      scale_color_manual(values = graph_colors) + guides(color = FALSE)}
+    g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black', size = 7, alpha = 1.0) +
+      scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
-        g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'),
-            label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines"),
-            show.legend = FALSE)}
+      g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'),
+                          label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines"),
+                          show.legend = FALSE)}
+    g <- g + theme_classic() +
+      theme(
+        aspect.ratio = 1,
+        axis.line.x = element_line(colour = 'black', size = 1, linetype = 'solid'),
+        axis.line.y = element_line(colour = 'black', size = 1, linetype = 'solid'),
+        axis.text.x=element_text(size = 12),
+        axis.text.y=element_text(size = 12),
+        axis.title.x=element_text(size = 16, face = 'bold'),
+        axis.title.y=element_text(size = 16, face = 'bold'),
+        legend.title=element_text(size = 16, face = 'bold'),
+        legend.text=element_text(size = 16),
+        legend.spacing.x = unit(0.2, 'cm'),
+        legend.background = element_rect(fill = (alpha = 0))
+      ) + labs(x = 't-SNE Dimension 1', y = 't-SNE Dimension 2')
     return(g)
 }
 

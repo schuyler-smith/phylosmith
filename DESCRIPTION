@@ -27,6 +27,7 @@ Imports:
     ggraph,
     ggrepel,
     sf,
+    sp,
     vegan,
     Rtsne,
     stringr

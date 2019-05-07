@@ -45,6 +45,5 @@ This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
 creates line graphs across samples.
 }
 \examples{
-abundance_lines_ggplot(soil_column, classification = 'phylum',
-treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 }
