@@ -107,7 +107,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
         facet_grid(treatment_name, scales = "free", space = "free")
     g <- g + theme_classic() +
       theme(
-        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1, size = 12),
         axis.text.y = element_text(hjust = 0.95, size = 12),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
@@ -244,7 +244,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     if(relative_abundance == TRUE){g <- g + ylab('Relative Abundance')}
     g <- g + theme_bw() +
       theme(
-        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1, size = 12),
         axis.text.y = element_text(hjust = 0.95, size = 12),
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 16),
@@ -693,7 +693,7 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
 
     g <- g + theme_classic() +
       theme(
-        axis.text.x = element_text(angle = -30, hjust = 0, size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1, size = 12),
         axis.text.y = element_text(size = 12),
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 16, face = 'bold'),
@@ -834,7 +834,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
                                    linetype = 'solid'),
         axis.line.y = element_line(colour = 'black', size = 1,
                                    linetype = 'solid'),
-        axis.text.x = element_text(size = 12, vjust = 0.7, hjust = 0, angle = -30),
+        axis.text.x = element_text(size = 12, vjust = 0.7, hjust = 1, angle = 30),
         axis.text.y = element_text(size = 12),
         axis.title.x = element_text(size = 16, face = "bold"),
         axis.title.y = element_text(size = 16, face = "bold"),
