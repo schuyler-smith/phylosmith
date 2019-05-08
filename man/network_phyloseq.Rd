@@ -2,11 +2,11 @@
 % Please edit documentation in R/graphs.R
 \name{network_phyloseq}
 \alias{network_phyloseq}
-\title{Create an object of the abundance barplots from a phyloseq object.
+\title{Create a ggplot object of the co-occurrence from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
 network_phyloseq(phyloseq_obj, classification = NULL,
-treatment = NULL, subset = NULL, co_occurrence_table = NULL,
+treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
 nodes_of_interest = NULL, node_colors = 'default',
 cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 }
@@ -34,6 +34,9 @@ factors to subset on.}
 table is given, it will be computed with the \code{phyloseq_obj}, using the
 given \code{treatment} and \code{p} = 0.05.}
 
+\item{layout}{(optional) an igraph layout of the network, for reproducibility.
+Can be created with \code{\link{graph_layout_phyloseq}}.}
+
 \item{nodes_of_interest}{A vector of names of classes within the
 \code{classification} to be labeled.}
 
@@ -59,10 +62,10 @@ ggplot-object
 }
 \description{
 This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-creates barplots of taxa by treatment.
+creates a network from the co-occurrence.
 }
 \examples{
 #network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
-#subset = 'Soil_Manure', co_occurrence_table = NULL,
+#subset = 'Soil_Manure', co_occurrence_table = NULL, layout = NULL,
 #classification = 'phylum')
 }
