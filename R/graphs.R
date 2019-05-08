@@ -78,10 +78,6 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
         phyloseq_obj <- relative_abundance(phyloseq_obj)}
     treatment_name <- paste(treatment, collapse = sep)
 
-    color_count <- 10
-    if(colors == 'default'){colors <- 'YlOrRd'}
-    graph_colors <- create_palette(color_count, colors)
-
     if(is.null(classification)){
         classification <- 'OTU'
         graph_data <- phyloseq(
@@ -122,9 +118,22 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
       ) +
       scale_x_discrete(expand = expand_scale(mult = 0, add = .53)) +
       if(transformation %in% c('none', 'relative_abundance')){
+        if(colors == 'default'){
+          scale_fill_viridis()
+        } else {
+          color_count <- 100
+          graph_colors <- create_palette(color_count, colors)
           scale_fill_gradientn(colors = graph_colors)
-      } else {scale_fill_gradientn(colors = graph_colors,
-          trans = transformation)}
+        }
+      } else {
+        if(colors == 'default'){
+          scale_fill_viridis(trans = transformation)
+        } else {
+          color_count <- 100
+          graph_colors <- create_palette(color_count, colors)
+          scale_fill_gradientn(colors = graph_colors, trans = transformation)
+        }
+      }
     return(g)
 }
 

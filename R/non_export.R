@@ -100,8 +100,7 @@ create_palette <- function(color_count, colors = 'default'){
         "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
         "#949696", "#4989DE", "#E2E2E2", "#565656",
         "#F7B04C", "#696bb2")
-    # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)),
-    # col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
+    # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
     if(any(colors == 'default')){
         colors <- mycolors
         if(color_count <= length(colors)){
