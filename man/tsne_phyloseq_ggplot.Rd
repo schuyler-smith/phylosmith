@@ -38,7 +38,7 @@ colors.}
 ggplot-object
 }
 \description{
-Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
 treatment or set of treatments.
 }
 \examples{

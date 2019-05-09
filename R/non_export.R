@@ -9,7 +9,7 @@
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
 #' @param ... Column name as a \code{string} or \code{numeric} in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be any number of
 #' multiple columns and they will be combined into a new column.
 #' @return string
 #' @examples
@@ -75,10 +75,12 @@ check_numeric_classification <- function(phyloseq_obj, ...){
     }
 }
 
-#' Internal function for creating color palettes for graphs.
-#' Function from the phylosmith-package.
+#' Creates color palettes for figures.
+#' 
 #'
-#' This function creates color palettes for graphs.
+#' Creates color palettes for figures using the the RColorBrewer, or the default
+#' color palette I made. The first 8 colors of the palette are from B. Wong's 2011
+#' publication. The additional colors I added and may change as time goes by.
 #' @useDynLib phylosmith
 #' @usage create_palette(color_count, colors = 'default')
 #' @param color_count Number of colors to choose for palette.

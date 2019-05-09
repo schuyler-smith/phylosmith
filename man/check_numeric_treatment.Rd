@@ -14,7 +14,7 @@ information about each sample, and it must contain
 taxa/gene.}
 
 \item{...}{Column name as a \code{string} or \code{numeric} in the
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+\code{\link[phyloseq:sample_data]{sample_data}}. This can be any number of
 multiple columns and they will be combined into a new column.}
 }
 \value{

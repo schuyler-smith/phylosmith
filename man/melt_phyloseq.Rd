@@ -18,7 +18,7 @@ taxa/gene.}
 data.table
 }
 \description{
-melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale,
+melt_phyloseq inputs a phyloseq object and melts its ou_table, taxa_tale,
 and sample_Data into a single into a data.table.
 }
 \examples{

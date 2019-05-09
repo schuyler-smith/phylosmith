@@ -1,8 +1,10 @@
-#' Create a ggplot object of the heatmap of the abundance table from a
+#' Create a heatmap ggplot object of the abundance table from a
 #' phyloseq object. Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-#' creates heatmaps of the abundances across samples.
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' creates heatmaps of the abundances across samples as a ggplot object.
+#' The default color choice is the viridis palette, which is supposed to
+#' be both aesthetic for normal and color-blind viewers.
 #' @useDynLib phylosmith
 #' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL,
@@ -137,11 +139,11 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
     return(g)
 }
 
-#' Create a ggplot object of the abundance table from a phyloseq object.
+#' Create a lineplot ggplot object of the abundance table from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-#' creates line graphs across samples.
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' creates line graphs with points across samples.
 #' @useDynLib phylosmith
 #' @usage abundance_lines_ggplot(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL,
@@ -169,7 +171,8 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+#' @examples abundance_lines_ggplot(soil_column, classification = 'phylum',
+#' treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 
 abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     treatment, subset = NULL, relative_abundance = FALSE, points = TRUE,
@@ -272,13 +275,15 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
     return(g)
 }
 
-#' Create a ggplot object of the co-occurrence from a phyloseq object.
+#' Create a node network ggplot object of the co-occurrence from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-#' creates a network from the co-occurrence.
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' creates a network from the co-occurrence. The co-occurrence can either be
+#' input, or it will be calculated with the Spearman-rank correlation. Also,
+#' the layout of the graph can be given as an argument as well for reprodusibility.
 #' @useDynLib phylosmith
-#' @usage network_phyloseq(phyloseq_obj, classification = NULL,
+#' @usage network_ps(phyloseq_obj, classification = NULL,
 #' treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
 #' nodes_of_interest = NULL, node_colors = 'default',
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
@@ -301,7 +306,7 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
 #' table is given, it will be computed with the \code{phyloseq_obj}, using the
 #' given \code{treatment} and \code{p} = 0.05.
 #' @param layout (optional) an igraph layout of the network, for reproducibility.
-#' Can be created with \code{\link{graph_layout_phyloseq}}.
+#' Can be created with \code{\link{network_layout_ps}}.
 #' @param nodes_of_interest A vector of names of classes within the
 #' \code{classification} to be labeled.
 #' @param node_colors Name of a color set from the
@@ -325,24 +330,24 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @export
 #' @return ggplot-object
 #' @examples
-#' #network_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
+#' #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
 #' #subset = 'Soil_Manure', co_occurrence_table = NULL, layout = NULL,
 #' #classification = 'phylum')
 
-network_phyloseq <- function(phyloseq_obj, classification = NULL,
-    treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
-    nodes_of_interest = NULL, node_colors = 'default',
+network_ps <- function(phyloseq_obj, classification = NULL,
+    treatment = NULL, subset = NULL, co_occurrence_table = NULL,
+    layout = NULL, nodes_of_interest = NULL, node_colors = 'default',
     cluster = FALSE, cluster_colors = 'default', buffer = 0.5){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("network_phyloseq(): `phyloseq_obj` must be a phyloseq-class
+        stop("network_ps(): `phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("network_phyloseq(): `phyloseq_obj` must contain sample_data()
+        stop("network_ps(): `phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'tax_table'))){
-        stop("network_phyloseq(): `phyloseq_obj` must contain tax_table()
+        stop("network_ps(): `phyloseq_obj` must contain tax_table()
         information", call. = FALSE)
     }
     classification <- check_numeric_classification(phyloseq_obj,
@@ -350,28 +355,28 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
     if(!(is.null(classification)) &
         any(!(classification %in% colnames(access(phyloseq_obj,
             'tax_table'))))){
-        stop("network_phyloseq(): `classification` must be a column name, or
+        stop("network_ps(): `classification` must be a column name, or
         index, from the tax_table()", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(!(is.null(treatment)) &
         any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("network_phyloseq(): `treatment` must be at least one column
+        stop("network_ps(): `treatment` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
     if(!(is.null(co_occurrence_table)) &
         !(is.data.frame(co_occurrence_table))){
-        stop("network_phyloseq(): `co_occurrence_table` must be at data.frame
+        stop("network_ps(): `co_occurrence_table` must be at data.frame
         object", call. = FALSE)
     }
     if(!(is.null(nodes_of_interest))){
         if(!(is.vector(nodes_of_interest))){
-            stop("network_phyloseq(): `nodes_of_interest` must be at vector of
+            stop("network_ps(): `nodes_of_interest` must be at vector of
             strings", call. = FALSE)
         }
     }
     if(!(is.numeric(buffer)) | !(buffer >= 0)){
-        stop("network_phyloseq(): `buffer` must be a numeric value >= 0", call.
+        stop("network_ps(): `buffer` must be a numeric value >= 0", call.
         = FALSE)
     }
     node_classes <- sort(unique(access(phyloseq_obj,
@@ -422,7 +427,7 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
                 directed = FALSE), remove.multiple = FALSE,
                 remove.loops = TRUE))$membership}
     if(length(cluster) > 1 & length(cluster) != nrow(nodes)){
-        stop("network_phyloseq(): `cluster` must be either `TRUE`,`FALSE`, or
+        stop("network_ps(): `cluster` must be either `TRUE`,`FALSE`, or
         a vector of memborship for each node", call. = FALSE)
     }
     if(length(cluster) > 1){communities <- data.table(layout[, c(1,2)])
@@ -475,11 +480,115 @@ network_phyloseq <- function(phyloseq_obj, classification = NULL,
     return(g)
 }
 
+#' Create an layout_igraph object of the co-occurrence from a phyloseq object.
+#' Function from the phylosmith-package.
+#'
+#' Create an layout_igraph object of the co-occurrence from a phyloseq object.
+#' This can be input into the network_ps function, or used for other
+#' network creating scripts. The purpose is to be able to create reproducible
+#' and comparable graphics.
+#' @useDynLib phylosmith
+#' @usage network_layout_ps(phyloseq_obj, classification = NULL,
+#' treatment = NULL, subset = NULL, co_occurrence_table = NULL,
+#' algorithm = 'fr')
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param classification Column name as a string or number in the
+#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+#' colors.
+#' @param treatment Column name as a string or number in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the
+#' \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no
+#' table is given, it will be computed with the \code{phyloseq_obj}, using the
+#' given \code{treatment} and \code{p} = 0.05.
+#' @param algorithm Supported \code{\link[igraph:layout_]{igraph::layout_()}} algorithm.
+#' @import data.table
+#' @import igraph
+#' @import ggraph
+#' @import graphics
+#' @export
+#' @return layout_igraph object
+#' @examples
+#' network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'),
+#' subset = 'Soil Manure', algorithm = 'kk')
+
+network_layout_ps <- function (phyloseq_obj, classification = NULL, treatment = NULL,
+        subset = NULL, co_occurrence_table = NULL, algorithm = 'fr'){
+
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("network_ps(): `phyloseq_obj` must be a phyloseq-class
+         object", call. = FALSE)
+  }
+  if(is.null(access(phyloseq_obj, 'sam_data'))){
+    stop("network_ps(): `phyloseq_obj` must contain sample_data()
+         information", call. = FALSE)
+  }
+  if(is.null(access(phyloseq_obj, 'tax_table'))){
+    stop("network_ps(): `phyloseq_obj` must contain tax_table()
+         information", call. = FALSE)
+  }
+  classification <- check_numeric_classification(phyloseq_obj,
+                                                 classification)
+  if(!(is.null(classification)) &
+     any(!(classification %in% colnames(access(phyloseq_obj,
+                                               'tax_table'))))){
+    stop("network_ps(): `classification` must be a column name, or
+         index, from the tax_table()", call. = FALSE)
+  }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  if(!(is.null(treatment)) &
+     any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
+    stop("network_ps(): `treatment` must be at least one column
+         name, or index, from the sample_data()", call. = FALSE)
+  }
+  if(!(is.null(co_occurrence_table)) &
+     !(is.data.frame(co_occurrence_table))){
+    stop("network_ps(): `co_occurrence_table` must be at data.frame
+         object", call. = FALSE)
+  }
+
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
+  treatment_name <- paste(treatment, collapse = sep)
+
+  if(is.null(co_occurrence_table)){
+    co_occurrence_table <- co_occurrence(phyloseq_obj, treatment)[rho >= 0.8 | rho <= -0.8]
+  }
+  co_occurrence_table <- co_occurrence_table[,c('OTU_1', 'OTU_2', 'Treatment', 'rho', 'p')]
+  if(!is.null(subset)){
+    co_occurrence_table <- co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]}
+  colnames(co_occurrence_table)[colnames(co_occurrence_table) == 'rho'] <- 'weight'
+  co_occurrence_table$weight <- abs(co_occurrence_table$weight)
+  if(!(is.null(classification))){
+    nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
+    nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')), nodes)
+    set(nodes, which(is.na(nodes[[classification]])), classification, 'Unclassified')
+  } else {
+    nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')))
+  }
+  nodes <- nodes[nodes[['Node_Name']] %in%
+                   c(as.character(co_occurrence_table$OTU_1),
+                     as.character(co_occurrence_table$OTU_2)),]
+
+  net <- graph_from_data_frame(d = co_occurrence_table, vertices = nodes, directed = FALSE)
+  net <- simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
+  layout <- create_layout(net, layout = 'igraph', algorithm = algorithm)
+
+  return(layout)
+}
+
 #' Create a ggplot object of the NMDS from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-#' plots the NMDS of a treatment or set of treatments.
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' plots the NMDS of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
 #' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE,
 #' labels = NULL, colors = 'default', verbose = TRUE)
@@ -590,7 +699,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
 #' Create a ggplot object of the phylogenic barplots from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates phylogenic barplots.
 #' @useDynLib phylosmith
 #' @usage phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
@@ -728,7 +837,7 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
 #' Create a ggplot object of the abundance barplots from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
 #' @usage taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL,
@@ -864,7 +973,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 #' Create a ggplot object using t-SNE from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' Uses a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
 #' treatment or set of treatments.
 #' @useDynLib phylosmith
 #' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
@@ -973,104 +1082,4 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
     return(g)
 }
 
-#' Create an igraph_layout object of the co-occurrence from a phyloseq object.
-#' Function from the phylosmith-package.
-#'
-#' Create an igraph_layout object of the co-occurrence from a phyloseq object.
-#' @useDynLib phylosmith
-#' @usage graph_layout_phyloseq(phyloseq_obj, classification = NULL,
-#' treatment = NULL, subset = NULL, co_occurrence_table = NULL,
-#' algorithm = 'fr')
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
-#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-#' information about each sample, and it must contain
-#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
-#' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
-#' @param treatment Column name as a string or number in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-#' multiple columns and they will be combined into a new column.
-#' @param subset A factor within the \code{treatment}. This will remove any
-#' samples that to not contain this factor. This can be a vector of multiple
-#' factors to subset on.
-#' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the
-#' \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no
-#' table is given, it will be computed with the \code{phyloseq_obj}, using the
-#' given \code{treatment} and \code{p} = 0.05.
-#' @param algorithm Supported \code{\link[igraph:layout_]{igraph::layout_()}} algorithm.
-#' @import data.table
-#' @import igraph
-#' @import ggraph
-#' @import graphics
-#' @export
-#' @return igraph_layout object
-#' @examples
-#' #graph_layout_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'),
-#' #subset = 'Soil_Manure', co_occurrence_table = NULL, algorithm = 'fr')
-
-graph_layout_phyloseq <- function (phyloseq_obj, classification = NULL, treatment = NULL,
-                                   subset = NULL, co_occurrence_table = NULL, algorithm = 'fr'){
-
-  if(!inherits(phyloseq_obj, "phyloseq")){
-    stop("network_phyloseq(): `phyloseq_obj` must be a phyloseq-class
-         object", call. = FALSE)
-  }
-  if(is.null(access(phyloseq_obj, 'sam_data'))){
-    stop("network_phyloseq(): `phyloseq_obj` must contain sample_data()
-         information", call. = FALSE)
-  }
-  if(is.null(access(phyloseq_obj, 'tax_table'))){
-    stop("network_phyloseq(): `phyloseq_obj` must contain tax_table()
-         information", call. = FALSE)
-  }
-  classification <- check_numeric_classification(phyloseq_obj,
-                                                 classification)
-  if(!(is.null(classification)) &
-     any(!(classification %in% colnames(access(phyloseq_obj,
-                                               'tax_table'))))){
-    stop("network_phyloseq(): `classification` must be a column name, or
-         index, from the tax_table()", call. = FALSE)
-  }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if(!(is.null(treatment)) &
-     any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-    stop("network_phyloseq(): `treatment` must be at least one column
-         name, or index, from the sample_data()", call. = FALSE)
-  }
-  if(!(is.null(co_occurrence_table)) &
-     !(is.data.frame(co_occurrence_table))){
-    stop("network_phyloseq(): `co_occurrence_table` must be at data.frame
-         object", call. = FALSE)
-  }
-
-  node_classes <- sort(unique(access(phyloseq_obj, 'tax_table')[,classification]))
-  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0, subset = subset)
-  treatment_name <- paste(treatment, collapse = sep)
-
-  if(is.null(co_occurrence_table)){
-    co_occurrence_table <- co_occurrence(phyloseq_obj, treatment)[rho >= 0.8 | rho <= -0.8]
-  }
-  co_occurrence_table <- co_occurrence_table[,c('OTU_1', 'OTU_2', 'Treatment', 'rho', 'p')]
-  if(!is.null(subset)){
-    co_occurrence_table <- co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]}
-  colnames(co_occurrence_table)[colnames(co_occurrence_table) == 'rho'] <- 'weight'
-  co_occurrence_table$weight <- abs(co_occurrence_table$weight)
-  if(!(is.null(classification))){
-    nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
-    nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')), nodes)
-    set(nodes, which(is.na(nodes[[classification]])), classification, 'Unclassified')
-  } else {nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj, 'tax_table')))
-  }
-  nodes <- nodes[nodes[['Node_Name']] %in%
-                   c(as.character(co_occurrence_table$OTU_1),
-                     as.character(co_occurrence_table$OTU_2)),]
-
-  net <- graph_from_data_frame(d = co_occurrence_table, vertices = nodes, directed = FALSE)
-  net <- simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
-  layout <- create_layout(net, layout = 'igraph', algorithm = algorithm)
-
-return(layout)
-}
 

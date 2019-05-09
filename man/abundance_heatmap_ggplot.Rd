@@ -2,7 +2,7 @@
 % Please edit documentation in R/graphs.R
 \name{abundance_heatmap_ggplot}
 \alias{abundance_heatmap_ggplot}
-\title{Create a ggplot object of the heatmap of the abundance table from a
+\title{Create a heatmap ggplot object of the abundance table from a
 phyloseq object. Function from the phylosmith-package.}
 \usage{
 abundance_heatmap_ggplot(phyloseq_obj, classification = NULL,
@@ -40,8 +40,10 @@ colors.}
 ggplot-object
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-creates heatmaps of the abundances across samples.
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+creates heatmaps of the abundances across samples as a ggplot object.
+The default color choice is the viridis palette, which is supposed to
+be both aesthetic for normal and color-blind viewers.
 }
 \examples{
 abundance_heatmap_ggplot(soil_column, classification = 'phylum',

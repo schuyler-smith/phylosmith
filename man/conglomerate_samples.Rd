@@ -32,9 +32,9 @@ multiple columns and they will be combined into a new column.}
 phyloseq-object
 }
 \description{
-This function takes a phyloseq object and merges the samples that meet the
+Inputs a phyloseq object and merges the samples that meet the
 specified criteria into a single sample. This is meant for replicates, or
-samples statistically proven to not be significantly different and should
+samples statistically proven to not be significantly different. This should
 be used with caution as it may be a misleading representation of the data.
 }
 \examples{

@@ -423,7 +423,7 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="https://github.com/schuyler-smith/phylosmith/">
+  <a href="https://github.com/schuyler-smith/phylosmith/tree/master/R">
     <span class="fa fa-code"></span>
      
     Source Code
@@ -532,12 +532,12 @@ library(phylosmith)</code></pre>
 <td>sets the order of the factors in a sample_data column</td>
 </tr>
 <tr class="odd">
-<td><a href="data_wrangling.html#taxa_proportions">taxa_proportions</a></td>
-<td>computes the proportion of a taxa classification</td>
-</tr>
-<tr class="even">
 <td><a href="data_wrangling.html#taxa_filter">taxa_filter</a></td>
 <td>filter taxa by proportion of samples seen in</td>
+</tr>
+<tr class="even">
+<td><a href="data_wrangling.html#taxa_proportions">taxa_proportions</a></td>
+<td>computes the proportion of a taxa classification</td>
 </tr>
 <tr class="odd">
 <td><a href="data_wrangling.html#unique_taxa">unique_taxa</a></td>
@@ -565,27 +565,31 @@ library(phylosmith)</code></pre>
 <td>create a ggplot object of the heatmaps of the abndance table</td>
 </tr>
 <tr class="even">
-<td><a href="graphs#abundance_lines_ggplot">abundance_lines_ggplot</a></td>
+<td><a href="graphs.html#abundance_lines_ggplot">abundance_lines_ggplot</a></td>
 <td>create a ggplot object of the abundance data as a line graph</td>
 </tr>
 <tr class="odd">
-<td><a href="graphs#network_phyloseq">network_phyloseq</a></td>
+<td><a href="graphs.html#network_ps">network_ps</a></td>
 <td>creates a network of the co-occurrence of taxa</td>
 </tr>
 <tr class="even">
-<td><a href="graphs#nmds_phyloseq_ggplot">nmds_phyloseq_ggplot</a></td>
+<td><a href="graphs.html#network_layout_ps">network_layout_ps</a></td>
+<td>create a layout object for a network</td>
+</tr>
+<tr class="odd">
+<td><a href="graphs.html#nmds_phyloseq_ggplot">nmds_phyloseq_ggplot</a></td>
 <td>create a ggplot object of the NMDS from a phyloseq object</td>
 </tr>
-<tr class="odd">
-<td><a href="graphs#phylogeny_profile_ggplot">phylogeny_profile_ggplot</a></td>
+<tr class="even">
+<td><a href="graphs.html#phylogeny_profile_ggplot">phylogeny_profile_ggplot</a></td>
 <td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
 </tr>
-<tr class="even">
-<td><a href="graphs#taxa_abundance_bars_ggplot">taxa_abundance_bars_ggplot</a></td>
+<tr class="odd">
+<td><a href="graphs.html#taxa_abundance_bars_ggplot">taxa_abundance_bars_ggplot</a></td>
 <td>create a ggplot object of the abundance of taxa in each sample</td>
 </tr>
-<tr class="odd">
-<td><a href="graphs#tsne_phyloseq_ggplot">tsne_phyloseq_ggplot</a></td>
+<tr class="even">
+<td><a href="graphs.html#tsne_phyloseq_ggplot">tsne_phyloseq_ggplot</a></td>
 <td>create a ggplot object of the t-SNE from a phyloseq object</td>
 </tr>
 </tbody>
@@ -606,19 +610,19 @@ library(phylosmith)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="calculations#co_occurrence">co_occurrence</a></td>
+<td><a href="calculations.html#co_occurrence">co_occurrence</a></td>
 <td>calculate co-occurrence between taxa</td>
 </tr>
 <tr class="even">
-<td><a href="calculations#permute_rho">permute_rho</a></td>
+<td><a href="calculations.html#permute_rho">permute_rho</a></td>
 <td>runs permutations of the otu_table to calculate a significant <span class="math inline">\(\rho\)</span> value</td>
 </tr>
 <tr class="odd">
-<td><a href="calculations#histogram_permuted_rhos">histogram_permuted_rhos</a></td>
+<td><a href="calculations.html#histogram_permuted_rhos">histogram_permuted_rhos</a></td>
 <td>Create a ggplot object of the distribution of rho values.</td>
 </tr>
 <tr class="even">
-<td><a href="calculations#quantile_permuted_rhos">quantile_permuted_rhos</a></td>
+<td><a href="calculations.html#quantile_permuted_rhos">quantile_permuted_rhos</a></td>
 <td>calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence</td>
 </tr>
 </tbody>

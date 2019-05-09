@@ -41,7 +41,8 @@ Call                 | Description
 -------------------- | ------------------------------------------------------------
 [abundance_heatmap_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
 [abundance_lines_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
-[network_phyloseq](https://schuyler-smith.github.io/phylosmith/graphs.html#network_phyloseq) | creates a ggplot object of the co-occurrence network of taxa
+[network_ps](https://schuyler-smith.github.io/phylosmith/graphs.html#network_ps) | creates a ggplot object of the co-occurrence network of taxa
+[network_layout_ps](https://schuyler-smith.github.io/phylosmith/graphs.html#network_layout_ps) | create a layout object for a network
 [nmds_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
 [phylogeny_profile_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
 [taxa_abundance_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample

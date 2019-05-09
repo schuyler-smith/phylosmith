@@ -30,7 +30,8 @@ visualization tool to help show how the permutation worked, and to see
 where the cutoffs lie.
 }
 \examples{
-permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), replicate_samples = 'Day', permutations = 1,  cores = 0)
+permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
+replicate_samples = 'Day', permutations = 1,  cores = 0)
 histogram_permuted_rhos(permuted_rhos)
 histogram_permuted_rhos(permuted_rhos, p = 0.01)
 }

@@ -35,7 +35,7 @@ after removing taxa filtered by frequency (\code{TRUE}).}
 phyloseq-object
 }
 \description{
-This function takes a phyloseq object and finds which taxa are seen in a
+Inputs a phyloseq object and finds which taxa are seen in a
 given proportion of samples, either in the entire dataset, by treatment, or
 a particular treatment of interest.
 }

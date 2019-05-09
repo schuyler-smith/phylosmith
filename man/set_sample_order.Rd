@@ -22,7 +22,7 @@ or indices in particular order.}
 phyloseq object
 }
 \description{
-Takes a \code{\link[phyloseq]{phyloseq-class}} object and changes the
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and changes the
 order of sample index either based on the metadata, or a given order.
 }
 \examples{

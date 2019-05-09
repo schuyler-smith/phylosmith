@@ -23,7 +23,7 @@ strings. If assinged "numeric" will set ascending numerical order.}
 phyloseq-object
 }
 \description{
-Reorders the levels of a metadata column in a
+Reorders the levels of a metadata factor column in a
 \code{\link[phyloseq]{phyloseq-class}} object
 \code{\link[phyloseq:sample_data]{sample_data}}.
 }

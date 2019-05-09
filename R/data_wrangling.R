@@ -1,10 +1,12 @@
 #' Find taxa shared between treatments of a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
-#' are shared between all of the specified treatments.
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
+#' are shared between all of the specified treatments from data in the
+#' \code{\link[phyloseq:sample_data]{sample_data()}}), or every sample in the
+#' dataset.
 #' @useDynLib phylosmith
-#' @usage common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+#' @usage common_taxa(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -24,7 +26,7 @@
 #' @examples common_taxa(soil_column, treatment = 'Treatment',
 #' subset = 'Manure', n = 'all')
 
-common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
+common_taxa <- function(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all'){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("common_taxa(): `phyloseq_obj` must be a phyloseq-class object",
             call. = FALSE)
@@ -43,20 +45,30 @@ common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
         than the number of treatments being compared", call. = FALSE)
     }
     phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'),
-        access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
+                             access(phyloseq_obj, 'tax_table'), access(phyloseq_obj, 'sam_data'))
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset = subset)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- unique(access(phyloseq_obj,
-        'sam_data')[[treatment_name]])
+                                       'sam_data')[[treatment_name]])
     if(n == 'all'){n <- length(treatment_classes)}
     if(n > length(treatment_classes)){
-        stop("common_taxa(): `n` must be either 'all' or a numeric value less
+      stop("common_taxa(): `n` must be either 'all' or a numeric value less
         than the number of treatments being compared", call. = FALSE)
     }
     seen_taxa <- lapply(treatment_classes, FUN = function(trt){
-        taxa_names(taxa_filter(phyloseq_obj, treatment = treatment_name,
-            subset = trt, frequency = 0))
-    }); names(seen_taxa) <- treatment_classes
+      taxa_names(taxa_filter(phyloseq_obj, treatment = treatment,
+                             subset = trt, frequency = 0))
+    })
+    if(n == 0){
+      seen_taxa <- tryCatch(taxa_names(taxa_filter(phyloseq_obj, frequency = .99)),
+                            error = function(e){stop("
+      No taxa seen in every sample.
+      To get a list of taxa seen in a certain proportion of samples use:
+      taxa_names(taxa_filter(phyloseq_obj, frequency = x))")}
+      )
+      n <- 1
+    }
+    names(seen_taxa) <- treatment_classes
     taxa_counts <- table(unlist(seen_taxa))
     shared_taxa <- names(taxa_counts[taxa_counts == round(n)])
     return(shared_taxa)
@@ -65,9 +77,9 @@ common_taxa <- function(phyloseq_obj, treatment, subset = NULL, n = 'all'){
 #' Merge samples based on common factor within sample_data.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a phyloseq object and merges the samples that meet the
+#' Inputs a phyloseq object and merges the samples that meet the
 #' specified criteria into a single sample. This is meant for replicates, or
-#' samples statistically proven to not be significantly different and should
+#' samples statistically proven to not be significantly different. This should
 #' be used with caution as it may be a misleading representation of the data.
 #' @useDynLib phylosmith
 #' @usage conglomerate_samples(phyloseq_obj, treatment, subset = NULL,
@@ -298,7 +310,7 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
 #' Melt a phyloseq object into a data.table.
 #' Function from the phylosmith-package.
 #'
-#' melt_phyloseq takes a phyloseq object and melts its ou_table, taxa_tale,
+#' melt_phyloseq inputs a phyloseq object and melts its ou_table, taxa_tale,
 #' and sample_Data into a single into a data.table.
 #' @useDynLib phylosmith
 #' @usage melt_phyloseq(phyloseq_obj)
@@ -398,7 +410,7 @@ merge_treatments <- function(phyloseq_obj, ...){
 #' Re-orders the samples of a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' Takes a \code{\link[phyloseq]{phyloseq-class}} object and changes the
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and changes the
 #' order of sample index either based on the metadata, or a given order.
 #' @useDynLib phylosmith
 #' @usage set_sample_order(phyloseq_obj, sort_on)
@@ -466,7 +478,7 @@ set_sample_order <- function(phyloseq_obj, sort_on){
 
 #' set_treatment_levels
 #'
-#' Reorders the levels of a metadata column in a
+#' Reorders the levels of a metadata factor column in a
 #' \code{\link[phyloseq]{phyloseq-class}} object
 #' \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @useDynLib phylosmith
@@ -542,7 +554,7 @@ relative_abundance <- function(phyloseq_obj){
 #' Filter taxa based on proportion of samples they are observed in.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a phyloseq object and finds which taxa are seen in a
+#' Inputs a phyloseq object and finds which taxa are seen in a
 #' given proportion of samples, either in the entire dataset, by treatment, or
 #' a particular treatment of interest.
 #' @useDynLib phylosmith
@@ -769,7 +781,7 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
 #' Find unique taxa between treatments of a phyloseq object.
 #' Function from the phylosmith-package.
 #'
-#' This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' finds which taxa are taxa that are unique to a specific subset of the data.
 #' @useDynLib phylosmith
 #' @usage unique_taxa(phyloseq_obj, treatment, subset = NULL)

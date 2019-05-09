@@ -58,7 +58,3 @@ arrange_co_occurrence_table <- function(co_occurrence_table, taxa_of_interest) {
     .Call('_phylosmith_arrange_co_occurrence_table', PACKAGE = 'phylosmith', co_occurrence_table, taxa_of_interest)
 }
 
-match_sequences <- function(short_input, long_input) {
-    .Call('_phylosmith_match_sequences', PACKAGE = 'phylosmith', short_input, long_input)
-}
-

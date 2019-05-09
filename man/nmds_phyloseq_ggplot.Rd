@@ -38,8 +38,8 @@ colors.}
 ggplot-object
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-plots the NMDS of a treatment or set of treatments.
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+plots the NMDS of a treatment or set of treatments in space.
 }
 \examples{
 nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'),

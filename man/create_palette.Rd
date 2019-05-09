@@ -2,8 +2,7 @@
 % Please edit documentation in R/non_export.R
 \name{create_palette}
 \alias{create_palette}
-\title{Internal function for creating color palettes for graphs.
-Function from the phylosmith-package.}
+\title{Creates color palettes for figures.}
 \usage{
 create_palette(color_count, colors = 'default')
 }
@@ -18,7 +17,9 @@ colors.}
 palette
 }
 \description{
-This function creates color palettes for graphs.
+Creates color palettes for figures using the the RColorBrewer, or the default
+color palette I made. The first 8 colors of the palette are from B. Wong's 2011
+publication. The additional colors I added and may change as time goes by.
 }
 \examples{
 #create_palette(8, 'Dark2')

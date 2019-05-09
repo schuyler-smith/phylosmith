@@ -42,7 +42,7 @@ colors.}
 ggplot-object
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 creates phylogenic barplots.
 }
 \examples{

@@ -5,7 +5,7 @@
 \title{Find taxa shared between treatments of a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+common_taxa(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -29,8 +29,10 @@ considered a common taxa.}
 vector
 }
 \description{
-Takes a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
-are shared between all of the specified treatments.
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and finds which taxa
+are shared between all of the specified treatments from data in the
+\code{\link[phyloseq:sample_data]{sample_data()}}), or every sample in the
+dataset.
 }
 \examples{
 common_taxa(soil_column, treatment = 'Treatment',

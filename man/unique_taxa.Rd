@@ -26,7 +26,7 @@ factors to subset on.}
 list
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 finds which taxa are taxa that are unique to a specific subset of the data.
 }
 \examples{

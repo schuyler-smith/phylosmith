@@ -2,7 +2,7 @@
 % Please edit documentation in R/graphs.R
 \name{abundance_lines_ggplot}
 \alias{abundance_lines_ggplot}
-\title{Create a ggplot object of the abundance table from a phyloseq object.
+\title{Create a lineplot ggplot object of the abundance table from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
 abundance_lines_ggplot(phyloseq_obj, classification = NULL,
@@ -41,9 +41,10 @@ colors.}
 ggplot-object
 }
 \description{
-This function takes a \code{\link[phyloseq]{phyloseq-class}} object and
-creates line graphs across samples.
+Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+creates line graphs with points across samples.
 }
 \examples{
-abundance_lines_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
+abundance_lines_ggplot(soil_column, classification = 'phylum',
+treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 }
