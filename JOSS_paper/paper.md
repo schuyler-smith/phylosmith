@@ -14,7 +14,7 @@ tags:
   - metagenomics
   - microbial ecology
 date: 1 May 2019
-bibliography: phylosmith_release.bib
+bibliography: paper.bib
 csl: biomed-central.csl
 output:
   pdf_document: default
