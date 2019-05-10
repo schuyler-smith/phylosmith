@@ -8,6 +8,10 @@ output:
 
 <br>
 
+[![Travis Build Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith) [![status](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c/status.svg)](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c)
+
+<br>
+
 <a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a conglomeration of functions written to process and analyze `phyloseq-class` objects. <a href="https://joey711.github.io/phyloseq/" targe="_blank" >Phyloseq</a> objects are a great data-standard for microbiome, gene-expression, and many other data types.
 
 A lot of these functions are just to make "data-wrangling" easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication as some may require parameter optimization.
