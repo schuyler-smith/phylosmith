@@ -625,9 +625,9 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
         access(phyloseq_obj, 'sam_data')
     )
 
+    treatment_name <- paste(treatment, collapse = sep)
     if(!(is.null(treatment))){
         phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
-        treatment_name <- paste(treatment, collapse = sep)
         treatment_classes <- sort(unique(access(phyloseq_obj,
             'sam_data')[[treatment_name]]))
         if(below == TRUE){
