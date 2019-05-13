@@ -677,7 +677,7 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
         phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0,
             phyloseq_obj)
     }
-    for(i in seq_along(original_levels)){
+    for(i in seq_along(original_levels[!(names(original_levels) %in% treatment_name)])){
         if(!(is.null(unname(unlist(original_levels[i]))))){
             phyloseq_obj <- set_treatment_levels(phyloseq_obj,
                 names(original_levels)[i], unname(unlist(original_levels[i])))}
