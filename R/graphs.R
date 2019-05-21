@@ -330,9 +330,9 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @export
 #' @return ggplot-object
 #' @examples
-#' #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
-#' #subset = 'Soil_Manure', co_occurrence_table = NULL, layout = NULL,
-#' #classification = 'phylum')
+#' network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
+#' subset = 'Soil Manure', co_occurrence_table = NULL, layout = NULL,
+#' classification = 'phylum')
 
 network_ps <- function(phyloseq_obj, classification = NULL,
     treatment = NULL, subset = NULL, co_occurrence_table = NULL,
@@ -379,8 +379,8 @@ network_ps <- function(phyloseq_obj, classification = NULL,
         stop("network_ps(): `buffer` must be a numeric value >= 0", call.
         = FALSE)
     }
-    node_classes <- sort(unique(access(phyloseq_obj,
-        'tax_table')[,classification]))
+    node_classes <- c(sort(unique(access(phyloseq_obj,
+        'tax_table')[,classification])), 'Unclassified')
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment,
         frequency = 0, subset = subset)
     treatment_name <- paste(treatment, collapse = sep)

@@ -4,24 +4,27 @@
 \alias{co_occurrence_Rcpp}
 \title{Co-occurrence calculation}
 \usage{
-co_occurrence_Rcpp(otu_table, treatment_indices, 
-treatment_names, p_cutoff, ncores)
+co_occurrence_Rcpp(otu_table, treatment_indices,
+treatment_names, rho_cutoff, p_cutoff, ncores)
 }
 \arguments{
-\item{otu_table}{An \code{otu_table} in the format from 
+\item{otu_table}{An \code{otu_table} in the format from
 \code{\link[phyloseq:otu_table]{phyloseq}}}
 
-\item{treatment_indices}{A \code{list} with c++ indices for the 
-\code{treatment_names} corresponding to which treatment each column in the 
+\item{treatment_indices}{A \code{list} with c++ indices for the
+\code{treatment_names} corresponding to which treatment each column in the
 \code{otu_table} belongs to.}
 
-\item{treatment_names}{A \code{Vector} containing the treatment names 
+\item{treatment_names}{A \code{Vector} containing the treatment names
 corresponding to the \code{treatment_indices}.}
 
-\item{p_cutoff}{\code{double} representing the maximum \code{p-value} 
+\item{rho_cutoff}{\code{double} representing the minimum \code{rho-value}
 accepted for the correlation to be returned.}
 
-\item{ncores}{An \code{int} for how many cores to use to multithread the 
+\item{p_cutoff}{\code{double} representing the maximum \code{p-value}
+accepted for the correlation to be returned.}
+
+\item{ncores}{An \code{int} for how many cores to use to multithread the
 calculations.}
 }
 \value{

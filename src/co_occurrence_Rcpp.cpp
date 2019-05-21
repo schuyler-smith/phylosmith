@@ -1,8 +1,8 @@
 /*
- * 
+ *
  *	Author: Schuyler Smith
  *  significance.h written by Jin Choi
- *      
+ *
  */
 #include "significance.h"
 #include <cmath>
@@ -27,27 +27,30 @@ using namespace std;
 //' @author Schuyler D. Smith
 //' @title Co-occurrence calculation
 //' @description Calculate the pair-wise Spearman rank correlation.
-//' @usage co_occurrence_Rcpp(otu_table, treatment_indices, 
-//' treatment_names, p_cutoff, ncores)
-//' @param otu_table An \code{otu_table} in the format from 
+//' @usage co_occurrence_Rcpp(otu_table, treatment_indices,
+//' treatment_names, rho_cutoff, p_cutoff, ncores)
+//' @param otu_table An \code{otu_table} in the format from
 //' \code{\link[phyloseq:otu_table]{phyloseq}}
-//' @param treatment_indices A \code{list} with c++ indices for the 
-//' \code{treatment_names} corresponding to which treatment each column in the 
+//' @param treatment_indices A \code{list} with c++ indices for the
+//' \code{treatment_names} corresponding to which treatment each column in the
 //' \code{otu_table} belongs to.
-//' @param treatment_names A \code{Vector} containing the treatment names 
+//' @param treatment_names A \code{Vector} containing the treatment names
 //' corresponding to the \code{treatment_indices}.
-//' @param p_cutoff \code{double} representing the maximum \code{p-value} 
+//' @param rho_cutoff \code{double} representing the minimum \code{rho-value}
 //' accepted for the correlation to be returned.
-//' @param ncores An \code{int} for how many cores to use to multithread the 
+//' @param p_cutoff \code{double} representing the maximum \code{p-value}
+//' accepted for the correlation to be returned.
+//' @param ncores An \code{int} for how many cores to use to multithread the
 //' calculations.
 //' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 //' @seealso \code{\link{co_occurrence}}
 // [[Rcpp::export]]
 Rcpp::DataFrame co_occurrence_Rcpp(
-	Rcpp::NumericMatrix otu_table, 
-	Rcpp::List treatment_indices, 
-	Rcpp::StringVector treatment_names, 
-	double p_cutoff, 
+	Rcpp::NumericMatrix otu_table,
+	Rcpp::List treatment_indices,
+	Rcpp::StringVector treatment_names,
+	double rho_cutoff,
+	double p_cutoff,
 	const int ncores){
 
 	vector<string> taxa_names = Rcpp::as<vector <string> >(rownames(otu_table));
@@ -128,10 +131,10 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 	  				double df = n_samples - 2;
 	  				p_val = pvalue( t, df );
 				} else {
-					rho = 0; 
+					rho = 0;
 					p_val = 1;
 				}
-				if(p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+				if(rho >= rho_cutoff || rho <= -rho_cutoff && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
 					#ifdef _OPENMP
 				  		#pragma omp critical
 					#endif
@@ -143,7 +146,7 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 						taxa_2.push_back(taxa_names[taxa2]);
 					}
 				}
-			}	
+			}
 		}}
 	}
 
@@ -158,25 +161,25 @@ Rcpp::DataFrame co_occurrence_Rcpp(
 
 //' @author Schuyler D. Smith
 //' @title Co-occurrence rho calculations
-//' @description Calculates the pair-wise Spearman rank correlation without 
+//' @description Calculates the pair-wise Spearman rank correlation without
 //' testing for significance.
-//' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices, 
+//' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices,
 //' treatment_names, ncores)
-//' @param otu_table An \code{otu_table} in the format from 
+//' @param otu_table An \code{otu_table} in the format from
 //' \code{\link[phyloseq:otu_table]{phyloseq}}
-//' @param treatment_indices A \code{list} with c++ indices for the 
-//' \code{treatment_names} corresponding to which treatment each column in the 
+//' @param treatment_indices A \code{list} with c++ indices for the
+//' \code{treatment_names} corresponding to which treatment each column in the
 //' \code{otu_table} belongs to.
-//' @param treatment_names A \code{Vector} containing the treatment names 
+//' @param treatment_names A \code{Vector} containing the treatment names
 //' corresponding to the \code{treatment_indices}.
-//' @param ncores An \code{int} for how many cores to use to multithread the 
+//' @param ncores An \code{int} for how many cores to use to multithread the
 //' calculations.
 //' @return A \code{vector} with rho values for each pair-wise correlation.
 //' @seealso \code{\link{permute_rho}}
 // [[Rcpp::export]]
 Rcpp::DataFrame co_occurrence_rho_Rcpp(
-	Rcpp::NumericMatrix otu_table, 
-	Rcpp::List treatment_indices, 
+	Rcpp::NumericMatrix otu_table,
+	Rcpp::List treatment_indices,
 	Rcpp::StringVector treatment_names,
 	const int ncores){
 
@@ -244,16 +247,16 @@ Rcpp::DataFrame co_occurrence_rho_Rcpp(
 					vector<double> Y = arma::conv_to<vector <double> >::from(taxa2_ranks);
 					rho = pearsoncoeff(X, Y);
 				} else {
-					rho = 0; 
+					rho = 0;
 				}
 				#ifdef _OPENMP
 			  		#pragma omp critical
 				#endif
 				{
 				treatments.push_back(Rcpp::as<string> (treatment_names[trt]));
-				rho_values.push_back(rho);					
+				rho_values.push_back(rho);
 				}
-			}	
+			}
 		}}
 	}
 	return Rcpp::DataFrame::create(
@@ -264,16 +267,16 @@ Rcpp::DataFrame co_occurrence_rho_Rcpp(
 
 //' @author Schuyler D. Smith
 //' @title Arrange co-occurence table
-//' @description Arranges the co-occurence table so that taxa of interest are 
+//' @description Arranges the co-occurence table so that taxa of interest are
 //' on the left.
-//' @param co_occurrence_table A \code{data.frame} in the format from 
+//' @param co_occurrence_table A \code{data.frame} in the format from
 //' \code{\link{co_occurrence}}.
-//' @param taxa_of_interest A \code{vector} containing names of taxa to be 
+//' @param taxa_of_interest A \code{vector} containing names of taxa to be
 //' found in either OTU_1 or OTU_2.
 //' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 //' @seealso \code{\link{co_occurrence}}
 // [[Rcpp::export]]
-Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table, 
+Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table,
 	Rcpp::CharacterVector taxa_of_interest){
 
     Rcpp::CharacterVector treatment = co_occurrence_table[0];
@@ -331,7 +334,7 @@ double sum(vector<double> a)
 {
   double s = 0;
   for (size_t i = 0; i < a.size(); i++)
-  {    
+  {
     s += a[i];
   }
   return s;
@@ -391,7 +394,7 @@ double betai(double a, double b, double x)
   double betacf(double a, double b, double x);
   double gammln(double xx);
   double bt;
-  if (x == 0.0 || x == 1.0) 
+  if (x == 0.0 || x == 1.0)
     bt=0.0;
   else // Factors in front of the continued fraction.
     bt=exp(gammln(a+b)-gammln(a)-gammln(b)+a*log(x)+b*log(1.0-x));
@@ -415,7 +418,7 @@ double betacf(double a, double b, double x)
   qam=a-1.0;
   c=1.0; // First step of Lentz’s method.
   d=1.0-qab*x/qap;
-  if (fabs(d) < FPMIN) 
+  if (fabs(d) < FPMIN)
     d=FPMIN;
   d=1.0/d;
   h=d;
@@ -457,7 +460,7 @@ double gammln(double xx)
   return -tmp+log(2.5066282746310005*ser/x);
 }
 
-double pvalue( double t, double df ) 
+double pvalue( double t, double df )
 // Compute p-value of t-statistic
 {
   return betai(0.5*df,0.5,df/(df+t*t));

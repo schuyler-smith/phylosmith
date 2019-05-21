@@ -7,17 +7,17 @@
 arrange_co_occurrence_table(co_occurrence_table, taxa_of_interest)
 }
 \arguments{
-\item{co_occurrence_table}{A \code{data.frame} in the format from 
+\item{co_occurrence_table}{A \code{data.frame} in the format from
 \code{\link{co_occurrence}}.}
 
-\item{taxa_of_interest}{A \code{vector} containing names of taxa to be 
+\item{taxa_of_interest}{A \code{vector} containing names of taxa to be
 found in either OTU_1 or OTU_2.}
 }
 \value{
 A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 }
 \description{
-Arranges the co-occurence table so that taxa of interest are 
+Arranges the co-occurence table so that taxa of interest are
 on the left.
 }
 \seealso{

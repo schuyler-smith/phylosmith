@@ -5,11 +5,13 @@
 #' \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
 #' been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment = NULL, rho, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
+#' @param rho \code{numeric} The rho-value cutoff. All returned co-occurrences
+#' will have a rho-value less than or equal to \code{rho} or kess than or equal to -\code{rho}.
 #' @param p \code{numeric} The p-value cutoff. All returned co-occurrences
 #' will have a p-value less than or equal to \code{p}.
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise
@@ -30,7 +32,7 @@
 
 # sourceCpp("src/co_occurrence_Rcpp.cpp")
 
-co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
+co_occurrence <- function(phyloseq_obj, treatment = NULL, rho = 0, p = 0.05, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
@@ -46,6 +48,10 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
     }
     if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
         stop("co_occurrence(): `p` must be a numeric value between 0 and 1",
+        call. = FALSE)
+    }
+    if(!(is.numeric(rho)) | !(rho >= 0 & rho <= 1)){
+        stop("co_occurrence(): `rho` must be a numeric value between 0 and 1",
         call. = FALSE)
     }
     if(!(is.numeric(cores)) |
@@ -74,7 +80,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0){
 
     if(cores == 0){cores <- (parallel::detectCores() -1)}
     co_occurrence <- co_occurrence_Rcpp(access(phyloseq_obj, 'otu_table'),
-        treatment_indices, treatment_classes, p, cores)
+        treatment_indices, treatment_classes, rho, p, cores)
     return(as.data.table(co_occurrence))
 }
 

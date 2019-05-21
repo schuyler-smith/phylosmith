@@ -4,39 +4,41 @@
 #' @author Schuyler D. Smith
 #' @title Co-occurrence calculation
 #' @description Calculate the pair-wise Spearman rank correlation.
-#' @usage co_occurrence_Rcpp(otu_table, treatment_indices, 
-#' treatment_names, p_cutoff, ncores)
-#' @param otu_table An \code{otu_table} in the format from 
+#' @usage co_occurrence_Rcpp(otu_table, treatment_indices,
+#' treatment_names, rho_cutoff, p_cutoff, ncores)
+#' @param otu_table An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
-#' @param treatment_indices A \code{list} with c++ indices for the 
-#' \code{treatment_names} corresponding to which treatment each column in the 
+#' @param treatment_indices A \code{list} with c++ indices for the
+#' \code{treatment_names} corresponding to which treatment each column in the
 #' \code{otu_table} belongs to.
-#' @param treatment_names A \code{Vector} containing the treatment names 
+#' @param treatment_names A \code{Vector} containing the treatment names
 #' corresponding to the \code{treatment_indices}.
-#' @param p_cutoff \code{double} representing the maximum \code{p-value} 
+#' @param rho_cutoff \code{double} representing the minimum \code{rho-value}
 #' accepted for the correlation to be returned.
-#' @param ncores An \code{int} for how many cores to use to multithread the 
+#' @param p_cutoff \code{double} representing the maximum \code{p-value}
+#' accepted for the correlation to be returned.
+#' @param ncores An \code{int} for how many cores to use to multithread the
 #' calculations.
 #' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 #' @seealso \code{\link{co_occurrence}}
-co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, p_cutoff, ncores) {
-    .Call('_phylosmith_co_occurrence_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, p_cutoff, ncores)
+co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores) {
+    .Call('_phylosmith_co_occurrence_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores)
 }
 
 #' @author Schuyler D. Smith
 #' @title Co-occurrence rho calculations
-#' @description Calculates the pair-wise Spearman rank correlation without 
+#' @description Calculates the pair-wise Spearman rank correlation without
 #' testing for significance.
-#' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices, 
+#' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices,
 #' treatment_names, ncores)
-#' @param otu_table An \code{otu_table} in the format from 
+#' @param otu_table An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
-#' @param treatment_indices A \code{list} with c++ indices for the 
-#' \code{treatment_names} corresponding to which treatment each column in the 
+#' @param treatment_indices A \code{list} with c++ indices for the
+#' \code{treatment_names} corresponding to which treatment each column in the
 #' \code{otu_table} belongs to.
-#' @param treatment_names A \code{Vector} containing the treatment names 
+#' @param treatment_names A \code{Vector} containing the treatment names
 #' corresponding to the \code{treatment_indices}.
-#' @param ncores An \code{int} for how many cores to use to multithread the 
+#' @param ncores An \code{int} for how many cores to use to multithread the
 #' calculations.
 #' @return A \code{vector} with rho values for each pair-wise correlation.
 #' @seealso \code{\link{permute_rho}}
@@ -46,11 +48,11 @@ co_occurrence_rho_Rcpp <- function(otu_table, treatment_indices, treatment_names
 
 #' @author Schuyler D. Smith
 #' @title Arrange co-occurence table
-#' @description Arranges the co-occurence table so that taxa of interest are 
+#' @description Arranges the co-occurence table so that taxa of interest are
 #' on the left.
-#' @param co_occurrence_table A \code{data.frame} in the format from 
+#' @param co_occurrence_table A \code{data.frame} in the format from
 #' \code{\link{co_occurrence}}.
-#' @param taxa_of_interest A \code{vector} containing names of taxa to be 
+#' @param taxa_of_interest A \code{vector} containing names of taxa to be
 #' found in either OTU_1 or OTU_2.
 #' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 #' @seealso \code{\link{co_occurrence}}

@@ -7,17 +7,18 @@
 using namespace Rcpp;
 
 // co_occurrence_Rcpp
-Rcpp::DataFrame co_occurrence_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double p_cutoff, const int ncores);
-RcppExport SEXP _phylosmith_co_occurrence_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
+Rcpp::DataFrame co_occurrence_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double rho_cutoff, double p_cutoff, const int ncores);
+RcppExport SEXP _phylosmith_co_occurrence_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP rho_cutoffSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< double >::type rho_cutoff(rho_cutoffSEXP);
     Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(co_occurrence_Rcpp(otu_table, treatment_indices, treatment_names, p_cutoff, ncores));
+    rcpp_result_gen = Rcpp::wrap(co_occurrence_Rcpp(otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -49,7 +50,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 5},
+    {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 6},
     {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
     {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {NULL, NULL, 0}
