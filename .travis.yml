@@ -5,7 +5,6 @@ use_bioc: true
 bioc_required: true
 cache:
   - packages
-  - ccache
 sudo: false
 dist: trusty
 os:
@@ -27,6 +26,25 @@ env:
   # remove linux
   - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
 
+r_packages:
+  - phyloseq
+  - data.table
+  - parallel
+  - utils
+  - vegan
+  - Rtsne
+  - stringr
+  - grDevices
+  - graphics
+  - RColorBrewer
+  - ggplot2
+  - igraph
+  - ggraph
+  - ggrepel
+  - sf
+  - sp
+  - rgdal
+  - rgeos
 # before_install:
 #   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
 #     export PATH="/usr/local/opt/llvm/bin:$PATH" &&
