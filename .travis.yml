@@ -27,6 +27,10 @@ env:
   # remove linux
   - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
 
+r_binary_packages:
+  - sp
+  - ggplot2
+
 # before_install:
 #   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
 #     export PATH="/usr/local/opt/llvm/bin:$PATH" &&
