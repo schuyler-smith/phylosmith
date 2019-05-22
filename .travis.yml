@@ -28,6 +28,7 @@ env:
   - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
 
 r_binary_packages:
+  - dplyr
   - sp
   - ggplot2
 
