@@ -6,7 +6,7 @@ bioc_required: true
 cache:
   - packages
   - ccache
-sudo: required
+sudo: false
 dist: trusty
 os:
   - linux
@@ -14,10 +14,11 @@ os:
 compiler:
   - gcc
   - clang
-before_install:
-  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
-  - sudo apt-get --yes --force-yes update -qq
-  - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
+addons:
+ apt:
+   packages:
+     - libudunits2-dev # required for units, required for ggforce, required for ggraph
+     - libgdal-dev # required for sf
 env:
   global:
   - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
@@ -26,6 +27,8 @@ env:
   # remove linux
   - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
 
-r_binary_packages:
-  - ggplot2
-
+# before_install:
+#   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
+#     export PATH="/usr/local/opt/llvm/bin:$PATH" &&
+#     export LDFLAGS="-L/usr/local/opt/llvm/lib" &&
+#     export CFLAGS="-I/usr/local/opt/llvm/include"; fi
