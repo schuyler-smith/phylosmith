@@ -20,6 +20,7 @@ addons:
      - libudunits2-dev # required for units, required for ggforce, required for ggraph
      - libgdal-dev # required for sf
      - libgeos-dev 
+     - libproj-dev
 env:
   global:
   - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
@@ -27,6 +28,9 @@ env:
   - _R_CHECK_FORCE_SUGGESTS_=false
   # remove linux
   - TRAVIS_CXXFLAGS="-Wall -Wextra -pedantic -Werror"
+
+r_packages:
+  - rgdal
 
 r_binary_packages:
   - ggplot2
