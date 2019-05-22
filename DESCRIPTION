@@ -26,9 +26,7 @@ Imports:
     igraph,
     ggraph,
     ggrepel,
-    dplyr,
     sf,
-    sp,
     vegan,
     Rtsne,
     stringr
