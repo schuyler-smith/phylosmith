@@ -6,7 +6,7 @@ bioc_required: true
 cache:
   - packages
   - ccache
-sudo: false
+sudo: required
 dist: trusty
 os:
   - linux
