@@ -295,15 +295,15 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
         "')]), ",
         paste(colnames(access(phyloseq_obj, 'tax_table')), collapse = ', '),
             ")")))
-    taxa <- as.matrix(taxa, rownames = colnames(otus))
+    taxa <- as.matrix(taxa, rownames = unlist(taxa[, .(col_test = do.call(paste, c(.SD, sep = "_")))]))
 
     phyloseq_obj <- phyloseq(
         otu_table(t(otus)[,sample_order], taxa_are_rows = TRUE),
         tax_table(taxa)
     )
     if(!(is.logical(sam))){sample_data(phyloseq_obj) <- sam}
-    if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
-    if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
+    if(!(is.logical(phylo_tree))){warning('trees cannot be preserved after taxa conglomeration')}
+    if(!(is.logical(refseq))){warning('reference sequences cannot be preserved after taxa conglomeration')}
     return(phyloseq_obj)
 }
 
