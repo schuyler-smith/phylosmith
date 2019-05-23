@@ -1062,7 +1062,7 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
     g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black', size = 7, alpha = 1.0) +
       scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
-      g <- g + geom_label(aes_string(label = labels, fill = 'Treatment'),
+      g <- g + geom_label(aes_string(label = labels, fill = treatment_name),
                           label.padding = unit(0.35, "lines"), label.r = unit(0.55, "lines"),
                           show.legend = FALSE)}
     g <- g + theme_classic() +
