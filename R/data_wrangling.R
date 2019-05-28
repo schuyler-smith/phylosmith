@@ -213,8 +213,8 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
                 names(original_levels)[i], unname(unlist(original_levels[i])))
         }
     }
+    if(!(is.logical(refseqs))){phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data, refseq(refseqs))}
     if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
-    if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
     return(phyloseq_obj)
 }
 
@@ -471,8 +471,8 @@ set_sample_order <- function(phyloseq_obj, sort_on){
 
   phyloseq_obj <- phyloseq(otu, sam)
   if(!(is.logical(tax))){tax_table(phyloseq_obj) <- tax}
+  if(!(is.logical(refseqs))){phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data, refseq(refseqs))}
   if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
-  if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
   return(phyloseq_obj)
 }
 
@@ -682,8 +682,8 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
             phyloseq_obj <- set_treatment_levels(phyloseq_obj,
                 names(original_levels)[i], unname(unlist(original_levels[i])))}
     }
+    if(!(is.logical(refseqs))){phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, phyloseq_obj@sam_data, refseq(refseqs))}
     if(!(is.logical(phylo_tree))){phy_tree(phyloseq_obj) <- phylo_tree}
-    if(!(is.logical(refseq))){refseq(phyloseq_obj) <- refseq}
     return(phyloseq_obj)
 }
 
