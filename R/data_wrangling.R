@@ -130,9 +130,9 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
         phylo_tree <- FALSE
     }
     if(!(is.null(access(phyloseq_obj, 'refseq')))){
-        refseq <- access(phyloseq_obj, 'refseq')
+        refseqs <- access(phyloseq_obj, 'refseq')
     } else {
-        refseq <- FALSE
+        refseqs <- FALSE
     }
     original_levels <- lapply(access(phyloseq_obj, 'sam_data'), levels)
     phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'),
@@ -267,8 +267,8 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
         phylo_tree <- access(phyloseq_obj, 'phy_tree')
     } else {phylo_tree <- FALSE}
     if(!(is.null(access(phyloseq_obj, 'refseq')))){
-        refseq <- access(phyloseq_obj, 'refseq')
-    } else {refseq <- FALSE}
+        refseqs <- access(phyloseq_obj, 'refseq')
+    } else {refseqs <- FALSE}
     if(!(is.null(access(phyloseq_obj, 'sam_data')))){
         sam <- access(phyloseq_obj, 'sam_data')
     } else {sam <- FALSE}
@@ -303,7 +303,7 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
     )
     if(!(is.logical(sam))){sample_data(phyloseq_obj) <- sam}
     if(!(is.logical(phylo_tree))){warning('trees cannot be preserved after taxa conglomeration')}
-    if(!(is.logical(refseq))){warning('reference sequences cannot be preserved after taxa conglomeration')}
+    if(!(is.logical(refseqs))){warning('reference sequences cannot be preserved after taxa conglomeration')}
     return(phyloseq_obj)
 }
 
@@ -436,8 +436,8 @@ set_sample_order <- function(phyloseq_obj, sort_on){
     phylo_tree <- access(phyloseq_obj, 'phy_tree')
   } else {phylo_tree <- FALSE}
   if(!(is.null(access(phyloseq_obj, 'refseq')))){
-    refseq <- access(phyloseq_obj, 'refseq')
-  } else {refseq <- FALSE}
+    refseqs <- access(phyloseq_obj, 'refseq')
+  } else {refseqs <- FALSE}
   if(!(is.null(access(phyloseq_obj, 'sam_data')))){
     sam <- access(phyloseq_obj, 'sam_data')
   } else {sam <- FALSE}
@@ -617,8 +617,8 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
         phylo_tree <- access(phyloseq_obj, 'phy_tree')
     } else {phylo_tree <- FALSE}
     if(!(is.null(access(phyloseq_obj, 'refseq')))){
-        refseq <- access(phyloseq_obj, 'refseq')
-    } else {refseq <- FALSE}
+        refseqs <- access(phyloseq_obj, 'refseq')
+    } else {refseqs <- FALSE}
     phyloseq_obj <- phyloseq(
         access(phyloseq_obj, 'otu_table'),
         access(phyloseq_obj, 'tax_table'),
