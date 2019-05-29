@@ -1,11 +1,16 @@
 #' Soil Column 16S Data - OTUs
 #'
+#' This dataset was from an experiment that looked at how microbes from
+#' manure used as fertilizer move through soil systems. The manure was
+#' applied to the soil in a controlled system, and rain simulations were
+#' conducted. The soil was tested at various time points, as was the water
+#' that ran through the soil (effluent).
 #' @docType data
 #' @usage data(soil_column)
 #' @format A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @keywords datasets
-#' @source Simulation
-#' @references 
+#' @source Experiment
+#' @references
 #' \url{https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full}
 "soil_column"
 
