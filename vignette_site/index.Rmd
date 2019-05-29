@@ -32,6 +32,8 @@ library(phylosmith)
 
 <br>
 
+<a name="data_wrangling"></a>
+
 ### [Data Wrangling][dapa]
 Call | Description
 -------------------- | ------------------------------------------------------------
@@ -47,6 +49,8 @@ Call | Description
 [taxa_proportions](data_wrangling.html#taxa_proportions) | computes the proportion of a taxa classification
 [unique_taxa](data_wrangling.html#unique_taxa) | find taxa unique to each treatment
 
+<a name="graphs"></a>
+
 ### [Graphs][grap]
 Call | Description
 -------------------- | ------------------------------------------------------------
@@ -58,6 +62,8 @@ Call | Description
 [phylogeny_profile_ggplot](graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
 [taxa_abundance_bars_ggplot](graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
 [tsne_phyloseq_ggplot](graphs.html#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
+
+<a name="calculations"></a>
 
 ### [Calculations][calc]
 Call | Description
@@ -73,7 +79,7 @@ Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyl
 Then I decided that I should include a real example of microbiome data (`soil_column`) becasue it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.
 
 
-[dapa]:data_wrangling.html
-[grap]:graphs.html
-[calc]:calculations.html
+[dapa]:index.html#data_wrangling
+[grap]:index.html#graphs
+[calc]:index.html#calculations
 
