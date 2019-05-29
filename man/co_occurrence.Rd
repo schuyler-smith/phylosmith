@@ -6,7 +6,7 @@
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 Function from the phylosmith-package.}
 \usage{
-co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho, p = 0.05, cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
