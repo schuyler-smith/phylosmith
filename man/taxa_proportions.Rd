@@ -29,7 +29,7 @@ Computes the proportion of a taxa classification. Function from the
 phylosmith-package.
 }
 \examples{
-taxa_proportions(soil_column, 'phylum', treatment = NA)
-taxa_proportions(soil_column, 'phylum', treatment = 'sample')
-taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
+taxa_proportions(soil_column, 'Phylum', treatment = NA)
+taxa_proportions(soil_column, 'Phylum', treatment = 'sample')
+taxa_proportions(soil_column, 'Phylum', treatment = c('Matrix', 'Treatment'))
 }

@@ -46,5 +46,5 @@ and comparable graphics.
 }
 \examples{
 network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'),
-subset = 'Soil Manure', algorithm = 'kk')
+subset = 'Soil Amended', algorithm = 'kk')
 }

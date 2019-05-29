@@ -42,5 +42,5 @@ a particular treatment of interest.
 \examples{
 taxa_filter(soil_column, frequency = 0.8)
 taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'),
-subset = 'Soil Manure', frequency = 0.8)
+subset = 'Soil Amended', frequency = 0.8)
 }

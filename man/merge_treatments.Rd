@@ -24,5 +24,5 @@ object \code{\link[phyloseq:sample_data]{sample_data}} into a
 single-variable column.
 }
 \examples{
-merge_treatments(soil_column, 'Matrix', 'Treatment')
+merge_treatments(soil_column, 'Matrix', 'Treatment', 'Day')
 }

@@ -5,7 +5,7 @@
 \title{Permutes the pair-wise Spearman rank co-occurrence, to determine a
 significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
-permute_rho(phyloseq_obj, treatment = NULL,
+permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
 replicate_samples = 'independent', permutations = 100, cores = 0)
 }
 \arguments{
@@ -14,6 +14,10 @@ replicate_samples = 'independent', permutations = 100, cores = 0)
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
+
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
+factors to subset on.}
 
 \item{replicate_samples}{Column name as a \code{string} or \code{numeric}
 in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which
@@ -34,7 +38,7 @@ significant rho-cutoff.
 }
 \examples{
 permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
-replicate_samples = 'Day', permutations = 1,  cores = 0)
+subset = 'Amended', replicate_samples = 'Day', permutations = 1,  cores = 0)
 }
 \seealso{
 \code{\link{co_occurrence}}

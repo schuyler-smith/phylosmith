@@ -44,6 +44,6 @@ creates barplots of taxa by treatment.
 \examples{
 taxa_abundance_bars_ggplot(
 taxa_filter(soil_column, frequency = 0.8),
-classification = 'phylum', treatment = c('Matrix', 'Treatment'),
-subset = 'Control', transformation = 'mean')
+classification = 'Phylum', treatment = c('Matrix', 'Treatment'),
+subset = 'Unamended', transformation = 'mean')
 }

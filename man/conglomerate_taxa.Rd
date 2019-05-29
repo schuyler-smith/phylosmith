@@ -30,7 +30,7 @@ Conglomerate taxa by sample on a given classification level from the
 tax_table.
 }
 \examples{
-conglomerate_taxa(soil_column, 'phylum')
+conglomerate_taxa(soil_column, 'Phylum')
 }
 \seealso{
 \code{\link[phyloseq:tax_glom]{tax_glom()}}

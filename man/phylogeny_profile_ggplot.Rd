@@ -46,7 +46,7 @@ Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 creates phylogenic barplots.
 }
 \examples{
-phylogeny_profile_ggplot(soil_column, classification = 'phylum',
+phylogeny_profile_ggplot(soil_column, classification = 'Phylum',
 treatment = c('Matrix', 'Treatment'), merge = TRUE,
 relative_abundance = TRUE)
 }

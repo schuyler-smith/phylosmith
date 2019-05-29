@@ -5,11 +5,14 @@
 #' \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
 #' been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage co_occurrence(phyloseq_obj, treatment = NULL, rho, p = 0.05, cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
 #' @param rho \code{numeric} The rho-value cutoff. All returned co-occurrences
 #' will have a rho-value less than or equal to \code{rho} or kess than or equal to -\code{rho}.
 #' @param p \code{numeric} The p-value cutoff. All returned co-occurrences
@@ -28,11 +31,11 @@
 #' @return data.table
 #' @examples
 #' co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
-#' p = 0.05, cores = 0)
+#' subset = 'Amended', rho = 0.8, p = 0.05, cores = 0)
 
 # sourceCpp("src/co_occurrence_Rcpp.cpp")
 
-co_occurrence <- function(phyloseq_obj, treatment = NULL, rho = 0, p = 0.05, cores = 0){
+co_occurrence <- function(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
@@ -63,7 +66,7 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, rho = 0, p = 0.05, cor
     }
     options(warnings=-1)
 
-    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment)
+    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
     treatment_name <- paste(treatment, collapse = sep)
 
     treatment_classes <- as.character(unique(access(phyloseq_obj,
@@ -90,12 +93,15 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, rho = 0, p = 0.05, cor
 #' Permutes the pair-wise Spearman rank co-occurrence, to determine a
 #' significant rho-cutoff.
 #' @useDynLib phylosmith
-#' @usage permute_rho(phyloseq_obj, treatment = NULL,
+#' @usage permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
 #' replicate_samples = 'independent', permutations = 100, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
 #' @param replicate_samples Column name as a \code{string} or \code{numeric}
 #' in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which
 #' samples are non-independent of each other.
@@ -113,11 +119,11 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, rho = 0, p = 0.05, cor
 #' @return table
 #' @examples
 #' permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
-#' replicate_samples = 'Day', permutations = 1,  cores = 0)
+#' subset = 'Amended', replicate_samples = 'Day', permutations = 1,  cores = 0)
 
 # sourceCpp('src/co_occurrence_Rcpp.cpp')
 
-permute_rho <- function(phyloseq_obj, treatment = NULL,
+permute_rho <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     replicate_samples = 'independent', permutations = 100, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("permute_rho(): `phyloseq_obj` must be a phyloseq-class object",

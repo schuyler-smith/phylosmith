@@ -24,7 +24,7 @@
 #' @export
 #' @return vector
 #' @examples common_taxa(soil_column, treatment = 'Treatment',
-#' subset = 'Manure', n = 'all')
+#' subset = 'Amended', n = 'all')
 
 common_taxa <- function(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all'){
     if(!inherits(phyloseq_obj, "phyloseq")){
@@ -241,7 +241,7 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
 #' @import data.table
 #' @export
 #' @return phyloseq-object
-#' @examples conglomerate_taxa(soil_column, 'phylum')
+#' @examples conglomerate_taxa(soil_column, 'Phylum')
 
 conglomerate_taxa <- function(phyloseq_obj, classification,
     hierarchical = TRUE){
@@ -374,7 +374,7 @@ melt_phyloseq <- function(phyloseq_obj){
 #' @import data.table
 #' @export
 #' @return phyloseq-object
-#' @examples merge_treatments(soil_column, 'Matrix', 'Treatment')
+#' @examples merge_treatments(soil_column, 'Matrix', 'Treatment', 'Day')
 
 merge_treatments <- function(phyloseq_obj, ...){
     if(!inherits(phyloseq_obj, "phyloseq")){
@@ -411,7 +411,8 @@ merge_treatments <- function(phyloseq_obj, ...){
 #' Function from the phylosmith-package.
 #'
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and changes the
-#' order of sample index either based on the metadata, or a given order.
+#' order of sample index either based on the metadata, or a given order. If
+#' metadata columns are used, they will take the factor order.
 #' @useDynLib phylosmith
 #' @usage set_sample_order(phyloseq_obj, sort_on)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -496,7 +497,7 @@ set_sample_order <- function(phyloseq_obj, sort_on){
 #' @export
 #' @return phyloseq-object
 #' @examples set_treatment_levels(soil_column, treatment = 'Matrix',
-#' order = c('Manure', 'Soil', 'Water'))
+#' order = c('Manure', 'Soil', 'Effluent'))
 #' set_treatment_levels(soil_column, 'Day', 'numeric')
 
 set_treatment_levels <- function(phyloseq_obj, treatment, order){
@@ -581,7 +582,7 @@ relative_abundance <- function(phyloseq_obj){
 #' @return phyloseq-object
 #' @examples taxa_filter(soil_column, frequency = 0.8)
 #' taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'),
-#' subset = 'Soil Manure', frequency = 0.8)
+#' subset = 'Soil Amended', frequency = 0.8)
 
 taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     frequency = 0, below = FALSE, drop_samples = FALSE){
@@ -707,9 +708,9 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 #' @import data.table
 #' @export
 #' @return data.table
-#' @examples taxa_proportions(soil_column, 'phylum', treatment = NA)
-#' taxa_proportions(soil_column, 'phylum', treatment = 'sample')
-#' taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
+#' @examples taxa_proportions(soil_column, 'Phylum', treatment = NA)
+#' taxa_proportions(soil_column, 'Phylum', treatment = 'sample')
+#' taxa_proportions(soil_column, 'Phylum', treatment = c('Matrix', 'Treatment'))
 
 taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
     if(!inherits(phyloseq_obj, "phyloseq")){

@@ -32,7 +32,7 @@
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples abundance_heatmap_ggplot(soil_column, classification = 'phylum',
+#' @examples abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), transformation = 'log')
 
 abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
@@ -171,7 +171,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples abundance_lines_ggplot(soil_column, classification = 'phylum',
+#' @examples abundance_lines_ggplot(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 
 abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
@@ -331,8 +331,8 @@ abundance_lines_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @return ggplot-object
 #' @examples
 #' #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
-#' #subset = 'Soil Manure', co_occurrence_table = NULL, layout = NULL,
-#' #classification = 'phylum')
+#' #subset = 'Soil Amended', co_occurrence_table = NULL, layout = NULL,
+#' #classification = 'Phylum')
 
 network_ps <- function(phyloseq_obj, classification = NULL,
     treatment = NULL, subset = NULL, co_occurrence_table = NULL,
@@ -518,7 +518,7 @@ network_ps <- function(phyloseq_obj, classification = NULL,
 #' @return layout_igraph object
 #' @examples
 #' network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'),
-#' subset = 'Soil Manure', algorithm = 'kk')
+#' subset = 'Soil Amended', algorithm = 'kk')
 
 network_layout_ps <- function (phyloseq_obj, classification = NULL, treatment = NULL,
         subset = NULL, co_occurrence_table = NULL, algorithm = 'fr'){
@@ -729,7 +729,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
 #' @import ggplot2
 #' @export
 #' @return ggplot-object
-#' @examples phylogeny_profile_ggplot(soil_column, classification = 'phylum',
+#' @examples phylogeny_profile_ggplot(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), merge = TRUE,
 #' relative_abundance = TRUE)
 
@@ -866,8 +866,8 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @return ggplot-object
 #' @examples taxa_abundance_bars_ggplot(
 #' taxa_filter(soil_column, frequency = 0.8),
-#' classification = 'phylum', treatment = c('Matrix', 'Treatment'),
-#' subset = 'Control', transformation = 'mean')
+#' classification = 'Phylum', treatment = c('Matrix', 'Treatment'),
+#' subset = 'Unamended', transformation = 'mean')
 
 taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
     treatment, subset = NULL, transformation = 'none', colors = 'default'){
@@ -1004,7 +1004,7 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @export
 #' @return ggplot-object
 #' @examples tsne_phyloseq_ggplot(soil_column,
-#' treatment = c('Matrix', 'Treatment'), perplexity = 10)
+#' treatment = c('Matrix', 'Treatment'), perplexity = 8)
 
 
 tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,

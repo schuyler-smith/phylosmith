@@ -36,7 +36,7 @@ dataset.
 }
 \examples{
 common_taxa(soil_column, treatment = 'Treatment',
-subset = 'Manure', n = 'all')
+subset = 'Amended', n = 'all')
 }
 \seealso{
 \code{\link{unique_taxa}}

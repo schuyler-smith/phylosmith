@@ -43,7 +43,7 @@ treatment or set of treatments.
 }
 \examples{
 tsne_phyloseq_ggplot(soil_column,
-treatment = c('Matrix', 'Treatment'), perplexity = 10)
+treatment = c('Matrix', 'Treatment'), perplexity = 8)
 }
 \seealso{
 \code{\link[=Rtsne]{Rtsne}}

@@ -6,7 +6,7 @@
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 Function from the phylosmith-package.}
 \usage{
-co_occurrence(phyloseq_obj, treatment = NULL, rho, p = 0.05, cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho, p = 0.05, cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -14,6 +14,10 @@ co_occurrence(phyloseq_obj, treatment = NULL, rho, p = 0.05, cores = 0)
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
+
+\item{subset}{A factor within the \code{treatment}. This will remove any
+samples that to not contain this factor. This can be a vector of multiple
+factors to subset on.}
 
 \item{rho}{\code{numeric} The rho-value cutoff. All returned co-occurrences
 will have a rho-value less than or equal to \code{rho} or kess than or equal to -\code{rho}.}
@@ -35,7 +39,7 @@ been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 }
 \examples{
 co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
-p = 0.05, cores = 0)
+subset = 'Amended', rho = 0.8, p = 0.05, cores = 0)
 }
 \seealso{
 \code{\link{permute_rho}} \code{\link{phylosmith}}

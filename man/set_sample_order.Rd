@@ -23,7 +23,8 @@ phyloseq object
 }
 \description{
 Inputs a \code{\link[phyloseq]{phyloseq-class}} object and changes the
-order of sample index either based on the metadata, or a given order.
+order of sample index either based on the metadata, or a given order. If
+metadata columns are used, they will take the factor order.
 }
 \examples{
 set_sample_order(soil_column, c('Matrix', 'Treatment'))

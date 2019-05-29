@@ -29,6 +29,6 @@ Reorders the levels of a metadata factor column in a
 }
 \examples{
 set_treatment_levels(soil_column, treatment = 'Matrix',
-order = c('Manure', 'Soil', 'Water'))
+order = c('Manure', 'Soil', 'Effluent'))
 set_treatment_levels(soil_column, 'Day', 'numeric')
 }

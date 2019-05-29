@@ -68,6 +68,6 @@ the layout of the graph can be given as an argument as well for reprodusibility.
 }
 \examples{
 #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
-#subset = 'Soil Manure', co_occurrence_table = NULL, layout = NULL,
-#classification = 'phylum')
+#subset = 'Soil Amended', co_occurrence_table = NULL, layout = NULL,
+#classification = 'Phylum')
 }
