@@ -5,7 +5,7 @@
 #' \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
 #' been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho, p = 0.05, cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -35,7 +35,8 @@
 
 # sourceCpp("src/co_occurrence_Rcpp.cpp")
 
-co_occurrence <- function(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0){
+co_occurrence <- function(phyloseq_obj, treatment = NULL, subset = NULL,
+                          rho = 0, p = 0.05, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
@@ -164,7 +165,7 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     }
     options(warnings=-1)
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment,
-        frequency = 0)
+        subset = subset, frequency = 0)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- as.character(unique(access(phyloseq_obj,
         'sam_data')[[treatment_name]]))

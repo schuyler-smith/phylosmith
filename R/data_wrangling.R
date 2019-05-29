@@ -406,6 +406,34 @@ merge_treatments <- function(phyloseq_obj, ...){
     return(phyloseq_obj)
 }
 
+#' Transform abundance data in an \code{otu_table} to relative abundance,
+#' sample-by-sample. Function from the phylosmith-package.
+#'
+#' Transform abundance data into relative abundance, i.e. proportional data.
+#' This is an alternative method of normalization and may not be appropriate
+#' for all datasets, particularly if your sequencing depth varies between
+#' samples.
+#' @useDynLib phylosmith
+#' @usage relative_abundance(phyloseq_obj)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @export
+#' @return phyloseq-object
+#' @examples relative_abundance(soil_column)
+
+relative_abundance <- function(phyloseq_obj){
+  if(!inherits(phyloseq_obj, "phyloseq")){
+    stop("relative_abundance(): `phyloseq_obj` must be a phyloseq-class
+            object", call. = FALSE)
+  }
+  abundance_table <- access(phyloseq_obj, 'otu_table')
+  abundance_table <- apply(abundance_table, 2, FUN = function(c){c/sum(c)})
+  otu_table(phyloseq_obj) <- otu_table(abundance_table, taxa_are_rows = TRUE)
+  return(phyloseq_obj)
+}
 
 #' Re-orders the samples of a phyloseq object.
 #' Function from the phylosmith-package.
@@ -520,35 +548,6 @@ set_treatment_levels <- function(phyloseq_obj, treatment, order){
             access(phyloseq_obj, 'sam_data')[[treatment]])))))}
     sample_data(phyloseq_obj)[[treatment]] <- factor(access(phyloseq_obj,
         'sam_data')[[treatment]], levels = order)
-    return(phyloseq_obj)
-}
-
-#' Transform abundance data in an \code{otu_table} to relative abundance,
-#' sample-by-sample. Function from the phylosmith-package.
-#'
-#' Transform abundance data into relative abundance, i.e. proportional data.
-#' This is an alternative method of normalization and may not be appropriate
-#' for all datasets, particularly if your sequencing depth varies between
-#' samples.
-#' @useDynLib phylosmith
-#' @usage relative_abundance(phyloseq_obj)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
-#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-#' information about each sample, and it must contain
-#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
-#' taxa/gene.
-#' @export
-#' @return phyloseq-object
-#' @examples relative_abundance(soil_column)
-
-relative_abundance <- function(phyloseq_obj){
-    if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("relative_abundance(): `phyloseq_obj` must be a phyloseq-class
-            object", call. = FALSE)
-    }
-    abundance_table <- access(phyloseq_obj, 'otu_table')
-    abundance_table <- apply(abundance_table, 2, FUN = function(c){c/sum(c)})
-    otu_table(phyloseq_obj) <- otu_table(abundance_table, taxa_are_rows = TRUE)
     return(phyloseq_obj)
 }
 

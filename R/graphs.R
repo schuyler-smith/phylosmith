@@ -1006,7 +1006,6 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @examples tsne_phyloseq_ggplot(soil_column,
 #' treatment = c('Matrix', 'Treatment'), perplexity = 8)
 
-
 tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
     circle = TRUE, labels = NULL, colors = 'default'){
     if(!inherits(phyloseq_obj, "phyloseq")){

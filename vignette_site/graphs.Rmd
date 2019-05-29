@@ -11,6 +11,7 @@ output:
 knitr::opts_chunk$set(fig.width=16, fig.height=8, cache = TRUE)
 library(phylosmith)
 data(soil_column)
+derep_sc <- conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
 ```
 
 <br>
@@ -40,7 +41,7 @@ Call | Description
 
 ***Examples***
 ```{r abundance_heatmap_ggplot}
-abundance_heatmap_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
+abundance_heatmap_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
 ```
 
 <br>
@@ -75,7 +76,7 @@ Call | Description
 
 ***Examples***
 ```{r abundance_lines_ggplot}
-abundance_lines_ggplot(conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day'), classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', relative_abundance = TRUE)
+abundance_lines_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', relative_abundance = TRUE)
 ```
 
 <br>
@@ -112,7 +113,7 @@ Call | Description
 
 ***Examples***
 ```{r network_ps}
-network_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Manure', co_occurrence_table = NULL, classification = 'phylum')
+network_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', co_occurrence_table = NULL, classification = 'Phylum')
 ```
 
 <br>
@@ -146,7 +147,7 @@ Call | Description
 
 ***Examples***
 ```{r network_layout_ps}
-network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Manure', algorithm = 'kk')
+network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', algorithm = 'kk')
 ```
 
 <br>
@@ -217,7 +218,7 @@ Call | Description
 ***Examples***
 
 ```{r phylogeny_profile_ggplot}
-phylogeny_profile_ggplot(soil_column, classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
+phylogeny_profile_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
 ```
 
 <br>
@@ -252,7 +253,7 @@ Call | Description
 ***Examples***
 
 ```{r taxa_abundance_bars_ggplot}
-taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = 'phylum', treatment = c('Matrix', 'Treatment'), subset = 'Control', transformation = 'mean')
+taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Unamended', transformation = 'mean')
 ```
 
 <br>

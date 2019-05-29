@@ -23,7 +23,7 @@ Used to identify which entries in the taxa_table are shared among treatment-grou
 <br>
 ***Usage***
 ```r
-common_taxa(phyloseq_obj, treatment, subset = NULL, n = 'all')
+common_taxa(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all')
 ```
 
 <br>
@@ -38,7 +38,7 @@ Call | Description
 
 ***Examples***
 ```{r common_taxa}
-common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control', n = 'all')[1:35]
+common_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Unamended', n = 'all')[1:35]
 ```
 
 <br>
@@ -70,11 +70,11 @@ Call | Description
 
 ***Examples***
 ```{r samples_otu, echo=FALSE}
-manure <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Manure_Control')
+manure <- taxa_filter(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Manure Control')
 manure
 ```
-```{r conglomerate_samples}
-conglomerate_samples(manure, treatment = c('Matrix', 'Treatment'), subset = 'Manure', merge_on = 'Day')
+```{r conglomerate_samples, warning = FALSE}
+conglomerate_samples(manure, treatment = 'Matrix', subset = 'Manure', merge_on = 'Day')
 ```
 
 <br>
@@ -106,7 +106,7 @@ Call | Description
 ***Examples***
 ```{r conglomerate_taxa}
 soil_column
-conglomerate_taxa(soil_column, classification = 'phylum', hierarchical = TRUE)
+conglomerate_taxa(soil_column, classification = 'Phylum', hierarchical = TRUE)
 ```
 
 <br>
@@ -195,7 +195,7 @@ Call | Description
 ***Examples***
 
 ```{r relative_abundance}
-phyloseq::sample_sums( relative_abundance(soil_column) )[1:5]
+phyloseq::sample_sums(relative_abundance(soil_column))[1:5]
 ```
 
 <br>
@@ -361,13 +361,13 @@ Call | Description
 
 ***Examples***
 ```{r taxa_proportions_treatment}
-taxa_proportions(soil_column, 'phylum', treatment = c('Matrix', 'Treatment'))
+taxa_proportions(soil_column, 'Phylum', treatment = c('Matrix', 'Treatment'))
 ```
 ```{r taxa_proportions_sample}
-taxa_proportions(soil_column, 'phylum', treatment = 'sample')
+taxa_proportions(soil_column, 'Phylum', treatment = 'sample')
 ```
 ```{r taxa_proportions_whole}
-taxa_proportions(soil_column, 'phylum', treatment = NA)
+taxa_proportions(soil_column, 'Phylum', treatment = NA)
 ```
 
 <br>
@@ -398,7 +398,7 @@ Call | Description
 
 ***Examples***
 ```{r unique_taxa}
-unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Control')
+unique_taxa(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Unamended')
 ```
 
 <br>

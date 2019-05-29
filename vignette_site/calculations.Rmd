@@ -25,7 +25,7 @@ Because of how I implemented the multithreading, there is a large diminishing re
 <br>
 ***Usage***
 ```r
-co_occurrence(phyloseq_obj, treatment = NULL, p = 0.05, cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0)
 ```
 <br>
 ***Arguments***
@@ -40,8 +40,7 @@ Call | Description
 ***Examples***
 
 ```{r co_occurrence}
-soil_column <- taxa_filter(soil_column, 'Treatment', 'Manure')
-co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), p = 0.05)
+co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Amended', rho = 0.8, p = 0.05)
 co_occurrence_table
 ```
 
@@ -78,7 +77,7 @@ Call | Description
 ***Examples***
 
 ```{r permute_rho}
-permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), 'Day', permutations = 5)
+permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Amended', replicate_samples = 'Day', permutations = 5)
 permuted_rhos
 ```
 
