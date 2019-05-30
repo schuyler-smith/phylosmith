@@ -38,29 +38,29 @@
 co_occurrence <- function(phyloseq_obj, treatment = NULL, subset = NULL,
                           rho = 0, p = 0.05, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("co_occurrence(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(!(is.null(treatment)) & is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("co_occurrence(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information if `treatment` argument is used", call. = FALSE)
     }
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("co_occurrence(): `treatment` must be at least one column name,
+        stop("`treatment` must be at least one column name,
         or index, from the sample_data()", call. = FALSE)
     }
     if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
-        stop("co_occurrence(): `p` must be a numeric value between 0 and 1",
+        stop("`p` must be a numeric value between 0 and 1",
         call. = FALSE)
     }
     if(!(is.numeric(rho)) | !(rho >= 0 & rho <= 1)){
-        stop("co_occurrence(): `rho` must be a numeric value between 0 and 1",
+        stop("`rho` must be a numeric value between 0 and 1",
         call. = FALSE)
     }
     if(!(is.numeric(cores)) |
         !(cores >= 0 & cores <= (parallel::detectCores() -1))){
-        stop("co_occurrence(): `cores` must be a numeric value between 0 and ",
+        stop("`cores` must be a numeric value between 0 and ",
         (parallel::detectCores() -1),
         "\n(upper limit is set by the cores available on machine used to
         execute code)" , call. = FALSE)
@@ -127,38 +127,38 @@ co_occurrence <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 permute_rho <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     replicate_samples = 'independent', permutations = 100, cores = 0){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("permute_rho(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(!(is.null(treatment)) & is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("permute_rho(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information if `treatment` argument is used", call. = FALSE)
     }
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("permute_rho(): `treatment` must be at least one column name, or
+        stop("`treatment` must be at least one column name, or
         index, from the sample_data()", call. = FALSE)
     }
     replicate_samples <- check_numeric_treatment(phyloseq_obj,
         replicate_samples)
     if(replicate_samples != 'independent' &
         is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("permute_rho(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information if `replicate_samples` argument is used", call. = FALSE)
     }
     if(replicate_samples != 'independent' &
         any(!(replicate_samples %in% colnames(access(phyloseq_obj,
         'sam_data'))))){
-        stop("permute_rho(): `replicate_samples` must be at least one column
+        stop("`replicate_samples` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
     if(!(is.numeric(permutations)) | !(permutations >= 0)){
-        stop("permute_rho(): `permutations` must be a numeric value greater
+        stop("`permutations` must be a numeric value greater
         than 0", call. = FALSE)
     }
     if(!(is.numeric(cores)) |
         !(cores >= 0 & cores <= (parallel::detectCores() -1))){
-        stop("permute_rho(): `cores` must be a numeric value between 0 and ",
+        stop("`cores` must be a numeric value between 0 and ",
         (parallel::detectCores() -1),
         "\n(upper limit is set by the cores available on machine used to
         xecute code)", call. = FALSE)
@@ -257,15 +257,15 @@ permute_rho <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 quantile_permuted_rhos <- function(permuted_rhos, p = 0.05,
     by_treatment = TRUE){
     if(!(is.data.frame(permuted_rhos))){
-        stop("quantile_permuted_rhos(): `permuted_rhos` must be at data.frame
+        stop("`permuted_rhos` must be at data.frame
         object", call. = FALSE)
     }
     if(!(is.numeric(p)) | !(p >= 0 & p <= 1)){
-        stop("quantile_permuted_rhos(): `p` must be a numeric value between 0
+        stop("`p` must be a numeric value between 0
         and 1", call. = FALSE)
     }
     if(!(is.logical(by_treatment))){
-        stop("quantile_permuted_rhos(): `by_treatment` must must be either
+        stop("`by_treatment` must must be either
         `TRUE`, or `FALSE`", call. = FALSE)
     }
     if(by_treatment){
@@ -313,17 +313,17 @@ quantile_permuted_rhos <- function(permuted_rhos, p = 0.05,
 histogram_permuted_rhos <- function(permuted_rhos, p = NULL,
     x_breaks = 0.25, colors = 'default'){
     if(!(is.data.frame(permuted_rhos))){
-        stop("histogram_permuted_rhos(): `permuted_rhos` must be at data.frame
+        stop("`permuted_rhos` must be at data.frame
         object", call. = FALSE)
     }
     if(!(is.null(p))){
         if(!(is.numeric(p)) | !(p >= -0 & p <= 1)){
-            stop("histogram_permuted_rhos(): `p` must be a numeric value
+            stop("`p` must be a numeric value
             between 0 and 1", call. = FALSE)
         }
     }
     if(!(is.numeric(x_breaks)) | !(x_breaks >= -1 & x_breaks <= 1)){
-        stop("histogram_permuted_rhos(): `x_breaks` must be a numeric value
+        stop("`x_breaks` must be a numeric value
         between -1 and 1", call. = FALSE)
     }
     color_count <- length(unique(permuted_rhos[['Treatment']]))

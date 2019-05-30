@@ -23,18 +23,3 @@ string
 \description{
 Converts numeric values to column names in tax_table.
 }
-\examples{
-
-check_numeric_classification <- function(phyloseq_obj, ...){
-classifications <- list(...)
-classifications <- unlist(sapply(classifications,
-    FUN = function(classification){
-        if(is.numeric(classification)){
-            return(colnames(access(phyloseq_obj,
-            'tax_table')[,classification]))
-        } else {return(classification)}
-        }))
-return(classifications)
-}
-check_numeric_classification(soil_column, 2)
-}

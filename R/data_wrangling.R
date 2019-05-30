@@ -28,20 +28,20 @@
 
 common_taxa <- function(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all'){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("common_taxa(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
             call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("common_taxa(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("common_taxa(): `treatment` must be at least one column name, or
+        stop("`treatment` must be at least one column name, or
         index, from the sample_data()", call. = FALSE)
     }
     if(!(is.numeric(n)) & n != 'all'){
-        stop("common_taxa(): `n` must be either 'all' or a numeric value less
+        stop("`n` must be either 'all' or a numeric value less
         than the number of treatments being compared", call. = FALSE)
     }
     phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'),
@@ -52,7 +52,7 @@ common_taxa <- function(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all'
                                        'sam_data')[[treatment_name]])
     if(n == 'all'){n <- length(treatment_classes)}
     if(n > length(treatment_classes)){
-      stop("common_taxa(): `n` must be either 'all' or a numeric value less
+      stop("`n` must be either 'all' or a numeric value less
         than the number of treatments being compared", call. = FALSE)
     }
     seen_taxa <- lapply(treatment_classes, FUN = function(trt){
@@ -107,21 +107,21 @@ common_taxa <- function(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all'
 conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
     merge_on = treatment){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("conglomerate_samples(): `phyloseq_obj` must be a phyloseq-class
+        stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("conglomerate_samples(): `phyloseq_obj` must contain
+        stop("`phyloseq_obj` must contain
         sample_data() information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("conglomerate_samples(): `treatment` must be at least one column
+        stop("`treatment` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
     merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
     if(any(!(merge_on %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("conglomerate_samples(): `merge_on` must be at least one column
+        stop("`merge_on` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
     if(!(is.null(access(phyloseq_obj, 'phy_tree')))){
@@ -246,21 +246,21 @@ conglomerate_samples <- function(phyloseq_obj, treatment, subset = NULL,
 conglomerate_taxa <- function(phyloseq_obj, classification,
     hierarchical = TRUE){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("conglomerate_taxa(): `phyloseq_obj` must be a phyloseq-class
+        stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'tax_table'))){
-        stop("conglomerate_taxa(): `phyloseq_obj` must contain tax_table()
+        stop("`phyloseq_obj` must contain tax_table()
         information", call. = FALSE)
     }
     classification <- check_numeric_classification(phyloseq_obj,
         classification)
     if(any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table')))))
-        {stop("conglomerate_taxa(): `classification` must be a column from the
+        {stop("`classification` must be a column from the
         tax_table()", call. = FALSE)
     }
     if(!(is.logical(hierarchical))){
-        stop("conglomerate_taxa(): `hierarchical` must be either `TRUE` or
+        stop("`hierarchical` must be either `TRUE` or
         `FALSE`", call. = FALSE)
     }
     if(!(is.null(access(phyloseq_obj, 'phy_tree')))){
@@ -327,12 +327,12 @@ conglomerate_taxa <- function(phyloseq_obj, classification,
 
 melt_phyloseq <- function(phyloseq_obj){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("melt_phyloseq(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'tax_table')) & is.null(access(phyloseq_obj
         , 'sam_data'))){
-        stop("melt_phyloseq(): `phyloseq_obj` must contain either tax_table()
+        stop("`phyloseq_obj` must contain either tax_table()
             and/or sample_data() information", call. = FALSE)
     }
     melted_phyloseq <- melt.data.table(data.table(as(access(phyloseq_obj,
@@ -378,16 +378,16 @@ melt_phyloseq <- function(phyloseq_obj){
 
 merge_treatments <- function(phyloseq_obj, ...){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("merge_treatments(): `phyloseq_obj` must be a phyloseq-class
+        stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("merge_treatments(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     treatments <- check_numeric_treatment(phyloseq_obj, ...)
     if(any(!(treatments %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("merge_treatments(): `treatments` must be at least two column
+        stop("`treatments` must be at least two column
         names, or indices, from the sample_data()", call. = FALSE)
     }
     treatment_classes <- setDT(as(access(phyloseq_obj, 'sam_data')[,
@@ -426,7 +426,7 @@ merge_treatments <- function(phyloseq_obj, ...){
 
 relative_abundance <- function(phyloseq_obj){
   if(!inherits(phyloseq_obj, "phyloseq")){
-    stop("relative_abundance(): `phyloseq_obj` must be a phyloseq-class
+    stop("`phyloseq_obj` must be a phyloseq-class
             object", call. = FALSE)
   }
   abundance_table <- access(phyloseq_obj, 'otu_table')
@@ -458,7 +458,7 @@ relative_abundance <- function(phyloseq_obj){
 
 set_sample_order <- function(phyloseq_obj, sort_on){
   if(!inherits(phyloseq_obj, "phyloseq")){
-    stop("set_sample_order(): `phyloseq_obj` must be a phyloseq-class
+    stop("`phyloseq_obj` must be a phyloseq-class
          object", call. = FALSE)
   }
   if(!(is.null(access(phyloseq_obj, 'phy_tree')))){
@@ -481,7 +481,7 @@ set_sample_order <- function(phyloseq_obj, sort_on){
   if(length(sort_on) < nsamples(phyloseq_obj)){
     sort_on <- check_numeric_treatment(phyloseq_obj, sort_on)
     if(any(!(sort_on %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-      stop("set_sample_order(): `sort_on` must be at least one column
+      stop("`sort_on` must be at least one column
            name, or index, from the sample_data(), or a vector of a set
            order of sample names or indices", call. = FALSE)
     }
@@ -489,7 +489,7 @@ set_sample_order <- function(phyloseq_obj, sort_on){
     } else {
       if(is.character(sort_on)){
         if(!(any(sort_on %in% sample_names(phyloseq_obj)))){
-          stop("set_sample_order(): `sort_on` must be at least one column
+          stop("`sort_on` must be at least one column
         name, or index, from the sample_data(), or a vector of a set
         order of sample names or indices", call. = FALSE)
         }
@@ -530,17 +530,17 @@ set_sample_order <- function(phyloseq_obj, sort_on){
 
 set_treatment_levels <- function(phyloseq_obj, treatment, order){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("set_treatment_levels(): `phyloseq_obj` must be a phyloseq-class
+        stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("set_treatment_levels(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(length(treatment) > 1 |
         !(treatment %in% colnames(access(phyloseq_obj,'sam_data')))){
-        stop("set_treatment_levels(): `treatment` must be a single column name,
+        stop("`treatment` must be a single column name,
             or index, from the sample_data()", call. = FALSE)
     }
     if(order[1] == 'numeric'){
@@ -586,29 +586,29 @@ set_treatment_levels <- function(phyloseq_obj, treatment, order){
 taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     frequency = 0, below = FALSE, drop_samples = FALSE){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("taxa_filter(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
         call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("taxa_filter(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
             information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(!(is.null(treatment)) &
         any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("taxa_filter(): `treatment` must be at least one column name, or
+        stop("`treatment` must be at least one column name, or
         index, from the sample_data()", call. = FALSE)
     }
     if(!(is.numeric(frequency)) | !(frequency >= 0 & frequency <= 1)){
-        stop("taxa_filter(): `frequency` must be a numeric value between
+        stop("`frequency` must be a numeric value between
         0 and 1", call. = FALSE)
     }
     if(!(is.logical(below))){
-        stop("taxa_filter(): `below` must be either `TRUE` or `FALSE`",
+        stop("`below` must be either `TRUE` or `FALSE`",
             call. = FALSE)
     }
     if(!(is.logical(drop_samples))){
-        stop("taxa_filter(): `drop_samples` must be either `TRUE` or `FALSE`",
+        stop("`drop_samples` must be either `TRUE` or `FALSE`",
             call. = FALSE)
     }
     original_levels <- lapply(access(phyloseq_obj, 'sam_data'), levels)
@@ -628,6 +628,10 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
     treatment_name <- paste(treatment, collapse = sep)
     if(!(is.null(treatment))){
         phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
+        if(!(is.null(subset)) &
+           any(!(subset %in% unlist(access(phyloseq_obj, 'sam_data')[,c(treatment, treatment_name)])))){
+          stop("`subset` must be at least one factor from the `treatment`", call. = FALSE)
+        }
         treatment_classes <- sort(unique(access(phyloseq_obj,
             'sam_data')[[treatment_name]]))
         if(below == TRUE){
@@ -713,26 +717,26 @@ taxa_filter <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 
 taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("taxa_proportions(): `phyloseq_obj` must be a phyloseq-class
+        stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'tax_table'))){
-        stop("taxa_proportions(): `phyloseq_obj` must contain tax_table()
+        stop("`phyloseq_obj` must contain tax_table()
         information", call. = FALSE)
     }
     classification <- check_numeric_classification(phyloseq_obj,
         classification)
     if(any(!(classification %in% colnames(access(phyloseq_obj, 'tax_table')))))
-        {stop("taxa_proportions(): `classification` must be a column from the
+        {stop("`classification` must be a column from the
         the tax_table()", call. = FALSE)
     }
     if(any(!(is.na(treatment))) & is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("taxa_proportions(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information if `treatment` argument is used", call. = FALSE)
     }
     if(any(!(is.na(treatment))) & any(!(treatment %in% c('sample',
         colnames(access(phyloseq_obj, 'sam_data')))))){
-        stop("taxa_proportions(): `treatment` must be either NA, 'sample', or
+        stop("`treatment` must be either NA, 'sample', or
         at least one column name, or index, from the sample_data()",
         call. = FALSE)
     }
@@ -803,16 +807,16 @@ taxa_proportions <- function(phyloseq_obj, classification, treatment = NA){
 
 unique_taxa <- function(phyloseq_obj, treatment, subset = NULL){
     if(!inherits(phyloseq_obj, "phyloseq")){
-        stop("unique_taxa(): `phyloseq_obj` must be a phyloseq-class object",
+        stop("`phyloseq_obj` must be a phyloseq-class object",
             call. = FALSE)
     }
     if(is.null(access(phyloseq_obj, 'sam_data'))){
-        stop("unique_taxa(): `phyloseq_obj` must contain sample_data()
+        stop("`phyloseq_obj` must contain sample_data()
         information", call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
     if(any(!(treatment %in% colnames(access(phyloseq_obj, 'sam_data'))))){
-        stop("unique_taxa(): `treatment` must be at least one column name, or
+        stop("`treatment` must be at least one column name, or
         index, from the sample_data()", call. = FALSE)
     }
     phyloseq_obj <- phyloseq(

@@ -12,26 +12,21 @@
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be any number of
 #' multiple columns and they will be combined into a new column.
 #' @return string
-#' @examples
-#' check_numeric_treatment <- function(phyloseq_obj, ...){
-#' treatments <- list(...)
-#' treatments <- unlist(sapply(treatments, FUN = function(treatment){
-#'   if(is.numeric(treatment)){
-#'     return(colnames(access(phyloseq_obj, 'sam_data')[,treatment]))
-#'   } else {return(treatment)}
-#' }))
-#' return(treatments)
-#' }
-#' check_numeric_treatment(soil_column, 2)
 
 check_numeric_treatment <- function(phyloseq_obj, ...){
     treatments <- list(...)
     if(any(unlist(sapply(treatments, is.null))) | any(unlist(sapply(treatments, is.na)))){
       return(NULL)
     } else {
-      return(unlist(sapply(treatments, FUN = function(treatment){
-        colnames(access(phyloseq_obj, 'sam_data')[,treatment])
-      })))
+      return(
+        tryCatch({
+          unlist(sapply(treatments, FUN = function(treatment){
+            colnames(access(phyloseq_obj, 'sam_data')[,treatment])
+          }))
+        }, error = function(e){
+          stop("taxa_filter(): `treatment` must be at least one column name, or index, from the sample_data()", call. = FALSE)
+        })
+      )
     }
 }
 
@@ -49,34 +44,26 @@ check_numeric_treatment <- function(phyloseq_obj, ...){
 #' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate
 #' by.
 #' @return string
-#' @examples
-#'
-#' check_numeric_classification <- function(phyloseq_obj, ...){
-#' classifications <- list(...)
-#' classifications <- unlist(sapply(classifications,
-#'     FUN = function(classification){
-#'         if(is.numeric(classification)){
-#'             return(colnames(access(phyloseq_obj,
-#'             'tax_table')[,classification]))
-#'         } else {return(classification)}
-#'         }))
-#' return(classifications)
-#' }
-#' check_numeric_classification(soil_column, 2)
 
 check_numeric_classification <- function(phyloseq_obj, ...){
     classifications <- list(...)
     if(any(unlist(sapply(classifications, is.null))) | any(unlist(sapply(classifications, is.na)))){
       return(NULL)
     } else {
-      return(unlist(sapply(classifications, FUN = function(classification){
+      return(
+        tryCatch({
+          unlist(sapply(classifications, FUN = function(classification){
             colnames(access(phyloseq_obj, 'tax_table')[,classification])
-      })))
+          }))
+        }, error = function(e){
+          stop("taxa_filter(): `classification` must be at least one column name, or index, from the tax_table()", call. = FALSE)
+        })
+      )
     }
 }
 
 #' Creates color palettes for figures.
-#' 
+#'
 #'
 #' Creates color palettes for figures using the the RColorBrewer, or the default
 #' color palette I made. The first 8 colors of the palette are from B. Wong's 2011
