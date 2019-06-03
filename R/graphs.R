@@ -809,9 +809,9 @@ phylogeny_profile_ggplot <- function(phyloseq_obj, classification = NULL,
       g <- g + facet_grid(treatment_name, scales = "free", space = "free")
     }
     if(merge){
-      g <- g + geom_bar(aes_string(color = classification, fill = classification), stat = 'identity', position = 'stack', size = 0.2, width = 0.95)
+      g <- g + geom_bar(aes_string(fill = classification), color = 'black', stat = 'identity', position = 'stack', size = 0.2, width = 0.95)
     } else {
-      g <- g + geom_bar(stat = "identity", position = "stack", size = 0.12, color = 'black')}
+      g <- g + geom_bar(stat = "identity", position = "stack", size = 0.12, width = 0.95, color = 'black')}
     if(relative_abundance){g <- g + ylab('Relative Abundance')}
 
     g <- g + theme_classic() +
