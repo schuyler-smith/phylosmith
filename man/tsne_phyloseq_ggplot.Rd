@@ -23,8 +23,10 @@ multiple columns and they will be combined into a new column.}
 in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1,
 see \code{\link[=Rtsne]{Rtsne}} for interpretation)}
 
-\item{circle}{Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
-each of the \code{treatment} factors (\code{TRUE}).}
+\item{circle}{If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
+each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
+will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
+ellipses of 95\% confidence intervals)}
 
 \item{labels}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of

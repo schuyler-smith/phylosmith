@@ -590,7 +590,7 @@ network_layout_ps <- function (phyloseq_obj, classification = NULL, treatment = 
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' plots the NMDS of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE,
+#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = 0.95,
 #' labels = NULL, colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -600,8 +600,10 @@ network_layout_ps <- function (phyloseq_obj, classification = NULL, treatment = 
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
-#' @param circle Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
-#' each of the \code{treatment} factors (\code{TRUE}).
+#' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
+#' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
+#' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
+#' ellipses of 95\% confidence intervals)
 #' @param labels Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of
 #' that factor instead of circle points.
@@ -618,7 +620,7 @@ network_layout_ps <- function (phyloseq_obj, classification = NULL, treatment = 
 #' @examples nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'),
 #' circle = TRUE, verbose = FALSE)
 
-nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
+nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = 0.95,
     labels = NULL, colors = 'default', verbose = TRUE){
     if(!inherits(phyloseq_obj, "phyloseq")){
         stop("`phyloseq_obj` must be a phyloseq-class
@@ -633,9 +635,9 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
         stop("`treatment` must be at least one column
         name, or index, from the sample_data()", call. = FALSE)
     }
-    if(!(is.logical(circle))){
-        stop("`circle` must be either `TRUE`, or
-        `FALSE`", call. = FALSE)
+    if(!(is.logical(circle) | is.numeric(circle) & circle > 0 & circle <= 1)){
+        stop("`circle` must be either `TRUE`, `FALSE`, or a confidence interval",
+             call. = FALSE)
     }
     labels <- check_numeric_treatment(phyloseq_obj, labels)
     if(!(is.null(labels)) & any(!(labels %in% colnames(access(phyloseq_obj,
@@ -650,27 +652,32 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = TRUE,
     options(warn = -1)
     phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
     treatment_name <- paste(treatment, collapse = sep)
-    Treatment <- access(phyloseq_obj, 'sam_data')[[treatment_name]]
-    color_count <- length(unique(Treatment))
+    metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
+    color_count <- length(unique(metadata[[treatment_name]]))
     graph_colors <- create_palette(color_count, colors)
 
     MDS <- metaMDS(t(access(phyloseq_obj, 'otu_table')), autotransform = FALSE,
         distance = "bray", k = 3, trymax = 100, trace = verbose)
     NMDS1 <- data.table(scores(MDS))$NMDS1
     NMDS2 <- data.table(scores(MDS))$NMDS2
-    ord <- data.table(NMDS1,NMDS2,Treatment)
-    ord <- subset(ord, !is.na(Treatment))
+    ord <- data.table(NMDS1, NMDS2, metadata)
+    ord <- subset(ord, !is.na(treatment_name))
     if(is.character(labels)){
         eval(parse(text = paste0('ord[, ', labels,
             ' := access(phyloseq_obj, "sam_data")[[labels]]]')))}
 
-    g <- ggplot(data = ord, aes(NMDS1, NMDS2))
-    if(circle == TRUE){
-      g <- g + stat_ellipse(geom = "polygon", type = "norm", size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
-                            aes(fill = Treatment), show.legend = FALSE) +
+    g <- ggplot(data = ord, aes_string('NMDS1', 'NMDS2', group = treatment_name))
+    if(circle){
+      g <- g + stat_ellipse(geom = "polygon", type = "norm",
+        size = 0.6, linetype = 1, alpha = 0.3, color = 'black',
+        aes_string(fill = treatment_name), show.legend = FALSE) +
         scale_color_manual(values = graph_colors) + guides(color = FALSE)
+    } else if(is.numeric(circle)){
+      ellipse_df <- CI_ellipse(ggplot_build(g)$data[[1]], groups = 'group', level = circle)
+      g <- g + geom_polygon(data = ellipse_df, aes(x = x, y = y, group = group), color = 'black',
+          fill = graph_colors[ellipse_df$group], alpha = 0.3, size = 0.6, linetype = 1)
     }
-    g <- g + geom_point(aes(fill = Treatment), shape = 21, color = 'black', size = 5, alpha = 1.0) +
+    g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black', size = 5, alpha = 1.0) +
       scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
       g <- g + geom_label(aes_string(label = labels,
@@ -989,8 +996,10 @@ taxa_abundance_bars_ggplot <- function(phyloseq_obj, classification = NULL,
 #' @param perplexity similar to selecting the number of neighbors to consider
 #' in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1,
 #' see \code{\link[=Rtsne]{Rtsne}} for interpretation)
-#' @param circle Add a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
-#' each of the \code{treatment} factors (\code{TRUE}).
+#' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
+#' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
+#' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
+#' ellipses of 95\% confidence intervals)
 #' @param labels Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of
 #' that factor instead of circle points.
@@ -1025,9 +1034,9 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
         stop("`perplexity` must be a numeric value
         greater than 1", call. = FALSE)
     }
-    if(!(is.logical(circle))){
-        stop("`circle` must be either `TRUE`, or
-        `FALSE`", call. = FALSE)
+    if(!(is.logical(circle) | is.numeric(circle) & circle > 0 & circle <= 1)){
+      stop("`circle` must be either `TRUE`, `FALSE`, or a confidence interval",
+           call. = FALSE)
     }
     labels <- check_numeric_treatment(phyloseq_obj, labels)
     if(!(is.null(labels)) & any(!(labels %in% colnames(
@@ -1053,11 +1062,17 @@ tsne_phyloseq_ggplot <- function (phyloseq_obj, treatment, perplexity = 10,
             ' := access(phyloseq_obj, "sam_data")[[labels]]]')))
     }
 
-    g <- ggplot(data = ord, aes(tSNE1, tSNE2))
-    if(circle == TRUE){g <- g + stat_ellipse(geom = "polygon", type = "norm",
-      size = 0.6, linetype = 1, alpha = 0.1, color = 'black',
-      aes_string(fill = treatment_name), show.legend = FALSE) +
-      scale_color_manual(values = graph_colors) + guides(color = FALSE)}
+    g <- ggplot(data = ord, aes_string('tSNE1', 'tSNE2', group = treatment_name))
+    if(circle){
+      g <- g + stat_ellipse(geom = "polygon", type = "norm",
+                            size = 0.6, linetype = 1, alpha = 0.3, color = 'black',
+                            aes_string(fill = treatment_name), show.legend = FALSE) +
+        scale_color_manual(values = graph_colors) + guides(color = FALSE)
+    } else if(is.numeric(circle)){
+      ellipse_df <- CI_ellipse(ggplot_build(g)$data[[1]], groups = 'group', level = circle)
+      g <- g + geom_polygon(data = ellipse_df, aes(x = x, y = y, group = group), color = 'black',
+                            fill = graph_colors[ellipse_df$group], alpha = 0.3, size = 0.6, linetype = 1)
+    }
     g <- g + geom_point(aes_string(fill = treatment_name), shape = 21, color = 'black', size = 7, alpha = 1.0) +
       scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
