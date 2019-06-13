@@ -681,7 +681,7 @@ nmds_phyloseq_ggplot <- function(phyloseq_obj, treatment, circle = 0.95,
       scale_fill_manual(values = graph_colors)
     if(is.character(labels)){
       g <- g + geom_label(aes_string(label = labels,
-                                     fill = 'Treatment'), label.padding = unit(0.35, "lines"),
+                                     fill = treatment_name), label.padding = unit(0.35, "lines"),
                           label.r = unit(0.55, "lines") , show.legend = FALSE)
     }
     g <- g +theme_classic() +
