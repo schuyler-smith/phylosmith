@@ -77,7 +77,10 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
         phyloseq_obj <- conglomerate_taxa(phyloseq_obj,
             classification, hierarchical = FALSE)}
     if(transformation == 'relative_abundance'){
-        phyloseq_obj <- relative_abundance(phyloseq_obj)}
+      phyloseq_obj <- relative_abundance(phyloseq_obj)
+    } else if(!(transformation %in% c('none', 'relative_abundance'))){
+      eval(parse(text = paste0('otu_table(phyloseq_obj) <- ', transformation,' (access(phyloseq_obj, "otu_table"))')))
+    }
     treatment_name <- paste(treatment, collapse = sep)
 
     if(is.null(classification)){
@@ -119,22 +122,12 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
         strip.background = element_rect(colour = 'black', size = 1.4)
       ) +
       scale_x_discrete(expand = expand_scale(mult = 0, add = .53)) +
-      if(transformation %in% c('none', 'relative_abundance')){
-        if(colors == 'default'){
-          scale_fill_viridis()
-        } else {
-          color_count <- 100
-          graph_colors <- create_palette(color_count, colors)
-          scale_fill_gradientn(colors = graph_colors)
-        }
+      if(colors == 'default'){
+        ggraph::scale_fill_viridis()
       } else {
-        if(colors == 'default'){
-          scale_fill_viridis(trans = transformation, name = transformation)
-        } else {
-          color_count <- 100
-          graph_colors <- create_palette(color_count, colors)
-          scale_fill_gradientn(colors = graph_colors, trans = transformation, name = transformation)
-        }
+        color_count <- 100
+        graph_colors <- create_palette(color_count, colors)
+        scale_fill_gradientn(colors = graph_colors)
       }
     return(g)
 }
