@@ -476,18 +476,44 @@ div.tocify {
 <p><br></p>
 <div id="installation" class="section level1">
 <h1>Installation</h1>
-<pre class="r"><code>library(devtools)
-install_github(&#39;schuyler-smith/phylosmith&#39;)
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<div id="linux-systems" class="section level3">
+<h3>Linux Systems</h3>
+<p>For some Linux systems you may need to install the following two programs through your terminal.</p>
+<p>Ubuntu example:</p>
+<pre><code>sudo apt install libgdal-dev libudunits2-dev</code></pre>
+<p>These programs are required by some dependancies and may not come in your default OS distribution.</p>
+</div>
+<div id="windows-systems" class="section level3">
+<h3>Windows Systems</h3>
+<p>if you are working on WINDOWS you likely need to install the CRAN program <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>.When prompted, select <code>add rtools to system PATH</code>.</p>
+</div>
+<div id="r" class="section level3">
+<h3>R</h3>
+<p>phylosmith depends on the usage of the <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217">phyloseq package</a> released by Dr. Paul McMurdie. The pacakge is maintained on BioConductor, and can be installed through R using the following commands:</p>
+<pre><code>if(!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)){
+  install.packages(&quot;BiocManager&quot;)
+} 
+BiocManager::install(&quot;phyloseq&quot;)</code></pre>
+<p>Additionally, the package imports a number of other packages to use their advanced functions. These packages may install with the phylosmith installation, but it is always best to install independently.</p>
+<pre><code>install.packages(c(&quot;devtools&quot;, RcppEigen&quot;, &quot;RcppParallel&quot;, &quot;Rtsne&quot;, &quot;ggforce&quot;, &quot;units&quot;))</code></pre>
+</div>
+</div>
+<div id="phylosmith" class="section level2">
+<h2>phylosmith</h2>
+<p>The package is hosted on my Github page, and can be installed through R with:</p>
+<pre><code>devtools::install_github(&#39;schuyler-smith/phylosmith&#39;)
 library(phylosmith)</code></pre>
-<p>*for WINDOWS you need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>, when prompted, select <code>add rtools to system PATH</code>.</p>
 <p><br></p>
+</div>
 </div>
 <div id="functions" class="section level1">
 <h1>Functions</h1>
 <p><br></p>
 <p><a name="data_wrangling"></a></p>
-<div id="data-wranglingdapa" class="section level3">
-<h3><a href="index.html#data_wrangling">Data Wrangling</a></h3>
+<div id="data-wrangling" class="section level3">
+<h3>Data Wrangling</h3>
 <table>
 <colgroup>
 <col width="25%" />
@@ -548,8 +574,8 @@ library(phylosmith)</code></pre>
 </table>
 <p><a name="graphs"></a></p>
 </div>
-<div id="graphsgrap" class="section level3">
-<h3><a href="index.html#graphs">Graphs</a></h3>
+<div id="graphs" class="section level3">
+<h3>Graphs</h3>
 <table>
 <colgroup>
 <col width="25%" />
@@ -598,8 +624,8 @@ library(phylosmith)</code></pre>
 </table>
 <p><a name="calculations"></a></p>
 </div>
-<div id="calculationscalc" class="section level3">
-<h3><a href="index.html#calculations">Calculations</a></h3>
+<div id="calculations" class="section level3">
+<h3>Calculations</h3>
 <table>
 <colgroup>
 <col width="25%" />
