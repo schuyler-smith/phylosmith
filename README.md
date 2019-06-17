@@ -23,7 +23,7 @@ if you are working on WINDOWS you likely need to install the CRAN program <a hre
 
 ### R
 
-phylosmith depends on the usage of the [phyloseq package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217) released by Dr. Paul McMurdie. The pacakge is maintained on BioConductor, and can be installed through R using the following commands:
+phylosmith depends on the usage of the [phyloseq package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217) released by [Dr. Paul McMurdie](https://github.com/joey711). The pacakge is maintained on BioConductor, and can be installed through R using the following commands:
 
 ```
 if(!requireNamespace("BiocManager", quietly = TRUE)){
