@@ -105,7 +105,7 @@ abundance_heatmap_ggplot <- function(phyloseq_obj, classification = NULL,
 
     g <- ggplot(graph_data, aes_string('Sample', classification, fill = 'Abundance')) +
         geom_tile(color = "white", size = 0.25) +
-        facet_grid(treatment_name, scales = "free", space = "free")
+        facet_grid(reformulate(treatment_name), scales = "free", space = "free")
     g <- g + theme_classic() +
       theme(
         axis.text.x = element_text(angle = 30, hjust = 1, size = 12),
