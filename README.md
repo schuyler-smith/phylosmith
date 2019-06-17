@@ -40,10 +40,11 @@ install.packages(c("devtools", RcppEigen", "RcppParallel", "Rtsne", "ggforce", "
 
 ## phylosmith
 
-The package is hosted on my Github page, and can be installed through R with:
+The package is hosted on Github, and can be installed through R with:
 ```
 devtools::install_github('schuyler-smith/phylosmith')
 library(phylosmith)
+```
 
 ## Functions
 
