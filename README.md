@@ -3,6 +3,7 @@
 [vignette](https://schuyler-smith.github.io/phylosmith/)
 
 [![Travis Build Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith) [![status](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c/status.svg)](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c)
+[![DOI](https://zenodo.org/badge/159598780.svg)](https://zenodo.org/badge/latestdoi/159598780)
 
 A conglomeration of functions that I have written, that I find useful, for analyzing phyloseq objects. Phyloseq objects are a great data-standard for microbiome and gene-expression data.
 
