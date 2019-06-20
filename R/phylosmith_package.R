@@ -12,6 +12,8 @@
 #' @docType package
 #' @keywords package
 #' @import phyloseq
+#' @import data.table
+#' @import ggplot2
 NA
 
 

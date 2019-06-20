@@ -2,7 +2,6 @@
 % Please edit documentation in R/co_occurrence.R
 \name{co_occurrence}
 \alias{co_occurrence}
-\alias{FastCoOccur}
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 Function from the phylosmith-package.}
 \usage{

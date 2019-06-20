@@ -10,24 +10,19 @@ biocViews: Software, Sequencing, Microbiome,
 URL: https://schuyler-smith.github.io/phylosmith/
 BugReports: https://github.com/schuyler-smith/phylosmith.issues
 Depends:
-    R (>= 3.2),
-    phyloseq
+    R (>= 3.2)
 Imports:
-    RcppParallel,
-    RcppArmadillo,
-    RcppProgress,
+    phyloseq,
     data.table,
     parallel,
-    utils,
+    stats,
     grDevices,
-    graphics,
     RColorBrewer,
     ggplot2,
     igraph,
     ggraph,
     ggrepel,
     sf,
-    sp,
     vegan,
     Rtsne,
     stringr
