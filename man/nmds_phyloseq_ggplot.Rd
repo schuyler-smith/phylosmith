@@ -29,7 +29,7 @@ ellipses of 95\% confidence intervals)}
 that factor instead of circle points.}
 
 \item{colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
 
 \item{verbose}{Whether or not to print the

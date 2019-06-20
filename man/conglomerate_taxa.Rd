@@ -19,7 +19,7 @@ the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
 conglomerate by.}
 
 \item{hierarchical}{Whether the order of factors in the tax_table represent
-a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will
+a decreasing hierarchy (TRUE) or are independent (FALSE). If FALSE, will
 only return the factor given by \code{classification}.}
 }
 \value{

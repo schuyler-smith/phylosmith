@@ -86,7 +86,7 @@ Call | Description
 ### Graphs
 Call | Description
 -------------------- | ------------------------------------------------------------
-[abundance_heatmap_ggplot](graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
+[abundance_heatmap_ggplot](graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abundance table
 [abundance_lines_ggplot](graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
 [network_ps](graphs.html#network_ps) | creates a network of the co-occurrence of taxa
 [network_layout_ps](graphs.html#network_layout_ps) | create a layout object for a network

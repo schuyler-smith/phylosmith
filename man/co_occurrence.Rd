@@ -19,7 +19,7 @@ samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
 
 \item{rho}{\code{numeric} The rho-value cutoff. All returned co-occurrences
-will have a rho-value less than or equal to \code{rho} or kess than or equal to -\code{rho}.}
+will have a rho-value less than or equal to \code{rho} or less than or equal to -\code{rho}.}
 
 \item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences
 will have a p-value less than or equal to \code{p}.}

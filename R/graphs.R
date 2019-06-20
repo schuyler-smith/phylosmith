@@ -27,7 +27,7 @@
 #' "boxcox", "exp", "identity", "logit", "probability", "probit",
 #' "reciprocal", "reverse" and "sqrt"
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @importFrom stats reformulate
 #' @importFrom ggraph scale_fill_viridis
@@ -219,9 +219,9 @@ abundance_heatmap_ggplot <-
 #' factors to subset on.
 #' @param relative_abundance If \code{TRUE}, transforms the abundance data
 #' into relative abundance by sample.
-#' @param points if \code{FALSE}, will not diplay the data-points.
+#' @param points if \code{FALSE}, will not display the data-points.
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @export
 #' @return ggplot-object
@@ -383,7 +383,7 @@ abundance_lines_ggplot <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates a network from the co-occurrence. The co-occurrence can either be
 #' input, or it will be calculated with the Spearman-rank correlation. Also,
-#' the layout of the graph can be given as an argument as well for reprodusibility.
+#' the layout of the graph can be given as an argument as well for reproducibility.
 #' @useDynLib phylosmith
 #' @usage network_ps(phyloseq_obj, classification = NULL,
 #' treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
@@ -412,7 +412,7 @@ abundance_lines_ggplot <-
 #' @param nodes_of_interest A vector of names of classes within the
 #' \code{classification} to be labeled.
 #' @param node_colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
 #' colors.
 #' @param cluster if \code{TRUE}, will use igraph's
 #' \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method.
@@ -420,7 +420,7 @@ abundance_lines_ggplot <-
 #' corresponding to the order of the \code{taxa_names} in the
 #' \code{phyloseq_obj}.
 #' @param cluster_colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
 #' colors to use for the clusters.
 #' @param buffer Amount of space beyond the points to extend the cluster (
 #' aesthetic argument).
@@ -838,7 +838,7 @@ network_layout_ps <-
 #' \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of
 #' that factor instead of circle points.
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @param verbose Whether or not to print the
 #' \code{\link[vegan:metaMDS]{metaMDS}} stress convergence to console
@@ -1026,7 +1026,7 @@ nmds_phyloseq_ggplot <-
 #' @param relative_abundance If \code{TRUE}, transforms the abundance data
 #' into relative abundance by sample.
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @export
 #' @return ggplot-object
@@ -1212,7 +1212,7 @@ phylogeny_profile_ggplot <-
 #' @param transformation Transformation to be used on the data. "none",
 #' "mean", "median", "sd", "log", "log10"
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @export
 #' @return ggplot-object
@@ -1409,7 +1409,7 @@ taxa_abundance_bars_ggplot <-
 #' \code{\link[phyloseq:sample_data]{sample_data}} to use to place labels of
 #' that factor instead of circle points.
 #' @param colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @importFrom Rtsne Rtsne
 #' @importFrom vegan vegdist

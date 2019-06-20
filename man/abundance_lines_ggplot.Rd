@@ -31,10 +31,10 @@ factors to subset on.}
 \item{relative_abundance}{If \code{TRUE}, transforms the abundance data
 into relative abundance by sample.}
 
-\item{points}{if \code{FALSE}, will not diplay the data-points.}
+\item{points}{if \code{FALSE}, will not display the data-points.}
 
 \item{colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
 }
 \value{

@@ -41,7 +41,7 @@ Can be created with \code{\link{network_layout_ps}}.}
 \code{classification} to be labeled.}
 
 \item{node_colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
 colors.}
 
 \item{cluster}{if \code{TRUE}, will use igraph's
@@ -51,7 +51,7 @@ corresponding to the order of the \code{taxa_names} in the
 \code{phyloseq_obj}.}
 
 \item{cluster_colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
 colors to use for the clusters.}
 
 \item{buffer}{Amount of space beyond the points to extend the cluster (
@@ -64,7 +64,7 @@ ggplot-object
 Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 creates a network from the co-occurrence. The co-occurrence can either be
 input, or it will be calculated with the Spearman-rank correlation. Also,
-the layout of the graph can be given as an argument as well for reprodusibility.
+the layout of the graph can be given as an argument as well for reproducibility.
 }
 \examples{
 #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),

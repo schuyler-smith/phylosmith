@@ -33,7 +33,7 @@ factors to subset on.}
 "reciprocal", "reverse" and "sqrt"}
 
 \item{colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
 }
 \value{

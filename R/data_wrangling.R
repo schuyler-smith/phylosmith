@@ -343,7 +343,7 @@ conglomerate_samples <-
 #' the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
 #' conglomerate by.
 #' @param hierarchical Whether the order of factors in the tax_table represent
-#' a decreasing heirarchy (TRUE) or are independant (FALSE). If FALSE, will
+#' a decreasing hierarchy (TRUE) or are independent (FALSE). If FALSE, will
 #' only return the factor given by \code{classification}.
 #' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
 #' @export
@@ -448,7 +448,7 @@ conglomerate_taxa <- function(phyloseq_obj,
 #' Melt a phyloseq object into a data.table.
 #' Function from the phylosmith-package.
 #'
-#' melt_phyloseq inputs a phyloseq object and melts its ou_table, taxa_tale,
+#' melt_phyloseq inputs a phyloseq object and melts its otu_table, taxa_tale,
 #' and sample_Data into a single into a data.table.
 #' @useDynLib phylosmith
 #' @usage melt_phyloseq(phyloseq_obj)
@@ -734,7 +734,7 @@ set_sample_order <- function(phyloseq_obj, sort_on) {
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}.
 #' @param order The order of factors in \code{treatment} column as a vector of
-#' strings. If assinged "numeric" will set ascending numerical order.
+#' strings. If assigned "numeric" will set ascending numerical order.
 #' @export
 #' @return phyloseq-object
 #' @examples set_treatment_levels(soil_column, treatment = 'Matrix',
@@ -985,13 +985,13 @@ taxa_filter <-
 #' must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with
 #' information about each taxa/gene.
 #' @param classification Column name as a \code{string} or \code{numeric} in
-#' the \code{\link[phyloseq:tax_table]{tax_table}} for the prportions to be
+#' the \code{\link[phyloseq:tax_table]{tax_table}} for the proportions to be
 #' reported on.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column. If \code{NA},
-#' then proprtions will be reported for the entire dataset. If set to "sample"
-#' it will repoort proportions by sample.
+#' then proportions will be reported for the entire dataset. If set to "sample"
+#' it will report proportions by sample.
 #' @export
 #' @return data.table
 #' @examples taxa_proportions(soil_column, 'Phylum', treatment = NA)

@@ -14,7 +14,7 @@
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
 #' @param rho \code{numeric} The rho-value cutoff. All returned co-occurrences
-#' will have a rho-value less than or equal to \code{rho} or kess than or equal to -\code{rho}.
+#' will have a rho-value less than or equal to \code{rho} or less than or equal to -\code{rho}.
 #' @param p \code{numeric} The p-value cutoff. All returned co-occurrences
 #' will have a p-value less than or equal to \code{p}.
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise
@@ -282,7 +282,7 @@ permute_rho <-
         for (indices in replicate_indices) {
           otu_table(permuted_phyloseq_obj)[, indices] <- access(phyloseq_obj, 'otu_table')[sample(seq(n), n), indices]
         }
-        co_occurence_table <- data.table(
+        co_occurrence_table <- data.table(
           co_occurrence_rho_Rcpp(
             access(permuted_phyloseq_obj, 'otu_table'),
             treatment_indices,
@@ -290,10 +290,10 @@ permute_rho <-
             cores
           )
         )
-        co_occurence_table[, rho := round(.SD, 3), .SDcols = 'rho']
-        co_occurence_table[, Count := .N, by = .(Treatment, rho)]
-        co_occurence_table <- unique(co_occurence_table)
-        rhos <- rbindlist(list(rhos, co_occurence_table))[,
+        co_occurrence_table[, rho := round(.SD, 3), .SDcols = 'rho']
+        co_occurrence_table[, Count := .N, by = .(Treatment, rho)]
+        co_occurrence_table <- unique(co_occurrence_table)
+        rhos <- rbindlist(list(rhos, co_occurrence_table))[,
                                                           lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
       }
     },

@@ -17,7 +17,7 @@ taxa/gene.}
 \code{\link[phyloseq:sample_data]{sample_data}}.}
 
 \item{order}{The order of factors in \code{treatment} column as a vector of
-strings. If assinged "numeric" will set ascending numerical order.}
+strings. If assigned "numeric" will set ascending numerical order.}
 }
 \value{
 phyloseq-object

@@ -15,7 +15,7 @@ Ubuntu example:
 ```
 sudo apt install libgdal-dev libudunits2-dev
 ```
-These programs are required by some dependancies and may not come in your default OS distribution.
+These programs are required by some dependencies and may not come in your default OS distribution.
 
 ### Windows Systems 
 
@@ -23,7 +23,7 @@ if you are working on WINDOWS you likely need to install the CRAN program <a hre
 
 ### R
 
-phylosmith depends on the usage of the [phyloseq package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217) released by [Dr. Paul McMurdie](https://github.com/joey711). The pacakge is maintained on BioConductor, and can be installed through R using the following commands:
+phylosmith depends on the usage of the [phyloseq package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217) released by [Dr. Paul McMurdie](https://github.com/joey711). The package is maintained on BioConductor, and can be installed through R using the following commands:
 
 ```
 if(!requireNamespace("BiocManager", quietly = TRUE)){
@@ -68,12 +68,12 @@ Call			     | Description
 
 Call                 | Description
 -------------------- | ------------------------------------------------------------
-[abundance_heatmap_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abndance table
+[abundance_heatmap_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abundance table
 [abundance_lines_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
 [network_ps](https://schuyler-smith.github.io/phylosmith/graphs.html#network_ps) | creates a ggplot object of the co-occurrence network of taxa
 [network_layout_ps](https://schuyler-smith.github.io/phylosmith/graphs.html#network_layout_ps) | create a layout object for a network
 [nmds_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
-[phylogeny_profile_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[phylogeny_profile_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositions of each sample at a taxonomic level
 [taxa_abundance_bars_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
 [tsne_phyloseq_ggplot](https://schuyler-smith.github.io/phylosmith/graphs.html#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
 
@@ -90,4 +90,4 @@ Call                 | Description
 
 Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyloseq2`) that had no real-world data but served to show simple examples of how the functions worked. 
 
-Then I decided that I should include a real example of microbiome data (`soil_column`) becasue it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.
+Then I decided that I should include a real example of microbiome data (`soil_column`) because it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.

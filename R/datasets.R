@@ -18,7 +18,7 @@
 #'
 #' These datasets were made-up for the purpose
 #' of demonstrating the examples of the functions.
-#' They are not biologicall accurate, and don't
+#' They are not biologically accurate, and don't
 #' represent anything meaningful beyond being
 #' functional phyloseq objects.
 #'
@@ -33,7 +33,7 @@
 #'
 #' These datasets were made-up for the purpose
 #' of demonstrating the examples of the functions.
-#' They are not biologicall accurate, and don't
+#' They are not biologically accurate, and don't
 #' represent anything meaningful beyond being
 #' functional phyloseq objects.
 #'

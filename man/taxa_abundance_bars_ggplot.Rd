@@ -31,7 +31,7 @@ factors to subset on.}
 "mean", "median", "sd", "log", "log10"}
 
 \item{colors}{Name of a color set from the
-\link[=RColorBrewer]{RColorBrewer} package or a vector palete of R-accepted
+\link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
 }
 \value{
