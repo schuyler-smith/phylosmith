@@ -17,11 +17,9 @@
 NA
 
 
-# OBO_filepath <- '~/Downloads/card-ontology/aro.obo'
-# CARD <- processOBO(OBO_filepath)
 # load('R/sysdata.rda')
 # sep = '_'
-# save(CARD, sep, file = 'R/sysdata.rda')
+# save(sep, file = 'R/sysdata.rda')
 
 
 
