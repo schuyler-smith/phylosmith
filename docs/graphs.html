@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+<meta name="date" content="2019-06-20" />
+
+<title>Graphs</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li>
+  <a href="data_wrangling.html">
+    <span class="fa fa-file"></span>
+     
+    Data Wrangling
+  </a>
+</li>
+<li>
+  <a href="graphs.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphs
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/tree/master/R">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphs</h1>
+<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
+<h4 class="date">2019-06-20</h4>
+
+</div>
+
+
+<p><br></p>
+<div id="abundance_heatmap_ggplot" class="section level2">
+<h2>abundance_heatmap_ggplot</h2>
+<p><a name="abundance_heatmap_ggplot"></a></p>
+<p>Create a ggplot object heatmap of abundances of each taxa for each sample.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code>. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="odd">
+<td><code>transformation</code></td>
+<td>Transformation to be used on the data. “none”, “relative_abundance”, “log”, “log10”, “log1p”, “log2”, “asn”, “atanh”, “boxcox”, “exp”, “identity”, “logit”, “probability”, “probit”, “reciprocal”, “reverse” and “sqrt”.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>abundance_heatmap_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, transformation = &#39;log10&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/abundance_heatmap_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="abundance_lines_ggplot" class="section level2">
+<h2>abundance_lines_ggplot</h2>
+<p><a name="abundance_lines_ggplot"></a></p>
+<p>Create a ggplot object line graph of abundances across samples</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="odd">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="even">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="odd">
+<td><code>relative_abundance</code></td>
+<td>If <code>TRUE</code>, transforms the abundance data into relative abundance by sample.</td>
+</tr>
+<tr class="even">
+<td><code>points</code></td>
+<td>Whether or not to display point on the lines for each data-point.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>abundance_lines_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, relative_abundance = TRUE)</code></pre>
+<p><img src="graphs_files/figure-html/abundance_lines_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="network_ps" class="section level2">
+<h2>network_ps</h2>
+<p><a name="network_ps"></a></p>
+<p>Create a ggplot object of the co-occurrence network.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>network_ps(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = &#39;default&#39;, cluster = FALSE, cluster_colors = &#39;default&#39;, buffer = 0.5)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>co_occurrence_table</code></td>
+<td>Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using <code>co_occurrence()</code>. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="even">
+<td><code>node_colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="odd">
+<td><code>cluster</code></td>
+<td>if <code>TRUE</code>, will use <code>igraph</code>’s <code>cluster_fast_greedy</code> method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the <code>phyloseq_obj</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cluster_colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="odd">
+<td><code>buffer</code></td>
+<td>Amount of space beyond the points to extend the cluster (aesthetic argument).</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>network_ps(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, co_occurrence_table = NULL, classification = &#39;Phylum&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/network_ps-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="network_layout_ps" class="section level2">
+<h2>network_layout_ps</h2>
+<p><a name="network_layout_ps"></a></p>
+<p>Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the network_ps function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = &#39;fr&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>co_occurrence_table</code></td>
+<td>Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using <code>co_occurrence()</code>. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="even">
+<td><code>algorithm</code></td>
+<td>Supported <code>igraph::layout_</code> algorithm.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>network_layout_ps(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, algorithm = &#39;kk&#39;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["name"],"name":[3],"type":["fctr"],"align":["left"]},{"label":["ggraph.orig_index"],"name":[4],"type":["int"],"align":["right"]},{"label":["circular"],"name":[5],"type":["lgl"],"align":["right"]},{"label":["ggraph.index"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"-2.9644490","2":"6.15810325","3":"OTU_5","4":"1","5":"FALSE","6":"1"},{"1":"-5.3779199","2":"5.26897815","3":"OTU_6","4":"2","5":"FALSE","6":"2"},{"1":"-7.1089580","2":"0.70149042","3":"OTU_8","4":"3","5":"FALSE","6":"3"},{"1":"4.5396908","2":"-7.17076578","3":"OTU_18","4":"4","5":"FALSE","6":"4"},{"1":"5.4371053","2":"-9.39704793","3":"OTU_33","4":"5","5":"FALSE","6":"5"},{"1":"7.5920108","2":"-5.92674174","3":"OTU_38","4":"6","5":"FALSE","6":"6"},{"1":"6.7205701","2":"-7.99630210","3":"OTU_39","4":"7","5":"FALSE","6":"7"},{"1":"5.9641745","2":"-11.14080797","3":"OTU_43","4":"8","5":"FALSE","6":"8"},{"1":"3.7828585","2":"-9.14451340","3":"OTU_45","4":"9","5":"FALSE","6":"9"},{"1":"5.5912066","2":"-6.71493078","3":"OTU_46","4":"10","5":"FALSE","6":"10"},{"1":"-1.9656612","2":"-12.74887682","3":"OTU_48","4":"11","5":"FALSE","6":"11"},{"1":"6.7687667","2":"0.34600890","3":"OTU_51","4":"12","5":"FALSE","6":"12"},{"1":"6.9453638","2":"-0.99536734","3":"OTU_52","4":"13","5":"FALSE","6":"13"},{"1":"8.3227404","2":"-6.43691996","3":"OTU_53","4":"14","5":"FALSE","6":"14"},{"1":"5.7899098","2":"-2.84465687","3":"OTU_55","4":"15","5":"FALSE","6":"15"},{"1":"8.0202737","2":"-3.46646047","3":"OTU_56","4":"16","5":"FALSE","6":"16"},{"1":"6.9054495","2":"-10.04129479","3":"OTU_57","4":"17","5":"FALSE","6":"17"},{"1":"4.6388473","2":"-9.56573810","3":"OTU_61","4":"18","5":"FALSE","6":"18"},{"1":"3.7910228","2":"-7.86192573","3":"OTU_66","4":"19","5":"FALSE","6":"19"},{"1":"5.8722122","2":"-8.79176985","3":"OTU_70","4":"20","5":"FALSE","6":"20"},{"1":"-2.7373857","2":"4.73741163","3":"OTU_72","4":"21","5":"FALSE","6":"21"},{"1":"1.9825058","2":"-13.31049292","3":"OTU_73","4":"22","5":"FALSE","6":"22"},{"1":"-5.0010682","2":"4.70573775","3":"OTU_74","4":"23","5":"FALSE","6":"23"},{"1":"-5.3029023","2":"3.50871780","3":"OTU_79","4":"24","5":"FALSE","6":"24"},{"1":"10.1881637","2":"-6.22510858","3":"OTU_82","4":"25","5":"FALSE","6":"25"},{"1":"-5.2946015","2":"4.26988926","3":"OTU_86","4":"26","5":"FALSE","6":"26"},{"1":"6.5207898","2":"4.55761642","3":"OTU_87","4":"27","5":"FALSE","6":"27"},{"1":"5.6562330","2":"6.38585742","3":"OTU_89","4":"28","5":"FALSE","6":"28"},{"1":"-1.8527678","2":"5.13704539","3":"OTU_108","4":"29","5":"FALSE","6":"29"},{"1":"7.8445209","2":"6.00530557","3":"OTU_134","4":"30","5":"FALSE","6":"30"},{"1":"8.1563244","2":"4.05484861","3":"OTU_144","4":"31","5":"FALSE","6":"31"},{"1":"2.9724690","2":"-5.09254225","3":"OTU_146","4":"32","5":"FALSE","6":"32"},{"1":"-3.0318909","2":"-10.15656165","3":"OTU_160","4":"33","5":"FALSE","6":"33"},{"1":"-1.2309099","2":"-11.85132165","3":"OTU_164","4":"34","5":"FALSE","6":"34"},{"1":"5.6268379","2":"-6.06426065","3":"OTU_166","4":"35","5":"FALSE","6":"35"},{"1":"0.1112746","2":"4.76066202","3":"OTU_174","4":"36","5":"FALSE","6":"36"},{"1":"-8.4077926","2":"-8.78935466","3":"OTU_176","4":"37","5":"FALSE","6":"37"},{"1":"5.6085613","2":"-7.50650091","3":"OTU_177","4":"38","5":"FALSE","6":"38"},{"1":"-8.5133179","2":"-7.37207082","3":"OTU_179","4":"39","5":"FALSE","6":"39"},{"1":"9.8968520","2":"4.03940966","3":"OTU_181","4":"40","5":"FALSE","6":"40"},{"1":"4.3880079","2":"-8.84369541","3":"OTU_183","4":"41","5":"FALSE","6":"41"},{"1":"8.6104760","2":"-4.20203386","3":"OTU_187","4":"42","5":"FALSE","6":"42"},{"1":"8.3305615","2":"-8.36856528","3":"OTU_190","4":"43","5":"FALSE","6":"43"},{"1":"-0.2409256","2":"3.36851996","3":"OTU_194","4":"44","5":"FALSE","6":"44"},{"1":"-3.5707892","2":"4.17798131","3":"OTU_197","4":"45","5":"FALSE","6":"45"},{"1":"-3.7711425","2":"4.70711713","3":"OTU_198","4":"46","5":"FALSE","6":"46"},{"1":"-3.8531412","2":"5.38865643","3":"OTU_204","4":"47","5":"FALSE","6":"47"},{"1":"-0.1794717","2":"5.37617667","3":"OTU_206","4":"48","5":"FALSE","6":"48"},{"1":"-4.8216510","2":"5.48120812","3":"OTU_208","4":"49","5":"FALSE","6":"49"},{"1":"-11.5575447","2":"-7.33809732","3":"OTU_209","4":"50","5":"FALSE","6":"50"},{"1":"-3.2520918","2":"-0.22707876","3":"OTU_212","4":"51","5":"FALSE","6":"51"},{"1":"-0.1206443","2":"2.25467275","3":"OTU_217","4":"52","5":"FALSE","6":"52"},{"1":"-5.5849506","2":"2.03397063","3":"OTU_220","4":"53","5":"FALSE","6":"53"},{"1":"-6.0607874","2":"5.44089022","3":"OTU_255","4":"54","5":"FALSE","6":"54"},{"1":"-6.6676184","2":"4.71394388","3":"OTU_263","4":"55","5":"FALSE","6":"55"},{"1":"6.5747083","2":"6.84808522","3":"OTU_283","4":"56","5":"FALSE","6":"56"},{"1":"8.5833097","2":"-9.14552244","3":"OTU_308","4":"57","5":"FALSE","6":"57"},{"1":"4.5184913","2":"-4.10407534","3":"OTU_309","4":"58","5":"FALSE","6":"58"},{"1":"6.3538959","2":"-7.65597554","3":"OTU_310","4":"59","5":"FALSE","6":"59"},{"1":"-5.0668655","2":"-8.46594537","3":"OTU_321","4":"60","5":"FALSE","6":"60"},{"1":"0.6757017","2":"-13.19003105","3":"OTU_327","4":"61","5":"FALSE","6":"61"},{"1":"-0.8659517","2":"-13.82881947","3":"OTU_329","4":"62","5":"FALSE","6":"62"},{"1":"6.5322593","2":"-5.00350238","3":"OTU_330","4":"63","5":"FALSE","6":"63"},{"1":"2.2726126","2":"4.75705201","3":"OTU_331","4":"64","5":"FALSE","6":"64"},{"1":"-2.7139022","2":"7.10780490","3":"OTU_341","4":"65","5":"FALSE","6":"65"},{"1":"-2.8981330","2":"2.37865081","3":"OTU_343","4":"66","5":"FALSE","6":"66"},{"1":"-9.4833170","2":"-5.22832057","3":"OTU_346","4":"67","5":"FALSE","6":"67"},{"1":"-9.7846769","2":"3.21694191","3":"OTU_386","4":"68","5":"FALSE","6":"68"},{"1":"-12.1567051","2":"-5.03251290","3":"OTU_387","4":"69","5":"FALSE","6":"69"},{"1":"-2.8406917","2":"5.19881199","3":"OTU_391","4":"70","5":"FALSE","6":"70"},{"1":"-6.9164532","2":"-8.20090273","3":"OTU_393","4":"71","5":"FALSE","6":"71"},{"1":"-7.9746760","2":"-11.36156893","3":"OTU_394","4":"72","5":"FALSE","6":"72"},{"1":"-10.2697090","2":"-7.65501634","3":"OTU_399","4":"73","5":"FALSE","6":"73"},{"1":"-4.7814264","2":"2.61780988","3":"OTU_403","4":"74","5":"FALSE","6":"74"},{"1":"-4.7674333","2":"-10.78160034","3":"OTU_405","4":"75","5":"FALSE","6":"75"},{"1":"-1.6285509","2":"0.06432597","3":"OTU_406","4":"76","5":"FALSE","6":"76"},{"1":"-3.5678072","2":"-13.39188343","3":"OTU_408","4":"77","5":"FALSE","6":"77"},{"1":"-3.9524019","2":"-0.32103098","3":"OTU_412","4":"78","5":"FALSE","6":"78"},{"1":"9.5418395","2":"0.62632246","3":"OTU_417","4":"79","5":"FALSE","6":"79"},{"1":"-1.5644195","2":"7.06992692","3":"OTU_422","4":"80","5":"FALSE","6":"80"},{"1":"-8.9329129","2":"-10.53825239","3":"OTU_428","4":"81","5":"FALSE","6":"81"},{"1":"-1.1904549","2":"1.09454112","3":"OTU_430","4":"82","5":"FALSE","6":"82"},{"1":"-2.4779722","2":"3.29410215","3":"OTU_437","4":"83","5":"FALSE","6":"83"},{"1":"-6.1461771","2":"-12.57424183","3":"OTU_441","4":"84","5":"FALSE","6":"84"},{"1":"0.5212858","2":"-5.25019411","3":"OTU_444","4":"85","5":"FALSE","6":"85"},{"1":"-7.1319161","2":"3.33665347","3":"OTU_449","4":"86","5":"FALSE","6":"86"},{"1":"-9.3968408","2":"2.38751499","3":"OTU_450","4":"87","5":"FALSE","6":"87"},{"1":"-12.8376623","2":"-2.19816066","3":"OTU_461","4":"88","5":"FALSE","6":"88"},{"1":"1.8782237","2":"6.23298181","3":"OTU_465","4":"89","5":"FALSE","6":"89"},{"1":"-4.2800920","2":"3.66713017","3":"OTU_467","4":"90","5":"FALSE","6":"90"},{"1":"0.5963487","2":"1.76664897","3":"OTU_468","4":"91","5":"FALSE","6":"91"},{"1":"-4.5189523","2":"-11.98163861","3":"OTU_474","4":"92","5":"FALSE","6":"92"},{"1":"-6.8446620","2":"-10.44988536","3":"OTU_476","4":"93","5":"FALSE","6":"93"},{"1":"6.0206721","2":"7.72667816","3":"OTU_478","4":"94","5":"FALSE","6":"94"},{"1":"-8.3421143","2":"4.87705003","3":"OTU_480","4":"95","5":"FALSE","6":"95"},{"1":"-2.0615813","2":"1.74320667","3":"OTU_483","4":"96","5":"FALSE","6":"96"},{"1":"-6.2055044","2":"-5.69360677","3":"OTU_494","4":"97","5":"FALSE","6":"97"},{"1":"4.1490026","2":"-10.80704499","3":"OTU_499","4":"98","5":"FALSE","6":"98"},{"1":"-1.6503278","2":"-9.78919764","3":"OTU_502","4":"99","5":"FALSE","6":"99"},{"1":"6.7734765","2":"-8.88386874","3":"OTU_505","4":"100","5":"FALSE","6":"100"},{"1":"5.8856148","2":"-10.03241787","3":"OTU_509","4":"101","5":"FALSE","6":"101"},{"1":"5.5379128","2":"0.81826082","3":"OTU_512","4":"102","5":"FALSE","6":"102"},{"1":"-8.2716324","2":"-7.37245773","3":"OTU_517","4":"103","5":"FALSE","6":"103"},{"1":"9.6979800","2":"-5.50518309","3":"OTU_519","4":"104","5":"FALSE","6":"104"},{"1":"8.8509865","2":"-1.91774368","3":"OTU_522","4":"105","5":"FALSE","6":"105"},{"1":"-10.6965629","2":"-6.76375963","3":"OTU_528","4":"106","5":"FALSE","6":"106"},{"1":"10.5145838","2":"-3.40935793","3":"OTU_530","4":"107","5":"FALSE","6":"107"},{"1":"10.3529499","2":"-1.05885265","3":"OTU_532","4":"108","5":"FALSE","6":"108"},{"1":"3.3168029","2":"-7.06497659","3":"OTU_533","4":"109","5":"FALSE","6":"109"},{"1":"10.5973161","2":"1.66480694","3":"OTU_535","4":"110","5":"FALSE","6":"110"},{"1":"-7.2878557","2":"-9.29999215","3":"OTU_551","4":"111","5":"FALSE","6":"111"},{"1":"9.0650707","2":"-6.49789889","3":"OTU_560","4":"112","5":"FALSE","6":"112"},{"1":"-5.3450096","2":"-9.34077049","3":"OTU_563","4":"113","5":"FALSE","6":"113"},{"1":"7.1420636","2":"2.56928906","3":"OTU_566","4":"114","5":"FALSE","6":"114"},{"1":"7.7285849","2":"-9.81688020","3":"OTU_587","4":"115","5":"FALSE","6":"115"},{"1":"9.2978615","2":"1.09176128","3":"OTU_611","4":"116","5":"FALSE","6":"116"},{"1":"7.6199311","2":"0.85885319","3":"OTU_625","4":"117","5":"FALSE","6":"117"},{"1":"-4.4566158","2":"-13.13549550","3":"OTU_627","4":"118","5":"FALSE","6":"118"},{"1":"0.9966670","2":"-13.37546954","3":"OTU_647","4":"119","5":"FALSE","6":"119"},{"1":"0.4557394","2":"-11.57779644","3":"OTU_651","4":"120","5":"FALSE","6":"120"},{"1":"-4.1168901","2":"1.75815955","3":"OTU_660","4":"121","5":"FALSE","6":"121"},{"1":"-3.7043068","2":"3.71598332","3":"OTU_661","4":"122","5":"FALSE","6":"122"},{"1":"-4.8239799","2":"4.29946393","3":"OTU_664","4":"123","5":"FALSE","6":"123"},{"1":"7.1605858","2":"-2.97105025","3":"OTU_726","4":"124","5":"FALSE","6":"124"},{"1":"7.2966180","2":"-5.19579455","3":"OTU_729","4":"125","5":"FALSE","6":"125"},{"1":"-0.5578847","2":"0.82535028","3":"OTU_739","4":"126","5":"FALSE","6":"126"},{"1":"-2.3625840","2":"-0.07983542","3":"OTU_740","4":"127","5":"FALSE","6":"127"},{"1":"10.6470368","2":"-2.43727709","3":"OTU_755","4":"128","5":"FALSE","6":"128"},{"1":"4.9448881","2":"-10.96351095","3":"OTU_781","4":"129","5":"FALSE","6":"129"},{"1":"-3.7406812","2":"2.56183892","3":"OTU_796","4":"130","5":"FALSE","6":"130"},{"1":"-7.3974107","2":"4.01093906","3":"OTU_842","4":"131","5":"FALSE","6":"131"},{"1":"3.6507366","2":"-2.66705751","3":"OTU_862","4":"132","5":"FALSE","6":"132"},{"1":"-11.6360779","2":"-6.03830428","3":"OTU_864","4":"133","5":"FALSE","6":"133"},{"1":"10.0072687","2":"-0.81766510","3":"OTU_874","4":"134","5":"FALSE","6":"134"},{"1":"5.0056015","2":"8.24135379","3":"OTU_878","4":"135","5":"FALSE","6":"135"},{"1":"2.5915290","2":"-8.36518165","3":"OTU_880","4":"136","5":"FALSE","6":"136"},{"1":"-5.6420768","2":"2.71336333","3":"OTU_888","4":"137","5":"FALSE","6":"137"},{"1":"-1.1573107","2":"2.76430411","3":"OTU_891","4":"138","5":"FALSE","6":"138"},{"1":"-1.6452232","2":"2.59375291","3":"OTU_894","4":"139","5":"FALSE","6":"139"},{"1":"-5.4825163","2":"-1.13902312","3":"OTU_895","4":"140","5":"FALSE","6":"140"},{"1":"-3.5696502","2":"-10.71013463","3":"OTU_901","4":"141","5":"FALSE","6":"141"},{"1":"4.4516676","2":"-5.53955765","3":"OTU_902","4":"142","5":"FALSE","6":"142"},{"1":"9.8659812","2":"2.88266624","3":"OTU_904","4":"143","5":"FALSE","6":"143"},{"1":"9.5731858","2":"-4.16775008","3":"OTU_906","4":"144","5":"FALSE","6":"144"},{"1":"-5.6775491","2":"-11.44520024","3":"OTU_916","4":"145","5":"FALSE","6":"145"},{"1":"5.1957234","2":"-8.52168481","3":"OTU_919","4":"146","5":"FALSE","6":"146"},{"1":"0.1058623","2":"3.88908846","3":"OTU_9","4":"147","5":"FALSE","6":"147"},{"1":"10.7107582","2":"-0.05542644","3":"OTU_11","4":"148","5":"FALSE","6":"148"},{"1":"8.6774425","2":"4.44123001","3":"OTU_28","4":"149","5":"FALSE","6":"149"},{"1":"4.0375575","2":"-7.72250135","3":"OTU_40","4":"150","5":"FALSE","6":"150"},{"1":"-12.2497796","2":"-2.64221410","3":"OTU_58","4":"151","5":"FALSE","6":"151"},{"1":"-11.0786869","2":"-4.34391905","3":"OTU_97","4":"152","5":"FALSE","6":"152"},{"1":"-0.5747739","2":"6.49865909","3":"OTU_126","4":"153","5":"FALSE","6":"153"},{"1":"-4.2436889","2":"-6.95915673","3":"OTU_175","4":"154","5":"FALSE","6":"154"},{"1":"1.1722414","2":"7.85131383","3":"OTU_215","4":"155","5":"FALSE","6":"155"},{"1":"-4.1704416","2":"2.53507455","3":"OTU_221","4":"156","5":"FALSE","6":"156"},{"1":"-6.1388792","2":"4.52817216","3":"OTU_243","4":"157","5":"FALSE","6":"157"},{"1":"-12.6384561","2":"-0.76072522","3":"OTU_244","4":"158","5":"FALSE","6":"158"},{"1":"-4.2373059","2":"4.70696960","3":"OTU_246","4":"159","5":"FALSE","6":"159"},{"1":"-3.3606454","2":"7.26337577","3":"OTU_247","4":"160","5":"FALSE","6":"160"},{"1":"2.5130987","2":"-13.03691383","3":"OTU_249","4":"161","5":"FALSE","6":"161"},{"1":"-6.3109983","2":"3.33181518","3":"OTU_251","4":"162","5":"FALSE","6":"162"},{"1":"-12.0975206","2":"-5.29166500","3":"OTU_252","4":"163","5":"FALSE","6":"163"},{"1":"-2.2914013","2":"-13.61199508","3":"OTU_256","4":"164","5":"FALSE","6":"164"},{"1":"-7.3016571","2":"1.61740863","3":"OTU_259","4":"165","5":"FALSE","6":"165"},{"1":"-13.1717620","2":"-3.85967137","3":"OTU_260","4":"166","5":"FALSE","6":"166"},{"1":"8.9613695","2":"1.50839943","3":"OTU_261","4":"167","5":"FALSE","6":"167"},{"1":"-7.8083866","2":"2.98692046","3":"OTU_289","4":"168","5":"FALSE","6":"168"},{"1":"-4.2933502","2":"6.62749204","3":"OTU_294","4":"169","5":"FALSE","6":"169"},{"1":"-5.3764599","2":"5.66213525","3":"OTU_295","4":"170","5":"FALSE","6":"170"},{"1":"-10.1726203","2":"-0.81648881","3":"OTU_317","4":"171","5":"FALSE","6":"171"},{"1":"-1.8949627","2":"-6.93875267","3":"OTU_336","4":"172","5":"FALSE","6":"172"},{"1":"5.9144979","2":"7.72419159","3":"OTU_344","4":"173","5":"FALSE","6":"173"},{"1":"-11.0594190","2":"-3.27734547","3":"OTU_396","4":"174","5":"FALSE","6":"174"},{"1":"-2.3004428","2":"4.67553113","3":"OTU_400","4":"175","5":"FALSE","6":"175"},{"1":"-9.6212866","2":"-8.74793222","3":"OTU_419","4":"176","5":"FALSE","6":"176"},{"1":"-8.2641946","2":"-10.08289474","3":"OTU_432","4":"177","5":"FALSE","6":"177"},{"1":"-4.1537024","2":"-12.71646785","3":"OTU_457","4":"178","5":"FALSE","6":"178"},{"1":"-7.0617321","2":"-11.19582271","3":"OTU_487","4":"179","5":"FALSE","6":"179"},{"1":"-9.8129091","2":"-9.23749201","3":"OTU_506","4":"180","5":"FALSE","6":"180"},{"1":"1.8032218","2":"-9.73743712","3":"OTU_516","4":"181","5":"FALSE","6":"181"},{"1":"8.7586592","2":"-7.91086283","3":"OTU_534","4":"182","5":"FALSE","6":"182"},{"1":"-7.4348932","2":"6.10488838","3":"OTU_538","4":"183","5":"FALSE","6":"183"},{"1":"-3.6902834","2":"6.17041752","3":"OTU_545","4":"184","5":"FALSE","6":"184"},{"1":"-3.1742370","2":"3.09301705","3":"OTU_555","4":"185","5":"FALSE","6":"185"},{"1":"-6.4783462","2":"6.01713675","3":"OTU_556","4":"186","5":"FALSE","6":"186"},{"1":"-5.3111227","2":"8.13206404","3":"OTU_559","4":"187","5":"FALSE","6":"187"},{"1":"-4.4464367","2":"5.63523104","3":"OTU_571","4":"188","5":"FALSE","6":"188"},{"1":"-2.3923591","2":"5.78187827","3":"OTU_575","4":"189","5":"FALSE","6":"189"},{"1":"6.5452924","2":"5.66567132","3":"OTU_588","4":"190","5":"FALSE","6":"190"},{"1":"-7.6940483","2":"2.18973993","3":"OTU_600","4":"191","5":"FALSE","6":"191"},{"1":"-11.0923701","2":"0.21680862","3":"OTU_601","4":"192","5":"FALSE","6":"192"},{"1":"-3.3832019","2":"4.76597854","3":"OTU_602","4":"193","5":"FALSE","6":"193"},{"1":"7.9910851","2":"5.64112046","3":"OTU_604","4":"194","5":"FALSE","6":"194"},{"1":"-2.0586968","2":"-12.37620528","3":"OTU_621","4":"195","5":"FALSE","6":"195"},{"1":"-5.7564164","2":"7.08601376","3":"OTU_648","4":"196","5":"FALSE","6":"196"},{"1":"-4.8358774","2":"3.07222675","3":"OTU_649","4":"197","5":"FALSE","6":"197"},{"1":"-3.9663659","2":"7.36877461","3":"OTU_653","4":"198","5":"FALSE","6":"198"},{"1":"-2.5180658","2":"3.81949027","3":"OTU_655","4":"199","5":"FALSE","6":"199"},{"1":"3.8011768","2":"-10.38886271","3":"OTU_657","4":"200","5":"FALSE","6":"200"},{"1":"-7.6827971","2":"4.76035229","3":"OTU_658","4":"201","5":"FALSE","6":"201"},{"1":"-1.5246772","2":"8.84991087","3":"OTU_659","4":"202","5":"FALSE","6":"202"},{"1":"-4.7635917","2":"6.90890819","3":"OTU_663","4":"203","5":"FALSE","6":"203"},{"1":"-11.9000482","2":"-2.51017043","3":"OTU_673","4":"204","5":"FALSE","6":"204"},{"1":"-1.7367982","2":"-11.12486841","3":"OTU_680","4":"205","5":"FALSE","6":"205"},{"1":"-6.9690222","2":"-7.04832609","3":"OTU_683","4":"206","5":"FALSE","6":"206"},{"1":"7.7073745","2":"3.61284811","3":"OTU_702","4":"207","5":"FALSE","6":"207"},{"1":"-3.4212023","2":"4.69229491","3":"OTU_704","4":"208","5":"FALSE","6":"208"},{"1":"7.1682576","2":"5.34852533","3":"OTU_712","4":"209","5":"FALSE","6":"209"},{"1":"-1.1860788","2":"4.19732616","3":"OTU_746","4":"210","5":"FALSE","6":"210"},{"1":"-10.5013861","2":"-8.94711817","3":"OTU_793","4":"211","5":"FALSE","6":"211"},{"1":"-3.3487573","2":"-7.96640136","3":"OTU_794","4":"212","5":"FALSE","6":"212"},{"1":"0.2073409","2":"-13.45034061","3":"OTU_823","4":"213","5":"FALSE","6":"213"},{"1":"-4.8823099","2":"0.23090176","3":"OTU_830","4":"214","5":"FALSE","6":"214"},{"1":"0.2894501","2":"-12.03537455","3":"OTU_834","4":"215","5":"FALSE","6":"215"},{"1":"-9.8920492","2":"-5.80611498","3":"OTU_836","4":"216","5":"FALSE","6":"216"},{"1":"-10.7760748","2":"-4.02162713","3":"OTU_844","4":"217","5":"FALSE","6":"217"},{"1":"-6.6389331","2":"6.66485515","3":"OTU_872","4":"218","5":"FALSE","6":"218"},{"1":"-3.7567489","2":"-9.93955487","3":"OTU_883","4":"219","5":"FALSE","6":"219"},{"1":"9.2558176","2":"2.88608903","3":"OTU_892","4":"220","5":"FALSE","6":"220"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="nmds_phyloseq_ggplot" class="section level2">
+<h2>nmds_phyloseq_ggplot</h2>
+<p><a name="nmds_phyloseq_ggplot"></a></p>
+<p>Creates a ggplot object of the NMDS ordination of samples.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = &#39;default&#39;, verbose = TRUE)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>circle</code></td>
+<td>Whether to add a stat_elipse around eache treatment factor on the graph.</td>
+</tr>
+<tr class="even">
+<td><code>labels</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data to use to place labels of that factor instead of circle points.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="even">
+<td><code>verbose</code></td>
+<td>Whether or not to print the <code>vegan::metaMDS</code> stress convergence to console (TRUE) or not (FALSE).</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>nmds_phyloseq_ggplot(soil_column, c(&#39;Matrix&#39;, &#39;Treatment&#39;), circle = TRUE, verbose = FALSE)</code></pre>
+<p><img src="graphs_files/figure-html/nmds_phyloseq_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="phylogeny_profile_ggplot" class="section level2">
+<h2>phylogeny_profile_ggplot</h2>
+<p><a name="phylogeny_profile_ggplot"></a></p>
+<p>Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>phylogeny_profile_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="odd">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="even">
+<td><code>subset</code></td>
+<td>A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="odd">
+<td><code>merge</code></td>
+<td>If <code>FALSE</code>, will show separation of individuals within each <code>classification</code>.</td>
+</tr>
+<tr class="even">
+<td><code>relative_abundance</code></td>
+<td>If <code>TRUE</code>, transforms the abundance data into relative abundance by sample.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>phylogeny_profile_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, merge = TRUE, relative_abundance = TRUE)</code></pre>
+<p><img src="graphs_files/figure-html/phylogeny_profile_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_abundance_bars_ggplot" class="section level2">
+<h2>taxa_abundance_bars_ggplot</h2>
+<p><a name="taxa_abundance_bars_ggplot"></a></p>
+<p>Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="odd">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="even">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="odd">
+<td><code>transformation</code></td>
+<td>Transformation to be used on the data. “none”, “mean”, “median”, “sd”, “log”, “log10”</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;, transformation = &#39;mean&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/taxa_abundance_bars_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="tsne_phyloseq_ggplot" class="section level2">
+<h2>tsne_phyloseq_ggplot</h2>
+<p><a name="tsne_phyloseq_ggplot"></a></p>
+<p>Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code>. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>perplexity</code></td>
+<td>similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity &lt; nrow(X) - 1, see Rtsne for interpretation)</td>
+</tr>
+<tr class="even">
+<td><code>circle</code></td>
+<td>Whether to add a <code>stat_elipse</code> around each <code>treatment</code> factor on the graph.</td>
+</tr>
+<tr class="odd">
+<td><code>labels</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code> to use to place labels of that factor instead of circle points.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>tsne_phyloseq_ggplot(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), perplexity = 10)</code></pre>
+<p><img src="graphs_files/figure-html/tsne_phyloseq_ggplot-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Student - Bioinformatics and Computational Biology<br>
+Iowa State University.  Ames, IA.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

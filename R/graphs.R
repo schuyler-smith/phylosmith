@@ -331,7 +331,7 @@ abundance_lines_ggplot <-
     }
     g <-
       g + geom_line(size = 1.2, aes_string(color = classification)) +
-      facet_grid(treatment_name, scales = "free", space = "free") +
+      facet_grid(reformulate(treatment_name), scales = "free", space = "free") +
       scale_colour_manual(values = graph_colors) +
       guides(colour = guide_legend(
         ncol = ceiling(length(unique(graph_data[[classification]])) / 25),
@@ -1133,7 +1133,7 @@ phylogeny_profile_ggplot <-
       ) / 25))) +
       scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
     if (!(is.null(treatment))) {
-      g <- g + facet_grid(treatment_name, scales = "free", space = "free")
+      g <- g + facet_grid(reformulate(treatment_name), scales = "free", space = "free")
     }
     if (merge) {
       g <-
