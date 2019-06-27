@@ -1159,7 +1159,7 @@ phylogeny_profile_ggplot <-
       g <- g + ylab('Relative Abundance')
     }
 
-    g <- g + theme_classic() +
+    g <- g + theme_bw() +
       theme(
         axis.text.x = element_text(
           angle = 30,
@@ -1175,12 +1175,12 @@ phylogeny_profile_ggplot <-
         legend.spacing.x = unit(0.005, 'npc'),
         panel.background = element_rect(
           color = 'black',
-          size = 1.5,
-          fill = 'black'
+          size = 1.5
         ),
         panel.spacing = unit(0.01, 'npc'),
         strip.text.x = element_text(size = 14, face = 'bold'),
-        strip.background = element_rect(colour = 'black', size = 1.4)
+        strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white'),
+        panel.grid.major.x = element_blank()
       ) +
       scale_y_continuous(expand = expand_scale(mult = c(0.0037, 0.003), add = c(0, 0))) +
       scale_x_discrete(expand = expand_scale(mult = 0, add = 0.51))
