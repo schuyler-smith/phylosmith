@@ -425,7 +425,7 @@ abundance_lines_ggplot <-
 #' @param buffer Amount of space beyond the points to extend the cluster (
 #' aesthetic argument).
 #' @importFrom igraph graph_from_data_frame simplify cluster_fast_greedy
-#' @importFrom ggraph create_layout
+#' @importFrom ggraph ggraph create_layout
 #' @importFrom sf st_as_sf st_buffer
 #' @importFrom grDevices chull
 #' @export
