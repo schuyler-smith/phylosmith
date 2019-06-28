@@ -769,6 +769,147 @@ set_treatment_levels <- function(phyloseq_obj, treatment, order) {
   return(phyloseq_obj)
 }
 
+#' Filter taxa based on proportion of samples they are observed in, as well as
+#' by a minimum relative abundance in each. Function from the phylosmith-package.
+#'
+#' Inputs a phyloseq object and finds which taxa are seen in a
+#' given proportion of samples at a minimum relative abundance, either in the
+#' entire dataset, by treatment, or a particular treatment of interest.
+#' @useDynLib phylosmith
+#' @usage taxa_core(phyloseq_obj, treatment = NULL, subset = NULL,
+#' frequency = 0.5, abundance_threshold = 0.01)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @param frequency The proportion of samples the taxa is found in.
+#' @param abundance_threshold The minimum relative abundance the taxa is found
+#' in for each sample.
+#' @export
+#' @return phyloseq-object
+#' @examples taxa_core(soil_column, frequency = 0.2, abundance_threshold = 0.01)
+
+taxa_core <-
+  function(phyloseq_obj,
+           treatment = NULL,
+           subset = NULL,
+           frequency = 0.5,
+           abundance_threshold = 0.01
+  ) {
+    if (!inherits(phyloseq_obj, "phyloseq")) {
+      stop("`phyloseq_obj` must be a phyloseq-class object",
+           call. = FALSE)
+    }
+    if (is.null(access(phyloseq_obj, 'sam_data'))) {
+      stop("`phyloseq_obj` must contain sample_data()
+            information",
+           call. = FALSE)
+    }
+    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    if (!(is.null(treatment)) &
+        any(!(treatment %in% colnames(access(
+          phyloseq_obj, 'sam_data'
+        ))))) {
+      stop(
+        "`treatment` must be at least one column name, or
+        index, from the sample_data()",
+        call. = FALSE
+      )
+    }
+    if (!(is.numeric(frequency)) |
+        !(frequency >= 0 & frequency <= 1)) {
+      stop("`frequency` must be a numeric value between
+        0 and 1", call. = FALSE)
+    }
+    if (!(is.numeric(abundance_threshold)) |
+        !(abundance_threshold >= 0 & abundance_threshold <= 1)) {
+      stop("`abundance_threshold` must be a numeric value between
+        0 and 1", call. = FALSE)
+    }
+    original_levels <-
+      lapply(access(phyloseq_obj, 'sam_data'), levels)
+
+    original_object <- phyloseq_obj
+    phyloseq_obj <- phyloseq(
+      access(phyloseq_obj, 'otu_table'),
+      access(phyloseq_obj, 'tax_table'),
+      access(phyloseq_obj, 'sam_data')
+    )
+    abundances <- access(phyloseq_obj, 'otu_table')
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
+
+    treatment_name <- paste(treatment, collapse = sep)
+    if (!(is.null(treatment))) {
+      phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
+      if (!(is.null(subset)) &
+          any(!(subset %in% unlist(access(
+            phyloseq_obj, 'sam_data'
+          )[, c(treatment, treatment_name)])))) {
+        stop("`subset` must be at least one factor from the `treatment`",
+             call. = FALSE)
+      }
+      treatment_classes <- sort(unique(access(phyloseq_obj,
+                                              'sam_data')[[treatment_name]]))
+
+      phyloseq_obj <- do.call(merge_phyloseq,
+                              apply(
+                                array(treatment_classes),
+                                1,
+                                FUN = function(group) {
+                                  sub_phy <- eval(parse(
+                                    text = paste0(
+                                      "subset_samples(phyloseq_obj, ",
+                                      treatment_name,
+                                      " == '",
+                                      group,
+                                      "')"
+                                    )
+                                  ))
+                                  cutoff <-
+                                    floor(ncol(sub_phy@otu_table) * frequency)
+                                  sub_phy <- filter_taxa(sub_phy, function(x) {
+                                    sum(x >= abundance_threshold, na.rm = TRUE) >= cutoff
+                                  }, TRUE)
+                                  if (sum(taxa_sums(sub_phy), na.rm = TRUE) != 0) {
+                                    sub_phy <- filter_taxa(sub_phy, function(x) {
+                                      sum(x, na.rm = TRUE) != 0
+                                    }, TRUE)
+                                  }
+                                  return(sub_phy)
+                                }
+                              ))
+    } else {
+      cutoff <- floor(ncol(access(phyloseq_obj, 'otu_table')) * frequency)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x) {
+        sum(x >= abundance_threshold, na.rm = TRUE) >= cutoff
+      }, TRUE)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x) {
+        sum(x, na.rm = TRUE) != 0
+      }, TRUE)
+    }
+    if (!(is.null(subset))) {
+      phyloseq_obj <-
+        prune_samples(sample_names(phyloseq_obj)[unname(apply(access(phyloseq_obj, 'sam_data')[, c(treatment, treatment_name)], 1,
+                                                              function(x) {
+                                                                any(x %in% subset)
+                                                              }))], phyloseq_obj)
+      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x) {
+        sum(x, na.rm = TRUE) > 0
+      }, TRUE)
+    }
+
+    phyloseq_obj <- prune_taxa(taxa_names(phyloseq_obj), original_object)
+    return(phyloseq_obj)
+  }
+
+
 #' Filter taxa based on proportion of samples they are observed in.
 #' Function from the phylosmith-package.
 #'

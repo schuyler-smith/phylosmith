@@ -1,3 +1,5 @@
 Changes in version 1.0.0
 + Accepted in the Journal of Open Source Software
 
+Changes in version 1.0.1
++ Add taxa_core()
