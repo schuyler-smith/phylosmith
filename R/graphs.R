@@ -33,8 +33,8 @@
 #' @importFrom ggraph scale_fill_viridis
 #' @export
 #' @return ggplot-object
-#' @examples abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
-#' treatment = c('Matrix', 'Treatment'), transformation = 'log')
+#' @examples #abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
+#' #treatment = c('Matrix', 'Treatment'), transformation = 'log')
 
 abundance_heatmap_ggplot <-
   function(phyloseq_obj,
@@ -165,22 +165,23 @@ abundance_heatmap_ggplot <-
         axis.text.x = element_text(
           angle = 30,
           hjust = 1,
-          size = 12
+          size = 10
         ),
-        axis.text.y = element_text(hjust = 0.95, size = 12),
-        axis.title.x = element_text(size = 14, face = 'bold'),
-        axis.title.y = element_text(size = 14, face = 'bold'),
+        axis.text.y = element_text(hjust = 0.95, size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
         axis.ticks.x = element_blank(),
-        legend.title = element_text(size = 14, face = 'bold'),
-        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
+        legend.key.size = unit(4, "mm"),
         legend.background = element_rect(
           fill = (alpha = 0),
           color = 'black',
           size = 0.25
         ),
         panel.background = element_rect(color = 'black', size = 1.4),
-        strip.text.x = element_text(size = 14, face = 'bold'),
+        strip.text.x = element_text(size = 10, face = 'bold'),
         strip.background = element_rect(colour = 'black', size = 1.4)
       ) +
       scale_x_discrete(expand = expand_scale(mult = 0, add = .53)) +
@@ -345,15 +346,16 @@ abundance_lines_ggplot <-
         axis.text.x = element_text(
           angle = 30,
           hjust = 1,
-          size = 12
+          size = 10
         ),
-        axis.text.y = element_text(hjust = 0.95, size = 12),
-        axis.title.x = element_text(size = 14, face = 'bold'),
-        axis.title.y = element_text(size = 14, face = 'bold'),
+        axis.text.y = element_text(hjust = 0.95, size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
         axis.ticks.x = element_blank(),
-        legend.title = element_text(size = 14, face = 'bold'),
-        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
+        legend.key.size = unit(4, "mm"),
         legend.background = element_rect(fill = (alpha = 0)),
         panel.background = element_rect(
           color = 'black',
@@ -362,7 +364,7 @@ abundance_lines_ggplot <-
         ),
         panel.spacing = unit(.015, 'npc'),
         strip.text.x = element_text(
-          size = 14,
+          size = 10,
           face = 'bold',
           color = 'black'
         ),
@@ -672,8 +674,9 @@ network_ps <- function(phyloseq_obj,
       )
   }
   g <- g + theme(
-    legend.text = element_text(size = 12),
-    legend.title = element_text(size = 12, face = 'bold'),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10, face = 'bold'),
+    legend.key.size = unit(4, "mm"),
     legend.spacing.x = unit(0.005, 'npc')
   )
   return(g)
@@ -975,7 +978,6 @@ nmds_phyloseq_ggplot <-
     }
     g <- g + theme_classic() +
       theme(
-        aspect.ratio = 1,
         axis.line.x = element_line(
           colour = 'black',
           size = 1,
@@ -986,13 +988,14 @@ nmds_phyloseq_ggplot <-
           size = 1,
           linetype = 'solid'
         ),
-        axis.text.x = element_text(size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 14, face = "bold"),
-        axis.title.y = element_text(size = 14, face = "bold"),
-        legend.title = element_text(size = 14, face = 'bold'),
-        legend.text = element_text(size = 12),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10, face = "bold"),
+        axis.title.y = element_text(size = 10, face = "bold"),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
+        legend.key.size = unit(4, "mm"),
         legend.background = element_rect(fill = (alpha = 0))
       ) + labs(x = 'NMDS Dimension 1', y = 'NMDS Dimension 2')
     return(g)
@@ -1164,21 +1167,22 @@ phylogeny_profile_ggplot <-
         axis.text.x = element_text(
           angle = 30,
           hjust = 1,
-          size = 12
+          size = 10
         ),
-        axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 14, face = 'bold'),
-        axis.title.y = element_text(size = 14, face = 'bold'),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
         axis.ticks.x = element_blank(),
-        legend.title = element_text(size = 14, face = 'bold'),
-        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
+        legend.key.size = unit(4, "mm"),
         panel.background = element_rect(
           color = 'black',
           size = 1.5
         ),
         panel.spacing = unit(0.01, 'npc'),
-        strip.text.x = element_text(size = 14, face = 'bold'),
+        strip.text.x = element_text(size = 10, face = 'bold'),
         strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white'),
         panel.grid.major.x = element_blank()
       ) +
@@ -1365,22 +1369,169 @@ taxa_abundance_bars_ggplot <-
           linetype = 'solid'
         ),
         axis.text.x = element_text(
-          size = 12,
+          size = 10,
           vjust = 1,
           hjust = 1,
           angle = 30
         ),
-        axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 14, face = "bold"),
-        axis.title.y = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14, face = "bold"),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10, face = "bold"),
+        axis.title.y = element_text(size = 10, face = "bold"),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10, face = "bold"),
         legend.background = element_rect(fill = (alpha = 0)),
+        legend.key.size = unit(4, "mm"),
         legend.spacing.x = unit(0.005, 'npc')
       ) +
       scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
     return(g)
   }
+
+#' Create graph of the core taxa seen in phyloseq-object over a range of
+#' abundance and smaple-frequency values.  Function from the phylosmith-package.
+#'
+#' Inputs a phyloseq object and finds which taxa are seen in a
+#' given proportion of samples at a minimum relative abundance, either in the
+#' entire dataset, or by treatment, over a range of values. Then draws the
+#' distribution.
+#' @useDynLib phylosmith
+#' @usage taxa_core_graph(phyloseq_obj, treatment = NULL, subset = NULL,
+#' frequencies = seq(0.1, 1, 0.1), abundance_thresholds = seq(0.01, 1, 0.01),
+#' colors = 'default')
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @param frequencies The range of proportions of samples the taxa are found in.
+#' @param abundance_thresholds The range of minimum relative abundances the taxa are found
+#' in for each sample.
+#' @param colors Name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors.
+#' @export
+#' @return phyloseq-object
+#' @examples taxa_core_graph(soil_column)
+
+taxa_core_graph <-
+  function(phyloseq_obj,
+           treatment = NULL,
+           subset = NULL,
+           frequencies = seq(0.1, 1, 0.1),
+           abundance_thresholds = seq(0.01, 1, 0.01),
+           colors = 'default'
+  ) {
+    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
+    treatment_name <- paste(treatment, collapse = sep)
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
+    dataset <- melt_phyloseq(phyloseq(phyloseq_obj@otu_table, phyloseq_obj@sam_data))
+
+    graph_data <- data.table()
+    if(is.null(treatment)){
+      N <- nsamples(phyloseq_obj)
+      for(frequency in frequencies){
+        for(abundance_threshold in abundance_thresholds){
+          sub_table <- dataset[Abundance >= abundance_threshold]
+          taxa <- nrow(sub_table[, .(count = .N), by = OTU][count >= floor(N*frequency)])
+          if(taxa >= 0){
+            graph_data <- rbind(graph_data,
+                                data.table(
+                                  freq = factor(frequency),
+                                  abundance = abundance_threshold,
+                                  taxa = taxa)
+            )
+          } else {
+            graph_data <- rbind(graph_data, data.table(freq = factor(frequency), abundance = abundance_threshold, taxa = 0))
+          }
+        }
+      }
+    } else {
+      treatments <- levels(dataset[[treatment_name]])
+      for(treatment in treatments){
+        N <- sum(phyloseq_obj@sam_data[[treatment_name]] == treatment)
+        sub_table <- dataset[dataset[[treatment_name]] == treatment, ]
+        for(frequency in frequencies){
+          for(abundance_threshold in abundance_thresholds){
+            sub_table <- sub_table[Abundance >= abundance_threshold]
+            taxa <- nrow(sub_table[, .(count = .N), by = OTU][count >= floor(N*frequency)])
+            if(taxa >= 0){
+              graph_data <- rbind(graph_data,
+                                  data.table(
+                                    freq = factor(frequency),
+                                    abundance = abundance_threshold,
+                                    taxa = taxa,
+                                    treatment = treatment)
+              )
+            } else {
+              graph_data <- rbind(graph_data,
+                                  data.table(freq = factor(frequency),
+                                             abundance = abundance_threshold,
+                                             taxa = 0,
+                                             treatment = treatment))
+            }
+          }
+        }
+      }
+      graph_data[['treatment']] <- factor(graph_data[['treatment']], levels = treatments)
+    }
+
+    graph_colors <- create_palette(length(frequencies), colors)
+
+    g <- ggplot(graph_data, aes(x = abundance, y = taxa, color = freq)) +
+      geom_line(size = 1.4) +
+      scale_colour_manual(values = graph_colors) +
+      guides(colour = guide_legend(
+        ncol = ceiling(length(unique(graph_data[['freq']])) / 25),
+        override.aes = list(size = 4)
+      )) +
+      theme_bw() +
+      theme(
+        axis.text.x = element_text(
+          angle = 30,
+          hjust = 1,
+          size = 10
+        ),
+        axis.text.y = element_text(hjust = 0.95, size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
+        axis.ticks.x = element_blank(),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
+        legend.spacing.x = unit(0.005, 'npc'),
+        legend.background = element_rect(fill = (alpha = 0)),
+        legend.key.size = unit(4, "mm"),
+        panel.background = element_rect(
+          color = 'black',
+          size = 1.5,
+          fill = 'white'
+        ),
+        panel.spacing = unit(.015, 'npc'),
+        strip.text.x = element_text(
+          size = 10,
+          face = 'bold',
+          color = 'black'
+        ),
+        strip.background = element_rect(
+          colour = 'black',
+          size = 1.4,
+          fill = 'white'
+        )
+      ) +
+      labs(x = 'Relative Abundance', y = 'Number of OTUs', color = 'Proportion\nof Samples') +
+      scale_y_continuous(expand = expand_scale(add = c(0.3, 0.5))) +
+      scale_x_continuous(expand = expand_scale(add = c(0.0005, 0.001)))
+    if(!is.null(treatment)){
+      g <- g + facet_wrap(~treatment, ncol = 3, dir = 'v')
+    }
+    return(g)
+  }
+
 
 #' Create a ggplot object using t-SNE from a phyloseq object.
 #' Function from the phylosmith-package.
@@ -1554,14 +1705,15 @@ tsne_phyloseq_ggplot <-
           size = 1,
           linetype = 'solid'
         ),
-        axis.text.x = element_text(size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title.x = element_text(size = 14, face = 'bold'),
-        axis.title.y = element_text(size = 14, face = 'bold'),
-        legend.title = element_text(size = 14, face = 'bold'),
-        legend.text = element_text(size = 12),
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
-        legend.background = element_rect(fill = (alpha = 0))
+        legend.background = element_rect(fill = (alpha = 0)),
+        legend.key.size = unit(4, "mm")
       ) + labs(x = 't-SNE Dimension 1', y = 't-SNE Dimension 2')
     return(g)
   }

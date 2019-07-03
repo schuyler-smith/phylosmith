@@ -3,3 +3,8 @@ Changes in version 1.0.0
 
 Changes in version 1.0.1
 + Add taxa_core()
+
+Changes in version 1.0.2
++ Add taxa_core_graph()
++ update taxa_filter() routine
++ update plot graphics for publishing figures (font sizes)

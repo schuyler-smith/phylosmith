@@ -477,16 +477,16 @@ histogram_permuted_rhos <- function(permuted_rhos,
         linetype = 'solid'
       ),
       axis.text.x = element_text(
-        size = 12,
+        size = 8,
         vjust = 0.7,
         hjust = 0,
         angle = -30
       ),
-      axis.text.y = element_text(size = 12),
-      axis.title.x = element_text(size = 16, face = "bold"),
-      axis.title.y = element_text(size = 16, face = "bold"),
-      legend.text = element_text(size = 16),
-      legend.title = element_text(size = 16, face = "bold"),
+      axis.text.y = element_text(size = 8),
+      axis.title.x = element_text(size = 10, face = "bold"),
+      axis.title.y = element_text(size = 10, face = "bold"),
+      legend.text = element_text(size = 10),
+      legend.title = element_text(size = 10, face = "bold"),
       legend.background = element_rect(fill = (alpha = 0)),
       legend.spacing.x = unit(0.01, 'npc')
     ) +
