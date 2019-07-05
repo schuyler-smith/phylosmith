@@ -1009,7 +1009,7 @@ nmds_phyloseq_ggplot <-
 #' @useDynLib phylosmith
 #' @usage phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
 #' treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
-#' colors = 'default')
+#' colors = 'default', grid = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
