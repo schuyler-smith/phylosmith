@@ -1008,7 +1008,7 @@ nmds_phyloseq_ggplot <-
 #' creates phylogenic barplots.
 #' @useDynLib phylosmith
 #' @usage phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
-#' treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE,
+#' treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
 #' colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -1031,6 +1031,7 @@ nmds_phyloseq_ggplot <-
 #' @param colors Name of a color set from the
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
+#' @param grid Wraps the sub-plots into a grid pattern rather than side-by-side.
 #' @export
 #' @return ggplot-object
 #' @examples phylogeny_profile_ggplot(soil_column, classification = 'Phylum',
@@ -1040,11 +1041,12 @@ nmds_phyloseq_ggplot <-
 phylogeny_profile_ggplot <-
   function(phyloseq_obj,
            classification = NULL,
-           treatment,
+           treatment = NULL,
            subset = NULL,
            merge = TRUE,
            relative_abundance = FALSE,
-           colors = 'default') {
+           colors = 'default',
+           grid = FALSE) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -1131,9 +1133,9 @@ phylogeny_profile_ggplot <-
       ggplot(graph_data,
              aes_string(x = "Sample", y = "Abundance", fill = classification))
     g <- g +
-      guides(colour = guide_legend(ncol = ceiling(length(
+      guides(fill = guide_legend(ncol = ceiling(length(
         unique(graph_data[[classification]])
-      ) / 25))) +
+      ) / 50))) +
       scale_fill_manual(values = graph_colors, aesthetics = c('color', 'fill'))
     if (!(is.null(treatment))) {
       g <- g + facet_grid(reformulate(treatment_name), scales = "free", space = "free")
@@ -1188,6 +1190,9 @@ phylogeny_profile_ggplot <-
       ) +
       scale_y_continuous(expand = expand_scale(mult = c(0.0037, 0.003), add = c(0, 0))) +
       scale_x_discrete(expand = expand_scale(mult = 0, add = 0.51))
+    if(grid){
+      g <- g + facet_wrap(reformulate(treatment_name), scales = "free") + theme(axis.text.x = element_blank())
+    }
     return(g)
   }
 

@@ -6,7 +6,7 @@
 Function from the phylosmith-package.}
 \usage{
 phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
-treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE,
+treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
 colors = 'default')
 }
 \arguments{
@@ -37,6 +37,8 @@ into relative abundance by sample.}
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
+
+\item{grid}{Wraps the sub-plots into a grid pattern rather than side-by-side.}
 }
 \value{
 ggplot-object
