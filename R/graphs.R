@@ -33,8 +33,8 @@
 #' @importFrom ggraph scale_fill_viridis
 #' @export
 #' @return ggplot-object
-#' @examples #abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
-#' #treatment = c('Matrix', 'Treatment'), transformation = 'log')
+#' @examples abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
+#' treatment = c('Matrix', 'Treatment'), transformation = 'log')
 
 abundance_heatmap_ggplot <-
   function(phyloseq_obj,

@@ -7,7 +7,7 @@ Function from the phylosmith-package.}
 \usage{
 phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
 treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
-colors = 'default')
+colors = 'default', grid = FALSE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

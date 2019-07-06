@@ -46,6 +46,6 @@ The default color choice is the viridis palette, which is supposed to
 be both aesthetic for normal and color-blind viewers.
 }
 \examples{
-#abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
-#treatment = c('Matrix', 'Treatment'), transformation = 'log')
+abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
+treatment = c('Matrix', 'Treatment'), transformation = 'log')
 }
