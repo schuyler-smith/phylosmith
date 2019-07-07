@@ -1687,7 +1687,7 @@ tsne_phyloseq_ggplot <-
         aes_string(fill = treatment_name),
         shape = 21,
         color = 'black',
-        size = 7,
+        size = 5,
         alpha = 1.0
       ) +
       scale_fill_manual(values = graph_colors)
