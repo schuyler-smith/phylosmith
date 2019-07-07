@@ -997,7 +997,10 @@ nmds_phyloseq_ggplot <-
         legend.spacing.x = unit(0.005, 'npc'),
         legend.key.size = unit(4, "mm"),
         legend.background = element_rect(fill = (alpha = 0))
-      ) + labs(x = 'NMDS Dimension 1', y = 'NMDS Dimension 2')
+      ) + labs(x = 'NMDS Dimension 1', y = 'NMDS Dimension 2') +
+      guides(fill = guide_legend(
+        override.aes = list(size = 4)
+      ))
     return(g)
   }
 
@@ -1699,7 +1702,6 @@ tsne_phyloseq_ggplot <-
     }
     g <- g + theme_classic() +
       theme(
-        aspect.ratio = 1,
         axis.line.x = element_line(
           colour = 'black',
           size = 1,
@@ -1719,6 +1721,9 @@ tsne_phyloseq_ggplot <-
         legend.spacing.x = unit(0.005, 'npc'),
         legend.background = element_rect(fill = (alpha = 0)),
         legend.key.size = unit(4, "mm")
-      ) + labs(x = 't-SNE Dimension 1', y = 't-SNE Dimension 2')
+      ) + labs(x = 't-SNE Dimension 1', y = 't-SNE Dimension 2') +
+      guides(fill = guide_legend(
+        override.aes = list(size = 4)
+      ))
     return(g)
   }
