@@ -1638,8 +1638,8 @@ tsne_phyloseq_ggplot <-
       theta = 0.0,
       perplexity = perplexity
     )
-    tSNE1 <- tsne$Y[, 1]
-    tSNE2 <- tsne$Y[, 2]
+    tSNE1 <- tsne$Y[, 1]/100
+    tSNE2 <- tsne$Y[, 2]/100
     ord <- data.table(tSNE1, tSNE2, metadata)
     ord <- subset(ord, !is.na(treatment_name))
     if (is.character(labels)) {
