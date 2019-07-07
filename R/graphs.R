@@ -31,6 +31,7 @@
 #' colors.
 #' @importFrom stats reformulate
 #' @importFrom ggraph scale_fill_viridis
+#' @importFrom stringr str_to_title
 #' @export
 #' @return ggplot-object
 #' @examples abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
@@ -111,7 +112,7 @@ abundance_heatmap_ggplot <-
     options(warn = -1)
     phyloseq_obj <-
       taxa_filter(phyloseq_obj,
-                  treatment,
+                  treatment = treatment,
                   frequency = 0,
                   subset = subset)
     if (!(is.null(classification))) {
@@ -133,14 +134,27 @@ abundance_heatmap_ggplot <-
 
     if (is.null(classification)) {
       classification <- 'OTU'
-      graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'),
-                             access(phyloseq_obj, 'sam_data')[, treatment_name])
+      if(is.null(treatment)){
+        graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'))
+      } else {
+        graph_data <- phyloseq(access(phyloseq_obj, 'otu_table'),
+                               access(phyloseq_obj, 'sam_data')[, treatment_name])
+      }
     } else {
-      graph_data <- phyloseq(
-        access(phyloseq_obj, 'otu_table'),
-        access(phyloseq_obj, 'tax_table')[, classification],
-        access(phyloseq_obj, 'sam_data')[, treatment_name]
-      )
+      if(is.null(treatment)){
+        graph_data <- phyloseq(
+          access(phyloseq_obj, 'otu_table'),
+          access(phyloseq_obj, 'tax_table')[, classification],
+          access(phyloseq_obj, 'sam_data')
+        )
+      } else {
+        graph_data <- phyloseq(
+          access(phyloseq_obj, 'otu_table'),
+          access(phyloseq_obj, 'tax_table')[, classification],
+          access(phyloseq_obj, 'sam_data')[, treatment_name]
+        )
+      }
+
     }
     graph_data <- melt_phyloseq(graph_data)
     graph_data[[classification]] <-
@@ -156,10 +170,12 @@ abundance_heatmap_ggplot <-
     g <-
       ggplot(graph_data,
              aes_string('Sample', classification, fill = 'Abundance')) +
-      geom_tile(color = "white", size = 0.25) +
-      facet_grid(reformulate(treatment_name),
-                 scales = "free",
-                 space = "free")
+      geom_tile(color = "white", size = 0.25)
+    if(!(is.null(treatment))){
+      g <- g + facet_grid(reformulate(treatment_name),
+                          scales = "free",
+                          space = "free")
+    }
     g <- g + theme_classic() +
       theme(
         axis.text.x = element_text(
@@ -192,6 +208,13 @@ abundance_heatmap_ggplot <-
         graph_colors <- create_palette(color_count, colors)
         scale_fill_gradientn(colors = graph_colors)
       }
+    if(transformation != 'none'){
+      if(transformation == 'relative_abundance'){
+        g <- g + labs(fill = str_to_title('Relative\nAbundance'))
+      } else {
+        g <- g  + labs(fill = str_to_title(paste(transformation, '\nAbundance')))
+      }
+    }
     return(g)
   }
 

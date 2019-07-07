@@ -463,18 +463,9 @@ conglomerate_taxa <- function(phyloseq_obj,
 #' @examples melt_phyloseq(soil_column)
 
 melt_phyloseq <- function(phyloseq_obj) {
-  if (!inherits(phyloseq_obj, "phyloseq")) {
-    stop("`phyloseq_obj` must be a phyloseq-class object",
+  if (!(inherits(phyloseq_obj, "phyloseq") | inherits(phyloseq_obj, "otu_table"))) {
+    stop("`phyloseq_obj` must be a phyloseq-class object or otu_table to melt",
          call. = FALSE)
-  }
-  if (is.null(access(phyloseq_obj, 'tax_table')) &
-      is.null(access(phyloseq_obj
-                     , 'sam_data'))) {
-    stop(
-      "`phyloseq_obj` must contain either tax_table()
-            and/or sample_data() information",
-      call. = FALSE
-    )
   }
   melted_phyloseq <-
     melt.data.table(data.table(as(
@@ -486,17 +477,17 @@ melt_phyloseq <- function(phyloseq_obj) {
     taxa <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'),
                        OTU = taxa_names(phyloseq_obj))
   }
-  sample_data <- NULL
+
   if (!(is.null(access(phyloseq_obj, 'sam_data')))) {
     sample_data <-
       data.table(data.frame(access(phyloseq_obj, 'sam_data'),
                             stringsAsFactors = FALSE))
-  }
-  if (is.null(sample_data)) {
-    sample_data <- data.table(Sample = sample_names(phyloseq_obj))
-  } else {
     sample_data[, 'Sample' := sample_names(phyloseq_obj)]
+  } else {
+    sample_data <- data.table(Sample = sample_names(phyloseq_obj))
   }
+
+
 
   melted_phyloseq <-
     merge(melted_phyloseq, sample_data, by = "Sample")
