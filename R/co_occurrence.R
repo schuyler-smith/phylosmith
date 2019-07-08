@@ -166,8 +166,10 @@ permute_rho <-
         call. = FALSE
       )
     }
-    replicate_samples <- check_numeric_treatment(phyloseq_obj,
-                                                 replicate_samples)
+    if (replicate_samples != 'independent'){
+      replicate_samples <- check_numeric_treatment(phyloseq_obj,
+                                                   replicate_samples)
+    }
     if (replicate_samples != 'independent' &
         is.null(access(phyloseq_obj, 'sam_data'))) {
       stop(
