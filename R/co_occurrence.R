@@ -166,15 +166,6 @@ permute_rho <-
         call. = FALSE
       )
     }
-    if (any(!(treatment %in% colnames(access(
-      phyloseq_obj, 'sam_data'
-    ))))) {
-      stop(
-        "`treatment` must be at least one column name, or
-        index, from the sample_data()",
-        call. = FALSE
-      )
-    }
     replicate_samples <- check_numeric_treatment(phyloseq_obj,
                                                  replicate_samples)
     if (replicate_samples != 'independent' &
