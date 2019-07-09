@@ -270,6 +270,39 @@ levels(ordered_days@sam_data$Day)
 
 <br>
 
+## taxa_core
+<a name="taxa_core"></a>
+
+Filter taxa in phyloseq-object to only include core taxa
+
+***Usage***
+```r
+taxa_core(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0.5, abundance_threshold = 0.01)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`frequency` | The proportion of samples the taxa is found in.
+`abundance_threshold` | The minimum relative abundance the taxa is found in for each sample.
+
+***Examples***
+The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
+```{r taxa_core}
+taxa_core(soil_column, frequency = 0.2, abundance_threshold = 0.01)
+```
+
+<br>
+
+***
+
+<br>
+
 ## taxa_filter
 <a name="taxa_filter"></a>
 

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-07-02" />
+<meta name="date" content="2019-07-08" />
 
 <title>Graphs</title>
 
@@ -465,18 +465,18 @@ div.tocify {
 
 <h1 class="title toc-ignore">Graphs</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-07-02</h4>
+<h4 class="date">2019-07-08</h4>
 
 </div>
 
 
 <p><br></p>
-<div id="abundance_heatmap_ggplot" class="section level2">
-<h2>abundance_heatmap_ggplot</h2>
-<p><a name="abundance_heatmap_ggplot"></a></p>
+<div id="abundance_heatmap" class="section level2">
+<h2>abundance_heatmap</h2>
+<p><a name="abundance_heatmap"></a></p>
 <p>Create a ggplot object heatmap of abundances of each taxa for each sample.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>abundance_heatmap(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -517,18 +517,18 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>abundance_heatmap_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, transformation = &#39;log10&#39;)</code></pre>
-<p><img src="graphs_files/figure-html/abundance_heatmap_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>abundance_heatmap(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, transformation = &#39;log10&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/abundance_heatmap-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="abundance_lines_ggplot" class="section level2">
-<h2>abundance_lines_ggplot</h2>
-<p><a name="abundance_lines_ggplot"></a></p>
+<div id="abundance_lines" class="section level2">
+<h2>abundance_lines</h2>
+<p><a name="abundance_lines"></a></p>
 <p>Create a ggplot object line graph of abundances across samples</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>abundance_lines(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -573,18 +573,18 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>abundance_lines_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, relative_abundance = TRUE)</code></pre>
-<p><img src="graphs_files/figure-html/abundance_lines_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>abundance_lines(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, relative_abundance = TRUE)</code></pre>
+<p><img src="graphs_files/figure-html/abundance_lines-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="network_ps" class="section level2">
-<h2>network_ps</h2>
-<p><a name="network_ps"></a></p>
+<div id="co_occurrence_network" class="section level2">
+<h2>co_occurrence_network</h2>
+<p><a name="co_occurrence_network"></a></p>
 <p>Create a ggplot object of the co-occurrence network.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>network_ps(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = &#39;default&#39;, cluster = FALSE, cluster_colors = &#39;default&#39;, buffer = 0.5)</code></pre>
+<pre class="r"><code>co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = &#39;default&#39;, cluster = FALSE, cluster_colors = &#39;default&#39;, buffer = 0.5)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -637,8 +637,8 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>network_ps(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, co_occurrence_table = NULL, classification = &#39;Phylum&#39;)</code></pre>
-<p><img src="graphs_files/figure-html/network_ps-1.png" width="1536" /></p>
+<pre class="r"><code>co_occurrence_network(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, co_occurrence_table = NULL, classification = &#39;Phylum&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/co_occurrence_network-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -646,7 +646,7 @@ div.tocify {
 <div id="network_layout_ps" class="section level2">
 <h2>network_layout_ps</h2>
 <p><a name="network_layout_ps"></a></p>
-<p>Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the network_ps function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.</p>
+<p>Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the co_occurrence_network function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.</p>
 <p><br> <strong><em>Usage</em></strong></p>
 <pre class="r"><code>network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = &#39;fr&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
@@ -699,12 +699,12 @@ div.tocify {
 <hr />
 <p><br></p>
 </div>
-<div id="nmds_phyloseq_ggplot" class="section level2">
-<h2>nmds_phyloseq_ggplot</h2>
-<p><a name="nmds_phyloseq_ggplot"></a></p>
+<div id="nmds_phyloseq" class="section level2">
+<h2>nmds_phyloseq</h2>
+<p><a name="nmds_phyloseq"></a></p>
 <p>Creates a ggplot object of the NMDS ordination of samples.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = &#39;default&#39;, verbose = TRUE)</code></pre>
+<pre class="r"><code>nmds_phyloseq(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = &#39;default&#39;, verbose = TRUE)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -745,18 +745,18 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>nmds_phyloseq_ggplot(soil_column, c(&#39;Matrix&#39;, &#39;Treatment&#39;), circle = TRUE, verbose = FALSE)</code></pre>
-<p><img src="graphs_files/figure-html/nmds_phyloseq_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>nmds_phyloseq(soil_column, c(&#39;Matrix&#39;, &#39;Treatment&#39;), circle = TRUE, verbose = FALSE)</code></pre>
+<p><img src="graphs_files/figure-html/nmds_phyloseq-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="phylogeny_profile_ggplot" class="section level2">
-<h2>phylogeny_profile_ggplot</h2>
-<p><a name="phylogeny_profile_ggplot"></a></p>
+<div id="phylogeny_profile" class="section level2">
+<h2>phylogeny_profile</h2>
+<p><a name="phylogeny_profile"></a></p>
 <p>Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>phylogeny_profile_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>phylogeny_profile(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -801,18 +801,18 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>phylogeny_profile_ggplot(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, merge = TRUE, relative_abundance = TRUE)</code></pre>
-<p><img src="graphs_files/figure-html/phylogeny_profile_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>phylogeny_profile(derep_sc, classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil&#39;, merge = TRUE, relative_abundance = TRUE)</code></pre>
+<p><img src="graphs_files/figure-html/phylogeny_profile-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="taxa_abundance_bars_ggplot" class="section level2">
-<h2>taxa_abundance_bars_ggplot</h2>
-<p><a name="taxa_abundance_bars_ggplot"></a></p>
+<div id="taxa_abundance_bars" class="section level2">
+<h2>taxa_abundance_bars</h2>
+<p><a name="taxa_abundance_bars"></a></p>
 <p>Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>taxa_abundance_bars(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -853,18 +853,69 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;, transformation = &#39;mean&#39;)</code></pre>
-<p><img src="graphs_files/figure-html/taxa_abundance_bars_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>taxa_abundance_bars(taxa_filter(soil_column, frequency = 0.8), classification = &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;, transformation = &#39;mean&#39;)</code></pre>
+<p><img src="graphs_files/figure-html/taxa_abundance_bars-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>
 </div>
-<div id="tsne_phyloseq_ggplot" class="section level2">
-<h2>tsne_phyloseq_ggplot</h2>
-<p><a name="tsne_phyloseq_ggplot"></a></p>
+<div id="taxa_core_graph" class="section level2">
+<h2>taxa_core_graph</h2>
+<p><a name="taxa_core_graph"></a></p>
+<p>Create graph of the core taxa seen in phyloseq-object over a range of abundance and smaple-frequency values.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_core_graph(phyloseq_obj, treatment = NULL, subset = NULL, frequencies = seq(0.1, 1, 0.1), abundance_thresholds = seq(0.01, 1, 0.01), colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>frequencies</code></td>
+<td>The range of proportions of samples the taxa are found in.</td>
+</tr>
+<tr class="odd">
+<td><code>abundance_thresholds</code></td>
+<td>The range of minimum relative abundances the taxa are found in for each sample.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>taxa_core_graph(soil_column, abundance_thresholds = seq(0.01, 0.25, 0.01))</code></pre>
+<p><img src="graphs_files/figure-html/taxa_core_graph-1.png" width="1536" /> <br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="tsne_phyloseq" class="section level2">
+<h2>tsne_phyloseq</h2>
+<p><a name="tsne_phyloseq"></a></p>
 <p>Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.</p>
 <p><br> <strong><em>Usage</em></strong></p>
-<pre class="r"><code>tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = &#39;default&#39;)</code></pre>
+<pre class="r"><code>tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = &#39;default&#39;)</code></pre>
 <p><br> <strong><em>Arguments</em></strong></p>
 <table>
 <colgroup>
@@ -905,8 +956,8 @@ div.tocify {
 </tbody>
 </table>
 <p><strong><em>Examples</em></strong></p>
-<pre class="r"><code>tsne_phyloseq_ggplot(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), perplexity = 10)</code></pre>
-<p><img src="graphs_files/figure-html/tsne_phyloseq_ggplot-1.png" width="1536" /></p>
+<pre class="r"><code>tsne_phyloseq(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), perplexity = 10)</code></pre>
+<p><img src="graphs_files/figure-html/tsne_phyloseq-1.png" width="1536" /></p>
 <p><br></p>
 <hr />
 <p><br></p>

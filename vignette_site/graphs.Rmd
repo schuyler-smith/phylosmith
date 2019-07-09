@@ -16,15 +16,15 @@ derep_sc <- conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment
 
 <br>
 
-## abundance_heatmap_ggplot
-<a name="abundance_heatmap_ggplot"></a>
+## abundance_heatmap
+<a name="abundance_heatmap"></a>
 
 Create a ggplot object heatmap of abundances of each taxa for each sample.
 
 <br>
 ***Usage***
 ```r
-abundance_heatmap_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
+abundance_heatmap(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
 ```
 
 <br>
@@ -40,8 +40,8 @@ Call | Description
 `colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r abundance_heatmap_ggplot}
-abundance_heatmap_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
+```{r abundance_heatmap}
+abundance_heatmap(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
 ```
 
 <br>
@@ -50,15 +50,15 @@ abundance_heatmap_ggplot(derep_sc, classification = 'Phylum', treatment = c('Mat
 
 <br>
 
-## abundance_lines_ggplot
-<a name="abundance_lines_ggplot"></a>
+## abundance_lines
+<a name="abundance_lines"></a>
 
 Create a ggplot object line graph of abundances across samples
 
 <br>
 ***Usage***
 ```r
-abundance_lines_ggplot(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default')
+abundance_lines(phyloseq_obj, classification, treatment, subset = NULL, relative_abundance = FALSE, points = TRUE, colors = 'default')
 ```
 
 <br>
@@ -75,8 +75,8 @@ Call | Description
 `colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r abundance_lines_ggplot}
-abundance_lines_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', relative_abundance = TRUE)
+```{r abundance_lines}
+abundance_lines(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', relative_abundance = TRUE)
 ```
 
 <br>
@@ -85,15 +85,15 @@ abundance_lines_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matri
 
 <br>
 
-## network_ps
-<a name="network_ps"></a>
+## co_occurrence_network
+<a name="co_occurrence_network"></a>
 
 Create a ggplot object of the co-occurrence network.
 
 <br>
 ***Usage***
 ```r
-network_ps(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default', cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
+co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default', cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 ```
 
 <br>
@@ -112,8 +112,8 @@ Call | Description
 `buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
 
 ***Examples***
-```{r network_ps}
-network_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', co_occurrence_table = NULL, classification = 'Phylum')
+```{r co_occurrence_network}
+co_occurrence_network(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', co_occurrence_table = NULL, classification = 'Phylum')
 ```
 
 <br>
@@ -125,7 +125,7 @@ network_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Ame
 ## network_layout_ps
 <a name="network_layout_ps"></a>
 
-Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the network_ps function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.
+Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the co_occurrence_network function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.
 
 <br>
 ***Usage***
@@ -156,15 +156,15 @@ network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'S
 
 <br>
 
-## nmds_phyloseq_ggplot
-<a name="nmds_phyloseq_ggplot"></a>
+## nmds_phyloseq
+<a name="nmds_phyloseq"></a>
 
 Creates a ggplot object of the NMDS ordination of samples.
 
 <br>
 ***Usage***
 ```r
-nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
+nmds_phyloseq(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
 ```
 
 <br>
@@ -181,8 +181,8 @@ Call | Description
 
 ***Examples***
 
-```{r nmds_phyloseq_ggplot}
-nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
+```{r nmds_phyloseq}
+nmds_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
 ```
 
 <br>
@@ -191,15 +191,15 @@ nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbo
 
 <br>
 
-## phylogeny_profile_ggplot
-<a name="phylogeny_profile_ggplot"></a>
+## phylogeny_profile
+<a name="phylogeny_profile"></a>
 
 Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample. 
 
 <br>
 ***Usage***
 ```r
-phylogeny_profile_ggplot(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default')
+phylogeny_profile(phyloseq_obj, classification, treatment, subset = NULL, merge = TRUE, relative_abundance = FALSE, colors = 'default')
 ```
 
 <br>
@@ -217,8 +217,8 @@ Call | Description
 
 ***Examples***
 
-```{r phylogeny_profile_ggplot}
-phylogeny_profile_ggplot(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
+```{r phylogeny_profile}
+phylogeny_profile(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
 ```
 
 <br>
@@ -227,15 +227,15 @@ phylogeny_profile_ggplot(derep_sc, classification = 'Phylum', treatment = c('Mat
 
 <br>
 
-## taxa_abundance_bars_ggplot
-<a name="taxa_abundance_bars_ggplot"></a>
+## taxa_abundance_bars
+<a name="taxa_abundance_bars"></a>
 
 Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data. 
 
 <br>
 ***Usage***
 ```r
-taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
+taxa_abundance_bars(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = 'none', colors = 'default')
 ```
 
 <br>
@@ -252,8 +252,8 @@ Call | Description
 
 ***Examples***
 
-```{r taxa_abundance_bars_ggplot}
-taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Unamended', transformation = 'mean')
+```{r taxa_abundance_bars}
+taxa_abundance_bars(taxa_filter(soil_column, frequency = 0.8), classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Unamended', transformation = 'mean')
 ```
 
 <br>
@@ -262,15 +262,49 @@ taxa_abundance_bars_ggplot(taxa_filter(soil_column, frequency = 0.8), classifica
 
 <br>
 
-## tsne_phyloseq_ggplot
-<a name="tsne_phyloseq_ggplot"></a>
+## taxa_core_graph
+<a name="taxa_core_graph"></a>
+
+Create graph of the core taxa seen in phyloseq-object over a range of abundance and smaple-frequency values.
+
+<br>
+***Usage***
+```r
+taxa_core_graph(phyloseq_obj, treatment = NULL, subset = NULL, frequencies = seq(0.1, 1, 0.1), abundance_thresholds = seq(0.01, 1, 0.01), colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain tax_table() with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`frequencies` | The range of proportions of samples the taxa are found in.
+`abundance_thresholds` | The range of minimum relative abundances the taxa are found in for each sample.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r taxa_core_graph}
+taxa_core_graph(soil_column, abundance_thresholds = seq(0.01, 0.25, 0.01))
+```
+<br>
+
+***
+
+<br>
+
+## tsne_phyloseq
+<a name="tsne_phyloseq"></a>
 
 Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.
 
 <br>
 ***Usage***
 ```r
-tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default')
+tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10, circle = TRUE, labels = FALSE, colors = 'default')
 ```
 
 <br>
@@ -287,8 +321,8 @@ Call | Description
 
 ***Examples***
 
-```{r tsne_phyloseq_ggplot}
-tsne_phyloseq_ggplot(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10)
+```{r tsne_phyloseq}
+tsne_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10)
 ```
 
 <br>

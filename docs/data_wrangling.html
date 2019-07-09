@@ -11,7 +11,7 @@
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-07-02" />
+<meta name="date" content="2019-07-08" />
 
 <title>Data Wrangling</title>
 
@@ -465,7 +465,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data Wrangling</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-07-02</h4>
+<h4 class="date">2019-07-08</h4>
 
 </div>
 
@@ -802,6 +802,57 @@ as(set_sample_order(unsorted, sort_on = c(&#39;Treatment&#39;, &#39;Matrix&#39;,
 <pre class="r"><code>ordered_days &lt;- set_treatment_levels(soil_column, &#39;Day&#39;, &#39;numeric&#39;)
 levels(ordered_days@sam_data$Day)</code></pre>
 <pre><code>## [1] &quot;0&quot;   &quot;10&quot;  &quot;24&quot;  &quot;38&quot;  &quot;59&quot;  &quot;80&quot;  &quot;108&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_core" class="section level2">
+<h2>taxa_core</h2>
+<p><a name="taxa_core"></a></p>
+<p>Filter taxa in phyloseq-object to only include core taxa</p>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_core(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0.5, abundance_threshold = 0.01)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>frequency</code></td>
+<td>The proportion of samples the taxa is found in.</td>
+</tr>
+<tr class="odd">
+<td><code>abundance_threshold</code></td>
+<td>The minimum relative abundance the taxa is found in for each sample.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong> The <code>soil_column</code> data has 18,441 OTUs listed in its <code>taxa_table</code>.</p>
+<pre class="r"><code>taxa_core(soil_column, frequency = 0.2, abundance_threshold = 0.01)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 26 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 26 taxa by 6 taxonomic ranks ]</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>

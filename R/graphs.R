@@ -6,7 +6,7 @@
 #' The default color choice is the viridis palette, which is supposed to
 #' be both aesthetic for normal and color-blind viewers.
 #' @useDynLib phylosmith
-#' @usage abundance_heatmap_ggplot(phyloseq_obj, classification = NULL,
+#' @usage abundance_heatmap(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL,
 #' transformation = 'none', colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -34,10 +34,10 @@
 #' @importFrom stringr str_to_title
 #' @export
 #' @return ggplot-object
-#' @examples abundance_heatmap_ggplot(soil_column, classification = 'Phylum',
+#' @examples abundance_heatmap(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), transformation = 'log')
 
-abundance_heatmap_ggplot <-
+abundance_heatmap <-
   function(phyloseq_obj,
            classification = NULL,
            treatment,
@@ -224,7 +224,7 @@ abundance_heatmap_ggplot <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates line graphs with points across samples.
 #' @useDynLib phylosmith
-#' @usage abundance_lines_ggplot(phyloseq_obj, classification = NULL,
+#' @usage abundance_lines(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL,
 #' relative_abundance = FALSE, points = TRUE, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -249,10 +249,10 @@ abundance_heatmap_ggplot <-
 #' colors.
 #' @export
 #' @return ggplot-object
-#' @examples abundance_lines_ggplot(soil_column, classification = 'Phylum',
+#' @examples abundance_lines(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), relative_abundance = TRUE)
 
-abundance_lines_ggplot <-
+abundance_lines <-
   function(phyloseq_obj,
            classification = NULL,
            treatment,
@@ -402,6 +402,81 @@ abundance_lines_ggplot <-
     return(g)
   }
 
+#' Create a boxplot of the alpha-diversity. Function from the phylosmith-package.
+#'
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' creates boxplot of the alpha diversity as a ggplot object.
+#' @useDynLib phylosmith
+#' @usage alpha_diversity_graph(phyloseq_obj, index = 'shannon',
+#' treatment = NULL, subset = NULL, colors = 'default')
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
+#' each taxa/gene.
+#' @param index The diversity index to calculate ('shannon', 'simpson', 'invsimpson')
+#' @param treatment Column name as a string or number in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @param colors Name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors.
+#' @export
+#' @return ggplot-object
+#' @examples alpha_diversity_graph(soil_column, index = 'shannon',
+#' treatment = c('Matrix', 'Treatment'), subset = NULL, colors = 'default')
+
+alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
+                                  treatment = NULL, subset = NULL, colors = 'default'){
+  if (!inherits(phyloseq_obj, "phyloseq")) {
+    stop("`phyloseq_obj` must be a
+         phyloseq-class object", call. = FALSE)
+  }
+  indices <- c("shannon", "simpson", "invsimpson")
+  index <- match.arg(index, indices)
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+
+  phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
+  treatment_name <- paste(treatment, collapse = sep)
+
+  alpha <- data.table(as(phyloseq_obj@otu_table, 'matrix'))
+  alpha <- alpha[,lapply(.SD,function(sample) sample/sum(sample))]
+  if (index == "shannon"){
+    alpha <- -alpha * log(alpha)
+  } else {
+    alpha <- alpha * alpha
+  }
+  alpha <- alpha[,lapply(.SD, sum, na.rm = TRUE)]
+  if (index == "simpson") {
+    alpha <- 1 - alpha
+  } else if (index == "invsimpson"){
+    alpha <- 1/alpha
+  }
+
+  graph_data <- data.table(Sample = sample_names(phyloseq_obj),
+                           Treatment = phyloseq_obj@sam_data[[treatment_name]],
+                           Alpha = unlist(alpha))
+  color_count <- length(unique(graph_data[['Treatment']]))
+  graph_colors <- create_palette(color_count, colors)
+
+  g <- ggplot(graph_data, aes(Treatment, Alpha, fill = Treatment))
+  g + geom_boxplot(show.legend = FALSE) +
+    scale_fill_manual(values = graph_colors) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(size = 10, face = 'bold'),
+      axis.text.y = element_text(hjust = 0.95, size = 10),
+      axis.title.x = element_blank(),
+      axis.title.y = element_text(size = 10, face = 'bold'),
+      axis.ticks.x = element_blank(),
+      panel.grid.major.x = element_blank()
+    )
+  return(g)
+}
+
 #' Create a node network ggplot object of the co-occurrence from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
@@ -410,7 +485,7 @@ abundance_lines_ggplot <-
 #' input, or it will be calculated with the Spearman-rank correlation. Also,
 #' the layout of the graph can be given as an argument as well for reproducibility.
 #' @useDynLib phylosmith
-#' @usage network_ps(phyloseq_obj, classification = NULL,
+#' @usage co_occurrence_network(phyloseq_obj, classification = NULL,
 #' treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
 #' nodes_of_interest = NULL, node_colors = 'default',
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
@@ -456,11 +531,11 @@ abundance_lines_ggplot <-
 #' @export
 #' @return ggplot-object
 #' @examples
-#' #network_ps(soil_column, treatment = c('Matrix', 'Treatment'),
+#' #co_occurrence_network(soil_column, treatment = c('Matrix', 'Treatment'),
 #' #subset = 'Soil Amended', co_occurrence_table = NULL, layout = NULL,
 #' #classification = 'Phylum')
 
-network_ps <- function(phyloseq_obj,
+co_occurrence_network <- function(phyloseq_obj,
                        classification = NULL,
                        treatment = NULL,
                        subset = NULL,
@@ -654,7 +729,7 @@ network_ps <- function(phyloseq_obj,
            alpha = FALSE,
            fill = guide_legend(ncol = ceiling(length(levels(
              layout[[classification]]
-           )) / 25)))
+           )) / 25)), override.aes = list(size = 4))
   if (is.null(classification)) {
     g <-
       g + geom_point(
@@ -675,10 +750,6 @@ network_ps <- function(phyloseq_obj,
       scale_fill_manual(values = node_colors)
   }
   if (!is.null(nodes_of_interest)) {
-    coi <-
-      subset(layout, apply(layout, 1, function(class) {
-        any(class %in% nodes_of_interest)
-      }))
     coi <-
       subset(layout, apply(layout, 1, function(class) {
         any(class %in% nodes_of_interest)
@@ -709,7 +780,7 @@ network_ps <- function(phyloseq_obj,
 #' Function from the phylosmith-package.
 #'
 #' Create an layout_igraph object of the co-occurrence from a phyloseq object.
-#' This can be input into the network_ps function, or used for other
+#' This can be input into the co_occurrence_network function, or used for other
 #' network creating scripts. The purpose is to be able to create reproducible
 #' and comparable graphics.
 #' @useDynLib phylosmith
@@ -846,7 +917,7 @@ network_layout_ps <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' plots the NMDS of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq_ggplot(phyloseq_obj, treatment, circle = 0.95,
+#' @usage nmds_phyloseq(phyloseq_obj, treatment, circle = 0.95,
 #' labels = NULL, colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -872,10 +943,10 @@ network_layout_ps <-
 #' @importFrom vegan metaMDS scores
 #' @export
 #' @return ggplot-object
-#' @examples nmds_phyloseq_ggplot(soil_column, c('Matrix', 'Treatment'),
+#' @examples nmds_phyloseq(soil_column, c('Matrix', 'Treatment'),
 #' circle = TRUE, verbose = FALSE)
 
-nmds_phyloseq_ggplot <-
+nmds_phyloseq <-
   function(phyloseq_obj,
            treatment,
            circle = 0.95,
@@ -1033,7 +1104,7 @@ nmds_phyloseq_ggplot <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates phylogenic barplots.
 #' @useDynLib phylosmith
-#' @usage phylogeny_profile_ggplot(phyloseq_obj, classification = NULL,
+#' @usage phylogeny_profile(phyloseq_obj, classification = NULL,
 #' treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
 #' colors = 'default', grid = FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -1060,11 +1131,11 @@ nmds_phyloseq_ggplot <-
 #' @param grid Wraps the sub-plots into a grid pattern rather than side-by-side.
 #' @export
 #' @return ggplot-object
-#' @examples phylogeny_profile_ggplot(soil_column, classification = 'Phylum',
+#' @examples phylogeny_profile(soil_column, classification = 'Phylum',
 #' treatment = c('Matrix', 'Treatment'), merge = TRUE,
 #' relative_abundance = TRUE)
 
-phylogeny_profile_ggplot <-
+phylogeny_profile <-
   function(phyloseq_obj,
            classification = NULL,
            treatment = NULL,
@@ -1228,7 +1299,7 @@ phylogeny_profile_ggplot <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage taxa_abundance_bars_ggplot(phyloseq_obj, classification = NULL,
+#' @usage taxa_abundance_bars(phyloseq_obj, classification = NULL,
 #' treatment, subset = NULL, transformation = 'none', colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -1251,12 +1322,12 @@ phylogeny_profile_ggplot <-
 #' colors.
 #' @export
 #' @return ggplot-object
-#' @examples taxa_abundance_bars_ggplot(
+#' @examples taxa_abundance_bars(
 #' taxa_filter(soil_column, frequency = 0.8),
 #' classification = 'Phylum', treatment = c('Matrix', 'Treatment'),
 #' subset = 'Unamended', transformation = 'mean')
 
-taxa_abundance_bars_ggplot <-
+taxa_abundance_bars <-
   function(phyloseq_obj,
            classification = NULL,
            treatment,
@@ -1570,7 +1641,7 @@ taxa_core_graph <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
 #' treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage tsne_phyloseq_ggplot(phyloseq_obj, treatment, perplexity = 10,
+#' @usage tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10,
 #' circle = TRUE, labels = NULL, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -1598,10 +1669,10 @@ taxa_core_graph <-
 #' @seealso \code{\link[=Rtsne]{Rtsne}}
 #' @export
 #' @return ggplot-object
-#' @examples tsne_phyloseq_ggplot(soil_column,
+#' @examples tsne_phyloseq(soil_column,
 #' treatment = c('Matrix', 'Treatment'), perplexity = 8)
 
-tsne_phyloseq_ggplot <-
+tsne_phyloseq <-
   function (phyloseq_obj,
             treatment,
             perplexity = 10,

@@ -40,7 +40,7 @@ layout_igraph object
 }
 \description{
 Create an layout_igraph object of the co-occurrence from a phyloseq object.
-This can be input into the network_ps function, or used for other
+This can be input into the co_occurrence_network function, or used for other
 network creating scripts. The purpose is to be able to create reproducible
 and comparable graphics.
 }

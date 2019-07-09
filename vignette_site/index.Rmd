@@ -78,6 +78,7 @@ Call | Description
 [relative_abundance](data_wrangling.html#relative_abundance) | transform abundance data to relative abundance
 [set_sample_order](data_wrangling.html#set_sample_order) | sets the order of the samples of a phyloseq object
 [set_treatment_levels](data_wrangling.html#set_treatment_levels) | sets the order of the factors in a sample_data column
+[taxa_core](data_wrangling.html#taxa_core) | filter taxa by proportion of samples and relative abundance
 [taxa_filter](data_wrangling.html#taxa_filter) | filter taxa by proportion of samples seen in
 [taxa_proportions](data_wrangling.html#taxa_proportions) | computes the proportion of a taxa classification
 [unique_taxa](data_wrangling.html#unique_taxa) | find taxa unique to each treatment
@@ -87,14 +88,15 @@ Call | Description
 ### Graphs
 Call | Description
 -------------------- | ------------------------------------------------------------
-[abundance_heatmap_ggplot](graphs.html#abundance_heatmap_ggplot) | create a ggplot object of the heatmaps of the abundance table
-[abundance_lines_ggplot](graphs.html#abundance_lines_ggplot) | create a ggplot object of the abundance data as a line graph
-[network_ps](graphs.html#network_ps) | creates a network of the co-occurrence of taxa
+[abundance_heatmap](graphs.html#abundance_heatmap) | create a ggplot object of the heatmaps of the abundance table
+[abundance_lines](graphs.html#abundance_lines) | create a ggplot object of the abundance data as a line graph
+[co_occurrence_network](graphs.html#co_occurrence_network) | creates a network of the co-occurrence of taxa
 [network_layout_ps](graphs.html#network_layout_ps) | create a layout object for a network
-[nmds_phyloseq_ggplot](graphs.html#nmds_phyloseq_ggplot)  | create a ggplot object of the NMDS from a phyloseq object
-[phylogeny_profile_ggplot](graphs.html#phylogeny_profile_ggplot) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
-[taxa_abundance_bars_ggplot](graphs.html#taxa_abundance_bars_ggplot) | create a ggplot object of the abundance of taxa in each sample
-[tsne_phyloseq_ggplot](graphs.html#tsne_phyloseq_ggplot)  | create a ggplot object of the t-SNE from a phyloseq object
+[nmds_phyloseq](graphs.html#nmds_phyloseq)  | create a ggplot object of the NMDS from a phyloseq object
+[phylogeny_profile](graphs.html#phylogeny_profile) | create a ggplot barplot object of the compositons of each sample at a taxonomic level
+[taxa_abundance_bars](graphs.html#taxa_abundance_bars) | create a ggplot object of the abundance of taxa in each sample
+[taxa_core_graph](graphs.html#taxa_core_graph) | create a ggplot object of the core taxa over a range of parameters
+[tsne_phyloseq](graphs.html#tsne_phyloseq)  | create a ggplot object of the t-SNE from a phyloseq object
 
 <a name="calculations"></a>
 
