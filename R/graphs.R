@@ -467,7 +467,10 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
     scale_fill_manual(values = graph_colors) +
     theme_bw() +
     theme(
-      axis.text.x = element_text(size = 10, face = 'bold'),
+      axis.text.x = element_text(
+        angle = 30, hjust = 1,
+        size = 10, face = 'bold'
+      ),
       axis.text.y = element_text(hjust = 0.95, size = 10),
       axis.title.x = element_blank(),
       axis.title.y = element_text(size = 10, face = 'bold'),
