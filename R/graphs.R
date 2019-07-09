@@ -463,7 +463,7 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
   graph_colors <- create_palette(color_count, colors)
 
   g <- ggplot(graph_data, aes(Treatment, Alpha, fill = Treatment))
-  g + geom_boxplot(show.legend = FALSE) +
+  g <- g + geom_boxplot(show.legend = FALSE) +
     scale_fill_manual(values = graph_colors) +
     theme_bw() +
     theme(
