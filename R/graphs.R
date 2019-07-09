@@ -476,7 +476,8 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
       axis.title.y = element_text(size = 10, face = 'bold'),
       axis.ticks.x = element_blank(),
       panel.grid.major.x = element_blank()
-    )
+    ) +
+    labs(y = paste('Alpha-Diverity (', str_to_title(index), ' Index)', sep = ''))
   return(g)
 }
 
