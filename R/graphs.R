@@ -1002,10 +1002,10 @@ nmds_phyloseq <-
     metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
     color_count <- length(unique(metadata[[treatment_name]]))
     graph_colors <- create_palette(color_count, colors)
-
+    otu_matrix <- as(access(phyloseq_obj, 'otu_table'), 'matrix')
     MDS <-
       metaMDS(
-        t(access(phyloseq_obj, 'otu_table')),
+        t(otu_matrix),
         autotransform = FALSE,
         distance = "bray",
         k = 3,

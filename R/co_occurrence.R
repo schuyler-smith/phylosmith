@@ -110,6 +110,7 @@ co_occurrence <-
         p,
         cores
       )
+    co_occurrence <- co_occurrence[!is.na(co_occurrence$p),]
     return(as.data.table(co_occurrence))
   }
 

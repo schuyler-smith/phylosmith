@@ -935,11 +935,11 @@ taxa_filter <-
                                 otu_matrix <- as(sub_phy@otu_table, 'matrix')
                                 if(below){
                                   sub_phy <- filter_taxa(sub_phy, function(x){
-                                    sum(x > 0) <= floor(N*frequency)
+                                    sum(x != 0) <= floor(N*frequency)
                                   }, TRUE)
                                 } else {
                                   sub_phy <- filter_taxa(sub_phy, function(x){
-                                    sum(x > 0) >= floor(N*frequency)
+                                    sum(x != 0) >= floor(N*frequency)
                                   }, TRUE)
                                 }
                                 return(sub_phy)
