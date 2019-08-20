@@ -926,28 +926,25 @@ taxa_filter <-
       treatment_name <- paste(treatment, collapse = sep)
       treatment_classes <- as.character(sort(unique(access(phyloseq_obj,
                                                            'sam_data')[[treatment_name]])))
-      do.call(merge_phyloseq,
-              lapply(treatment_classes, FUN = function(class){
-                sub_phy <- eval(parse(text = paste0(
-                  "subset_samples(phyloseq_obj, ", treatment_name, " == '", class, "')"
-                )
-                ))
-                N <- nsamples(sub_phy)
-                if(below){
-                  sub_phy <- subset_taxa(sub_phy,
-                                         apply(sub_phy@otu_table, 1, FUN = function(x){
-                                           sum(x > 0) <= floor(N*frequency)
-                                         })
-                  )
-                } else {
-                  sub_phy <- subset_taxa(sub_phy,
-                                         apply(sub_phy@otu_table, 1, FUN = function(x){
-                                           sum(x > 0) >= floor(N*frequency)
-                                         })
-                  )
-                }
-                return(sub_phy)}
-              )
+      phyloseq_obj <- do.call(merge_phyloseq,
+                              lapply(treatment_classes, FUN = function(trt_class){
+                                sub_phy <- eval(parse(text = paste0(
+                                  "subset_samples(phyloseq_obj, ", treatment_name, " == '", trt_class, "')"
+                                )))
+                                N <- nsamples(sub_phy)
+                                otu_matrix <- as(sub_phy@otu_table, 'matrix')
+                                if(below){
+                                  sub_phy <- filter_taxa(sub_phy, function(x){
+                                    sum(x > 0) <= floor(N*frequency)
+                                  }, TRUE)
+                                } else {
+                                  sub_phy <- filter_taxa(sub_phy, function(x){
+                                    sum(x > 0) >= floor(N*frequency)
+                                  }, TRUE)
+                                }
+                                return(sub_phy)
+                              }
+                              )
       )
     } else {
       N <- nsamples(phyloseq_obj)
@@ -965,7 +962,6 @@ taxa_filter <-
         )
       }
     }
-    phyloseq_obj <- prune_taxa(taxa, phyloseq_obj)
     if (!(is.null(subset))) {
       phyloseq_obj <-
         prune_samples(sample_names(phyloseq_obj)[unname(apply(access(phyloseq_obj, 'sam_data')[, c(treatment, treatment_name)], 1,
