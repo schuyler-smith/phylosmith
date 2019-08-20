@@ -921,43 +921,49 @@ taxa_filter <-
       stop("`drop_samples` must be either `TRUE` or `FALSE`",
            call. = FALSE)
     }
-    taxa <- vector()
     if (!(is.null(treatment))) {
       phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
       treatment_name <- paste(treatment, collapse = sep)
-      filtered_obj <- phyloseq(
-        access(phyloseq_obj, 'otu_table'),
-        access(phyloseq_obj, 'sam_data')
+      treatment_classes <- as.character(sort(unique(access(phyloseq_obj,
+                                                           'sam_data')[[treatment_name]])))
+      do.call(merge_phyloseq,
+              lapply(treatment_classes, FUN = function(class){
+                sub_phy <- eval(parse(text = paste0(
+                  "subset_samples(phyloseq_obj, ", treatment_name, " == '", class, "')"
+                )
+                ))
+                N <- nsamples(sub_phy)
+                if(below){
+                  sub_phy <- subset_taxa(sub_phy,
+                                         apply(sub_phy@otu_table, 1, FUN = function(x){
+                                           sum(x > 0) <= floor(N*frequency)
+                                         })
+                  )
+                } else {
+                  sub_phy <- subset_taxa(sub_phy,
+                                         apply(sub_phy@otu_table, 1, FUN = function(x){
+                                           sum(x > 0) >= floor(N*frequency)
+                                         })
+                  )
+                }
+                return(sub_phy)}
+              )
       )
-      treatment_classes <- sort(unique(access(filtered_obj,
-                                              'sam_data')[[treatment_name]]))
-      filtered_obj <- melt_phyloseq(filtered_obj)
-      for(class in treatment_classes){
-        N <- sum(phyloseq_obj@sam_data[[treatment_name]] == class)
-        sub_table <- filtered_obj[filtered_obj[[treatment_name]] == class, ]
-        if(below){
-          sub_table <- sub_table[, .(count = .N), by = OTU][count < floor(N*frequency)]
-        } else {
-          sub_table <- sub_table[Abundance != 0]
-          sub_table <- sub_table[, .(count = .N), by = OTU][count >= floor(N*frequency)]
-        }
-        taxa <- c(taxa, sub_table[['OTU']])
-      }
     } else {
       N <- nsamples(phyloseq_obj)
-      filtered_obj <- phyloseq(
-        access(phyloseq_obj, 'otu_table'),
-        access(phyloseq_obj, 'sam_data')
-      )
-      filtered_obj <- melt_phyloseq(filtered_obj)
       if(below){
-        filtered_obj <- filtered_obj[, .(count = .N), by = OTU][count < floor(N*frequency)]
+        phyloseq_obj <- subset_taxa(phyloseq_obj,
+                                    apply(phyloseq_obj@otu_table, 1, FUN = function(x){
+                                      sum(x > 0) <= floor(N*frequency)
+                                    })
+        )
       } else {
-        filtered_obj <- filtered_obj[Abundance != 0]
-        filtered_obj <- filtered_obj[, .(count = .N), by = OTU][count >= floor(N*frequency)]
+        phyloseq_obj <- subset_taxa(phyloseq_obj,
+                                    apply(phyloseq_obj@otu_table, 1, FUN = function(x){
+                                      sum(x > 0) >= floor(N*frequency)
+                                    })
+        )
       }
-
-      taxa <- filtered_obj[['OTU']]
     }
     phyloseq_obj <- prune_taxa(taxa, phyloseq_obj)
     if (!(is.null(subset))) {
