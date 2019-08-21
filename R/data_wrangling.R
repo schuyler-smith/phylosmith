@@ -949,17 +949,13 @@ taxa_filter <-
     } else {
       N <- nsamples(phyloseq_obj)
       if(below){
-        phyloseq_obj <- subset_taxa(phyloseq_obj,
-                                    apply(phyloseq_obj@otu_table, 1, FUN = function(x){
-                                      sum(x > 0) <= floor(N*frequency)
-                                    })
-        )
+        phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){
+          sum(x != 0) <= floor(N*frequency)
+        }, TRUE)
       } else {
-        phyloseq_obj <- subset_taxa(phyloseq_obj,
-                                    apply(phyloseq_obj@otu_table, 1, FUN = function(x){
-                                      sum(x > 0) >= floor(N*frequency)
-                                    })
-        )
+        phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){
+          sum(x != 0) >= floor(N*frequency)
+        }, TRUE)
       }
     }
     if (!(is.null(subset))) {

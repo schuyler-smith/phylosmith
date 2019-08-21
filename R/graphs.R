@@ -586,6 +586,14 @@ co_occurrence_network <- function(phyloseq_obj,
       call. = FALSE
     )
   }
+  if (!(is.null(treatment)) &
+      is.null(subset)) {
+    stop(
+      "if `treatment` is declared,
+      a `subset` must also be declared.",
+      call. = FALSE
+    )
+  }
   if (!(is.null(co_occurrence_table)) &
       !(is.data.frame(co_occurrence_table))) {
     stop("`co_occurrence_table` must be at data.frame
@@ -624,12 +632,6 @@ co_occurrence_network <- function(phyloseq_obj,
   }
   colnames(co_occurrence_table)[colnames(co_occurrence_table)
                                 == 'rho'] <- 'weight'
-  edge_colors <- c('pink1', 'gray22')[vapply(
-    co_occurrence_table$weight,
-    FUN = function(x) {
-      rep(as.numeric(as.logical(sign(x) + 1) + 1), 100)
-    }, numeric(100)
-  )]
   co_occurrence_table$weight <- abs(co_occurrence_table$weight)
   if (!(is.null(classification))) {
     nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
@@ -647,12 +649,33 @@ co_occurrence_network <- function(phyloseq_obj,
                      as.character(co_occurrence_table$OTU_1),
                      as.character(co_occurrence_table$OTU_2)
                    ),]
-
+  cluster_table <- co_occurrence_table
+  cluster_table[['weight']] <- abs(cluster_table[['weight']])
+  clusters <- cluster_fast_greedy(simplify(
+    graph_from_data_frame(
+      d = cluster_table,
+      vertices = nodes,
+      directed = FALSE
+    ),
+    remove.multiple = FALSE,
+    remove.loops = TRUE
+  ))$membership
+  cluster_sizes <- table(clusters)
+  nodes <- nodes[clusters %in% names(cluster_sizes[cluster_sizes > 3])]
+  co_occurrence_table <- co_occurrence_table[OTU_1 %in% nodes$Node_Name &
+                                               OTU_2 %in% nodes$Node_Name]
+  edge_colors <- c('pink1', 'gray22')[vapply(
+    co_occurrence_table$weight,
+    FUN = function(x) {
+      rep(as.numeric(as.logical(sign(x) + 1) + 1), 100)
+    }, numeric(100)
+  )]
   net <- graph_from_data_frame(d = co_occurrence_table,
                                vertices = nodes,
                                directed = FALSE)
   net <-
     simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
+
   if (is.null(layout)) {
     layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
   }
