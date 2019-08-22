@@ -6,16 +6,13 @@
 #' network creating scripts. The purpose is to be able to create reproducible
 #' and comparable graphics.
 #' @useDynLib phylosmith
-#' @usage network_ps(phyloseq_obj, classification = NULL,
+#' @usage network_ps(phyloseq_obj,
 #' treatment = NULL, subset = NULL, co_occurrence_table = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
@@ -37,7 +34,6 @@
 
 network_ps <-
   function (phyloseq_obj,
-            classification = NULL,
             treatment = NULL,
             subset = NULL,
             co_occurrence_table = NULL) {
@@ -53,17 +49,6 @@ network_ps <-
   if (is.null(access(phyloseq_obj, 'tax_table'))) {
     stop("`phyloseq_obj` must contain tax_table()
           information",
-         call. = FALSE)
-  }
-  classification <- check_numeric_classification(phyloseq_obj,
-                                                 classification)
-  if (!(is.null(classification)) &
-      any(!(classification %in% colnames(access(
-        phyloseq_obj,
-        'tax_table'
-      ))))) {
-    stop("`classification` must be a column name, or
-          index, from the tax_table()",
          call. = FALSE)
   }
   treatment <- check_numeric_treatment(phyloseq_obj, treatment)
@@ -110,16 +95,14 @@ network_ps <-
   colnames(co_occurrence_table)[colnames(co_occurrence_table)
                                 == 'rho'] <- 'weight'
   co_occurrence_table$weight <- abs(co_occurrence_table$weight)
-  if (!(is.null(classification))) {
+  if (!is.null(access(phyloseq_obj, 'tax_table'))){
     nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
     nodes <-
       data.table('Node_Name' = rownames(access(phyloseq_obj,
                                                'tax_table')), nodes)
-    set(nodes, which(is.na(nodes[[classification]])), classification,
-        'Unclassified')
   } else {
     nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj,
-                                                      'tax_table')))
+                                                      'otu_table')))
   }
   nodes <- nodes[nodes[['Node_Name']] %in%
                    c(
@@ -163,7 +146,7 @@ network_ps <-
 #' network creating scripts. The purpose is to be able to create reproducible
 #' and comparable graphics.
 #' @useDynLib phylosmith
-#' @usage network_layout_ps(phyloseq_obj, classification = NULL,
+#' @usage network_layout_ps(phyloseq_obj,
 #' treatment = NULL, subset = NULL, co_occurrence_table = NULL,
 #' algorithm = 'fr')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -171,9 +154,6 @@ network_ps <-
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
@@ -195,13 +175,11 @@ network_ps <-
 
 network_layout_ps <-
   function (phyloseq_obj,
-            classification = NULL,
             treatment = NULL,
             subset = NULL,
             co_occurrence_table = NULL,
             algorithm = 'fr') {
     net <- network_ps(phyloseq_obj,
-               classification,
                treatment,
                subset,
                co_occurrence_table)
@@ -289,19 +267,24 @@ co_occurrence_network <- function(phyloseq_obj,
     stop("`buffer` must be a numeric value >= 0", call.
          = FALSE)
   }
-  node_classes <- c(sort(unique(access(
-    phyloseq_obj,
-    'tax_table'
-  )[, classification])), 'Unclassified')
+  classification <- check_numeric_classification(phyloseq_obj,
+                                                 classification)
+  if (!(is.null(classification)) &
+      any(!(classification %in% colnames(access(
+        phyloseq_obj,
+        'tax_table'
+      ))))) {
+    stop("`classification` must be a column name, or
+          index, from the tax_table()",
+         call. = FALSE)
+  }
   net <- network_ps(phyloseq_obj,
-                    classification,
                     treatment,
                     subset,
                     co_occurrence_table)
   if (is.null(layout)) {
     layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
   }
-
   if (cluster == TRUE) {
     cluster_table <- co_occurrence_table
     cluster_table[['weight']] <- abs(cluster_table[['weight']])
@@ -351,6 +334,13 @@ co_occurrence_network <- function(phyloseq_obj,
   }
 
   if (!(is.null(classification))) {
+    eval(parse(text = paste0(
+      'V(net)$', classification, '[is.na(V(net)$', classification, ')] <- "Unclassified"'
+    )))
+    node_classes <- c(sort(unique(access(
+      phyloseq_obj,
+      'tax_table'
+    )[, classification])), 'Unclassified')
     node_colors <- create_palette(length(node_classes), node_colors)
     node_colors <- node_colors[node_classes %in%
       eval(parse(text = paste0(

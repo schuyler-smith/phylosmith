@@ -5,7 +5,7 @@
 \title{Create an igraph network object of the co-occurrence from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-network_ps(phyloseq_obj, classification = NULL,
+network_ps(phyloseq_obj,
 treatment = NULL, subset = NULL, co_occurrence_table = NULL)
 }
 \arguments{
@@ -14,10 +14,6 @@ must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 information about each sample, and it must contain
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
-
-\item{classification}{Column name as a string or number in the
-\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-colors.}
 
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
