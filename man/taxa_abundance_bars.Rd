@@ -6,7 +6,8 @@
 Function from the phylosmith-package.}
 \usage{
 taxa_abundance_bars(phyloseq_obj, classification = NULL,
-treatment, subset = NULL, transformation = 'none', colors = 'default')
+treatment, subset = NULL, transformation = 'none', colors = 'default',
+wrap_by = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -33,6 +34,10 @@ factors to subset on.}
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
+
+\item{wrap_by}{Column name as a string or number in the
+phyloseq \code{\link[phyloseq:sample_data]{sample_data}} to facet the ggplot
+figure by.}
 }
 \value{
 ggplot-object

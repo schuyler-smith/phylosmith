@@ -871,7 +871,8 @@ phylogeny_profile <-
 #' creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
 #' @usage taxa_abundance_bars(phyloseq_obj, classification = NULL,
-#' treatment, subset = NULL, transformation = 'none', colors = 'default')
+#' treatment, subset = NULL, transformation = 'none', colors = 'default',
+#' wrap_by = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -891,6 +892,9 @@ phylogeny_profile <-
 #' @param colors Name of a color set from the
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
+#' @param wrap_by Column name as a string or number in the
+#' phyloseq \code{\link[phyloseq:sample_data]{sample_data}} to facet the ggplot
+#' figure by.
 #' @export
 #' @return ggplot-object
 #' @examples taxa_abundance_bars(
@@ -904,7 +908,8 @@ taxa_abundance_bars <-
            treatment,
            subset = NULL,
            transformation = 'none',
-           colors = 'default') {
+           colors = 'default',
+           wrap_by = NULL) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a
         phyloseq-class object", call. = FALSE)
@@ -931,6 +936,7 @@ taxa_abundance_bars <-
            call. = FALSE)
     }
     treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    wrap_by <- check_numeric_treatment(phyloseq_obj, wrap_by)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -962,6 +968,9 @@ taxa_abundance_bars <-
       classification <- 'OTU'
     }
     treatment_name <- paste(treatment, collapse = sep)
+    if(!(is.null(wrap_by)) && !(wrap_by %in% treatment)){
+      treatment <- c(treatment, wrap_by)
+    }
 
     graph_data <- melt_phyloseq(phyloseq_obj)
     graph_data[[classification]] <-
@@ -970,37 +979,37 @@ taxa_abundance_bars <-
     if (transformation == 'none') {
       abundance <- 'Abundance'
       graph_data <- graph_data[, sum(Abundance),
-                               by = c(treatment_name, classification)][, setnames(.SD, 'V1',
-                                                                                  abundance, skip_absent = TRUE)]
+                               by = c(treatment_name, treatment, classification)][, setnames(.SD, 'V1',
+                                                                                             abundance, skip_absent = TRUE)]
     }
     if (transformation == 'mean') {
       abundance <- 'Mean_Abundance'
       graph_data <-
-        graph_data[, mean(Abundance), by = c(treatment_name,
+        graph_data[, mean(Abundance), by = c(treatment_name, treatment,
                                              classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]
     }
     if (transformation == 'median') {
       abundance <- 'Median_Abundance'
       graph_data <- graph_data[, stats::median(Abundance),
-                               by = c(treatment_name, classification)][, setnames(.SD, 'V1',
-                                                                                  abundance, skip_absent = TRUE)]
+                               by = c(treatment_name, treatment, classification)][, setnames(.SD, 'V1',
+                                                                                             abundance, skip_absent = TRUE)]
     }
     if (transformation == 'sd') {
       abundance <- 'StdDev_Abundance'
       graph_data <-
-        graph_data[, stats::sd(Abundance), by = c(treatment_name,
+        graph_data[, stats::sd(Abundance), by = c(treatment_name, treatment,
                                                   classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]
     }
     if (transformation == 'log') {
       abundance <- 'log_Abundance'
       graph_data <-
-        graph_data[, log(Abundance), by = c(treatment_name,
+        graph_data[, log(Abundance), by = c(treatment_name, treatment,
                                             classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]
     }
     if (transformation == 'log10') {
       abundance <- 'log10_Abundance'
       graph_data <-
-        graph_data[, log10(Abundance), by = c(treatment_name,
+        graph_data[, log10(Abundance), by = c(treatment_name, treatment,
                                               classification)][, setnames(.SD, 'V1', abundance, skip_absent = TRUE)]
     }
     set(graph_data, which(is.na(graph_data[[classification]])),
@@ -1054,9 +1063,14 @@ taxa_abundance_bars <-
         legend.title = element_text(size = 10, face = "bold"),
         legend.background = element_rect(fill = (alpha = 0)),
         legend.key.size = unit(4, "mm"),
-        legend.spacing.x = unit(0.005, 'npc')
+        legend.spacing.x = unit(0.005, 'npc'),
+        strip.text.x = element_text(size = 10, face = 'bold', color = 'black'),
+        strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white')
       ) +
       scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
+    if(!is.null(wrap_by)){
+      g <- g + facet_wrap(reformulate(wrap_by))
+    }
     return(g)
   }
 
