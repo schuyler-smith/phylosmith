@@ -5,7 +5,7 @@
 #' \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
 #' been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, method = 'pearson', cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -17,6 +17,7 @@
 #' will have a rho-value less than or equal to \code{rho} or less than or equal to -\code{rho}.
 #' @param p \code{numeric} The p-value cutoff. All returned co-occurrences
 #' will have a p-value less than or equal to \code{p}.
+#' @param method Which correlation method to calculate, "pearson", "spearman".
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise
 #' permutations. Default (0) uses max cores available. Parallelization not
 #' available for systems running MacOS without openMP configuration.
@@ -29,7 +30,7 @@
 #' co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
 #' subset = 'Amended', rho = 0.8, p = 0.05, cores = 0)
 
-# sourceCpp("src/co_occurrence_Rcpp.cpp")
+# sourceCpp("src/correlations_Rcpp.cpp")
 
 co_occurrence <-
   function(phyloseq_obj,
@@ -37,7 +38,8 @@ co_occurrence <-
            subset = NULL,
            rho = 0,
            p = 0.05,
-           cores = 0) {
+           method = 'pearson',
+           cores = 1) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a phyloseq-class object",
            call. = FALSE)
@@ -78,11 +80,16 @@ co_occurrence <-
         call. = FALSE
       )
     }
+    if (cores == 0) {
+      cores <- (detectCores() - 1)
+    }
+    match.arg(method, c("pearson", "kendall", "spearman"))
     options(warnings = -1)
 
     phyloseq_obj <-
       taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
     treatment_name <- paste(treatment, collapse = sep)
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
 
     treatment_classes <- as.character(unique(access(phyloseq_obj,
                                                     'sam_data')[[treatment_name]]))
@@ -97,20 +104,20 @@ co_occurrence <-
       treatment_classes <- 'Experiment_Wide'
       treatment_indices <- list(seq(nsamples(phyloseq_obj)) - 1)
     }
-
-    if (cores == 0) {
-      cores <- (detectCores() - 1)
-    }
-    co_occurrence <-
-      co_occurrence_Rcpp(
-        access(phyloseq_obj, 'otu_table'),
-        treatment_indices,
-        treatment_classes,
+    co_occurrence <- data.table()
+    for(i in seq_along(treatment_indices)){
+      treatment_co_occurrence <- Correlation(
+        access(phyloseq_obj, 'otu_table')[,treatment_indices[[i]]],
         rho,
         p,
+        method,
         cores
       )
-    co_occurrence <- co_occurrence[!is.na(co_occurrence$p),]
+      if(length(treatment_indices) > 1){
+        treatment_co_occurrence <- cbind(Treatment = treatment_classes[i], treatment_co_occurrence)
+      }
+      co_occurrence <- rbind(co_occurrence, treatment_co_occurrence)
+    }
     return(as.data.table(co_occurrence))
   }
 
@@ -121,7 +128,8 @@ co_occurrence <-
 #' significant rho-cutoff.
 #' @useDynLib phylosmith
 #' @usage permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-#' replicate_samples = 'independent', permutations = 100, cores = 0)
+#' replicate_samples = 'independent', permutations = 100, method = 'pearson',
+#' cores = 0)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -133,6 +141,7 @@ co_occurrence <-
 #' in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which
 #' samples are non-independent of each other.
 #' @param permutations \code{numeric} Number of iterations to compute.
+#' @param method Which correlation method to calculate, "pearson", "spearman".
 #' @param cores \code{numeric} Number of CPU cores to use for the pair-wise
 #' permutations. Default (0) uses max cores available. Parallelization not
 #' available for systems running MacOS without openMP configuration.
@@ -145,15 +154,16 @@ co_occurrence <-
 #' permute_rho(soil_column, treatment = c('Matrix', 'Treatment'),
 #' subset = 'Amended', replicate_samples = 'Day', permutations = 1,  cores = 0)
 
-# sourceCpp('src/co_occurrence_Rcpp.cpp')
+# sourceCpp('src/correlations_Rcpp.cpp')
 
 permute_rho <-
   function(phyloseq_obj,
            treatment = NULL,
            subset = NULL,
            replicate_samples = 'independent',
-           permutations = 100,
-           cores = 0) {
+           permutations = 10,
+           method = 'pearson',
+           cores = 1) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a phyloseq-class object",
            call. = FALSE)
@@ -211,6 +221,7 @@ permute_rho <-
       subset = subset,
       frequency = 0
     )
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
     treatment_name <- paste(treatment, collapse = sep)
     treatment_classes <- as.character(unique(access(phyloseq_obj,
                                                     'sam_data')[[treatment_name]]))
@@ -225,70 +236,62 @@ permute_rho <-
       treatment_classes <- 'Experiment_Wide'
       treatment_indices <- list(seq(nsamples(phyloseq_obj)) - 1)
     }
-    if (replicate_samples == 'independent' & is.null(treatment)) {
+    replicate_sample_classes <- vector()
+    if (replicate_samples == 'independent'){
       replicate_indices <- seq(ncol(access(phyloseq_obj, 'otu_table')))
-    } else if (replicate_samples == 'independent' &
-               !(is.null(treatment))) {
-      phyloseq_obj_reps <- merge_treatments(phyloseq_obj, c(treatment))
-      replicate_name <- paste(c(treatment), collapse = sep)
-      replicate_samples <-
-        as.character(unique(access(phyloseq_obj_reps,
-                                   'sam_data')[[replicate_name]]))
-      replicate_indices <- lapply(
-        replicate_samples,
-        FUN = function(trt) {
-          which(as.character(access(phyloseq_obj_reps,
-                                    'sam_data')[[replicate_name]]) %in% trt)
-        }
-      )
-    } else if (replicate_samples != 'independent' &
-               !(is.null(treatment))) {
+    } else if (replicate_samples != 'independent'){
       phyloseq_obj_reps <- merge_treatments(phyloseq_obj,
                                             c(treatment, replicate_samples))
       replicate_name <- paste(c(treatment, replicate_samples),
                               collapse = sep)
-      replicate_samples <-
+      replicate_sample_classes <-
         as.character(unique(access(phyloseq_obj_reps,
                                    'sam_data')[[replicate_name]]))
       replicate_indices <- lapply(
-        replicate_samples,
+        replicate_sample_classes,
         FUN = function(trt) {
           which(as.character(access(phyloseq_obj_reps,
                                     'sam_data')[[replicate_name]]) %in% trt)
         }
       )
     }
-
-    rhos <-
-      data.table(
-        Treatment = factor(levels = treatment_classes),
-        rho = numeric(),
-        Count = numeric()
-      )
-    n <- nrow(access(phyloseq_obj, 'otu_table'))
-    permuted_phyloseq_obj <- phyloseq_obj
-    if (cores == 0) {
-      cores <- (detectCores() - 1)
-    }
-
+    rhos <- data.table()
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
+    permuted_counts <- as(phyloseq_obj@otu_table, 'matrix')
     tryCatch({
-      for (i in seq(permutations)) {
-        for (indices in replicate_indices) {
-          otu_table(permuted_phyloseq_obj)[, indices] <- access(phyloseq_obj, 'otu_table')[sample(seq(n), n), indices]
+      for (j in seq(permutations)){
+        co_occurrence_table <- data.table()
+        if(replicate_samples == 'independent'){
+          n <- nrow(permuted_counts)
+          permuted_counts<- apply(permuted_counts, 2, FUN = function(x){
+            sample(x, n)
+          })
+        } else {for(indices in replicate_indices){
+          n <- nrow(permuted_counts)
+          permuted_counts[, indices] <- permuted_counts[sample(seq(n), n), indices]
+        }}
+        for(i in seq_along(treatment_classes)){
+          rep_co_occurrence_table <- data.table(permute_rho_Rcpp(
+            phyloseq_obj@otu_table[, treatment_indices[[i]]],
+            permuted_counts[, treatment_indices[[i]]],
+            method,
+            cores))
+          rep_co_occurrence_table[, rho := round(rho, 2)]
+          rep_co_occurrence_table[, Count := .N, by = .(rho)]
+          rep_co_occurrence_table <- unique(rep_co_occurrence_table)
+          if(length(treatment_classes) > 1){
+            rep_co_occurrence_table <- cbind(Treatment = treatment_classes[i], rep_co_occurrence_table)
+          }
+          co_occurrence_table <- rbind(co_occurrence_table, unique(rep_co_occurrence_table))
         }
-        co_occurrence_table <- data.table(
-          co_occurrence_rho_Rcpp(
-            access(permuted_phyloseq_obj, 'otu_table'),
-            treatment_indices,
-            treatment_classes,
-            cores
-          )
-        )
-        co_occurrence_table[, rho := round(.SD, 3), .SDcols = 'rho']
-        co_occurrence_table[, Count := .N, by = .(Treatment, rho)]
-        co_occurrence_table <- unique(co_occurrence_table)
-        rhos <- rbindlist(list(rhos, co_occurrence_table))[,
-                                                          lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
+
+        if(length(treatment_classes) > 1){
+          rhos <- rbindlist(list(rhos, co_occurrence_table))[,
+                                                             lapply(.SD, sum, na.rm = TRUE), by = .(Treatment, rho)]
+        } else {
+          rhos <- rbindlist(list(rhos, co_occurrence_table))[,
+                                                             lapply(.SD, sum, na.rm = TRUE), by = .(rho)]
+        }
       }
     },
     interrupt = function(interrupt) {
@@ -296,7 +299,11 @@ permute_rho <-
       setkey(rhos, Treatment, rho)
       return(rhos)
     })
-    setkey(rhos, Treatment, rho)
+    if(length(treatment_classes) > 1){
+      setkey(rhos, Treatment, rho)
+    } else {
+      setkey(rhos, rho)
+    }
     return(rhos)
   } #else {
 #     return(stats::quantile(rhos, 1-p, na.rm = TRUE))}
@@ -407,22 +414,38 @@ histogram_permuted_rhos <- function(permuted_rhos,
   color_count <- length(unique(permuted_rhos[['Treatment']]))
   graph_colors <- create_palette(color_count, colors)
 
-  permuted_rhos[, Proportion := Count / sum(Count),
-                by = Treatment]
-  quantiles <- permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p /
-                                                                             2))],
-                                    upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))]),
-                             by = Treatment]
+  if(color_count > 0){permuted_rhos[, Proportion := Count / sum(Count),
+                                    by = Treatment]
+    quantiles <- permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p /
+                                                                               2))],
+                                      upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))]),
+                               by = Treatment]
 
-  permuted_rhos[, bin := findInterval(rho, seq(-1, 1, .03)), by = Treatment]
-  permuted_rhos <- permuted_rhos[, list(
-    rho = mean(rho),
-    Count = sum(Count),
-    Proportion = sum(Proportion)
-  ), by = .(Treatment, bin)]
+    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(rhos$rho) - min(rhos$rho))/100)), by = Treatment]
+    permuted_rhos <- permuted_rhos[, list(
+      rho = mean(rho),
+      Count = sum(Count),
+      Proportion = sum(Proportion)
+    ), by = .(Treatment, bin)]
 
-  g <-
-    ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
+    g <-
+      ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = Treatment))
+  } else {
+    permuted_rhos[, Proportion := Count / sum(Count)]
+    quantiles <- permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <= (p /
+                                                                               2))],
+                                      upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))])]
+
+    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(rhos$rho) - min(rhos$rho))/100))]
+    permuted_rhos <- permuted_rhos[, list(
+      rho = mean(rho),
+      Count = sum(Count),
+      Proportion = sum(Proportion)
+    ), by = .(bin)]
+
+    g <-
+      ggplot(permuted_rhos, aes(x = rho, y = Proportion, fill = graph_colors))
+  }
   if (!(is.null(p))) {
     g <-
       g + geom_vline(

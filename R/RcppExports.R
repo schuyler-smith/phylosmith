@@ -4,8 +4,8 @@
 #' @author Schuyler D. Smith
 #' @title Co-occurrence calculation
 #' @description Calculate the pair-wise Spearman rank correlation.
-#' @usage co_occurrence_Rcpp(otu_table, treatment_indices,
-#' treatment_names, rho_cutoff, p_cutoff, ncores)
+#' @usage Correlation(otu_table, treatment_indices,
+#' rho_cutoff, p_cutoff, method, ncores)
 #' @param otu_table An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param treatment_indices A \code{list} with c++ indices for the
@@ -17,19 +17,20 @@
 #' accepted for the correlation to be returned.
 #' @param p_cutoff \code{double} representing the maximum \code{p-value}
 #' accepted for the correlation to be returned.
+#' @param method Pearson, Spearman
 #' @param ncores An \code{int} for how many cores to use to multithread the
 #' calculations.
 #' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 #' @seealso \code{\link{co_occurrence}}
-co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores) {
-    .Call('_phylosmith_co_occurrence_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores)
+Correlation <- function(count_matrix, cor_coef_cutoff = 0, p_cutoff = 1, method = "pearson", ncores = 1L) {
+    .Call('_phylosmith_Correlation', PACKAGE = 'phylosmith', count_matrix, cor_coef_cutoff, p_cutoff, method, ncores)
 }
 
 #' @author Schuyler D. Smith
 #' @title Co-occurrence rho calculations
 #' @description Calculates the pair-wise Spearman rank correlation without
 #' testing for significance.
-#' @usage co_occurrence_rho_Rcpp(otu_table, treatment_indices,
+#' @usage permute_rho_Rcpp(otu_table, treatment_indices,
 #' treatment_names, ncores)
 #' @param otu_table An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
@@ -38,12 +39,13 @@ co_occurrence_Rcpp <- function(otu_table, treatment_indices, treatment_names, rh
 #' \code{otu_table} belongs to.
 #' @param treatment_names A \code{Vector} containing the treatment names
 #' corresponding to the \code{treatment_indices}.
+#' @param method Pearson, Spearman
 #' @param ncores An \code{int} for how many cores to use to multithread the
 #' calculations.
 #' @return A \code{vector} with rho values for each pair-wise correlation.
 #' @seealso \code{\link{permute_rho}}
-co_occurrence_rho_Rcpp <- function(otu_table, treatment_indices, treatment_names, ncores) {
-    .Call('_phylosmith_co_occurrence_rho_Rcpp', PACKAGE = 'phylosmith', otu_table, treatment_indices, treatment_names, ncores)
+permute_rho_Rcpp <- function(count_matrix, permuted_matrix, method = "pearson", ncores = 1L) {
+    .Call('_phylosmith_permute_rho_Rcpp', PACKAGE = 'phylosmith', count_matrix, permuted_matrix, method, ncores)
 }
 
 #' @author Schuyler D. Smith

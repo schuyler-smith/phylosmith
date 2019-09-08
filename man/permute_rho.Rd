@@ -6,7 +6,8 @@
 significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
 permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-replicate_samples = 'independent', permutations = 100, cores = 0)
+replicate_samples = 'independent', permutations = 100, method = 'pearson',
+cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -24,6 +25,8 @@ in the \code{\link[phyloseq:sample_data]{sample_data}} that indicates which
 samples are non-independent of each other.}
 
 \item{permutations}{\code{numeric} Number of iterations to compute.}
+
+\item{method}{Which correlation method to calculate, "pearson", "spearman".}
 
 \item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise
 permutations. Default (0) uses max cores available. Parallelization not

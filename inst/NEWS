@@ -11,3 +11,7 @@ Changes in version 1.0.2
 
 Changes in version 1.0.3
 + Add alpha_diversity_graph()
+
+Changes in version 1.0.4
++ Add method options for co-occurrence calculations
++ Update routines for co-occurrence

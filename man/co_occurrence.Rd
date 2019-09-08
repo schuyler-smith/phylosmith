@@ -5,7 +5,7 @@
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 Function from the phylosmith-package.}
 \usage{
-co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, method = 'pearson', cores = 0)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -23,6 +23,8 @@ will have a rho-value less than or equal to \code{rho} or less than or equal to 
 
 \item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences
 will have a p-value less than or equal to \code{p}.}
+
+\item{method}{Which correlation method to calculate, "pearson", "spearman".}
 
 \item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise
 permutations. Default (0) uses max cores available. Parallelization not

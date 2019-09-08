@@ -6,33 +6,32 @@
 
 using namespace Rcpp;
 
-// co_occurrence_Rcpp
-Rcpp::DataFrame co_occurrence_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, double rho_cutoff, double p_cutoff, const int ncores);
-RcppExport SEXP _phylosmith_co_occurrence_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP rho_cutoffSEXP, SEXP p_cutoffSEXP, SEXP ncoresSEXP) {
+// Correlation
+Rcpp::DataFrame Correlation(Rcpp::NumericMatrix count_matrix, const double cor_coef_cutoff, const double p_cutoff, const std::string method, const int ncores);
+RcppExport SEXP _phylosmith_Correlation(SEXP count_matrixSEXP, SEXP cor_coef_cutoffSEXP, SEXP p_cutoffSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
-    Rcpp::traits::input_parameter< double >::type rho_cutoff(rho_cutoffSEXP);
-    Rcpp::traits::input_parameter< double >::type p_cutoff(p_cutoffSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type count_matrix(count_matrixSEXP);
+    Rcpp::traits::input_parameter< const double >::type cor_coef_cutoff(cor_coef_cutoffSEXP);
+    Rcpp::traits::input_parameter< const double >::type p_cutoff(p_cutoffSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type method(methodSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(co_occurrence_Rcpp(otu_table, treatment_indices, treatment_names, rho_cutoff, p_cutoff, ncores));
+    rcpp_result_gen = Rcpp::wrap(Correlation(count_matrix, cor_coef_cutoff, p_cutoff, method, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
-// co_occurrence_rho_Rcpp
-Rcpp::DataFrame co_occurrence_rho_Rcpp(Rcpp::NumericMatrix otu_table, Rcpp::List treatment_indices, Rcpp::StringVector treatment_names, const int ncores);
-RcppExport SEXP _phylosmith_co_occurrence_rho_Rcpp(SEXP otu_tableSEXP, SEXP treatment_indicesSEXP, SEXP treatment_namesSEXP, SEXP ncoresSEXP) {
+// permute_rho_Rcpp
+Rcpp::DataFrame permute_rho_Rcpp(Rcpp::NumericMatrix count_matrix, Rcpp::NumericMatrix permuted_matrix, const std::string method, const int ncores);
+RcppExport SEXP _phylosmith_permute_rho_Rcpp(SEXP count_matrixSEXP, SEXP permuted_matrixSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type otu_table(otu_tableSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type treatment_indices(treatment_indicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type treatment_names(treatment_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type count_matrix(count_matrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type permuted_matrix(permuted_matrixSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type method(methodSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(co_occurrence_rho_Rcpp(otu_table, treatment_indices, treatment_names, ncores));
+    rcpp_result_gen = Rcpp::wrap(permute_rho_Rcpp(count_matrix, permuted_matrix, method, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -50,8 +49,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_co_occurrence_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_Rcpp, 6},
-    {"_phylosmith_co_occurrence_rho_Rcpp", (DL_FUNC) &_phylosmith_co_occurrence_rho_Rcpp, 4},
+    {"_phylosmith_Correlation", (DL_FUNC) &_phylosmith_Correlation, 5},
+    {"_phylosmith_permute_rho_Rcpp", (DL_FUNC) &_phylosmith_permute_rho_Rcpp, 4},
     {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {NULL, NULL, 0}
 };
