@@ -4,24 +4,19 @@
 \alias{permute_rho_Rcpp}
 \title{Co-occurrence rho calculations}
 \usage{
-permute_rho_Rcpp(otu_table, treatment_indices,
-treatment_names, ncores)
+permute_rho_Rcpp(count_matrix, permuted_matrix, method, ncores)
 }
 \arguments{
-\item{method}{Pearson, Spearman}
+\item{count_matrix}{An \code{otu_table} in the format from
+\code{\link[phyloseq:otu_table]{phyloseq}}}
+
+\item{permuted_matrix}{An \code{otu_table} in the format from
+\code{\link[phyloseq:otu_table]{phyloseq}}}
+
+\item{method}{pearson, spearman}
 
 \item{ncores}{An \code{int} for how many cores to use to multithread the
 calculations.}
-
-\item{otu_table}{An \code{otu_table} in the format from
-\code{\link[phyloseq:otu_table]{phyloseq}}}
-
-\item{treatment_indices}{A \code{list} with c++ indices for the
-\code{treatment_names} corresponding to which treatment each column in the
-\code{otu_table} belongs to.}
-
-\item{treatment_names}{A \code{Vector} containing the treatment names
-corresponding to the \code{treatment_indices}.}
 }
 \value{
 A \code{vector} with rho values for each pair-wise correlation.

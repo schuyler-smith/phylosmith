@@ -4,10 +4,16 @@
 \alias{Correlation}
 \title{Co-occurrence calculation}
 \usage{
-Correlation(otu_table, treatment_indices,
-rho_cutoff, p_cutoff, method, ncores)
+Correlation(count_matrix,
+cor_coef_cutoff, p_cutoff, method, ncores)
 }
 \arguments{
+\item{count_matrix}{An \code{otu_table} in the format from
+\code{\link[phyloseq:otu_table]{phyloseq}}}
+
+\item{cor_coef_cutoff}{\code{double} representing the minimum \code{rho-value}
+accepted for the correlation to be returned.}
+
 \item{p_cutoff}{\code{double} representing the maximum \code{p-value}
 accepted for the correlation to be returned.}
 
@@ -15,19 +21,6 @@ accepted for the correlation to be returned.}
 
 \item{ncores}{An \code{int} for how many cores to use to multithread the
 calculations.}
-
-\item{otu_table}{An \code{otu_table} in the format from
-\code{\link[phyloseq:otu_table]{phyloseq}}}
-
-\item{treatment_indices}{A \code{list} with c++ indices for the
-\code{treatment_names} corresponding to which treatment each column in the
-\code{otu_table} belongs to.}
-
-\item{treatment_names}{A \code{Vector} containing the treatment names
-corresponding to the \code{treatment_indices}.}
-
-\item{rho_cutoff}{\code{double} representing the minimum \code{rho-value}
-accepted for the correlation to be returned.}
 }
 \value{
 A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.

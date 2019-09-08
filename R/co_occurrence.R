@@ -5,7 +5,8 @@
 #' \href{https://github.com/germs-lab/FastCoOccur}{Jin Choi}. The routine has
 #' been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 #' @useDynLib phylosmith
-#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, method = 'pearson', cores = 0)
+#' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL,
+#' rho = 0, p = 0.05, method = 'spearman', cores = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -28,7 +29,7 @@
 #' @return data.table
 #' @examples
 #' co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
-#' subset = 'Amended', rho = 0.8, p = 0.05, cores = 0)
+#' subset = 'Amended', rho = 0.8, p = 0.05, cores = 1)
 
 # sourceCpp("src/correlations_Rcpp.cpp")
 
@@ -38,7 +39,7 @@ co_occurrence <-
            subset = NULL,
            rho = 0,
            p = 0.05,
-           method = 'pearson',
+           method = 'spearman',
            cores = 1) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a phyloseq-class object",
@@ -113,7 +114,7 @@ co_occurrence <-
         method,
         cores
       )
-      if(length(treatment_indices) > 1){
+      if(length(treatment_indices) > 0){
         treatment_co_occurrence <- cbind(Treatment = treatment_classes[i], treatment_co_occurrence)
       }
       co_occurrence <- rbind(co_occurrence, treatment_co_occurrence)
@@ -128,8 +129,8 @@ co_occurrence <-
 #' significant rho-cutoff.
 #' @useDynLib phylosmith
 #' @usage permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-#' replicate_samples = 'independent', permutations = 100, method = 'pearson',
-#' cores = 0)
+#' replicate_samples = 'independent', permutations = 10, method = 'spearman',
+#' cores = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -162,7 +163,7 @@ permute_rho <-
            subset = NULL,
            replicate_samples = 'independent',
            permutations = 10,
-           method = 'pearson',
+           method = 'spearman',
            cores = 1) {
     if (!inherits(phyloseq_obj, "phyloseq")) {
       stop("`phyloseq_obj` must be a phyloseq-class object",
@@ -421,7 +422,7 @@ histogram_permuted_rhos <- function(permuted_rhos,
                                       upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))]),
                                by = Treatment]
 
-    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(rhos$rho) - min(rhos$rho))/100)), by = Treatment]
+    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(permuted_rhos$rho) - min(permuted_rhos$rho))/100)), by = Treatment]
     permuted_rhos <- permuted_rhos[, list(
       rho = mean(rho),
       Count = sum(Count),
@@ -436,7 +437,7 @@ histogram_permuted_rhos <- function(permuted_rhos,
                                                                                2))],
                                       upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))])]
 
-    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(rhos$rho) - min(rhos$rho))/100))]
+    permuted_rhos[, bin := findInterval(rho, seq(-1, 1, (max(permuted_rhos$rho) - min(permuted_rhos$rho))/100))]
     permuted_rhos <- permuted_rhos[, list(
       rho = mean(rho),
       Count = sum(Count),

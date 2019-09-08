@@ -83,11 +83,14 @@ network_ps <-
 
   if (is.null(co_occurrence_table)) {
     co_occurrence_table <- co_occurrence(phyloseq_obj,
-                                         treatment)[rho >= 0.8 |
-                                                      rho <= -0.8]
+                                         treatment, method = 'spearman')[rho >= 0.6 |
+                                                      rho <= -0.6]
   }
-  co_occurrence_table <- co_occurrence_table[, c('OTU_1',
-                                                 'OTU_2', 'Treatment', 'rho', 'p')]
+  if(is.null(co_occurrence_table[['Treatment']])){
+    co_occurrence_table <- cbind(co_occurrence_table, Treatment = 'NA')
+  }
+  co_occurrence_table <- co_occurrence_table[, c('X',
+                                                 'Y', 'Treatment', 'rho', 'p')]
   if (!is.null(subset)) {
     co_occurrence_table <-
       co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
@@ -106,8 +109,8 @@ network_ps <-
   }
   nodes <- nodes[nodes[['Node_Name']] %in%
                    c(
-                     as.character(co_occurrence_table$OTU_1),
-                     as.character(co_occurrence_table$OTU_2)
+                     as.character(co_occurrence_table$X),
+                     as.character(co_occurrence_table$Y)
                    ),]
   cluster_table <- co_occurrence_table
   cluster_table[['weight']] <- abs(cluster_table[['weight']])
@@ -122,8 +125,8 @@ network_ps <-
   ))$membership
   cluster_sizes <- table(clusters)
   nodes <- nodes[clusters %in% names(cluster_sizes[cluster_sizes > 3])]
-  co_occurrence_table <- co_occurrence_table[OTU_1 %in% nodes$Node_Name &
-                                               OTU_2 %in% nodes$Node_Name]
+  co_occurrence_table <- co_occurrence_table[X %in% nodes$Node_Name &
+                                               Y %in% nodes$Node_Name]
   net <- graph_from_data_frame(d = co_occurrence_table,
                                vertices = nodes,
                                directed = FALSE)

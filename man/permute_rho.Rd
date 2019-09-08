@@ -6,8 +6,8 @@
 significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
 permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-replicate_samples = 'independent', permutations = 100, method = 'pearson',
-cores = 0)
+replicate_samples = 'independent', permutations = 10, method = 'spearman',
+cores = 1)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}

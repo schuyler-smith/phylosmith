@@ -5,7 +5,8 @@
 \title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
 Function from the phylosmith-package.}
 \usage{
-co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, method = 'pearson', cores = 0)
+co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL,
+rho = 0, p = 0.05, method = 'spearman', cores = 1)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -40,7 +41,7 @@ been adapted to integrate with the \code{\link[Rcpp]{Rcpp-package}} API.
 }
 \examples{
 co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'),
-subset = 'Amended', rho = 0.8, p = 0.05, cores = 0)
+subset = 'Amended', rho = 0.8, p = 0.05, cores = 1)
 }
 \seealso{
 \code{\link{permute_rho}} \code{\link{phylosmith}}

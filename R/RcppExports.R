@@ -4,16 +4,11 @@
 #' @author Schuyler D. Smith
 #' @title Co-occurrence calculation
 #' @description Calculate the pair-wise Spearman rank correlation.
-#' @usage Correlation(otu_table, treatment_indices,
-#' rho_cutoff, p_cutoff, method, ncores)
-#' @param otu_table An \code{otu_table} in the format from
+#' @usage Correlation(count_matrix,
+#' cor_coef_cutoff, p_cutoff, method, ncores)
+#' @param count_matrix An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
-#' @param treatment_indices A \code{list} with c++ indices for the
-#' \code{treatment_names} corresponding to which treatment each column in the
-#' \code{otu_table} belongs to.
-#' @param treatment_names A \code{Vector} containing the treatment names
-#' corresponding to the \code{treatment_indices}.
-#' @param rho_cutoff \code{double} representing the minimum \code{rho-value}
+#' @param cor_coef_cutoff \code{double} representing the minimum \code{rho-value}
 #' accepted for the correlation to be returned.
 #' @param p_cutoff \code{double} representing the maximum \code{p-value}
 #' accepted for the correlation to be returned.
@@ -30,16 +25,12 @@ Correlation <- function(count_matrix, cor_coef_cutoff = 0, p_cutoff = 1, method 
 #' @title Co-occurrence rho calculations
 #' @description Calculates the pair-wise Spearman rank correlation without
 #' testing for significance.
-#' @usage permute_rho_Rcpp(otu_table, treatment_indices,
-#' treatment_names, ncores)
-#' @param otu_table An \code{otu_table} in the format from
+#' @usage permute_rho_Rcpp(count_matrix, permuted_matrix, method, ncores)
+#' @param count_matrix An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
-#' @param treatment_indices A \code{list} with c++ indices for the
-#' \code{treatment_names} corresponding to which treatment each column in the
-#' \code{otu_table} belongs to.
-#' @param treatment_names A \code{Vector} containing the treatment names
-#' corresponding to the \code{treatment_indices}.
-#' @param method Pearson, Spearman
+#' @param permuted_matrix An \code{otu_table} in the format from
+#' \code{\link[phyloseq:otu_table]{phyloseq}}
+#' @param method pearson, spearman
 #' @param ncores An \code{int} for how many cores to use to multithread the
 #' calculations.
 #' @return A \code{vector} with rho values for each pair-wise correlation.
