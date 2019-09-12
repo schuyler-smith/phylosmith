@@ -98,21 +98,21 @@ co_occurrence <-
       treatment_classes,
       FUN = function(trt) {
         which(as.character(access(phyloseq_obj,
-                                  'sam_data')[[treatment_name]]) %in% trt) - 1
+                                  'sam_data')[[treatment_name]]) %in% trt)
       }
     )
     if (is.null(treatment)) {
       treatment_classes <- 'Experiment_Wide'
-      treatment_indices <- list(seq(nsamples(phyloseq_obj)) - 1)
+      treatment_indices <- list(seq(nsamples(phyloseq_obj)))
     }
     co_occurrence <- data.table()
     for(i in seq_along(treatment_indices)){
       treatment_co_occurrence <- Correlation(
-        access(phyloseq_obj, 'otu_table')[,treatment_indices[[i]]],
-        rho,
-        p,
-        method,
-        cores
+        X = access(phyloseq_obj, 'otu_table')[,treatment_indices[[i]]],
+        cor_coef_cutoff = rho,
+        p_cutoff = p,
+        method = method,
+        ncores = cores
       )
       if(length(treatment_indices) > 0){
         treatment_co_occurrence <- cbind(Treatment = treatment_classes[i], treatment_co_occurrence)

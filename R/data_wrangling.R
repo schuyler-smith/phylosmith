@@ -291,7 +291,7 @@ conglomerate_taxa <- function(phyloseq_obj,
     tax_table(phyloseq_obj) <- access(phyloseq_obj,
                                       'tax_table')[, classification]
   }
-
+  phyloseq_obj@tax_table[is.na(phyloseq_obj@tax_table[, classification]), classification] <- 'Unclassified'
   phyloseq_table <- melt_phyloseq(phyloseq_obj)
   otus <- eval(parse(
     text = paste0(
@@ -331,6 +331,8 @@ conglomerate_taxa <- function(phyloseq_obj,
   if (!(is.logical(refseqs))) {
     warning('reference sequences cannot be preserved after taxa conglomeration')
   }
+  rm(list = c('taxa', 'sam', 'phylo_tree', 'refseqs', 'phyloseq_table'))
+  gc()
   return(phyloseq_obj)
 }
 
@@ -376,8 +378,6 @@ melt_phyloseq <- function(phyloseq_obj) {
     sample_data <- data.table(Sample = sample_names(phyloseq_obj))
   }
 
-
-
   melted_phyloseq <-
     merge(melted_phyloseq, sample_data, by = "Sample")
   if (!(is.null(access(phyloseq_obj, 'tax_table')))) {
@@ -386,6 +386,8 @@ melt_phyloseq <- function(phyloseq_obj) {
   melted_phyloseq <-
     melted_phyloseq[order(melted_phyloseq$Abundance
                           , decreasing = TRUE),]
+  rm(list = c('taxa', 'sample_data'))
+  gc()
   return(melted_phyloseq)
 }
 
@@ -772,5 +774,7 @@ taxa_filter <-
       phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0,
                                     phyloseq_obj)
     }
+    rm(list = c('treatment_name', 'treatment_classes'))
+    gc()
     return(phyloseq_obj)
   }

@@ -2,11 +2,23 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @author Schuyler D. Smith
+#' @title Assign rank values to a matrix.
+#' @description Arranges the co-occurence table so that taxa of interest are
+#' on the left.
+#' @param count_matrix A \code{data.frame}
+#' @return A rank matrix
+assign_rank <- function(count_matrix) {
+    .Call('_phylosmith_assign_rank', PACKAGE = 'phylosmith', count_matrix)
+}
+
+#' @author Schuyler D. Smith
 #' @title Co-occurrence calculation
 #' @description Calculate the pair-wise Spearman rank correlation.
-#' @usage Correlation(count_matrix,
+#' @usage Correlation(X, Y,
 #' cor_coef_cutoff, p_cutoff, method, ncores)
-#' @param count_matrix An \code{otu_table} in the format from
+#' @param X An \code{otu_table} in the format from
+#' \code{\link[phyloseq:otu_table]{phyloseq}}
+#' @param Y An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param cor_coef_cutoff \code{double} representing the minimum \code{rho-value}
 #' accepted for the correlation to be returned.
@@ -17,8 +29,8 @@
 #' calculations.
 #' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 #' @seealso \code{\link{co_occurrence}}
-Correlation <- function(count_matrix, cor_coef_cutoff = 0, p_cutoff = 1, method = "pearson", ncores = 1L) {
-    .Call('_phylosmith_Correlation', PACKAGE = 'phylosmith', count_matrix, cor_coef_cutoff, p_cutoff, method, ncores)
+Correlation <- function(X, Y = matrix(1), cor_coef_cutoff = 0, p_cutoff = 1, method = "pearson", ncores = 1L) {
+    .Call('_phylosmith_Correlation', PACKAGE = 'phylosmith', X, Y, cor_coef_cutoff, p_cutoff, method, ncores)
 }
 
 #' @author Schuyler D. Smith

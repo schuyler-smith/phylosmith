@@ -20,16 +20,58 @@
 #endif
 
 #include "significance.h"
-#include "rank.h"
 
 using namespace std;
 
 //' @author Schuyler D. Smith
+//' @title Assign rank values to a matrix.
+//' @description Arranges the co-occurence table so that taxa of interest are
+//' on the left.
+//' @param count_matrix A \code{data.frame}
+//' @return A rank matrix
+// [[Rcpp::export]]
+arma::mat assign_rank(Rcpp::NumericMatrix count_matrix
+){
+  arma::mat rank_table = Rcpp::as<arma::mat>(clone(count_matrix));
+  size_t n_X = count_matrix.nrow();
+  arma::uvec ordered_indices;
+  int rank;
+  int ties = 1;
+  size_t n_samples = rank_table.n_cols;
+  for(size_t X=0; X<n_X; ++X){
+    arma::rowvec rank_vector = arma::zeros<arma::rowvec>(n_samples);
+    arma::rowvec X_abund = rank_table.row(X);
+    if(arma::sum(X_abund) > 0){
+      ordered_indices = sort_index(X_abund, "descend"); // sort indices from largest to smallest
+      for(size_t rank_index=0; rank_index<n_samples; ++rank_index){ // indices are confusing here, likely source of any problem
+        int X_index = ordered_indices[rank_index];
+        rank = rank_index+1;
+        if(rank_index < (n_samples-1) && X_abund[X_index] == X_abund[ordered_indices[rank]]){ // especially here
+          ++ties;
+          rank_vector[X_index] = rank;
+          continue; // if the next sample has an equal value, go to next iteration
+        }
+        rank_vector[X_index] = rank;
+        if(ties > 1){
+          arma::uvec tied_indices = arma::find(rank_vector > rank-ties && rank_vector <= rank);
+          rank_vector.elem(tied_indices).fill(arma::sum(rank_vector.elem(tied_indices)) / ties);
+          ties = 1; // sum all equal values' ranks and assign them as the mean
+        }
+      }
+    }
+    rank_table.row(X) = rank_vector; // put ranks into matrix
+  }
+  return rank_table;
+}
+
+//' @author Schuyler D. Smith
 //' @title Co-occurrence calculation
 //' @description Calculate the pair-wise Spearman rank correlation.
-//' @usage Correlation(count_matrix,
+//' @usage Correlation(X, Y,
 //' cor_coef_cutoff, p_cutoff, method, ncores)
-//' @param count_matrix An \code{otu_table} in the format from
+//' @param X An \code{otu_table} in the format from
+//' \code{\link[phyloseq:otu_table]{phyloseq}}
+//' @param Y An \code{otu_table} in the format from
 //' \code{\link[phyloseq:otu_table]{phyloseq}}
 //' @param cor_coef_cutoff \code{double} representing the minimum \code{rho-value}
 //' accepted for the correlation to be returned.
@@ -42,7 +84,8 @@ using namespace std;
 //' @seealso \code{\link{co_occurrence}}
 // [[Rcpp::export]]
 Rcpp::DataFrame Correlation(
-    Rcpp::NumericMatrix count_matrix,
+    Rcpp::NumericMatrix X,
+    Rcpp::NumericMatrix Y = Rcpp::NumericMatrix(1),
     const double cor_coef_cutoff = 0,
     const double p_cutoff = 1,
     const std::string method = "pearson",
@@ -53,60 +96,106 @@ Rcpp::DataFrame Correlation(
   vector<double> p_values;
   vector<double> cor_coef_values;
 
-  vector<string> names = Rcpp::as<vector <string> >(rownames(count_matrix));
-  size_t N = count_matrix.nrow();
+  vector<string> X_name = Rcpp::as<vector <string> >(rownames(X));
+  size_t N_X = X.nrow();
+  int df = X.ncol() - 2;
 
-  arma::mat comparison_matrix;
+  arma::mat X_comp;
   const string pearson = "pearson";
   const string spearman = "spearman";
   const string kendall = "kendall";
   if(method != pearson){
-    comparison_matrix = assign_rank(count_matrix);
+    X_comp = assign_rank(X);
   } else {
-    comparison_matrix = Rcpp::as<arma::mat>(clone(count_matrix));
+    X_comp = Rcpp::as<arma::mat>(clone(X));
   }
-
-  Progress p(1, false);
-  int n_samples = comparison_matrix.n_cols;
-  #ifdef _OPENMP
-    #pragma omp parallel for num_threads(ncores)
-  #endif
-  for(size_t subject_1=0; subject_1<N-1; ++subject_1){
-    if(!Progress::check_abort()){
-      arma::rowvec X_values = comparison_matrix.row(subject_1);
-      for(size_t subject_2=subject_1+1; subject_2<N; ++subject_2){
-        double cor_coef;
-        double p_val;
-        arma::rowvec Y_values = comparison_matrix.row(subject_2);
-        if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
-          vector<double> X = arma::conv_to<vector <double> >::from(X_values);
-          vector<double> Y = arma::conv_to<vector <double> >::from(Y_values);
-          if(method != kendall){
-            cor_coef = pearsoncoeff(X, Y);
+  if(Y.nrow() > 1){
+    arma::mat Y_comp;
+    vector<string> Y_name = Rcpp::as<vector <string> >(colnames(Y));
+    size_t N_Y = Y.ncol();
+    if(method != pearson){
+      Y_comp = assign_rank(Rcpp::transpose(Y));
+    } else {
+      Y_comp = Rcpp::as<arma::mat>(clone(Y)).t();
+    }
+    Progress p(1, false);
+    #ifdef _OPENMP
+      #pragma omp parallel for num_threads(ncores)
+    #endif
+    for(size_t i=0; i<N_X; ++i){
+      if(!Progress::check_abort()){
+        arma::rowvec X_values = X_comp.row(i);
+        for(size_t j=0; j<N_Y; ++j){
+          double cor_coef;
+          double p_val;
+          arma::rowvec Y_values = Y_comp.row(j);
+          if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
+            vector<double> X_i = arma::conv_to<vector <double> >::from(X_values);
+            vector<double> Y_j = arma::conv_to<vector <double> >::from(Y_values);
+            if(method != kendall){
+              cor_coef = pearsoncoeff(X_i, Y_j);
+            } else {
+              cor_coef = kendall_tau(X_i, Y_j);
+            }
+            double t = t_statistic(cor_coef, df);
+            p_val = pvalue(t, df);
           } else {
-            cor_coef = kendall_tau(X, Y);
+            cor_coef = 0;
+            p_val = 1;
           }
-          double df = n_samples - 2;
-          double t = t_statistic(cor_coef, df);
-          p_val = pvalue(t, df);
-        } else {
-          cor_coef = 0;
-          p_val = 1;
-        }
-        if((cor_coef >= cor_coef_cutoff || cor_coef <= -cor_coef_cutoff) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
-          #ifdef _OPENMP
-            #pragma omp critical
-          #endif
-          {
-            p_values.push_back(p_val);
-            cor_coef_values.push_back(cor_coef);
-            X_names.push_back(names[subject_1]);
-            Y_names.push_back(names[subject_2]);
+          if((cor_coef >= cor_coef_cutoff || cor_coef <= -cor_coef_cutoff) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+            #ifdef _OPENMP
+              #pragma omp critical
+            #endif
+            {
+              p_values.push_back(p_val);
+              cor_coef_values.push_back(cor_coef);
+              X_names.push_back(X_name[i]);
+              Y_names.push_back(Y_name[j]);
+            }
           }
         }
-      }
-    }}
-
+      }}
+  } else {
+    Progress p(1, false);
+    #ifdef _OPENMP
+      #pragma omp parallel for num_threads(ncores)
+    #endif
+    for(size_t i=0; i<N_X-1; ++i){
+      if(!Progress::check_abort()){
+        arma::rowvec X_values = X_comp.row(i);
+        for(size_t j=1; j<N_X; ++j){
+          double cor_coef;
+          double p_val;
+          arma::rowvec Y_values = X_comp.row(j);
+          if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
+            vector<double> X_i = arma::conv_to<vector <double> >::from(X_values);
+            vector<double> Y_j = arma::conv_to<vector <double> >::from(Y_values);
+            if(method != kendall){
+              cor_coef = pearsoncoeff(X_i, Y_j);
+            } else {
+              cor_coef = kendall_tau(X_i, Y_j);
+            }
+            double t = t_statistic(cor_coef, df);
+            p_val = pvalue(t, df);
+          } else {
+            cor_coef = 0;
+            p_val = 1;
+          }
+          if((cor_coef >= cor_coef_cutoff || cor_coef <= -cor_coef_cutoff) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+            #ifdef _OPENMP
+              #pragma omp critical
+            #endif
+            {
+              p_values.push_back(p_val);
+              cor_coef_values.push_back(cor_coef);
+              X_names.push_back(X_name[i]);
+              Y_names.push_back(X_name[j]);
+            }
+          }
+        }
+      }}
+  }
   return Rcpp::DataFrame::create(
     Rcpp::Named("X") = X_names,
     Rcpp::Named("Y") = Y_names,

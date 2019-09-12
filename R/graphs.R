@@ -190,7 +190,7 @@ abundance_heatmap <-
         legend.title = element_text(size = 10, face = 'bold'),
         legend.text = element_text(size = 8),
         legend.spacing.x = unit(0.005, 'npc'),
-        legend.key.size = unit(4, "mm"),
+        legend.key.size = unit(6, "mm"),
         legend.background = element_rect(
           fill = (alpha = 0),
           color = 'black',

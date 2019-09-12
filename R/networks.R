@@ -84,7 +84,7 @@ network_ps <-
   if (is.null(co_occurrence_table)) {
     co_occurrence_table <- co_occurrence(phyloseq_obj,
                                          treatment, method = 'spearman')[rho >= 0.6 |
-                                                      rho <= -0.6]
+                                                                           rho <= -0.6]
   }
   if(is.null(co_occurrence_table[['Treatment']])){
     co_occurrence_table <- cbind(co_occurrence_table, Treatment = 'NA')
@@ -97,7 +97,6 @@ network_ps <-
   }
   colnames(co_occurrence_table)[colnames(co_occurrence_table)
                                 == 'rho'] <- 'weight'
-  co_occurrence_table$weight <- abs(co_occurrence_table$weight)
   if (!is.null(access(phyloseq_obj, 'tax_table'))){
     nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
     nodes <-
@@ -120,24 +119,26 @@ network_ps <-
       vertices = nodes,
       directed = FALSE
     ),
-    remove.multiple = FALSE,
+    remove.multiple = TRUE,
     remove.loops = TRUE
   ))$membership
   cluster_sizes <- table(clusters)
   nodes <- nodes[clusters %in% names(cluster_sizes[cluster_sizes > 3])]
   co_occurrence_table <- co_occurrence_table[X %in% nodes$Node_Name &
                                                Y %in% nodes$Node_Name]
-  net <- graph_from_data_frame(d = co_occurrence_table,
-                               vertices = nodes,
-                               directed = FALSE)
-  net <-
-    simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
-  igraph::E(net)$edge_sign <- vapply(
+  edge_sign <- vapply(
     co_occurrence_table$weight,
     FUN = function(x) {
       as.numeric(as.logical(sign(x) + 1) + 1)
     }, numeric(1)
   )
+  co_occurrence_table$weight <- abs(co_occurrence_table$weight)
+  net <- graph_from_data_frame(d = co_occurrence_table,
+                               vertices = nodes,
+                               directed = FALSE)
+  igraph::E(net)$edge_sign <- edge_sign
+  net <-
+    simplify(net, remove.multiple = TRUE, remove.loops = TRUE)
   return(net)
 }
 
@@ -370,7 +371,7 @@ co_occurrence_network <- function(phyloseq_obj,
         fill = community_colors[hulls$Community]
       )
   }
-  g <- g + geom_edge_link(color = edge_colors) +
+  g <- g + geom_edge_link(width = 0.8, color = edge_colors) +
     guides(colour = FALSE,
            alpha = FALSE,
            fill = guide_legend(ncol = ceiling(length(levels(

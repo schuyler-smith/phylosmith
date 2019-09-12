@@ -4,11 +4,14 @@
 \alias{Correlation}
 \title{Co-occurrence calculation}
 \usage{
-Correlation(count_matrix,
+Correlation(X, Y,
 cor_coef_cutoff, p_cutoff, method, ncores)
 }
 \arguments{
-\item{count_matrix}{An \code{otu_table} in the format from
+\item{X}{An \code{otu_table} in the format from
+\code{\link[phyloseq:otu_table]{phyloseq}}}
+
+\item{Y}{An \code{otu_table} in the format from
 \code{\link[phyloseq:otu_table]{phyloseq}}}
 
 \item{cor_coef_cutoff}{\code{double} representing the minimum \code{rho-value}

@@ -6,18 +6,30 @@
 
 using namespace Rcpp;
 
-// Correlation
-Rcpp::DataFrame Correlation(Rcpp::NumericMatrix count_matrix, const double cor_coef_cutoff, const double p_cutoff, const std::string method, const int ncores);
-RcppExport SEXP _phylosmith_Correlation(SEXP count_matrixSEXP, SEXP cor_coef_cutoffSEXP, SEXP p_cutoffSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
+// assign_rank
+arma::mat assign_rank(Rcpp::NumericMatrix count_matrix);
+RcppExport SEXP _phylosmith_assign_rank(SEXP count_matrixSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type count_matrix(count_matrixSEXP);
+    rcpp_result_gen = Rcpp::wrap(assign_rank(count_matrix));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Correlation
+Rcpp::DataFrame Correlation(Rcpp::NumericMatrix X, Rcpp::NumericMatrix Y, const double cor_coef_cutoff, const double p_cutoff, const std::string method, const int ncores);
+RcppExport SEXP _phylosmith_Correlation(SEXP XSEXP, SEXP YSEXP, SEXP cor_coef_cutoffSEXP, SEXP p_cutoffSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type Y(YSEXP);
     Rcpp::traits::input_parameter< const double >::type cor_coef_cutoff(cor_coef_cutoffSEXP);
     Rcpp::traits::input_parameter< const double >::type p_cutoff(p_cutoffSEXP);
     Rcpp::traits::input_parameter< const std::string >::type method(methodSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(Correlation(count_matrix, cor_coef_cutoff, p_cutoff, method, ncores));
+    rcpp_result_gen = Rcpp::wrap(Correlation(X, Y, cor_coef_cutoff, p_cutoff, method, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -49,7 +61,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_phylosmith_Correlation", (DL_FUNC) &_phylosmith_Correlation, 5},
+    {"_phylosmith_assign_rank", (DL_FUNC) &_phylosmith_assign_rank, 1},
+    {"_phylosmith_Correlation", (DL_FUNC) &_phylosmith_Correlation, 6},
     {"_phylosmith_permute_rho_Rcpp", (DL_FUNC) &_phylosmith_permute_rho_Rcpp, 4},
     {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {NULL, NULL, 0}

@@ -54,6 +54,25 @@ double pearsoncoeff(vector<double> X, vector<double> Y){
   return sum((X - mean(X))*(Y - mean(Y))) / (X.size()*stdev(X)* stdev(Y));
 }
 
+double kendall_tau(vector<double> X,
+                   vector<double> Y){
+  size_t N = X.size();
+  vector<double> sorted_Y;
+  sorted_Y.resize(N);
+  for (size_t i = 0; i<N; i++){
+    sorted_Y[X[i]-1] = Y[i];
+  }
+  vector<double> concordant;
+  vector<double> discordant;
+  for (size_t i = 0; i<N-1; i++){
+    for (size_t j = i+1; j<N; j++){
+      discordant.push_back(sorted_Y[i] > sorted_Y[j]);
+      concordant.push_back(sorted_Y[i] < sorted_Y[j]);
+    }
+  }
+  return (sum(concordant) - sum(discordant))/(sum(concordant) + sum(discordant));
+}
+
 double t_statistic(double r, int df){
   double t = sqrt(df) * r / sqrt(1 - (r*r));
   return(t);
