@@ -97,6 +97,8 @@ function(phyloseq_obj,
       Y = apply(as.matrix(phyloseq_obj_subset@sam_data[,variables]), 2, as.numeric),
       method = method
     )
+    treatment_correlations[['X']] <- rownames(phyloseq_obj_subset@otu_table)[treatment_correlations[['X']]]
+    treatment_correlations[['Y']] <- colnames(phyloseq_obj_subset@sam_data[,variables])[treatment_correlations[['Y']]]
     if(length(treatment_classes) > 1){
       treatment_correlations <- cbind(Treatment = k, treatment_correlations)
     }
