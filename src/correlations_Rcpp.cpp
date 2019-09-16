@@ -91,12 +91,11 @@ Rcpp::DataFrame Correlation(
     const std::string method = "pearson",
     const int ncores = 1
 ){
-  vector<string> X_names;
-  vector<string> Y_names;
+  vector<int> X_names;
+  vector<int> Y_names;
   vector<double> p_values;
   vector<double> cor_coef_values;
 
-  vector<string> X_name = Rcpp::as<vector <string> >(rownames(X));
   size_t N_X = X.nrow();
   int df = X.ncol() - 2;
 
@@ -111,7 +110,6 @@ Rcpp::DataFrame Correlation(
   }
   if(Y.nrow() > 1){
     arma::mat Y_comp;
-    vector<string> Y_name = Rcpp::as<vector <string> >(colnames(Y));
     size_t N_Y = Y.ncol();
     if(method != pearson){
       Y_comp = assign_rank(Rcpp::transpose(Y));
@@ -150,8 +148,8 @@ Rcpp::DataFrame Correlation(
             {
               p_values.push_back(p_val);
               cor_coef_values.push_back(cor_coef);
-              X_names.push_back(X_name[i]);
-              Y_names.push_back(Y_name[j]);
+              X_names.push_back(i+1);
+              Y_names.push_back(j+1);
             }
           }
         }
@@ -164,7 +162,7 @@ Rcpp::DataFrame Correlation(
     for(size_t i=0; i<N_X-1; ++i){
       if(!Progress::check_abort()){
         arma::rowvec X_values = X_comp.row(i);
-        for(size_t j=1; j<N_X; ++j){
+        for(size_t j=i+1; j<N_X; ++j){
           double cor_coef;
           double p_val;
           arma::rowvec Y_values = X_comp.row(j);
@@ -189,8 +187,8 @@ Rcpp::DataFrame Correlation(
             {
               p_values.push_back(p_val);
               cor_coef_values.push_back(cor_coef);
-              X_names.push_back(X_name[i]);
-              Y_names.push_back(X_name[j]);
+              X_names.push_back(i+1);
+              Y_names.push_back(j+1);
             }
           }
         }
@@ -246,12 +244,12 @@ Rcpp::DataFrame permute_rho_Rcpp(
   #ifdef _OPENMP
     #pragma omp parallel for num_threads(ncores)
   #endif
-  for(size_t subject_1=0; subject_1<N-1; ++subject_1){
+  for(size_t i=0; i<N-1; ++i){
     if(!Progress::check_abort()){
-      arma::rowvec X_values = comparison_matrix.row(subject_1);
-      for(size_t subject_2=subject_1+1; subject_2<N; ++subject_2){
+      arma::rowvec X_values = comparison_matrix.row(i);
+      for(size_t j=i+1; j<N; ++j){
         double cor_coef;
-        arma::rowvec Y_values = permuted_comparison_matrix.row(subject_2);
+        arma::rowvec Y_values = permuted_comparison_matrix.row(j);
         if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
           vector<double> X = arma::conv_to<vector <double> >::from(X_values);
           vector<double> Y = arma::conv_to<vector <double> >::from(Y_values);

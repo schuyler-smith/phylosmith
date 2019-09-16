@@ -105,15 +105,18 @@ co_occurrence <-
       treatment_classes <- 'Experiment_Wide'
       treatment_indices <- list(seq(nsamples(phyloseq_obj)))
     }
+    phyloseq_obj <- access(phyloseq_obj, 'otu_table')
     co_occurrence <- data.table()
     for(i in seq_along(treatment_indices)){
       treatment_co_occurrence <- Correlation(
-        X = access(phyloseq_obj, 'otu_table')[,treatment_indices[[i]]],
+        X = phyloseq_obj[,treatment_indices[[i]]],
         cor_coef_cutoff = rho,
         p_cutoff = p,
         method = method,
         ncores = cores
       )
+      treatment_co_occurrence[['X']] <- rownames(phyloseq_obj[,treatment_indices[[i]]])[treatment_co_occurrence[['X']]]
+      treatment_co_occurrence[['Y']] <- rownames(phyloseq_obj[,treatment_indices[[i]]])[treatment_co_occurrence[['Y']]]
       if(length(treatment_indices) > 0){
         treatment_co_occurrence <- cbind(Treatment = treatment_classes[i], treatment_co_occurrence)
       }

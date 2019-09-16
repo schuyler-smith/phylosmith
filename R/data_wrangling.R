@@ -774,7 +774,6 @@ taxa_filter <-
       phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0,
                                     phyloseq_obj)
     }
-    rm(list = c('treatment_name', 'treatment_classes'))
     gc()
     return(phyloseq_obj)
   }
