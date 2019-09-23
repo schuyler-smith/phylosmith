@@ -85,18 +85,16 @@ network_ps <-
     co_occurrence_table <- co_occurrence(phyloseq_obj,
                                          treatment, method = 'spearman')[rho >= 0.6 |
                                                                            rho <= -0.6]
+  } else { if(!is.null(subset)){
+    co_occurrence_table <-
+      co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
+    }
   }
   if(is.null(co_occurrence_table[['Treatment']])){
     co_occurrence_table <- cbind(co_occurrence_table, Treatment = 'NA')
   }
   co_occurrence_table <- co_occurrence_table[, c('X',
                                                  'Y', 'Treatment', 'rho', 'p')]
-  if (!is.null(subset)) {
-    co_occurrence_table <-
-      co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
-  }
-  colnames(co_occurrence_table)[colnames(co_occurrence_table)
-                                == 'rho'] <- 'weight'
   if (!is.null(access(phyloseq_obj, 'tax_table'))){
     nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
     nodes <-
@@ -112,7 +110,7 @@ network_ps <-
                      as.character(co_occurrence_table$Y)
                    ),]
   cluster_table <- co_occurrence_table
-  cluster_table[['weight']] <- abs(cluster_table[['weight']])
+  cluster_table[['weight']] <- abs(cluster_table[['rho']])
   clusters <- cluster_fast_greedy(simplify(
     graph_from_data_frame(
       d = cluster_table,
@@ -127,18 +125,17 @@ network_ps <-
   co_occurrence_table <- co_occurrence_table[X %in% nodes$Node_Name &
                                                Y %in% nodes$Node_Name]
   edge_sign <- vapply(
-    co_occurrence_table$weight,
+    co_occurrence_table$rho,
     FUN = function(x) {
       as.numeric(as.logical(sign(x) + 1) + 1)
     }, numeric(1)
   )
-  co_occurrence_table$weight <- abs(co_occurrence_table$weight)
+  co_occurrence_table$rho <- abs(co_occurrence_table$rho)
+  setnames(co_occurrence_table, 'rho', 'weight')
+  co_occurrence_table$edge_sign <- edge_sign
   net <- graph_from_data_frame(d = co_occurrence_table,
                                vertices = nodes,
                                directed = FALSE)
-  igraph::E(net)$edge_sign <- edge_sign
-  net <-
-    simplify(net, remove.multiple = TRUE, remove.loops = TRUE)
   return(net)
 }
 
@@ -286,27 +283,21 @@ co_occurrence_network <- function(phyloseq_obj,
                     treatment,
                     subset,
                     co_occurrence_table)
-  if (is.null(layout)) {
-    layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
-  }
-  if (cluster == TRUE) {
-    cluster_table <- co_occurrence_table
-    cluster_table[["weight"]] <- abs(cluster_table[["rho"]])
-    cluster <- cluster_fast_greedy(simplify(
-      graph_from_data_frame(
-        d = cluster_table,
-        directed = FALSE
-      ),
-      remove.multiple = TRUE,
-      remove.loops = TRUE
-    ))$membership
-  }
-  if (length(cluster) > 1 & length(cluster) != length(V(net))) {
+  if (length(cluster) > 1 & length(cluster) != length(igraph::V(net))) {
     stop(
       "`cluster` must be either `TRUE`,`FALSE`, or
         a vector of memborship for each node",
       call. = FALSE
     )
+  }
+  if (is.null(layout)) {
+    layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
+  }
+  if (cluster == TRUE) {
+    cluster <- cluster_fast_greedy(simplify(net,
+      remove.multiple = TRUE,
+      remove.loops = TRUE
+    ))$membership
   }
   if (length(cluster) > 1) {
     communities <- data.table(layout[, c(1, 2)])
@@ -338,7 +329,7 @@ co_occurrence_network <- function(phyloseq_obj,
 
   if (!(is.null(classification))) {
     eval(parse(text = paste0(
-      'V(net)$', classification, '[is.na(V(net)$', classification, ')] <- "Unclassified"'
+      'igraph::V(net)$', classification, '[is.na(igraph::V(net)$', classification, ')] <- "Unclassified"'
     )))
     node_classes <- c(sort(unique(access(
       phyloseq_obj,
@@ -347,14 +338,14 @@ co_occurrence_network <- function(phyloseq_obj,
     node_colors <- create_palette(length(node_classes), node_colors)
     node_colors <- node_colors[node_classes %in%
       eval(parse(text = paste0(
-        'V(net)$',
+        'igraph::V(net)$',
         classification
       )))]
   }
   if (is.null(classification) & node_colors == 'default') {
     node_colors <- 'steelblue'
   }
-  edge_colors <- c('pink1', 'gray22')[vapply(E(net)$edge_sign, rep, numeric(100), 100)]
+  edge_colors <- c('pink1', 'gray22')[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
 
   g <- ggraph(layout) + theme_graph() + coord_fixed()
   if (length(cluster) > 1) {
@@ -373,7 +364,7 @@ co_occurrence_network <- function(phyloseq_obj,
   g <- g + geom_edge_link(width = 0.8, color = edge_colors) +
     guides(colour = FALSE,
            alpha = FALSE,
-           fill = guide_legend(ncol = ceiling(length(levels(
+           fill = guide_legend(ncol = ceiling(length(unique(
              layout[[classification]]
            )) / 25)), override.aes = list(size = 4))
   if (is.null(classification)) {
