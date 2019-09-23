@@ -295,10 +295,9 @@ co_occurrence_network <- function(phyloseq_obj,
     cluster <- cluster_fast_greedy(simplify(
       graph_from_data_frame(
         d = cluster_table,
-        vertices = nodes,
         directed = FALSE
       ),
-      remove.multiple = FALSE,
+      remove.multiple = TRUE,
       remove.loops = TRUE
     ))$membership
   }
