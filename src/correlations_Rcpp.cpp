@@ -240,7 +240,6 @@ Rcpp::DataFrame permute_rho_Rcpp(
   }
 
   Progress p(1, false);
-  int n_samples = comparison_matrix.n_cols;
   #ifdef _OPENMP
     #pragma omp parallel for num_threads(ncores)
   #endif

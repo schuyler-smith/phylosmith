@@ -291,7 +291,7 @@ co_occurrence_network <- function(phyloseq_obj,
   }
   if (cluster == TRUE) {
     cluster_table <- co_occurrence_table
-    cluster_table[['weight']] <- abs(cluster_table[['weight']])
+    cluster_table[["weight"]] <- abs(cluster_table[["rho"]])
     cluster <- cluster_fast_greedy(simplify(
       graph_from_data_frame(
         d = cluster_table,

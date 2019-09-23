@@ -285,6 +285,10 @@ variable_correlation_network <- function(
   correlation_table <- correlation_table[p <= p_threshold]
   correlation_table <- correlation_table[rho <= rho_threshold[1] |
                                          rho >= rho_threshold[2]]
+  if(nrow(correlation_table) == 0){
+    stop("None of the supplied variables were sgnificantly correlated to the data.",
+         call. = FALSE)
+  }
   if(is.null(correlation_table[['Treatment']])){
     correlation_table <- cbind(correlation_table, Treatment = 'NA')}
   correlation_table <- correlation_table[, c('X', 'Y', 'Treatment', 'rho', 'p')]
