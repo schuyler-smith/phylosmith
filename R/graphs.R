@@ -565,6 +565,7 @@ nmds_phyloseq <-
     options(warn = -1)
     phyloseq_obj <-
       taxa_filter(phyloseq_obj, treatment, frequency = 0)
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
     treatment_name <- paste(treatment, collapse = sep)
     metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
     color_count <- length(unique(metadata[[treatment_name]]))
