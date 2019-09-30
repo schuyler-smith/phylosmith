@@ -1414,8 +1414,8 @@ tsne_phyloseq <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' plots the PCoA of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
-#' @usage pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, circle = 0.95,
-#' labels = NULL, colors = 'default')
+#' @usage pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = 'bray',
+#' circle = 0.95, labels = NULL, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -1426,6 +1426,7 @@ tsne_phyloseq <-
 #' multiple columns and they will be combined into a new column.
 #' @param x the numerical principle compenent to use as the x-axis
 #' @param y the numerical principle compenent to use as the y-axis
+#' @param method the distance measurement algorithm to use
 #' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 #' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
 #' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
@@ -1437,10 +1438,11 @@ tsne_phyloseq <-
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 #' colors.
 #' @importFrom vegan vegdist
+#' @importFrom stats cmdscale
 #' @export
 #' @return ggplot-object
 #' @examples pcoa_phyloseq(soil_column, c('Matrix', 'Treatment'),
-#' circle = TRUE, verbose = FALSE)
+#' circle = TRUE)
 
 pcoa_phyloseq <- function(phyloseq_obj,
                           treatment = NULL,
@@ -1467,6 +1469,11 @@ pcoa_phyloseq <- function(phyloseq_obj,
     stop("`labels` must be a column name, or\n        index, from the sample_data()",
          call. = FALSE)
   }
+
+  match.arg(method, c("manhattan", "euclidean", "canberra", "bray",
+       "kulczynski", "gower", "morisita", "horn", "mountford",
+       "jaccard", "raup", "binomial", "chao", "altGower", "cao",
+       "mahalanobis", "clark"))
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   phyloseq_obj <- relative_abundance(phyloseq_obj)

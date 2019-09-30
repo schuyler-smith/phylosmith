@@ -15,3 +15,5 @@ Changes in version 1.0.3
 Changes in version 1.0.4
 + Add method options for co-occurrence calculations
 + Update routines for co-occurrence
++ Add PCoA
++ Add variable correlations

@@ -5,8 +5,8 @@
 \title{Create a ggplot object of the PCoA from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, circle = 0.95,
-labels = NULL, colors = 'default')
+pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = 'bray',
+circle = 0.95, labels = NULL, colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -22,6 +22,8 @@ multiple columns and they will be combined into a new column.}
 \item{x}{the numerical principle compenent to use as the x-axis}
 
 \item{y}{the numerical principle compenent to use as the y-axis}
+
+\item{method}{the distance measurement algorithm to use}
 
 \item{circle}{If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
@@ -45,5 +47,5 @@ plots the PCoA of a treatment or set of treatments in space.
 }
 \examples{
 pcoa_phyloseq(soil_column, c('Matrix', 'Treatment'),
-circle = TRUE, verbose = FALSE)
+circle = TRUE)
 }
