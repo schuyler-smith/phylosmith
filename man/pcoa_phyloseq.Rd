@@ -6,7 +6,7 @@
 Function from the phylosmith-package.}
 \usage{
 pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = 'bray',
-circle = 0.95, labels = NULL, colors = 'default')
+circle = 0.95, colors = 'default', labels = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

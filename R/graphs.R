@@ -1415,7 +1415,7 @@ tsne_phyloseq <-
 #' plots the PCoA of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
 #' @usage pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = 'bray',
-#' circle = 0.95, labels = NULL, colors = 'default')
+#' circle = 0.95, colors = 'default', labels = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
