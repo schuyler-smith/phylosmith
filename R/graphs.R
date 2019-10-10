@@ -1019,8 +1019,8 @@ taxa_abundance_bars <-
     color_count <- length(unique(graph_data[[treatment_name]]))
     graph_colors <- create_palette(color_count, colors)
 
-    graph_data[[classification]] <-
-      factor(graph_data[[classification]], levels = sort(unique(as.character(graph_data[[classification]]))))
+    # graph_data[[classification]] <-
+    #   factor(graph_data[[classification]], levels = sort(unique(as.character(graph_data[[classification]]))))
 
     g <-
       ggplot(graph_data,
