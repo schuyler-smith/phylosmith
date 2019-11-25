@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+<meta name="date" content="2019-11-25" />
+
+<title>Analytics</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li>
+  <a href="wrangling.html">
+    <span class="fa fa-file"></span>
+     
+    Wrangling
+  </a>
+</li>
+<li>
+  <a href="analytics.html">
+    <span class="fa fa-chart-pie"></span>
+     
+    Analytics
+  </a>
+</li>
+<li>
+  <a href="graphs.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphs
+  </a>
+</li>
+<li>
+  <a href="networks.html">
+    <span class="fa fa-project-diagram"></span>
+     
+    Networks
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/tree/master/R">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Analytics</h1>
+<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
+<h4 class="date">2019-11-25</h4>
+
+</div>
+
+
+<p><br></p>
+<div id="common_taxa" class="section level2">
+<h2>common_taxa</h2>
+<p><a name="common_taxa"></a></p>
+<p>Used to identify which entries in the taxa_table are shared among treatment-groups. It will return a <code>vector</code> of taxa names that are all seen in <code>n</code> groups.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>common_taxa(phyloseq_obj, treatment = NULL, subset = NULL, n = &#39;all&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>n</code></td>
+<td>Number of treatment groups that need to share the taxa to be considered a common taxa.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>common_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;, n = &#39;all&#39;)[1:35]</code></pre>
+<pre><code>##  [1] &quot;OTU_1&quot;   &quot;OTU_100&quot; &quot;OTU_101&quot; &quot;OTU_104&quot; &quot;OTU_105&quot; &quot;OTU_110&quot; &quot;OTU_114&quot; &quot;OTU_115&quot; &quot;OTU_116&quot; &quot;OTU_117&quot; &quot;OTU_118&quot; &quot;OTU_119&quot; &quot;OTU_12&quot;  &quot;OTU_120&quot;
+## [15] &quot;OTU_121&quot; &quot;OTU_122&quot; &quot;OTU_123&quot; &quot;OTU_124&quot; &quot;OTU_125&quot; &quot;OTU_126&quot; &quot;OTU_127&quot; &quot;OTU_128&quot; &quot;OTU_129&quot; &quot;OTU_130&quot; &quot;OTU_131&quot; &quot;OTU_133&quot; &quot;OTU_134&quot; &quot;OTU_135&quot;
+## [29] &quot;OTU_137&quot; &quot;OTU_138&quot; &quot;OTU_139&quot; &quot;OTU_14&quot;  &quot;OTU_140&quot; &quot;OTU_141&quot; &quot;OTU_142&quot;</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_core" class="section level2">
+<h2>taxa_core</h2>
+<p><a name="taxa_core"></a></p>
+<p>Filter taxa in phyloseq-object to only include core taxa</p>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_core(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0.5, abundance_threshold = 0.01)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>frequency</code></td>
+<td>The proportion of samples the taxa is found in.</td>
+</tr>
+<tr class="odd">
+<td><code>abundance_threshold</code></td>
+<td>The minimum relative abundance the taxa is found in for each sample.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong> The <code>soil_column</code> data has 18,441 OTUs listed in its <code>taxa_table</code>.</p>
+<pre class="r"><code>taxa_core(soil_column, frequency = 0.2, abundance_threshold = 0.01)</code></pre>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 26 taxa and 481 samples ]
+## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
+## tax_table()   Taxonomy Table:    [ 26 taxa by 6 taxonomic ranks ]</code></pre>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_proportions" class="section level2">
+<h2>taxa_proportions</h2>
+<p><a name="taxa_proportions"></a></p>
+<p>Computes the proportion of a taxa classification. This can be done by treatment, sample, or across the dataset.</p>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_proportions(phyloseq_obj, classification, treatment = NA)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the tax_table for the prportions to be reported on.</td>
+</tr>
+<tr class="odd">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>taxa_proportions(soil_column, &#39;Phylum&#39;, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Matrix_Treatment"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Phylum"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Proportion"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Manure Control","2":"Firmicutes","3":"0.627"},{"1":"Manure Control","2":"Acidobacteria","3":"0.069"},{"1":"Manure Control","2":"Euryarchaeota","3":"0.054"},{"1":"Manure Control","2":"Proteobacteria","3":"0.041"},{"1":"Manure Control","2":"Bacteroidetes","3":"0.027"},{"1":"Manure Control","2":"Actinobacteria","3":"0.038"},{"1":"Manure Control","2":"Verrucomicrobia","3":"0.037"},{"1":"Manure Control","2":"unclassified_Bacteria","3":"0.025"},{"1":"Manure Control","2":"Planctomycetes","3":"0.022"},{"1":"Manure Control","2":"candidate division WPS-1","3":"0.019"},{"1":"Manure Control","2":"Spirochaetes","3":"0.011"},{"1":"Manure Control","2":"Chloroflexi","3":"0.016"},{"1":"Manure Control","2":"Tenericutes","3":"0.002"},{"1":"Manure Control","2":"Thaumarchaeota","3":"0.004"},{"1":"Manure Control","2":"Armatimonadetes","3":"0.002"},{"1":"Manure Control","2":"Cloacimonetes","3":"0.001"},{"1":"Manure Control","2":"Gemmatimonadetes","3":"0.002"},{"1":"Manure Control","2":"Latescibacteria","3":"0.001"},{"1":"Manure Control","2":"Synergistetes","3":"0.001"},{"1":"Manure Control","2":"Fibrobacteres","3":"0.000"},{"1":"Manure Control","2":"Nitrospirae","3":"0.000"},{"1":"Manure Control","2":"BRC1","3":"0.000"},{"1":"Manure Control","2":"Chlamydiae","3":"0.000"},{"1":"Manure Control","2":"Deinococcus-Thermus","3":"0.000"},{"1":"Manure Control","2":"Lentisphaerae","3":"0.000"},{"1":"Manure Control","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"Manure Control","2":"Crenarchaeota","3":"0.000"},{"1":"Manure Control","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"Manure Control","2":"Deferribacteres","3":"0.000"},{"1":"Manure Control","2":"Diapherotrites","3":"0.000"},{"1":"Manure Control","2":"Elusimicrobia","3":"0.000"},{"1":"Manure Control","2":"Fusobacteria","3":"0.000"},{"1":"Manure Control","2":"Hydrogenedentes","3":"0.000"},{"1":"Manure Control","2":"Ignavibacteriae","3":"0.000"},{"1":"Manure Control","2":"Microgenomates","3":"0.000"},{"1":"Manure Control","2":"Pacearchaeota","3":"0.000"},{"1":"Manure Control","2":"Parcubacteria","3":"0.000"},{"1":"Manure Control","2":"SR1","3":"0.000"},{"1":"Manure Control","2":"Woesearchaeota","3":"0.000"},{"1":"Manure Control","2":"candidate division WPS-2","3":"0.000"},{"1":"Manure Control","2":"candidate division ZB3","3":"0.000"},{"1":"Manure Control","2":"unclassified_Archaea","3":"0.000"},{"1":"Manure Control","2":"unclassified_Root","3":"0.000"},{"1":"Soil Amended","2":"Proteobacteria","3":"0.135"},{"1":"Soil Amended","2":"Acidobacteria","3":"0.223"},{"1":"Soil Amended","2":"unclassified_Bacteria","3":"0.156"},{"1":"Soil Amended","2":"Actinobacteria","3":"0.125"},{"1":"Soil Amended","2":"Bacteroidetes","3":"0.062"},{"1":"Soil Amended","2":"Chloroflexi","3":"0.070"},{"1":"Soil Amended","2":"Spirochaetes","3":"0.007"},{"1":"Soil Amended","2":"Verrucomicrobia","3":"0.069"},{"1":"Soil Amended","2":"Firmicutes","3":"0.032"},{"1":"Soil Amended","2":"candidate division WPS-1","3":"0.027"},{"1":"Soil Amended","2":"Planctomycetes","3":"0.046"},{"1":"Soil Amended","2":"Thaumarchaeota","3":"0.016"},{"1":"Soil Amended","2":"Latescibacteria","3":"0.010"},{"1":"Soil Amended","2":"Armatimonadetes","3":"0.006"},{"1":"Soil Amended","2":"Gemmatimonadetes","3":"0.007"},{"1":"Soil Amended","2":"Fibrobacteres","3":"0.001"},{"1":"Soil Amended","2":"Nitrospirae","3":"0.004"},{"1":"Soil Amended","2":"Synergistetes","3":"0.001"},{"1":"Soil Amended","2":"Euryarchaeota","3":"0.002"},{"1":"Soil Amended","2":"Tenericutes","3":"0.000"},{"1":"Soil Amended","2":"Deinococcus-Thermus","3":"0.000"},{"1":"Soil Amended","2":"Parcubacteria","3":"0.000"},{"1":"Soil Amended","2":"BRC1","3":"0.000"},{"1":"Soil Amended","2":"Woesearchaeota","3":"0.000"},{"1":"Soil Amended","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"Soil Amended","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"Soil Amended","2":"Chlamydiae","3":"0.000"},{"1":"Soil Amended","2":"Cloacimonetes","3":"0.000"},{"1":"Soil Amended","2":"Lentisphaerae","3":"0.000"},{"1":"Soil Amended","2":"Crenarchaeota","3":"0.000"},{"1":"Soil Amended","2":"Hydrogenedentes","3":"0.000"},{"1":"Soil Amended","2":"candidate division WPS-2","3":"0.000"},{"1":"Soil Amended","2":"unclassified_Archaea","3":"0.000"},{"1":"Soil Amended","2":"Pacearchaeota","3":"0.000"},{"1":"Soil Amended","2":"unclassified_Root","3":"0.000"},{"1":"Soil Amended","2":"Microgenomates","3":"0.000"},{"1":"Soil Amended","2":"Ignavibacteriae","3":"0.000"},{"1":"Soil Amended","2":"Deferribacteres","3":"0.000"},{"1":"Soil Amended","2":"Diapherotrites","3":"0.000"},{"1":"Soil Amended","2":"Elusimicrobia","3":"0.000"},{"1":"Soil Amended","2":"Fusobacteria","3":"0.000"},{"1":"Soil Amended","2":"SR1","3":"0.000"},{"1":"Soil Amended","2":"candidate division ZB3","3":"0.000"},{"1":"Effluent Amended","2":"Proteobacteria","3":"0.339"},{"1":"Effluent Amended","2":"Verrucomicrobia","3":"0.217"},{"1":"Effluent Amended","2":"Acidobacteria","3":"0.020"},{"1":"Effluent Amended","2":"Bacteroidetes","3":"0.130"},{"1":"Effluent Amended","2":"Planctomycetes","3":"0.071"},{"1":"Effluent Amended","2":"Firmicutes","3":"0.065"},{"1":"Effluent Amended","2":"Actinobacteria","3":"0.057"},{"1":"Effluent Amended","2":"Cyanobacteria/Chloroplast","3":"0.013"},{"1":"Effluent Amended","2":"unclassified_Bacteria","3":"0.043"},{"1":"Effluent Amended","2":"candidate division WPS-1","3":"0.004"},{"1":"Effluent Amended","2":"Chloroflexi","3":"0.010"},{"1":"Effluent Amended","2":"Spirochaetes","3":"0.003"},{"1":"Effluent Amended","2":"unclassified_Root","3":"0.006"},{"1":"Effluent Amended","2":"Euryarchaeota","3":"0.009"},{"1":"Effluent Amended","2":"Thaumarchaeota","3":"0.002"},{"1":"Effluent Amended","2":"Armatimonadetes","3":"0.004"},{"1":"Effluent Amended","2":"Gemmatimonadetes","3":"0.001"},{"1":"Effluent Amended","2":"Tenericutes","3":"0.002"},{"1":"Effluent Amended","2":"Latescibacteria","3":"0.000"},{"1":"Effluent Amended","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"Effluent Amended","2":"Nitrospirae","3":"0.000"},{"1":"Effluent Amended","2":"Chlamydiae","3":"0.001"},{"1":"Effluent Amended","2":"Fibrobacteres","3":"0.000"},{"1":"Effluent Amended","2":"BRC1","3":"0.000"},{"1":"Effluent Amended","2":"Parcubacteria","3":"0.000"},{"1":"Effluent Amended","2":"Ignavibacteriae","3":"0.000"},{"1":"Effluent Amended","2":"Woesearchaeota","3":"0.000"},{"1":"Effluent Amended","2":"Synergistetes","3":"0.000"},{"1":"Effluent Amended","2":"unclassified_Archaea","3":"0.000"},{"1":"Effluent Amended","2":"Pacearchaeota","3":"0.000"},{"1":"Effluent Amended","2":"candidate division WPS-2","3":"0.000"},{"1":"Effluent Amended","2":"Deinococcus-Thermus","3":"0.000"},{"1":"Effluent Amended","2":"Cloacimonetes","3":"0.000"},{"1":"Effluent Amended","2":"Hydrogenedentes","3":"0.000"},{"1":"Effluent Amended","2":"Lentisphaerae","3":"0.000"},{"1":"Effluent Amended","2":"Diapherotrites","3":"0.000"},{"1":"Effluent Amended","2":"Elusimicrobia","3":"0.000"},{"1":"Effluent Amended","2":"Crenarchaeota","3":"0.000"},{"1":"Effluent Amended","2":"Microgenomates","3":"0.000"},{"1":"Effluent Amended","2":"SR1","3":"0.000"},{"1":"Effluent Amended","2":"Deferribacteres","3":"0.000"},{"1":"Effluent Amended","2":"Fusobacteria","3":"0.000"},{"1":"Effluent Amended","2":"candidate division ZB3","3":"0.000"},{"1":"Soil Unamended","2":"Acidobacteria","3":"0.250"},{"1":"Soil Unamended","2":"Proteobacteria","3":"0.116"},{"1":"Soil Unamended","2":"Verrucomicrobia","3":"0.134"},{"1":"Soil Unamended","2":"Actinobacteria","3":"0.081"},{"1":"Soil Unamended","2":"candidate division WPS-1","3":"0.069"},{"1":"Soil Unamended","2":"Chloroflexi","3":"0.081"},{"1":"Soil Unamended","2":"unclassified_Bacteria","3":"0.108"},{"1":"Soil Unamended","2":"Planctomycetes","3":"0.066"},{"1":"Soil Unamended","2":"Firmicutes","3":"0.030"},{"1":"Soil Unamended","2":"Bacteroidetes","3":"0.021"},{"1":"Soil Unamended","2":"Gemmatimonadetes","3":"0.013"},{"1":"Soil Unamended","2":"Thaumarchaeota","3":"0.013"},{"1":"Soil Unamended","2":"Spirochaetes","3":"0.000"},{"1":"Soil Unamended","2":"Armatimonadetes","3":"0.009"},{"1":"Soil Unamended","2":"Latescibacteria","3":"0.005"},{"1":"Soil Unamended","2":"Crenarchaeota","3":"0.001"},{"1":"Soil Unamended","2":"Nitrospirae","3":"0.001"},{"1":"Soil Unamended","2":"Euryarchaeota","3":"0.001"},{"1":"Soil Unamended","2":"Fibrobacteres","3":"0.000"},{"1":"Soil Unamended","2":"BRC1","3":"0.001"},{"1":"Soil Unamended","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"Soil Unamended","2":"candidate division WPS-2","3":"0.000"},{"1":"Soil Unamended","2":"Parcubacteria","3":"0.000"},{"1":"Soil Unamended","2":"Chlamydiae","3":"0.000"},{"1":"Soil Unamended","2":"Deinococcus-Thermus","3":"0.000"},{"1":"Soil Unamended","2":"Woesearchaeota","3":"0.000"},{"1":"Soil Unamended","2":"unclassified_Archaea","3":"0.000"},{"1":"Soil Unamended","2":"Pacearchaeota","3":"0.000"},{"1":"Soil Unamended","2":"Tenericutes","3":"0.000"},{"1":"Soil Unamended","2":"Synergistetes","3":"0.000"},{"1":"Soil Unamended","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"Soil Unamended","2":"unclassified_Root","3":"0.000"},{"1":"Soil Unamended","2":"Ignavibacteriae","3":"0.000"},{"1":"Soil Unamended","2":"Microgenomates","3":"0.000"},{"1":"Soil Unamended","2":"Hydrogenedentes","3":"0.000"},{"1":"Soil Unamended","2":"Cloacimonetes","3":"0.000"},{"1":"Soil Unamended","2":"Deferribacteres","3":"0.000"},{"1":"Soil Unamended","2":"Diapherotrites","3":"0.000"},{"1":"Soil Unamended","2":"Elusimicrobia","3":"0.000"},{"1":"Soil Unamended","2":"Fusobacteria","3":"0.000"},{"1":"Soil Unamended","2":"Lentisphaerae","3":"0.000"},{"1":"Soil Unamended","2":"SR1","3":"0.000"},{"1":"Soil Unamended","2":"candidate division ZB3","3":"0.000"},{"1":"Effluent Unamended","2":"Proteobacteria","3":"0.569"},{"1":"Effluent Unamended","2":"Verrucomicrobia","3":"0.070"},{"1":"Effluent Unamended","2":"unclassified_Bacteria","3":"0.147"},{"1":"Effluent Unamended","2":"Acidobacteria","3":"0.042"},{"1":"Effluent Unamended","2":"Woesearchaeota","3":"0.010"},{"1":"Effluent Unamended","2":"Thaumarchaeota","3":"0.015"},{"1":"Effluent Unamended","2":"Bacteroidetes","3":"0.032"},{"1":"Effluent Unamended","2":"Firmicutes","3":"0.017"},{"1":"Effluent Unamended","2":"Planctomycetes","3":"0.025"},{"1":"Effluent Unamended","2":"Actinobacteria","3":"0.016"},{"1":"Effluent Unamended","2":"Parcubacteria","3":"0.008"},{"1":"Effluent Unamended","2":"Euryarchaeota","3":"0.012"},{"1":"Effluent Unamended","2":"Chloroflexi","3":"0.011"},{"1":"Effluent Unamended","2":"Armatimonadetes","3":"0.006"},{"1":"Effluent Unamended","2":"Chlamydiae","3":"0.003"},{"1":"Effluent Unamended","2":"Gemmatimonadetes","3":"0.003"},{"1":"Effluent Unamended","2":"candidate division WPS-2","3":"0.001"},{"1":"Effluent Unamended","2":"Pacearchaeota","3":"0.002"},{"1":"Effluent Unamended","2":"Spirochaetes","3":"0.003"},{"1":"Effluent Unamended","2":"unclassified_Root","3":"0.001"},{"1":"Effluent Unamended","2":"candidate division WPS-1","3":"0.003"},{"1":"Effluent Unamended","2":"unclassified_Archaea","3":"0.001"},{"1":"Effluent Unamended","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"Effluent Unamended","2":"BRC1","3":"0.001"},{"1":"Effluent Unamended","2":"Microgenomates","3":"0.000"},{"1":"Effluent Unamended","2":"Hydrogenedentes","3":"0.000"},{"1":"Effluent Unamended","2":"Nitrospirae","3":"0.000"},{"1":"Effluent Unamended","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"Effluent Unamended","2":"Ignavibacteriae","3":"0.000"},{"1":"Effluent Unamended","2":"Synergistetes","3":"0.000"},{"1":"Effluent Unamended","2":"Latescibacteria","3":"0.000"},{"1":"Effluent Unamended","2":"Diapherotrites","3":"0.000"},{"1":"Effluent Unamended","2":"Crenarchaeota","3":"0.000"},{"1":"Effluent Unamended","2":"Deinococcus-Thermus","3":"0.000"},{"1":"Effluent Unamended","2":"candidate division ZB3","3":"0.000"},{"1":"Effluent Unamended","2":"SR1","3":"0.000"},{"1":"Effluent Unamended","2":"Cloacimonetes","3":"0.000"},{"1":"Effluent Unamended","2":"Tenericutes","3":"0.000"},{"1":"Effluent Unamended","2":"Fusobacteria","3":"0.000"},{"1":"Effluent Unamended","2":"Deferribacteres","3":"0.000"},{"1":"Effluent Unamended","2":"Elusimicrobia","3":"0.000"},{"1":"Effluent Unamended","2":"Fibrobacteres","3":"0.000"},{"1":"Effluent Unamended","2":"Lentisphaerae","3":"0.000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>taxa_proportions(soil_column, &#39;Phylum&#39;, treatment = &#39;sample&#39;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Phylum"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Proportion"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"S_0","2":"Firmicutes","3":"0.637"},{"1":"S_0","2":"Acidobacteria","3":"0.071"},{"1":"S_0","2":"Euryarchaeota","3":"0.061"},{"1":"S_0","2":"Actinobacteria","3":"0.043"},{"1":"S_0","2":"Proteobacteria","3":"0.037"},{"1":"S_0","2":"Verrucomicrobia","3":"0.036"},{"1":"S_0","2":"unclassified_Bacteria","3":"0.024"},{"1":"S_0","2":"Planctomycetes","3":"0.023"},{"1":"S_0","2":"candidate division WPS-1","3":"0.018"},{"1":"S_0","2":"Chloroflexi","3":"0.016"},{"1":"S_0","2":"Bacteroidetes","3":"0.015"},{"1":"S_0","2":"Spirochaetes","3":"0.010"},{"1":"S_0","2":"Thaumarchaeota","3":"0.004"},{"1":"S_0","2":"Armatimonadetes","3":"0.001"},{"1":"S_0","2":"Gemmatimonadetes","3":"0.001"},{"1":"S_0","2":"Synergistetes","3":"0.001"},{"1":"S_0","2":"Tenericutes","3":"0.001"},{"1":"S_0","2":"Cloacimonetes","3":"0.001"},{"1":"S_0","2":"Latescibacteria","3":"0.001"},{"1":"S_0","2":"Fibrobacteres","3":"0.000"},{"1":"S_0","2":"Nitrospirae","3":"0.000"},{"1":"S_0","2":"BRC1","3":"0.000"},{"1":"S_0","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_0","2":"Lentisphaerae","3":"0.000"},{"1":"S_0","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_0","2":"Chlamydiae","3":"0.000"},{"1":"S_0","2":"Crenarchaeota","3":"0.000"},{"1":"S_0","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_0","2":"Deferribacteres","3":"0.000"},{"1":"S_0","2":"Diapherotrites","3":"0.000"},{"1":"S_0","2":"Elusimicrobia","3":"0.000"},{"1":"S_0","2":"Fusobacteria","3":"0.000"},{"1":"S_0","2":"Hydrogenedentes","3":"0.000"},{"1":"S_0","2":"Ignavibacteriae","3":"0.000"},{"1":"S_0","2":"Microgenomates","3":"0.000"},{"1":"S_0","2":"Pacearchaeota","3":"0.000"},{"1":"S_0","2":"Parcubacteria","3":"0.000"},{"1":"S_0","2":"SR1","3":"0.000"},{"1":"S_0","2":"Woesearchaeota","3":"0.000"},{"1":"S_0","2":"candidate division WPS-2","3":"0.000"},{"1":"S_0","2":"candidate division ZB3","3":"0.000"},{"1":"S_0","2":"unclassified_Archaea","3":"0.000"},{"1":"S_0","2":"unclassified_Root","3":"0.000"},{"1":"S_1","2":"Firmicutes","3":"0.614"},{"1":"S_1","2":"Acidobacteria","3":"0.056"},{"1":"S_1","2":"Proteobacteria","3":"0.049"},{"1":"S_1","2":"Bacteroidetes","3":"0.048"},{"1":"S_1","2":"Euryarchaeota","3":"0.047"},{"1":"S_1","2":"Actinobacteria","3":"0.036"},{"1":"S_1","2":"Verrucomicrobia","3":"0.033"},{"1":"S_1","2":"unclassified_Bacteria","3":"0.026"},{"1":"S_1","2":"Planctomycetes","3":"0.022"},{"1":"S_1","2":"candidate division WPS-1","3":"0.022"},{"1":"S_1","2":"Spirochaetes","3":"0.017"},{"1":"S_1","2":"Chloroflexi","3":"0.014"},{"1":"S_1","2":"Tenericutes","3":"0.005"},{"1":"S_1","2":"Thaumarchaeota","3":"0.005"},{"1":"S_1","2":"Cloacimonetes","3":"0.002"},{"1":"S_1","2":"Armatimonadetes","3":"0.002"},{"1":"S_1","2":"Latescibacteria","3":"0.001"},{"1":"S_1","2":"Fibrobacteres","3":"0.001"},{"1":"S_1","2":"Gemmatimonadetes","3":"0.001"},{"1":"S_1","2":"Nitrospirae","3":"0.000"},{"1":"S_1","2":"Synergistetes","3":"0.000"},{"1":"S_1","2":"BRC1","3":"0.000"},{"1":"S_1","2":"Chlamydiae","3":"0.000"},{"1":"S_1","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_1","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_1","2":"Crenarchaeota","3":"0.000"},{"1":"S_1","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_1","2":"Deferribacteres","3":"0.000"},{"1":"S_1","2":"Diapherotrites","3":"0.000"},{"1":"S_1","2":"Elusimicrobia","3":"0.000"},{"1":"S_1","2":"Fusobacteria","3":"0.000"},{"1":"S_1","2":"Hydrogenedentes","3":"0.000"},{"1":"S_1","2":"Ignavibacteriae","3":"0.000"},{"1":"S_1","2":"Lentisphaerae","3":"0.000"},{"1":"S_1","2":"Microgenomates","3":"0.000"},{"1":"S_1","2":"Pacearchaeota","3":"0.000"},{"1":"S_1","2":"Parcubacteria","3":"0.000"},{"1":"S_1","2":"SR1","3":"0.000"},{"1":"S_1","2":"Woesearchaeota","3":"0.000"},{"1":"S_1","2":"candidate division WPS-2","3":"0.000"},{"1":"S_1","2":"candidate division ZB3","3":"0.000"},{"1":"S_1","2":"unclassified_Archaea","3":"0.000"},{"1":"S_1","2":"unclassified_Root","3":"0.000"},{"1":"S_10","2":"Proteobacteria","3":"0.637"},{"1":"S_10","2":"unclassified_Bacteria","3":"0.142"},{"1":"S_10","2":"Verrucomicrobia","3":"0.042"},{"1":"S_10","2":"Planctomycetes","3":"0.033"},{"1":"S_10","2":"Bacteroidetes","3":"0.033"},{"1":"S_10","2":"Acidobacteria","3":"0.030"},{"1":"S_10","2":"Chloroflexi","3":"0.023"},{"1":"S_10","2":"Firmicutes","3":"0.021"},{"1":"S_10","2":"Spirochaetes","3":"0.010"},{"1":"S_10","2":"Actinobacteria","3":"0.007"},{"1":"S_10","2":"Euryarchaeota","3":"0.004"},{"1":"S_10","2":"Woesearchaeota","3":"0.004"},{"1":"S_10","2":"Armatimonadetes","3":"0.003"},{"1":"S_10","2":"Parcubacteria","3":"0.002"},{"1":"S_10","2":"Thaumarchaeota","3":"0.002"},{"1":"S_10","2":"Gemmatimonadetes","3":"0.002"},{"1":"S_10","2":"candidate division WPS-1","3":"0.001"},{"1":"S_10","2":"Nitrospirae","3":"0.001"},{"1":"S_10","2":"Pacearchaeota","3":"0.001"},{"1":"S_10","2":"unclassified_Archaea","3":"0.001"},{"1":"S_10","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"S_10","2":"candidate division WPS-2","3":"0.001"},{"1":"S_10","2":"Crenarchaeota","3":"0.000"},{"1":"S_10","2":"Chlamydiae","3":"0.000"},{"1":"S_10","2":"Latescibacteria","3":"0.000"},{"1":"S_10","2":"unclassified_Root","3":"0.000"},{"1":"S_10","2":"Microgenomates","3":"0.000"},{"1":"S_10","2":"BRC1","3":"0.000"},{"1":"S_10","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_10","2":"Cloacimonetes","3":"0.000"},{"1":"S_10","2":"Deferribacteres","3":"0.000"},{"1":"S_10","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_10","2":"Diapherotrites","3":"0.000"},{"1":"S_10","2":"Elusimicrobia","3":"0.000"},{"1":"S_10","2":"Fibrobacteres","3":"0.000"},{"1":"S_10","2":"Fusobacteria","3":"0.000"},{"1":"S_10","2":"Hydrogenedentes","3":"0.000"},{"1":"S_10","2":"Ignavibacteriae","3":"0.000"},{"1":"S_10","2":"Lentisphaerae","3":"0.000"},{"1":"S_10","2":"SR1","3":"0.000"},{"1":"S_10","2":"Synergistetes","3":"0.000"},{"1":"S_10","2":"Tenericutes","3":"0.000"},{"1":"S_10","2":"candidate division ZB3","3":"0.000"},{"1":"S_100","2":"Proteobacteria","3":"0.526"},{"1":"S_100","2":"Verrucomicrobia","3":"0.179"},{"1":"S_100","2":"Bacteroidetes","3":"0.143"},{"1":"S_100","2":"Actinobacteria","3":"0.055"},{"1":"S_100","2":"Planctomycetes","3":"0.043"},{"1":"S_100","2":"Firmicutes","3":"0.016"},{"1":"S_100","2":"Cyanobacteria/Chloroplast","3":"0.013"},{"1":"S_100","2":"unclassified_Bacteria","3":"0.006"},{"1":"S_100","2":"unclassified_Root","3":"0.006"},{"1":"S_100","2":"Chloroflexi","3":"0.004"},{"1":"S_100","2":"Acidobacteria","3":"0.003"},{"1":"S_100","2":"Euryarchaeota","3":"0.002"},{"1":"S_100","2":"Armatimonadetes","3":"0.001"},{"1":"S_100","2":"Tenericutes","3":"0.000"},{"1":"S_100","2":"Spirochaetes","3":"0.000"},{"1":"S_100","2":"Thaumarchaeota","3":"0.000"},{"1":"S_100","2":"Chlamydiae","3":"0.000"},{"1":"S_100","2":"candidate division WPS-1","3":"0.000"},{"1":"S_100","2":"Nitrospirae","3":"0.000"},{"1":"S_100","2":"Parcubacteria","3":"0.000"},{"1":"S_100","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_100","2":"Synergistetes","3":"0.000"},{"1":"S_100","2":"unclassified_Archaea","3":"0.000"},{"1":"S_100","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_100","2":"Pacearchaeota","3":"0.000"},{"1":"S_100","2":"Woesearchaeota","3":"0.000"},{"1":"S_100","2":"BRC1","3":"0.000"},{"1":"S_100","2":"Cloacimonetes","3":"0.000"},{"1":"S_100","2":"Crenarchaeota","3":"0.000"},{"1":"S_100","2":"Deferribacteres","3":"0.000"},{"1":"S_100","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_100","2":"Diapherotrites","3":"0.000"},{"1":"S_100","2":"Elusimicrobia","3":"0.000"},{"1":"S_100","2":"Fibrobacteres","3":"0.000"},{"1":"S_100","2":"Fusobacteria","3":"0.000"},{"1":"S_100","2":"Hydrogenedentes","3":"0.000"},{"1":"S_100","2":"Ignavibacteriae","3":"0.000"},{"1":"S_100","2":"Latescibacteria","3":"0.000"},{"1":"S_100","2":"Lentisphaerae","3":"0.000"},{"1":"S_100","2":"Microgenomates","3":"0.000"},{"1":"S_100","2":"SR1","3":"0.000"},{"1":"S_100","2":"candidate division WPS-2","3":"0.000"},{"1":"S_100","2":"candidate division ZB3","3":"0.000"},{"1":"S_101","2":"Proteobacteria","3":"0.368"},{"1":"S_101","2":"Bacteroidetes","3":"0.176"},{"1":"S_101","2":"Verrucomicrobia","3":"0.109"},{"1":"S_101","2":"Planctomycetes","3":"0.094"},{"1":"S_101","2":"Firmicutes","3":"0.082"},{"1":"S_101","2":"Actinobacteria","3":"0.065"},{"1":"S_101","2":"Euryarchaeota","3":"0.027"},{"1":"S_101","2":"Spirochaetes","3":"0.025"},{"1":"S_101","2":"unclassified_Bacteria","3":"0.020"},{"1":"S_101","2":"Tenericutes","3":"0.009"},{"1":"S_101","2":"Chloroflexi","3":"0.008"},{"1":"S_101","2":"Armatimonadetes","3":"0.004"},{"1":"S_101","2":"unclassified_Root","3":"0.004"},{"1":"S_101","2":"Fibrobacteres","3":"0.004"},{"1":"S_101","2":"Acidobacteria","3":"0.004"},{"1":"S_101","2":"Gemmatimonadetes","3":"0.001"},{"1":"S_101","2":"Nitrospirae","3":"0.000"},{"1":"S_101","2":"Synergistetes","3":"0.000"},{"1":"S_101","2":"Thaumarchaeota","3":"0.000"},{"1":"S_101","2":"candidate division WPS-1","3":"0.000"},{"1":"S_101","2":"Latescibacteria","3":"0.000"},{"1":"S_101","2":"Parcubacteria","3":"0.000"},{"1":"S_101","2":"unclassified_Archaea","3":"0.000"},{"1":"S_101","2":"BRC1","3":"0.000"},{"1":"S_101","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_101","2":"Chlamydiae","3":"0.000"},{"1":"S_101","2":"Cloacimonetes","3":"0.000"},{"1":"S_101","2":"Crenarchaeota","3":"0.000"},{"1":"S_101","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_101","2":"Deferribacteres","3":"0.000"},{"1":"S_101","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_101","2":"Diapherotrites","3":"0.000"},{"1":"S_101","2":"Elusimicrobia","3":"0.000"},{"1":"S_101","2":"Fusobacteria","3":"0.000"},{"1":"S_101","2":"Hydrogenedentes","3":"0.000"},{"1":"S_101","2":"Ignavibacteriae","3":"0.000"},{"1":"S_101","2":"Lentisphaerae","3":"0.000"},{"1":"S_101","2":"Microgenomates","3":"0.000"},{"1":"S_101","2":"Pacearchaeota","3":"0.000"},{"1":"S_101","2":"SR1","3":"0.000"},{"1":"S_101","2":"Woesearchaeota","3":"0.000"},{"1":"S_101","2":"candidate division WPS-2","3":"0.000"},{"1":"S_101","2":"candidate division ZB3","3":"0.000"},{"1":"S_102","2":"Proteobacteria","3":"0.328"},{"1":"S_102","2":"Bacteroidetes","3":"0.284"},{"1":"S_102","2":"Firmicutes","3":"0.100"},{"1":"S_102","2":"Planctomycetes","3":"0.074"},{"1":"S_102","2":"Actinobacteria","3":"0.070"},{"1":"S_102","2":"Verrucomicrobia","3":"0.049"},{"1":"S_102","2":"unclassified_Bacteria","3":"0.019"},{"1":"S_102","2":"Euryarchaeota","3":"0.018"},{"1":"S_102","2":"Spirochaetes","3":"0.017"},{"1":"S_102","2":"unclassified_Root","3":"0.014"},{"1":"S_102","2":"Tenericutes","3":"0.012"},{"1":"S_102","2":"Chloroflexi","3":"0.005"},{"1":"S_102","2":"Fibrobacteres","3":"0.004"},{"1":"S_102","2":"Armatimonadetes","3":"0.003"},{"1":"S_102","2":"Acidobacteria","3":"0.001"},{"1":"S_102","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"S_102","2":"Chlamydiae","3":"0.001"},{"1":"S_102","2":"Parcubacteria","3":"0.001"},{"1":"S_102","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_102","2":"Cloacimonetes","3":"0.000"},{"1":"S_102","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_102","2":"candidate division WPS-1","3":"0.000"},{"1":"S_102","2":"candidate division WPS-2","3":"0.000"},{"1":"S_102","2":"unclassified_Archaea","3":"0.000"},{"1":"S_102","2":"BRC1","3":"0.000"},{"1":"S_102","2":"Crenarchaeota","3":"0.000"},{"1":"S_102","2":"Deferribacteres","3":"0.000"},{"1":"S_102","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_102","2":"Diapherotrites","3":"0.000"},{"1":"S_102","2":"Elusimicrobia","3":"0.000"},{"1":"S_102","2":"Fusobacteria","3":"0.000"},{"1":"S_102","2":"Hydrogenedentes","3":"0.000"},{"1":"S_102","2":"Ignavibacteriae","3":"0.000"},{"1":"S_102","2":"Latescibacteria","3":"0.000"},{"1":"S_102","2":"Lentisphaerae","3":"0.000"},{"1":"S_102","2":"Microgenomates","3":"0.000"},{"1":"S_102","2":"Nitrospirae","3":"0.000"},{"1":"S_102","2":"Pacearchaeota","3":"0.000"},{"1":"S_102","2":"SR1","3":"0.000"},{"1":"S_102","2":"Synergistetes","3":"0.000"},{"1":"S_102","2":"Thaumarchaeota","3":"0.000"},{"1":"S_102","2":"Woesearchaeota","3":"0.000"},{"1":"S_102","2":"candidate division ZB3","3":"0.000"},{"1":"S_103","2":"Proteobacteria","3":"0.318"},{"1":"S_103","2":"Bacteroidetes","3":"0.258"},{"1":"S_103","2":"Firmicutes","3":"0.114"},{"1":"S_103","2":"Actinobacteria","3":"0.082"},{"1":"S_103","2":"Planctomycetes","3":"0.071"},{"1":"S_103","2":"Verrucomicrobia","3":"0.049"},{"1":"S_103","2":"unclassified_Bacteria","3":"0.025"},{"1":"S_103","2":"Euryarchaeota","3":"0.024"},{"1":"S_103","2":"unclassified_Root","3":"0.018"},{"1":"S_103","2":"Spirochaetes","3":"0.015"},{"1":"S_103","2":"Tenericutes","3":"0.012"},{"1":"S_103","2":"Chloroflexi","3":"0.003"},{"1":"S_103","2":"Fibrobacteres","3":"0.003"},{"1":"S_103","2":"Armatimonadetes","3":"0.003"},{"1":"S_103","2":"Acidobacteria","3":"0.002"},{"1":"S_103","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"S_103","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_103","2":"Cloacimonetes","3":"0.000"},{"1":"S_103","2":"Lentisphaerae","3":"0.000"},{"1":"S_103","2":"Nitrospirae","3":"0.000"},{"1":"S_103","2":"Thaumarchaeota","3":"0.000"},{"1":"S_103","2":"Chlamydiae","3":"0.000"},{"1":"S_103","2":"Pacearchaeota","3":"0.000"},{"1":"S_103","2":"Synergistetes","3":"0.000"},{"1":"S_103","2":"Woesearchaeota","3":"0.000"},{"1":"S_103","2":"candidate division WPS-1","3":"0.000"},{"1":"S_103","2":"unclassified_Archaea","3":"0.000"},{"1":"S_103","2":"BRC1","3":"0.000"},{"1":"S_103","2":"Crenarchaeota","3":"0.000"},{"1":"S_103","2":"Deferribacteres","3":"0.000"},{"1":"S_103","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_103","2":"Diapherotrites","3":"0.000"},{"1":"S_103","2":"Elusimicrobia","3":"0.000"},{"1":"S_103","2":"Fusobacteria","3":"0.000"},{"1":"S_103","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_103","2":"Hydrogenedentes","3":"0.000"},{"1":"S_103","2":"Ignavibacteriae","3":"0.000"},{"1":"S_103","2":"Latescibacteria","3":"0.000"},{"1":"S_103","2":"Microgenomates","3":"0.000"},{"1":"S_103","2":"Parcubacteria","3":"0.000"},{"1":"S_103","2":"SR1","3":"0.000"},{"1":"S_103","2":"candidate division WPS-2","3":"0.000"},{"1":"S_103","2":"candidate division ZB3","3":"0.000"},{"1":"S_104","2":"Proteobacteria","3":"0.342"},{"1":"S_104","2":"Bacteroidetes","3":"0.284"},{"1":"S_104","2":"unclassified_Bacteria","3":"0.094"},{"1":"S_104","2":"Verrucomicrobia","3":"0.093"},{"1":"S_104","2":"Actinobacteria","3":"0.079"},{"1":"S_104","2":"Planctomycetes","3":"0.036"},{"1":"S_104","2":"unclassified_Root","3":"0.026"},{"1":"S_104","2":"Firmicutes","3":"0.025"},{"1":"S_104","2":"Chloroflexi","3":"0.004"},{"1":"S_104","2":"Armatimonadetes","3":"0.003"},{"1":"S_104","2":"Tenericutes","3":"0.003"},{"1":"S_104","2":"Acidobacteria","3":"0.003"},{"1":"S_104","2":"Euryarchaeota","3":"0.003"},{"1":"S_104","2":"Spirochaetes","3":"0.002"},{"1":"S_104","2":"Thaumarchaeota","3":"0.001"},{"1":"S_104","2":"Fibrobacteres","3":"0.001"},{"1":"S_104","2":"Synergistetes","3":"0.001"},{"1":"S_104","2":"Chlamydiae","3":"0.000"},{"1":"S_104","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_104","2":"Nitrospirae","3":"0.000"},{"1":"S_104","2":"candidate division WPS-1","3":"0.000"},{"1":"S_104","2":"BRC1","3":"0.000"},{"1":"S_104","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_104","2":"Cloacimonetes","3":"0.000"},{"1":"S_104","2":"Crenarchaeota","3":"0.000"},{"1":"S_104","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_104","2":"Deferribacteres","3":"0.000"},{"1":"S_104","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_104","2":"Diapherotrites","3":"0.000"},{"1":"S_104","2":"Elusimicrobia","3":"0.000"},{"1":"S_104","2":"Fusobacteria","3":"0.000"},{"1":"S_104","2":"Hydrogenedentes","3":"0.000"},{"1":"S_104","2":"Ignavibacteriae","3":"0.000"},{"1":"S_104","2":"Latescibacteria","3":"0.000"},{"1":"S_104","2":"Lentisphaerae","3":"0.000"},{"1":"S_104","2":"Microgenomates","3":"0.000"},{"1":"S_104","2":"Pacearchaeota","3":"0.000"},{"1":"S_104","2":"Parcubacteria","3":"0.000"},{"1":"S_104","2":"SR1","3":"0.000"},{"1":"S_104","2":"Woesearchaeota","3":"0.000"},{"1":"S_104","2":"candidate division WPS-2","3":"0.000"},{"1":"S_104","2":"candidate division ZB3","3":"0.000"},{"1":"S_104","2":"unclassified_Archaea","3":"0.000"},{"1":"S_105","2":"Proteobacteria","3":"0.359"},{"1":"S_105","2":"Bacteroidetes","3":"0.296"},{"1":"S_105","2":"Verrucomicrobia","3":"0.101"},{"1":"S_105","2":"Actinobacteria","3":"0.069"},{"1":"S_105","2":"unclassified_Bacteria","3":"0.068"},{"1":"S_105","2":"Planctomycetes","3":"0.038"},{"1":"S_105","2":"Firmicutes","3":"0.025"},{"1":"S_105","2":"unclassified_Root","3":"0.020"},{"1":"S_105","2":"Chloroflexi","3":"0.005"},{"1":"S_105","2":"Tenericutes","3":"0.005"},{"1":"S_105","2":"Euryarchaeota","3":"0.003"},{"1":"S_105","2":"Acidobacteria","3":"0.003"},{"1":"S_105","2":"Armatimonadetes","3":"0.003"},{"1":"S_105","2":"Spirochaetes","3":"0.001"},{"1":"S_105","2":"Thaumarchaeota","3":"0.001"},{"1":"S_105","2":"Fibrobacteres","3":"0.001"},{"1":"S_105","2":"Chlamydiae","3":"0.000"},{"1":"S_105","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_105","2":"candidate division WPS-1","3":"0.000"},{"1":"S_105","2":"Parcubacteria","3":"0.000"},{"1":"S_105","2":"Synergistetes","3":"0.000"},{"1":"S_105","2":"Woesearchaeota","3":"0.000"},{"1":"S_105","2":"BRC1","3":"0.000"},{"1":"S_105","2":"Pacearchaeota","3":"0.000"},{"1":"S_105","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_105","2":"Cloacimonetes","3":"0.000"},{"1":"S_105","2":"Crenarchaeota","3":"0.000"},{"1":"S_105","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_105","2":"Deferribacteres","3":"0.000"},{"1":"S_105","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_105","2":"Diapherotrites","3":"0.000"},{"1":"S_105","2":"Elusimicrobia","3":"0.000"},{"1":"S_105","2":"Fusobacteria","3":"0.000"},{"1":"S_105","2":"Hydrogenedentes","3":"0.000"},{"1":"S_105","2":"Ignavibacteriae","3":"0.000"},{"1":"S_105","2":"Latescibacteria","3":"0.000"},{"1":"S_105","2":"Lentisphaerae","3":"0.000"},{"1":"S_105","2":"Microgenomates","3":"0.000"},{"1":"S_105","2":"Nitrospirae","3":"0.000"},{"1":"S_105","2":"SR1","3":"0.000"},{"1":"S_105","2":"candidate division WPS-2","3":"0.000"},{"1":"S_105","2":"candidate division ZB3","3":"0.000"},{"1":"S_105","2":"unclassified_Archaea","3":"0.000"},{"1":"S_106","2":"Proteobacteria","3":"0.318"},{"1":"S_106","2":"Bacteroidetes","3":"0.289"},{"1":"S_106","2":"Verrucomicrobia","3":"0.105"},{"1":"S_106","2":"Actinobacteria","3":"0.086"},{"1":"S_106","2":"unclassified_Bacteria","3":"0.081"},{"1":"S_106","2":"Planctomycetes","3":"0.053"},{"1":"S_106","2":"Firmicutes","3":"0.021"},{"1":"S_106","2":"unclassified_Root","3":"0.019"},{"1":"S_106","2":"Chloroflexi","3":"0.008"},{"1":"S_106","2":"Euryarchaeota","3":"0.005"},{"1":"S_106","2":"Tenericutes","3":"0.004"},{"1":"S_106","2":"Acidobacteria","3":"0.003"},{"1":"S_106","2":"Armatimonadetes","3":"0.002"},{"1":"S_106","2":"Thaumarchaeota","3":"0.002"},{"1":"S_106","2":"Spirochaetes","3":"0.002"},{"1":"S_106","2":"Fibrobacteres","3":"0.001"},{"1":"S_106","2":"Gemmatimonadetes","3":"0.001"},{"1":"S_106","2":"Chlamydiae","3":"0.000"},{"1":"S_106","2":"candidate division WPS-1","3":"0.000"},{"1":"S_106","2":"Lentisphaerae","3":"0.000"},{"1":"S_106","2":"Parcubacteria","3":"0.000"},{"1":"S_106","2":"Woesearchaeota","3":"0.000"},{"1":"S_106","2":"BRC1","3":"0.000"},{"1":"S_106","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_106","2":"Cloacimonetes","3":"0.000"},{"1":"S_106","2":"Crenarchaeota","3":"0.000"},{"1":"S_106","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_106","2":"Deferribacteres","3":"0.000"},{"1":"S_106","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_106","2":"Diapherotrites","3":"0.000"},{"1":"S_106","2":"Elusimicrobia","3":"0.000"},{"1":"S_106","2":"Fusobacteria","3":"0.000"},{"1":"S_106","2":"Hydrogenedentes","3":"0.000"},{"1":"S_106","2":"Ignavibacteriae","3":"0.000"},{"1":"S_106","2":"Latescibacteria","3":"0.000"},{"1":"S_106","2":"Microgenomates","3":"0.000"},{"1":"S_106","2":"Nitrospirae","3":"0.000"},{"1":"S_106","2":"Pacearchaeota","3":"0.000"},{"1":"S_106","2":"SR1","3":"0.000"},{"1":"S_106","2":"Synergistetes","3":"0.000"},{"1":"S_106","2":"candidate division WPS-2","3":"0.000"},{"1":"S_106","2":"candidate division ZB3","3":"0.000"},{"1":"S_106","2":"unclassified_Archaea","3":"0.000"},{"1":"S_107","2":"Proteobacteria","3":"0.329"},{"1":"S_107","2":"Verrucomicrobia","3":"0.205"},{"1":"S_107","2":"Planctomycetes","3":"0.090"},{"1":"S_107","2":"Actinobacteria","3":"0.087"},{"1":"S_107","2":"unclassified_Bacteria","3":"0.078"},{"1":"S_107","2":"Bacteroidetes","3":"0.073"},{"1":"S_107","2":"Firmicutes","3":"0.048"},{"1":"S_107","2":"unclassified_Root","3":"0.029"},{"1":"S_107","2":"Cyanobacteria/Chloroplast","3":"0.028"},{"1":"S_107","2":"Euryarchaeota","3":"0.009"},{"1":"S_107","2":"Chloroflexi","3":"0.008"},{"1":"S_107","2":"Armatimonadetes","3":"0.005"},{"1":"S_107","2":"Chlamydiae","3":"0.004"},{"1":"S_107","2":"Acidobacteria","3":"0.001"},{"1":"S_107","2":"Parcubacteria","3":"0.001"},{"1":"S_107","2":"Woesearchaeota","3":"0.001"},{"1":"S_107","2":"Spirochaetes","3":"0.001"},{"1":"S_107","2":"Thaumarchaeota","3":"0.001"},{"1":"S_107","2":"Pacearchaeota","3":"0.001"},{"1":"S_107","2":"BRC1","3":"0.000"},{"1":"S_107","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_107","2":"candidate division WPS-1","3":"0.000"},{"1":"S_107","2":"Nitrospirae","3":"0.000"},{"1":"S_107","2":"Cloacimonetes","3":"0.000"},{"1":"S_107","2":"Crenarchaeota","3":"0.000"},{"1":"S_107","2":"Deferribacteres","3":"0.000"},{"1":"S_107","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_107","2":"Diapherotrites","3":"0.000"},{"1":"S_107","2":"Elusimicrobia","3":"0.000"},{"1":"S_107","2":"Fibrobacteres","3":"0.000"},{"1":"S_107","2":"Fusobacteria","3":"0.000"},{"1":"S_107","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_107","2":"Hydrogenedentes","3":"0.000"},{"1":"S_107","2":"Ignavibacteriae","3":"0.000"},{"1":"S_107","2":"Latescibacteria","3":"0.000"},{"1":"S_107","2":"Lentisphaerae","3":"0.000"},{"1":"S_107","2":"Microgenomates","3":"0.000"},{"1":"S_107","2":"SR1","3":"0.000"},{"1":"S_107","2":"Synergistetes","3":"0.000"},{"1":"S_107","2":"Tenericutes","3":"0.000"},{"1":"S_107","2":"candidate division WPS-2","3":"0.000"},{"1":"S_107","2":"candidate division ZB3","3":"0.000"},{"1":"S_107","2":"unclassified_Archaea","3":"0.000"},{"1":"S_108","2":"Proteobacteria","3":"0.364"},{"1":"S_108","2":"Verrucomicrobia","3":"0.180"},{"1":"S_108","2":"Actinobacteria","3":"0.085"},{"1":"S_108","2":"Planctomycetes","3":"0.076"},{"1":"S_108","2":"Bacteroidetes","3":"0.067"},{"1":"S_108","2":"unclassified_Bacteria","3":"0.067"},{"1":"S_108","2":"Firmicutes","3":"0.063"},{"1":"S_108","2":"unclassified_Root","3":"0.038"},{"1":"S_108","2":"Cyanobacteria/Chloroplast","3":"0.032"},{"1":"S_108","2":"Euryarchaeota","3":"0.008"},{"1":"S_108","2":"Chloroflexi","3":"0.006"},{"1":"S_108","2":"Acidobacteria","3":"0.004"},{"1":"S_108","2":"Armatimonadetes","3":"0.003"},{"1":"S_108","2":"Chlamydiae","3":"0.002"},{"1":"S_108","2":"Parcubacteria","3":"0.001"},{"1":"S_108","2":"BRC1","3":"0.001"},{"1":"S_108","2":"Woesearchaeota","3":"0.001"},{"1":"S_108","2":"Thaumarchaeota","3":"0.001"},{"1":"S_108","2":"Pacearchaeota","3":"0.000"},{"1":"S_108","2":"Spirochaetes","3":"0.000"},{"1":"S_108","2":"Tenericutes","3":"0.000"},{"1":"S_108","2":"unclassified_Archaea","3":"0.000"},{"1":"S_108","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_108","2":"candidate division WPS-1","3":"0.000"},{"1":"S_108","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_108","2":"Cloacimonetes","3":"0.000"},{"1":"S_108","2":"Crenarchaeota","3":"0.000"},{"1":"S_108","2":"Deferribacteres","3":"0.000"},{"1":"S_108","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_108","2":"Diapherotrites","3":"0.000"},{"1":"S_108","2":"Elusimicrobia","3":"0.000"},{"1":"S_108","2":"Fibrobacteres","3":"0.000"},{"1":"S_108","2":"Fusobacteria","3":"0.000"},{"1":"S_108","2":"Hydrogenedentes","3":"0.000"},{"1":"S_108","2":"Ignavibacteriae","3":"0.000"},{"1":"S_108","2":"Latescibacteria","3":"0.000"},{"1":"S_108","2":"Lentisphaerae","3":"0.000"},{"1":"S_108","2":"Microgenomates","3":"0.000"},{"1":"S_108","2":"Nitrospirae","3":"0.000"},{"1":"S_108","2":"SR1","3":"0.000"},{"1":"S_108","2":"Synergistetes","3":"0.000"},{"1":"S_108","2":"candidate division WPS-2","3":"0.000"},{"1":"S_108","2":"candidate division ZB3","3":"0.000"},{"1":"S_109","2":"Proteobacteria","3":"0.353"},{"1":"S_109","2":"Verrucomicrobia","3":"0.178"},{"1":"S_109","2":"Actinobacteria","3":"0.096"},{"1":"S_109","2":"Planctomycetes","3":"0.091"},{"1":"S_109","2":"Firmicutes","3":"0.067"},{"1":"S_109","2":"unclassified_Bacteria","3":"0.063"},{"1":"S_109","2":"Bacteroidetes","3":"0.061"},{"1":"S_109","2":"unclassified_Root","3":"0.028"},{"1":"S_109","2":"Cyanobacteria/Chloroplast","3":"0.022"},{"1":"S_109","2":"Euryarchaeota","3":"0.016"},{"1":"S_109","2":"Chloroflexi","3":"0.011"},{"1":"S_109","2":"Acidobacteria","3":"0.005"},{"1":"S_109","2":"Armatimonadetes","3":"0.003"},{"1":"S_109","2":"Chlamydiae","3":"0.003"},{"1":"S_109","2":"Parcubacteria","3":"0.001"},{"1":"S_109","2":"Thaumarchaeota","3":"0.001"},{"1":"S_109","2":"BRC1","3":"0.000"},{"1":"S_109","2":"Spirochaetes","3":"0.000"},{"1":"S_109","2":"Woesearchaeota","3":"0.000"},{"1":"S_109","2":"Pacearchaeota","3":"0.000"},{"1":"S_109","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_109","2":"Tenericutes","3":"0.000"},{"1":"S_109","2":"Cloacimonetes","3":"0.000"},{"1":"S_109","2":"Crenarchaeota","3":"0.000"},{"1":"S_109","2":"Deferribacteres","3":"0.000"},{"1":"S_109","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_109","2":"Diapherotrites","3":"0.000"},{"1":"S_109","2":"Elusimicrobia","3":"0.000"},{"1":"S_109","2":"Fibrobacteres","3":"0.000"},{"1":"S_109","2":"Fusobacteria","3":"0.000"},{"1":"S_109","2":"Gemmatimonadetes","3":"0.000"},{"1":"S_109","2":"Hydrogenedentes","3":"0.000"},{"1":"S_109","2":"Ignavibacteriae","3":"0.000"},{"1":"S_109","2":"Latescibacteria","3":"0.000"},{"1":"S_109","2":"Lentisphaerae","3":"0.000"},{"1":"S_109","2":"Microgenomates","3":"0.000"},{"1":"S_109","2":"Nitrospirae","3":"0.000"},{"1":"S_109","2":"SR1","3":"0.000"},{"1":"S_109","2":"Synergistetes","3":"0.000"},{"1":"S_109","2":"candidate division WPS-1","3":"0.000"},{"1":"S_109","2":"candidate division WPS-2","3":"0.000"},{"1":"S_109","2":"candidate division ZB3","3":"0.000"},{"1":"S_109","2":"unclassified_Archaea","3":"0.000"},{"1":"S_11","2":"Proteobacteria","3":"0.664"},{"1":"S_11","2":"unclassified_Bacteria","3":"0.123"},{"1":"S_11","2":"Verrucomicrobia","3":"0.047"},{"1":"S_11","2":"Bacteroidetes","3":"0.030"},{"1":"S_11","2":"Acidobacteria","3":"0.029"},{"1":"S_11","2":"Planctomycetes","3":"0.023"},{"1":"S_11","2":"Actinobacteria","3":"0.018"},{"1":"S_11","2":"Firmicutes","3":"0.015"},{"1":"S_11","2":"Chloroflexi","3":"0.010"},{"1":"S_11","2":"Euryarchaeota","3":"0.007"},{"1":"S_11","2":"Parcubacteria","3":"0.006"},{"1":"S_11","2":"Woesearchaeota","3":"0.005"},{"1":"S_11","2":"Thaumarchaeota","3":"0.005"},{"1":"S_11","2":"Armatimonadetes","3":"0.003"},{"1":"S_11","2":"Gemmatimonadetes","3":"0.003"},{"1":"S_11","2":"Spirochaetes","3":"0.002"},{"1":"S_11","2":"Cyanobacteria/Chloroplast","3":"0.002"},{"1":"S_11","2":"Chlamydiae","3":"0.002"},{"1":"S_11","2":"candidate division WPS-1","3":"0.002"},{"1":"S_11","2":"unclassified_Archaea","3":"0.002"},{"1":"S_11","2":"Pacearchaeota","3":"0.001"},{"1":"S_11","2":"Latescibacteria","3":"0.001"},{"1":"S_11","2":"Nitrospirae","3":"0.001"},{"1":"S_11","2":"Microgenomates","3":"0.000"},{"1":"S_11","2":"unclassified_Root","3":"0.000"},{"1":"S_11","2":"Ignavibacteriae","3":"0.000"},{"1":"S_11","2":"BRC1","3":"0.000"},{"1":"S_11","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_11","2":"Diapherotrites","3":"0.000"},{"1":"S_11","2":"candidate division WPS-2","3":"0.000"},{"1":"S_11","2":"Cloacimonetes","3":"0.000"},{"1":"S_11","2":"Crenarchaeota","3":"0.000"},{"1":"S_11","2":"Deferribacteres","3":"0.000"},{"1":"S_11","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_11","2":"Elusimicrobia","3":"0.000"},{"1":"S_11","2":"Fibrobacteres","3":"0.000"},{"1":"S_11","2":"Fusobacteria","3":"0.000"},{"1":"S_11","2":"Hydrogenedentes","3":"0.000"},{"1":"S_11","2":"Lentisphaerae","3":"0.000"},{"1":"S_11","2":"SR1","3":"0.000"},{"1":"S_11","2":"Synergistetes","3":"0.000"},{"1":"S_11","2":"Tenericutes","3":"0.000"},{"1":"S_11","2":"candidate division ZB3","3":"0.000"},{"1":"S_110","2":"Proteobacteria","3":"0.575"},{"1":"S_110","2":"unclassified_Bacteria","3":"0.173"},{"1":"S_110","2":"Verrucomicrobia","3":"0.042"},{"1":"S_110","2":"Bacteroidetes","3":"0.036"},{"1":"S_110","2":"Acidobacteria","3":"0.031"},{"1":"S_110","2":"Planctomycetes","3":"0.026"},{"1":"S_110","2":"Actinobacteria","3":"0.022"},{"1":"S_110","2":"Firmicutes","3":"0.017"},{"1":"S_110","2":"Thaumarchaeota","3":"0.014"},{"1":"S_110","2":"Euryarchaeota","3":"0.013"},{"1":"S_110","2":"Chloroflexi","3":"0.013"},{"1":"S_110","2":"Woesearchaeota","3":"0.010"},{"1":"S_110","2":"Parcubacteria","3":"0.007"},{"1":"S_110","2":"Armatimonadetes","3":"0.004"},{"1":"S_110","2":"Gemmatimonadetes","3":"0.003"},{"1":"S_110","2":"Spirochaetes","3":"0.003"},{"1":"S_110","2":"candidate division WPS-1","3":"0.002"},{"1":"S_110","2":"Pacearchaeota","3":"0.002"},{"1":"S_110","2":"Chlamydiae","3":"0.001"},{"1":"S_110","2":"unclassified_Archaea","3":"0.001"},{"1":"S_110","2":"BRC1","3":"0.001"},{"1":"S_110","2":"unclassified_Root","3":"0.001"},{"1":"S_110","2":"Nitrospirae","3":"0.001"},{"1":"S_110","2":"Microgenomates","3":"0.000"},{"1":"S_110","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_110","2":"Diapherotrites","3":"0.000"},{"1":"S_110","2":"Ignavibacteriae","3":"0.000"},{"1":"S_110","2":"Latescibacteria","3":"0.000"},{"1":"S_110","2":"candidate division WPS-2","3":"0.000"},{"1":"S_110","2":"SR1","3":"0.000"},{"1":"S_110","2":"Crenarchaeota","3":"0.000"},{"1":"S_110","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_110","2":"Cloacimonetes","3":"0.000"},{"1":"S_110","2":"Deferribacteres","3":"0.000"},{"1":"S_110","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_110","2":"Elusimicrobia","3":"0.000"},{"1":"S_110","2":"Fibrobacteres","3":"0.000"},{"1":"S_110","2":"Fusobacteria","3":"0.000"},{"1":"S_110","2":"Hydrogenedentes","3":"0.000"},{"1":"S_110","2":"Lentisphaerae","3":"0.000"},{"1":"S_110","2":"Synergistetes","3":"0.000"},{"1":"S_110","2":"Tenericutes","3":"0.000"},{"1":"S_110","2":"candidate division ZB3","3":"0.000"},{"1":"S_111","2":"Proteobacteria","3":"0.595"},{"1":"S_111","2":"unclassified_Bacteria","3":"0.161"},{"1":"S_111","2":"Verrucomicrobia","3":"0.037"},{"1":"S_111","2":"Bacteroidetes","3":"0.035"},{"1":"S_111","2":"Acidobacteria","3":"0.030"},{"1":"S_111","2":"Planctomycetes","3":"0.023"},{"1":"S_111","2":"Actinobacteria","3":"0.021"},{"1":"S_111","2":"Firmicutes","3":"0.018"},{"1":"S_111","2":"Euryarchaeota","3":"0.015"},{"1":"S_111","2":"Woesearchaeota","3":"0.014"},{"1":"S_111","2":"Thaumarchaeota","3":"0.013"},{"1":"S_111","2":"Chloroflexi","3":"0.012"},{"1":"S_111","2":"Parcubacteria","3":"0.005"},{"1":"S_111","2":"Gemmatimonadetes","3":"0.004"},{"1":"S_111","2":"Armatimonadetes","3":"0.004"},{"1":"S_111","2":"Spirochaetes","3":"0.004"},{"1":"S_111","2":"unclassified_Archaea","3":"0.002"},{"1":"S_111","2":"Chlamydiae","3":"0.002"},{"1":"S_111","2":"candidate division WPS-1","3":"0.002"},{"1":"S_111","2":"unclassified_Root","3":"0.001"},{"1":"S_111","2":"Pacearchaeota","3":"0.001"},{"1":"S_111","2":"Latescibacteria","3":"0.001"},{"1":"S_111","2":"BRC1","3":"0.000"},{"1":"S_111","2":"Nitrospirae","3":"0.000"},{"1":"S_111","2":"candidate division WPS-2","3":"0.000"},{"1":"S_111","2":"Hydrogenedentes","3":"0.000"},{"1":"S_111","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_111","2":"Diapherotrites","3":"0.000"},{"1":"S_111","2":"Cloacimonetes","3":"0.000"},{"1":"S_111","2":"Crenarchaeota","3":"0.000"},{"1":"S_111","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_111","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_111","2":"Microgenomates","3":"0.000"},{"1":"S_111","2":"Deferribacteres","3":"0.000"},{"1":"S_111","2":"Elusimicrobia","3":"0.000"},{"1":"S_111","2":"Fibrobacteres","3":"0.000"},{"1":"S_111","2":"Fusobacteria","3":"0.000"},{"1":"S_111","2":"Ignavibacteriae","3":"0.000"},{"1":"S_111","2":"Lentisphaerae","3":"0.000"},{"1":"S_111","2":"SR1","3":"0.000"},{"1":"S_111","2":"Synergistetes","3":"0.000"},{"1":"S_111","2":"Tenericutes","3":"0.000"},{"1":"S_111","2":"candidate division ZB3","3":"0.000"},{"1":"S_112","2":"Proteobacteria","3":"0.553"},{"1":"S_112","2":"unclassified_Bacteria","3":"0.176"},{"1":"S_112","2":"Verrucomicrobia","3":"0.044"},{"1":"S_112","2":"Bacteroidetes","3":"0.039"},{"1":"S_112","2":"Acidobacteria","3":"0.032"},{"1":"S_112","2":"Planctomycetes","3":"0.024"},{"1":"S_112","2":"Actinobacteria","3":"0.024"},{"1":"S_112","2":"Firmicutes","3":"0.018"},{"1":"S_112","2":"Thaumarchaeota","3":"0.017"},{"1":"S_112","2":"Euryarchaeota","3":"0.015"},{"1":"S_112","2":"Woesearchaeota","3":"0.014"},{"1":"S_112","2":"Chloroflexi","3":"0.011"},{"1":"S_112","2":"Parcubacteria","3":"0.008"},{"1":"S_112","2":"Spirochaetes","3":"0.006"},{"1":"S_112","2":"Armatimonadetes","3":"0.004"},{"1":"S_112","2":"unclassified_Archaea","3":"0.004"},{"1":"S_112","2":"Gemmatimonadetes","3":"0.003"},{"1":"S_112","2":"candidate division WPS-1","3":"0.002"},{"1":"S_112","2":"Chlamydiae","3":"0.001"},{"1":"S_112","2":"Pacearchaeota","3":"0.001"},{"1":"S_112","2":"unclassified_Root","3":"0.001"},{"1":"S_112","2":"BRC1","3":"0.001"},{"1":"S_112","2":"Nitrospirae","3":"0.001"},{"1":"S_112","2":"Microgenomates","3":"0.001"},{"1":"S_112","2":"Latescibacteria","3":"0.000"},{"1":"S_112","2":"candidate division WPS-2","3":"0.000"},{"1":"S_112","2":"Hydrogenedentes","3":"0.000"},{"1":"S_112","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_112","2":"Crenarchaeota","3":"0.000"},{"1":"S_112","2":"Cloacimonetes","3":"0.000"},{"1":"S_112","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_112","2":"Deferribacteres","3":"0.000"},{"1":"S_112","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_112","2":"Diapherotrites","3":"0.000"},{"1":"S_112","2":"Elusimicrobia","3":"0.000"},{"1":"S_112","2":"Fibrobacteres","3":"0.000"},{"1":"S_112","2":"Fusobacteria","3":"0.000"},{"1":"S_112","2":"Ignavibacteriae","3":"0.000"},{"1":"S_112","2":"Lentisphaerae","3":"0.000"},{"1":"S_112","2":"SR1","3":"0.000"},{"1":"S_112","2":"Synergistetes","3":"0.000"},{"1":"S_112","2":"Tenericutes","3":"0.000"},{"1":"S_112","2":"candidate division ZB3","3":"0.000"},{"1":"S_113","2":"Proteobacteria","3":"0.499"},{"1":"S_113","2":"unclassified_Bacteria","3":"0.184"},{"1":"S_113","2":"Verrucomicrobia","3":"0.056"},{"1":"S_113","2":"Thaumarchaeota","3":"0.055"},{"1":"S_113","2":"Acidobacteria","3":"0.050"},{"1":"S_113","2":"Bacteroidetes","3":"0.045"},{"1":"S_113","2":"Planctomycetes","3":"0.026"},{"1":"S_113","2":"Euryarchaeota","3":"0.020"},{"1":"S_113","2":"Firmicutes","3":"0.017"},{"1":"S_113","2":"Actinobacteria","3":"0.011"},{"1":"S_113","2":"Chloroflexi","3":"0.008"},{"1":"S_113","2":"Woesearchaeota","3":"0.006"},{"1":"S_113","2":"Parcubacteria","3":"0.005"},{"1":"S_113","2":"candidate division WPS-1","3":"0.005"},{"1":"S_113","2":"Spirochaetes","3":"0.004"},{"1":"S_113","2":"Gemmatimonadetes","3":"0.003"},{"1":"S_113","2":"Chlamydiae","3":"0.002"},{"1":"S_113","2":"Cyanobacteria/Chloroplast","3":"0.002"},{"1":"S_113","2":"Armatimonadetes","3":"0.001"},{"1":"S_113","2":"Pacearchaeota","3":"0.001"},{"1":"S_113","2":"Latescibacteria","3":"0.000"},{"1":"S_113","2":"Ignavibacteriae","3":"0.000"},{"1":"S_113","2":"Microgenomates","3":"0.000"},{"1":"S_113","2":"BRC1","3":"0.000"},{"1":"S_113","2":"Nitrospirae","3":"0.000"},{"1":"S_113","2":"candidate division WPS-2","3":"0.000"},{"1":"S_113","2":"candidate division ZB3","3":"0.000"},{"1":"S_113","2":"unclassified_Archaea","3":"0.000"},{"1":"S_113","2":"unclassified_Root","3":"0.000"},{"1":"S_113","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_113","2":"Cloacimonetes","3":"0.000"},{"1":"S_113","2":"Crenarchaeota","3":"0.000"},{"1":"S_113","2":"Deferribacteres","3":"0.000"},{"1":"S_113","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_113","2":"Diapherotrites","3":"0.000"},{"1":"S_113","2":"Elusimicrobia","3":"0.000"},{"1":"S_113","2":"Fibrobacteres","3":"0.000"},{"1":"S_113","2":"Fusobacteria","3":"0.000"},{"1":"S_113","2":"Hydrogenedentes","3":"0.000"},{"1":"S_113","2":"Lentisphaerae","3":"0.000"},{"1":"S_113","2":"SR1","3":"0.000"},{"1":"S_113","2":"Synergistetes","3":"0.000"},{"1":"S_113","2":"Tenericutes","3":"0.000"},{"1":"S_114","2":"Proteobacteria","3":"0.506"},{"1":"S_114","2":"unclassified_Bacteria","3":"0.180"},{"1":"S_114","2":"Acidobacteria","3":"0.057"},{"1":"S_114","2":"Thaumarchaeota","3":"0.050"},{"1":"S_114","2":"Verrucomicrobia","3":"0.049"},{"1":"S_114","2":"Bacteroidetes","3":"0.047"},{"1":"S_114","2":"Planctomycetes","3":"0.022"},{"1":"S_114","2":"Euryarchaeota","3":"0.020"},{"1":"S_114","2":"Firmicutes","3":"0.018"},{"1":"S_114","2":"Actinobacteria","3":"0.015"},{"1":"S_114","2":"Woesearchaeota","3":"0.007"},{"1":"S_114","2":"Parcubacteria","3":"0.006"},{"1":"S_114","2":"Chloroflexi","3":"0.005"},{"1":"S_114","2":"Gemmatimonadetes","3":"0.004"},{"1":"S_114","2":"Spirochaetes","3":"0.004"},{"1":"S_114","2":"Armatimonadetes","3":"0.002"},{"1":"S_114","2":"candidate division WPS-1","3":"0.002"},{"1":"S_114","2":"Chlamydiae","3":"0.001"},{"1":"S_114","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"S_114","2":"unclassified_Archaea","3":"0.001"},{"1":"S_114","2":"BRC1","3":"0.001"},{"1":"S_114","2":"Pacearchaeota","3":"0.001"},{"1":"S_114","2":"Nitrospirae","3":"0.000"},{"1":"S_114","2":"Tenericutes","3":"0.000"},{"1":"S_114","2":"candidate division WPS-2","3":"0.000"},{"1":"S_114","2":"unclassified_Root","3":"0.000"},{"1":"S_114","2":"Hydrogenedentes","3":"0.000"},{"1":"S_114","2":"Ignavibacteriae","3":"0.000"},{"1":"S_114","2":"Latescibacteria","3":"0.000"},{"1":"S_114","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_114","2":"Cloacimonetes","3":"0.000"},{"1":"S_114","2":"Crenarchaeota","3":"0.000"},{"1":"S_114","2":"Deferribacteres","3":"0.000"},{"1":"S_114","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_114","2":"Diapherotrites","3":"0.000"},{"1":"S_114","2":"Elusimicrobia","3":"0.000"},{"1":"S_114","2":"Fibrobacteres","3":"0.000"},{"1":"S_114","2":"Fusobacteria","3":"0.000"},{"1":"S_114","2":"Lentisphaerae","3":"0.000"},{"1":"S_114","2":"Microgenomates","3":"0.000"},{"1":"S_114","2":"SR1","3":"0.000"},{"1":"S_114","2":"Synergistetes","3":"0.000"},{"1":"S_114","2":"candidate division ZB3","3":"0.000"},{"1":"S_115","2":"Proteobacteria","3":"0.474"},{"1":"S_115","2":"unclassified_Bacteria","3":"0.179"},{"1":"S_115","2":"Thaumarchaeota","3":"0.069"},{"1":"S_115","2":"Verrucomicrobia","3":"0.064"},{"1":"S_115","2":"Bacteroidetes","3":"0.046"},{"1":"S_115","2":"Acidobacteria","3":"0.044"},{"1":"S_115","2":"Planctomycetes","3":"0.025"},{"1":"S_115","2":"Euryarchaeota","3":"0.019"},{"1":"S_115","2":"Actinobacteria","3":"0.018"},{"1":"S_115","2":"Firmicutes","3":"0.014"},{"1":"S_115","2":"Woesearchaeota","3":"0.008"},{"1":"S_115","2":"Parcubacteria","3":"0.008"},{"1":"S_115","2":"Chloroflexi","3":"0.005"},{"1":"S_115","2":"Spirochaetes","3":"0.004"},{"1":"S_115","2":"Gemmatimonadetes","3":"0.004"},{"1":"S_115","2":"candidate division WPS-1","3":"0.004"},{"1":"S_115","2":"Armatimonadetes","3":"0.004"},{"1":"S_115","2":"Chlamydiae","3":"0.004"},{"1":"S_115","2":"Cyanobacteria/Chloroplast","3":"0.002"},{"1":"S_115","2":"Nitrospirae","3":"0.002"},{"1":"S_115","2":"unclassified_Root","3":"0.001"},{"1":"S_115","2":"BRC1","3":"0.001"},{"1":"S_115","2":"Latescibacteria","3":"0.001"},{"1":"S_115","2":"Ignavibacteriae","3":"0.000"},{"1":"S_115","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_115","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_115","2":"Pacearchaeota","3":"0.000"},{"1":"S_115","2":"candidate division WPS-2","3":"0.000"},{"1":"S_115","2":"Hydrogenedentes","3":"0.000"},{"1":"S_115","2":"unclassified_Archaea","3":"0.000"},{"1":"S_115","2":"Cloacimonetes","3":"0.000"},{"1":"S_115","2":"Crenarchaeota","3":"0.000"},{"1":"S_115","2":"Deferribacteres","3":"0.000"},{"1":"S_115","2":"Diapherotrites","3":"0.000"},{"1":"S_115","2":"Elusimicrobia","3":"0.000"},{"1":"S_115","2":"Fibrobacteres","3":"0.000"},{"1":"S_115","2":"Fusobacteria","3":"0.000"},{"1":"S_115","2":"Lentisphaerae","3":"0.000"},{"1":"S_115","2":"Microgenomates","3":"0.000"},{"1":"S_115","2":"SR1","3":"0.000"},{"1":"S_115","2":"Synergistetes","3":"0.000"},{"1":"S_115","2":"Tenericutes","3":"0.000"},{"1":"S_115","2":"candidate division ZB3","3":"0.000"},{"1":"S_116","2":"Proteobacteria","3":"0.703"},{"1":"S_116","2":"unclassified_Bacteria","3":"0.120"},{"1":"S_116","2":"Bacteroidetes","3":"0.041"},{"1":"S_116","2":"Verrucomicrobia","3":"0.032"},{"1":"S_116","2":"Firmicutes","3":"0.020"},{"1":"S_116","2":"Acidobacteria","3":"0.019"},{"1":"S_116","2":"Planctomycetes","3":"0.008"},{"1":"S_116","2":"Thaumarchaeota","3":"0.008"},{"1":"S_116","2":"Woesearchaeota","3":"0.007"},{"1":"S_116","2":"Actinobacteria","3":"0.007"},{"1":"S_116","2":"Parcubacteria","3":"0.007"},{"1":"S_116","2":"Spirochaetes","3":"0.005"},{"1":"S_116","2":"Chloroflexi","3":"0.005"},{"1":"S_116","2":"Euryarchaeota","3":"0.004"},{"1":"S_116","2":"Gemmatimonadetes","3":"0.003"},{"1":"S_116","2":"Armatimonadetes","3":"0.003"},{"1":"S_116","2":"candidate division WPS-1","3":"0.002"},{"1":"S_116","2":"Chlamydiae","3":"0.002"},{"1":"S_116","2":"unclassified_Archaea","3":"0.002"},{"1":"S_116","2":"Pacearchaeota","3":"0.001"},{"1":"S_116","2":"Microgenomates","3":"0.001"},{"1":"S_116","2":"unclassified_Root","3":"0.001"},{"1":"S_116","2":"Candidatus Saccharibacteria","3":"0.000"},{"1":"S_116","2":"Latescibacteria","3":"0.000"},{"1":"S_116","2":"candidate division WPS-2","3":"0.000"},{"1":"S_116","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_116","2":"Nitrospirae","3":"0.000"},{"1":"S_116","2":"BRC1","3":"0.000"},{"1":"S_116","2":"Diapherotrites","3":"0.000"},{"1":"S_116","2":"Ignavibacteriae","3":"0.000"},{"1":"S_116","2":"Cloacimonetes","3":"0.000"},{"1":"S_116","2":"Crenarchaeota","3":"0.000"},{"1":"S_116","2":"Deferribacteres","3":"0.000"},{"1":"S_116","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_116","2":"Elusimicrobia","3":"0.000"},{"1":"S_116","2":"Fibrobacteres","3":"0.000"},{"1":"S_116","2":"Fusobacteria","3":"0.000"},{"1":"S_116","2":"Hydrogenedentes","3":"0.000"},{"1":"S_116","2":"Lentisphaerae","3":"0.000"},{"1":"S_116","2":"SR1","3":"0.000"},{"1":"S_116","2":"Synergistetes","3":"0.000"},{"1":"S_116","2":"Tenericutes","3":"0.000"},{"1":"S_116","2":"candidate division ZB3","3":"0.000"},{"1":"S_117","2":"Proteobacteria","3":"0.620"},{"1":"S_117","2":"unclassified_Bacteria","3":"0.149"},{"1":"S_117","2":"Bacteroidetes","3":"0.052"},{"1":"S_117","2":"Verrucomicrobia","3":"0.039"},{"1":"S_117","2":"Firmicutes","3":"0.024"},{"1":"S_117","2":"Acidobacteria","3":"0.022"},{"1":"S_117","2":"Woesearchaeota","3":"0.013"},{"1":"S_117","2":"Planctomycetes","3":"0.012"},{"1":"S_117","2":"Parcubacteria","3":"0.011"},{"1":"S_117","2":"Chloroflexi","3":"0.009"},{"1":"S_117","2":"Actinobacteria","3":"0.008"},{"1":"S_117","2":"Spirochaetes","3":"0.007"},{"1":"S_117","2":"Euryarchaeota","3":"0.007"},{"1":"S_117","2":"Gemmatimonadetes","3":"0.005"},{"1":"S_117","2":"Thaumarchaeota","3":"0.005"},{"1":"S_117","2":"Armatimonadetes","3":"0.003"},{"1":"S_117","2":"Chlamydiae","3":"0.002"},{"1":"S_117","2":"Pacearchaeota","3":"0.002"},{"1":"S_117","2":"candidate division WPS-1","3":"0.002"},{"1":"S_117","2":"unclassified_Root","3":"0.002"},{"1":"S_117","2":"unclassified_Archaea","3":"0.002"},{"1":"S_117","2":"Cyanobacteria/Chloroplast","3":"0.001"},{"1":"S_117","2":"Candidatus Saccharibacteria","3":"0.001"},{"1":"S_117","2":"Microgenomates","3":"0.001"},{"1":"S_117","2":"Nitrospirae","3":"0.000"},{"1":"S_117","2":"candidate division WPS-2","3":"0.000"},{"1":"S_117","2":"Diapherotrites","3":"0.000"},{"1":"S_117","2":"BRC1","3":"0.000"},{"1":"S_117","2":"Crenarchaeota","3":"0.000"},{"1":"S_117","2":"Synergistetes","3":"0.000"},{"1":"S_117","2":"Tenericutes","3":"0.000"},{"1":"S_117","2":"Cloacimonetes","3":"0.000"},{"1":"S_117","2":"Deferribacteres","3":"0.000"},{"1":"S_117","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_117","2":"Elusimicrobia","3":"0.000"},{"1":"S_117","2":"Fibrobacteres","3":"0.000"},{"1":"S_117","2":"Fusobacteria","3":"0.000"},{"1":"S_117","2":"Hydrogenedentes","3":"0.000"},{"1":"S_117","2":"Ignavibacteriae","3":"0.000"},{"1":"S_117","2":"Latescibacteria","3":"0.000"},{"1":"S_117","2":"Lentisphaerae","3":"0.000"},{"1":"S_117","2":"SR1","3":"0.000"},{"1":"S_117","2":"candidate division ZB3","3":"0.000"},{"1":"S_118","2":"Proteobacteria","3":"0.662"},{"1":"S_118","2":"unclassified_Bacteria","3":"0.138"},{"1":"S_118","2":"Bacteroidetes","3":"0.046"},{"1":"S_118","2":"Verrucomicrobia","3":"0.037"},{"1":"S_118","2":"Acidobacteria","3":"0.021"},{"1":"S_118","2":"Firmicutes","3":"0.016"},{"1":"S_118","2":"Woesearchaeota","3":"0.011"},{"1":"S_118","2":"Planctomycetes","3":"0.010"},{"1":"S_118","2":"Chloroflexi","3":"0.009"},{"1":"S_118","2":"Parcubacteria","3":"0.008"},{"1":"S_118","2":"Actinobacteria","3":"0.007"},{"1":"S_118","2":"Thaumarchaeota","3":"0.007"},{"1":"S_118","2":"Euryarchaeota","3":"0.007"},{"1":"S_118","2":"Spirochaetes","3":"0.005"},{"1":"S_118","2":"Gemmatimonadetes","3":"0.004"},{"1":"S_118","2":"Pacearchaeota","3":"0.002"},{"1":"S_118","2":"candidate division WPS-1","3":"0.002"},{"1":"S_118","2":"unclassified_Archaea","3":"0.002"},{"1":"S_118","2":"Armatimonadetes","3":"0.001"},{"1":"S_118","2":"Chlamydiae","3":"0.001"},{"1":"S_118","2":"Candidatus Saccharibacteria","3":"0.001"},{"1":"S_118","2":"unclassified_Root","3":"0.000"},{"1":"S_118","2":"Microgenomates","3":"0.000"},{"1":"S_118","2":"Nitrospirae","3":"0.000"},{"1":"S_118","2":"BRC1","3":"0.000"},{"1":"S_118","2":"Hydrogenedentes","3":"0.000"},{"1":"S_118","2":"Cloacimonetes","3":"0.000"},{"1":"S_118","2":"Cyanobacteria/Chloroplast","3":"0.000"},{"1":"S_118","2":"Diapherotrites","3":"0.000"},{"1":"S_118","2":"Ignavibacteriae","3":"0.000"},{"1":"S_118","2":"Latescibacteria","3":"0.000"},{"1":"S_118","2":"Crenarchaeota","3":"0.000"},{"1":"S_118","2":"Deferribacteres","3":"0.000"},{"1":"S_118","2":"Deinococcus-Thermus","3":"0.000"},{"1":"S_118","2":"Elusimicrobia","3":"0.000"},{"1":"S_118","2":"Fibrobacteres","3":"0.000"},{"1":"S_118","2":"Fusobacteria","3":"0.000"},{"1":"S_118","2":"Lentisphaerae","3":"0.000"},{"1":"S_118","2":"SR1","3":"0.000"},{"1":"S_118","2":"Synergistetes","3":"0.000"},{"1":"S_118","2":"Tenericutes","3":"0.000"},{"1":"S_118","2":"candidate division WPS-2","3":"0.000"},{"1":"S_118","2":"candidate division ZB3","3":"0.000"},{"1":"S_119","2":"Proteobacteria","3":"0.689"},{"1":"S_119","2":"unclassified_Bacteria","3":"0.083"},{"1":"S_119","2":"Bacteroidetes","3":"0.075"},{"1":"S_119","2":"Verrucomicrobia","3":"0.049"},{"1":"S_119","2":"Acidobacteria","3":"0.022"},{"1":"S_119","2":"Planctomycetes","3":"0.020"},{"1":"S_119","2":"Actinobacteria","3":"0.012"},{"1":"S_119","2":"Firmicutes","3":"0.007"},{"1":"S_119","2":"Parcubacteria","3":"0.006"},{"1":"S_119","2":"Euryarchaeota","3":"0.006"},{"1":"S_119","2":"Thaumarchaeota","3":"0.006"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>taxa_proportions(soil_column, &#39;Phylum&#39;, treatment = NA)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Phylum"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Proportion"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Proteobacteria","2":"0.245"},{"1":"Acidobacteria","2":"0.162"},{"1":"Verrucomicrobia","2":"0.114"},{"1":"unclassified_Bacteria","2":"0.120"},{"1":"Actinobacteria","2":"0.079"},{"1":"Firmicutes","2":"0.038"},{"1":"Bacteroidetes","2":"0.055"},{"1":"candidate division WPS-1","2":"0.032"},{"1":"Chloroflexi","2":"0.052"},{"1":"Planctomycetes","2":"0.052"},{"1":"Spirochaetes","2":"0.004"},{"1":"Cyanobacteria/Chloroplast","2":"0.002"},{"1":"Gemmatimonadetes","2":"0.007"},{"1":"Woesearchaeota","2":"0.002"},{"1":"Thaumarchaeota","2":"0.013"},{"1":"Latescibacteria","2":"0.005"},{"1":"Euryarchaeota","2":"0.005"},{"1":"Parcubacteria","2":"0.002"},{"1":"unclassified_Root","2":"0.001"},{"1":"Armatimonadetes","2":"0.007"},{"1":"Fibrobacteres","2":"0.000"},{"1":"Chlamydiae","2":"0.001"},{"1":"Nitrospirae","2":"0.002"},{"1":"candidate division WPS-2","2":"0.000"},{"1":"Pacearchaeota","2":"0.000"},{"1":"Tenericutes","2":"0.000"},{"1":"Synergistetes","2":"0.000"},{"1":"Crenarchaeota","2":"0.000"},{"1":"unclassified_Archaea","2":"0.000"},{"1":"BRC1","2":"0.001"},{"1":"Candidatus Saccharibacteria","2":"0.000"},{"1":"Deinococcus-Thermus","2":"0.000"},{"1":"Microgenomates","2":"0.000"},{"1":"Hydrogenedentes","2":"0.000"},{"1":"Cloacimonetes","2":"0.000"},{"1":"Ignavibacteriae","2":"0.000"},{"1":"Diapherotrites","2":"0.000"},{"1":"Lentisphaerae","2":"0.000"},{"1":"candidate division ZB3","2":"0.000"},{"1":"SR1","2":"0.000"},{"1":"Elusimicrobia","2":"0.000"},{"1":"Fusobacteria","2":"0.000"},{"1":"Deferribacteres","2":"0.000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="unique_taxa" class="section level2">
+<h2>unique_taxa</h2>
+<p><a name="unique_taxa"></a></p>
+<p>Used to identify which entries in the taxa_table are unique to a specific treatment-group. It will return a <code>list</code> of <code>vector</code>s of taxa names that are only seen in each group.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>unique_taxa(phyloseq_obj, treatment, subset = NULL)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>unique_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;)</code></pre>
+<pre><code>## $`Soil Unamended`
+##   [1] &quot;OTU_8&quot;   &quot;OTU_9&quot;   &quot;OTU_36&quot;  &quot;OTU_49&quot;  &quot;OTU_73&quot;  &quot;OTU_74&quot;  &quot;OTU_76&quot;  &quot;OTU_80&quot;  &quot;OTU_103&quot; &quot;OTU_108&quot; &quot;OTU_111&quot; &quot;OTU_112&quot; &quot;OTU_113&quot; &quot;OTU_132&quot;
+##  [15] &quot;OTU_147&quot; &quot;OTU_148&quot; &quot;OTU_154&quot; &quot;OTU_158&quot; &quot;OTU_161&quot; &quot;OTU_165&quot; &quot;OTU_171&quot; &quot;OTU_176&quot; &quot;OTU_189&quot; &quot;OTU_198&quot; &quot;OTU_201&quot; &quot;OTU_206&quot; &quot;OTU_209&quot; &quot;OTU_215&quot;
+##  [29] &quot;OTU_219&quot; &quot;OTU_220&quot; &quot;OTU_221&quot; &quot;OTU_226&quot; &quot;OTU_229&quot; &quot;OTU_238&quot; &quot;OTU_240&quot; &quot;OTU_243&quot; &quot;OTU_246&quot; &quot;OTU_247&quot; &quot;OTU_249&quot; &quot;OTU_258&quot; &quot;OTU_260&quot; &quot;OTU_265&quot;
+##  [43] &quot;OTU_275&quot; &quot;OTU_290&quot; &quot;OTU_291&quot; &quot;OTU_306&quot; &quot;OTU_311&quot; &quot;OTU_312&quot; &quot;OTU_315&quot; &quot;OTU_316&quot; &quot;OTU_318&quot; &quot;OTU_320&quot; &quot;OTU_323&quot; &quot;OTU_326&quot; &quot;OTU_328&quot; &quot;OTU_333&quot;
+##  [57] &quot;OTU_334&quot; &quot;OTU_336&quot; &quot;OTU_337&quot; &quot;OTU_343&quot; &quot;OTU_365&quot; &quot;OTU_373&quot; &quot;OTU_379&quot; &quot;OTU_384&quot; &quot;OTU_388&quot; &quot;OTU_389&quot; &quot;OTU_405&quot; &quot;OTU_406&quot; &quot;OTU_412&quot; &quot;OTU_418&quot;
+##  [71] &quot;OTU_430&quot; &quot;OTU_433&quot; &quot;OTU_438&quot; &quot;OTU_439&quot; &quot;OTU_442&quot; &quot;OTU_453&quot; &quot;OTU_456&quot; &quot;OTU_460&quot; &quot;OTU_482&quot; &quot;OTU_486&quot; &quot;OTU_492&quot; &quot;OTU_497&quot; &quot;OTU_513&quot; &quot;OTU_545&quot;
+##  [85] &quot;OTU_546&quot; &quot;OTU_555&quot; &quot;OTU_573&quot; &quot;OTU_577&quot; &quot;OTU_581&quot; &quot;OTU_586&quot; &quot;OTU_601&quot; &quot;OTU_604&quot; &quot;OTU_607&quot; &quot;OTU_615&quot; &quot;OTU_616&quot; &quot;OTU_649&quot; &quot;OTU_655&quot; &quot;OTU_671&quot;
+##  [99] &quot;OTU_700&quot; &quot;OTU_739&quot; &quot;OTU_740&quot; &quot;OTU_746&quot; &quot;OTU_764&quot; &quot;OTU_784&quot; &quot;OTU_788&quot; &quot;OTU_789&quot; &quot;OTU_791&quot; &quot;OTU_794&quot; &quot;OTU_796&quot; &quot;OTU_805&quot; &quot;OTU_823&quot; &quot;OTU_841&quot;
+## [113] &quot;OTU_843&quot; &quot;OTU_845&quot; &quot;OTU_858&quot; &quot;OTU_891&quot; &quot;OTU_905&quot; &quot;OTU_908&quot;
+## 
+## $`Effluent Unamended`
+##  [1] &quot;OTU_2&quot;   &quot;OTU_3&quot;   &quot;OTU_13&quot;  &quot;OTU_21&quot;  &quot;OTU_172&quot; &quot;OTU_195&quot; &quot;OTU_203&quot; &quot;OTU_210&quot; &quot;OTU_213&quot; &quot;OTU_214&quot; &quot;OTU_216&quot; &quot;OTU_217&quot; &quot;OTU_227&quot; &quot;OTU_257&quot;
+## [15] &quot;OTU_266&quot; &quot;OTU_274&quot; &quot;OTU_300&quot; &quot;OTU_367&quot; &quot;OTU_370&quot; &quot;OTU_375&quot; &quot;OTU_397&quot; &quot;OTU_399&quot; &quot;OTU_408&quot; &quot;OTU_411&quot; &quot;OTU_428&quot; &quot;OTU_429&quot; &quot;OTU_448&quot; &quot;OTU_452&quot;
+## [29] &quot;OTU_463&quot; &quot;OTU_472&quot; &quot;OTU_488&quot; &quot;OTU_496&quot; &quot;OTU_500&quot; &quot;OTU_552&quot; &quot;OTU_593&quot; &quot;OTU_596&quot; &quot;OTU_609&quot; &quot;OTU_622&quot; &quot;OTU_626&quot; &quot;OTU_630&quot; &quot;OTU_633&quot; &quot;OTU_634&quot;
+## [43] &quot;OTU_666&quot; &quot;OTU_680&quot; &quot;OTU_682&quot; &quot;OTU_684&quot; &quot;OTU_687&quot; &quot;OTU_694&quot; &quot;OTU_695&quot; &quot;OTU_703&quot; &quot;OTU_704&quot; &quot;OTU_705&quot; &quot;OTU_708&quot; &quot;OTU_711&quot; &quot;OTU_738&quot; &quot;OTU_748&quot;
+## [57] &quot;OTU_749&quot; &quot;OTU_752&quot; &quot;OTU_782&quot; &quot;OTU_793&quot; &quot;OTU_797&quot; &quot;OTU_798&quot; &quot;OTU_807&quot; &quot;OTU_814&quot; &quot;OTU_815&quot; &quot;OTU_819&quot; &quot;OTU_824&quot; &quot;OTU_829&quot; &quot;OTU_831&quot; &quot;OTU_832&quot;
+## [71] &quot;OTU_838&quot; &quot;OTU_849&quot; &quot;OTU_861&quot; &quot;OTU_862&quot; &quot;OTU_881&quot; &quot;OTU_883&quot; &quot;OTU_884&quot; &quot;OTU_890&quot; &quot;OTU_918&quot;</code></pre>
+<p><br></p>
+<hr />
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Student - Bioinformatics and Computational Biology<br>
+Iowa State University.  Ames, IA.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -3,7 +3,6 @@
 \docType{package}
 \name{phylosmith}
 \alias{phylosmith}
-\alias{phylosmith-package}
 \title{phylosmith-package}
 \description{
 phylosmith is a conglomeration of functions written to process

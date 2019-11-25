@@ -1524,5 +1524,104 @@ pcoa_phyloseq <- function(phyloseq_obj,
 }
 
 
+#' Computes the correlation of numerical variables with taxa
+#' Function from the phylosmith-package.
+#'
+#' Computes the correlation of numerical variables with taxa
+#' @useDynLib phylosmith
+#' @usage variable_correlation_heatmap(phyloseq_obj, variables,
+#' treatment = NULL, subset = NULL, classification = NULL,
+#' method = 'spearman', limits = c(-0.8, 0.8),
+#' colors = 'default', significance_color = 'white', cores = 1)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
+#' @param variables Numerical factors within the in the
+#' \code{\link[phyloseq:sample_data]{sample_data}} to correlate with the
+#' abundance data.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @param classification Column name as a \code{string} or \code{numeric} in
+#' the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
+#' conglomerate by.
+#' @param method Which correlation method to calculate, "pearson", "spearman".
+#' @param limits The range for the legend, smaller limits will accentuate smaller
+#' correlations.
+#' @param colors the palette to use for the heatmap, default is viridis.
+#' @param significance_color the color to use for the significance stars.
+#' @param cores \code{numeric} Number of CPU cores to use for the pair-wise
+#' permutations. Default (1), (0) uses max cores available. Parallelization not
+#' available for systems running MacOS without openMP configuration.
+#' @importFrom parallel detectCores
+#' @keywords nonparametric
+#' @seealso \code{\link{permute_rho}} \code{\link{phylosmith}}
+#' @export
+#' @return data.table
+#' @examples
+#' variable_correlation_heatmap(soil_column, variables = 'Day',
+#' treatment = c('Matrix', 'Treatment'), subset = 'Amended',
+#' classification = 'Phylum', method = 'spearman', cores = 1,
+#' colors = c("#2C7BB6", "white", "#D7191C"),
+#' significance_color = 'black')
+
+variable_correlation_heatmap <-
+  function(phyloseq_obj,
+           variables,
+           treatment = NULL,
+           subset = NULL,
+           classification = NULL,
+           method = 'spearman',
+           limits = c(-0.8, 0.8),
+           colors = 'default',
+           significance_color = 'white',
+           cores = 1) {
+    correlations <- variable_correlation(
+      phyloseq_obj,
+      variables,
+      treatment,
+      subset,
+      classification,
+      method,
+      cores
+    )
+    correlations$Significance<-cut(correlations$p, breaks=c(-Inf, 0.001, 0.01, 0.05, Inf), label=c("***", "**", "*", ""))
+    if(is.null(treatment)){
+      g <- ggplot(data = correlations, aes(x = Y, y = X, fill = rho))
+    } else {
+      g <- ggplot(data = correlations, aes(x = Treatment, y = X, fill = rho))
+    }
+    g <- g + geom_tile() +
+      geom_text(aes(label = Significance), color = significance_color, size = 3) +
+      labs(y = NULL, x = NULL, fill = method) +
+      facet_grid(. ~ Y, drop = TRUE, scales = "free", space = "free_x")
+    if('default' %in% colors){
+      g <- g + ggraph::scale_fill_viridis(limit = limits)
+    } else {
+      g <- g + scale_fill_gradient2(low = colors[1], mid = colors[2], high = colors[3], limit = limits)
+    }
+    g <- g + theme_classic() +
+      theme(
+        axis.text.x = element_text(
+          angle = 30,
+          hjust = 1,
+          size = 10
+        ),
+        axis.text.y = element_text(hjust = 0.95, size = 10),
+        axis.title.x = element_text(size = 10, face = 'bold'),
+        axis.title.y = element_text(size = 10, face = 'bold'),
+        axis.ticks.x = element_blank(),
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 8),
+        legend.spacing.x = unit(0.005, 'npc'),
+        legend.key.size = unit(6, "mm"),
+        panel.background = element_rect(color = 'black', size = 1.4),
+        strip.text.x = element_text(size = 10, face = 'bold'),
+        strip.background = element_rect(colour = 'black', size = 1.4)
+      ) +
+      scale_x_discrete(expand = expand_scale(mult = 0, add = 0))
+    return(g)
+  }
 
 

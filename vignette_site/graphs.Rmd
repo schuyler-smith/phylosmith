@@ -16,7 +16,9 @@ derep_sc <- conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment
 
 <br>
 
-## abundance_heatmap
+## Abundance
+
+### abundance_heatmap
 <a name="abundance_heatmap"></a>
 
 Create a ggplot object heatmap of abundances of each taxa for each sample.
@@ -50,7 +52,7 @@ abundance_heatmap(derep_sc, classification = 'Phylum', treatment = c('Matrix', '
 
 <br>
 
-## abundance_lines
+### abundance_lines
 <a name="abundance_lines"></a>
 
 Create a ggplot object line graph of abundances across samples
@@ -85,113 +87,7 @@ abundance_lines(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Tr
 
 <br>
 
-## co_occurrence_network
-<a name="co_occurrence_network"></a>
-
-Create a ggplot object of the co-occurrence network.
-
-<br>
-***Usage***
-```r
-co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = 'default', cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
-`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
-`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
-`node_colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
-`cluster` |  if `TRUE`, will use `igraph`'s `cluster_fast_greedy` method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the `phyloseq_obj`.
-`cluster_colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
-`buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
-
-***Examples***
-```{r co_occurrence_network}
-co_occurrence_network(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', co_occurrence_table = NULL, classification = 'Phylum')
-```
-
-<br>
-
-***
-
-<br>
-
-## network_layout_ps
-<a name="network_layout_ps"></a>
-
-Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the co_occurrence_network function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.
-
-<br>
-***Usage***
-```r
-network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = 'fr')
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
-`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
-`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
-`algorithm` | Supported `igraph::layout_` algorithm.
-
-***Examples***
-```{r network_layout_ps}
-network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', algorithm = 'kk')
-```
-
-<br>
-
-***
-
-<br>
-
-## nmds_phyloseq
-<a name="nmds_phyloseq"></a>
-
-Creates a ggplot object of the NMDS ordination of samples.
-
-<br>
-***Usage***
-```r
-nmds_phyloseq(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
-```
-
-<br>
-***Arguments***
-
-Call | Description
--------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
-`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
-`labels` | Column name as a `string` or `numeric` in the sample_data to use to place labels of that factor instead of circle points.
-`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
-`verbose` | Whether or not to print the `vegan::metaMDS` stress convergence to console (TRUE) or not (FALSE).
-
-***Examples***
-
-```{r nmds_phyloseq}
-nmds_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
-```
-
-<br>
-
-***
-
-<br>
-
-## phylogeny_profile
+### phylogeny_profile
 <a name="phylogeny_profile"></a>
 
 Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample. 
@@ -227,7 +123,7 @@ phylogeny_profile(derep_sc, classification = 'Phylum', treatment = c('Matrix', '
 
 <br>
 
-## taxa_abundance_bars
+### taxa_abundance_bars
 <a name="taxa_abundance_bars"></a>
 
 Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data. 
@@ -262,7 +158,7 @@ taxa_abundance_bars(taxa_filter(soil_column, frequency = 0.8), classification = 
 
 <br>
 
-## taxa_core_graph
+### taxa_core_graph
 <a name="taxa_core_graph"></a>
 
 Create graph of the core taxa seen in phyloseq-object over a range of abundance and smaple-frequency values.
@@ -296,7 +192,166 @@ taxa_core_graph(soil_column, abundance_thresholds = seq(0.01, 0.25, 0.01))
 
 <br>
 
-## tsne_phyloseq
+### variable_correlation_heatmap
+<a name="variable_correlation_heatmap"></a>
+
+Computes the correlation of numerical variables with taxa and graphs as heatmap.
+
+<br>
+***Usage***
+```r
+variable_correlation_heatmap(phyloseq_obj, variables,
+  treatment = NULL, subset = NULL, classification = NULL,
+  method = 'spearman', limits = c(-0.8, 0.8),
+  colors = 'default', significance_color = 'white', cores = 1)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`variables` | Numerical factors within the in the sample_data to correlate with the abundance data.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`classification` | Column name as a string or numeric in the tax_table for the factor to conglomerate by.
+`method` | Which correlation method to calculate, "pearson", "spearman".
+`limits` | The range for the legend, smaller limits will accentuate smaller correlations.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+`significance_color` | the color to use for the significance stars.
+`cores` numeric value for number of CPU cores to use for the pair-wise permutations. Default (1), `0` uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
+
+***Examples***
+
+```{r variable_correlation_heatmap}
+variable_correlation_heatmap(soil_column, variables = 'Day',
+ treatment = c('Matrix', 'Treatment'), subset = 'Amended',
+ classification = 'Phylum', method = 'spearman', cores = 1,
+ colors = c("#2C7BB6", "white", "#D7191C"),
+ significance_color = 'black')
+```
+
+<br>
+
+***
+
+
+
+
+## Diversity
+
+<br>
+
+### alpha_diversity_graph
+<a name="alpha_diversity_graph"></a>
+
+Create a ggplot-object box-plot of the alpha-diversity from a phyloseq-object.
+
+<br>
+***Usage***
+```r
+alpha_diversity_graph(phyloseq_obj, index = 'shannon', treatment = NULL, subset = NULL, colors = 'default')
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`index` | The diversity index to calculate ('shannon', 'simpson', 'invsimpson')
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+```{r alpha_diversity_graph}
+alpha_diversity_graph(soil_column, index = 'shannon', treatment = c('Matrix', 'Treatment'), subset = NULL, colors = 'default')
+```
+
+<br>
+
+***
+
+<br>
+
+### nmds_phyloseq
+<a name="nmds_phyloseq"></a>
+
+Creates a ggplot object of the NMDS ordination of samples.
+
+<br>
+***Usage***
+```r
+nmds_phyloseq(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, colors = 'default', verbose = TRUE)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
+`labels` | Column name as a `string` or `numeric` in the sample_data to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+`verbose` | Whether or not to print the `vegan::metaMDS` stress convergence to console (TRUE) or not (FALSE).
+
+***Examples***
+
+```{r nmds_phyloseq}
+nmds_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
+```
+
+<br>
+
+***
+
+<br>
+
+### pcoa_phyloseq
+<a name="pcoa_phyloseq"></a>
+
+Creates a ggplot object of the NMDS ordination of samples.
+
+<br>
+***Usage***
+```r
+pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = 'bray', circle = 0.95, colors = 'default', labels = NULL)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`x` |  the numerical principle compenent to use as the x-axis.
+`y` | the numerical principle compenent to use as the y-axis.
+`method` | the distance measurement algorithm to use from "manhattan", "euclidean", "canberra", "bray",
+       "kulczynski", "gower", "morisita", "horn", "mountford",
+       "jaccard", "raup", "binomial", "chao", "altGower", "cao",
+       "mahalanobis", "clark"
+`circle` | Whether to add a stat_elipse around eache treatment factor on the graph.
+`labels` | Column name as a `string` or `numeric` in the sample_data to use to place labels of that factor instead of circle points.
+`colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
+
+***Examples***
+
+```{r pcoa_phyloseq}
+pcoa_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE)
+```
+
+<br>
+
+***
+
+<br>
+
+### tsne_phyloseq
 <a name="tsne_phyloseq"></a>
 
 Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.
@@ -328,5 +383,3 @@ tsne_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10
 <br>
 
 ***
-
-<br>

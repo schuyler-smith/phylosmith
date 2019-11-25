@@ -214,82 +214,6 @@ taxa_proportions <-
     return(class_table)
   }
 
-#' Find unique taxa between treatments of a phyloseq object.
-#' Function from the phylosmith-package.
-#'
-#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
-#' finds which taxa are taxa that are unique to a specific subset of the data.
-#' @useDynLib phylosmith
-#' @usage unique_taxa(phyloseq_obj, treatment, subset = NULL)
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
-#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-#' information about each sample, and it must contain
-#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
-#' taxa/gene.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-#' multiple columns and they will be combined into a new column.
-#' @param subset A factor within the \code{treatment}. This will remove any
-#' samples that to not contain this factor. This can be a vector of multiple
-#' factors to subset on.
-#' @seealso \code{\link{common_taxa}}
-#' @export
-#' @return list
-#' @examples unique_taxa(soil_column, c('Matrix', 'Treatment'))
-
-unique_taxa <- function(phyloseq_obj, treatment, subset = NULL) {
-  if (!inherits(phyloseq_obj, "phyloseq")) {
-    stop("`phyloseq_obj` must be a phyloseq-class object",
-         call. = FALSE)
-  }
-  if (is.null(access(phyloseq_obj, 'sam_data'))) {
-    stop("`phyloseq_obj` must contain sample_data()
-        information",
-         call. = FALSE)
-  }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-  if (any(!(treatment %in% colnames(access(
-    phyloseq_obj, 'sam_data'
-  ))))) {
-    stop(
-      "`treatment` must be at least one column name, or
-        index, from the sample_data()",
-      call. = FALSE
-    )
-  }
-  phyloseq_obj <- phyloseq(
-    access(phyloseq_obj, 'otu_table'),
-    access(phyloseq_obj, 'tax_table'),
-    access(phyloseq_obj, 'sam_data')
-  )
-  phyloseq_obj <-
-    taxa_filter(phyloseq_obj, treatment, subset = subset)
-  treatment_name <- paste(treatment, collapse = sep)
-  treatment_classes <- unique(access(phyloseq_obj,
-                                     'sam_data')[[treatment_name]])
-
-  seen_taxa <- lapply(
-    treatment_classes,
-    FUN = function(trt) {
-      taxa_names(taxa_filter(
-        phyloseq_obj,
-        treatment = treatment_name,
-        subset = trt,
-        frequency = 0
-      ))
-    }
-  )
-  names(seen_taxa) <- treatment_classes
-  taxa_counts <- table(unlist(seen_taxa))
-  unique_taxa <- names(taxa_counts[taxa_counts == 1])
-  unique_taxa <- lapply(
-    seen_taxa,
-    FUN = function(toi) {
-      toi[toi %in% unique_taxa]
-    }
-  )
-  return(unique_taxa)
-}
 
 #' Filter taxa in phyloseq-object to only include core taxa.
 #' Function from the phylosmith-package.
@@ -379,3 +303,81 @@ taxa_core <-
     phyloseq_obj <- prune_taxa(core_taxa, phyloseq_obj)
     return(phyloseq_obj)
   }
+
+
+#' Find unique taxa between treatments of a phyloseq object.
+#' Function from the phylosmith-package.
+#'
+#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
+#' finds which taxa are taxa that are unique to a specific subset of the data.
+#' @useDynLib phylosmith
+#' @usage unique_taxa(phyloseq_obj, treatment, subset = NULL)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param treatment Column name as a \code{string} or \code{numeric} in the
+#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
+#' multiple columns and they will be combined into a new column.
+#' @param subset A factor within the \code{treatment}. This will remove any
+#' samples that to not contain this factor. This can be a vector of multiple
+#' factors to subset on.
+#' @seealso \code{\link{common_taxa}}
+#' @export
+#' @return list
+#' @examples unique_taxa(soil_column, c('Matrix', 'Treatment'))
+
+unique_taxa <- function(phyloseq_obj, treatment, subset = NULL) {
+  if (!inherits(phyloseq_obj, "phyloseq")) {
+    stop("`phyloseq_obj` must be a phyloseq-class object",
+         call. = FALSE)
+  }
+  if (is.null(access(phyloseq_obj, 'sam_data'))) {
+    stop("`phyloseq_obj` must contain sample_data()
+        information",
+         call. = FALSE)
+  }
+  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  if (any(!(treatment %in% colnames(access(
+    phyloseq_obj, 'sam_data'
+  ))))) {
+    stop(
+      "`treatment` must be at least one column name, or
+        index, from the sample_data()",
+      call. = FALSE
+    )
+  }
+  phyloseq_obj <- phyloseq(
+    access(phyloseq_obj, 'otu_table'),
+    access(phyloseq_obj, 'tax_table'),
+    access(phyloseq_obj, 'sam_data')
+  )
+  phyloseq_obj <-
+    taxa_filter(phyloseq_obj, treatment, subset = subset)
+  treatment_name <- paste(treatment, collapse = sep)
+  treatment_classes <- unique(access(phyloseq_obj,
+                                     'sam_data')[[treatment_name]])
+
+  seen_taxa <- lapply(
+    treatment_classes,
+    FUN = function(trt) {
+      taxa_names(taxa_filter(
+        phyloseq_obj,
+        treatment = treatment_name,
+        subset = trt,
+        frequency = 0
+      ))
+    }
+  )
+  names(seen_taxa) <- treatment_classes
+  taxa_counts <- table(unlist(seen_taxa))
+  unique_taxa <- names(taxa_counts[taxa_counts == 1])
+  unique_taxa <- lapply(
+    seen_taxa,
+    FUN = function(toi) {
+      toi[toi %in% unique_taxa]
+    }
+  )
+  return(unique_taxa)
+}

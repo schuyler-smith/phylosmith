@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Schuyler D. Smith" />
@@ -92,7 +93,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -253,48 +253,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = false;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -308,6 +269,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -400,10 +367,17 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="data_wrangling.html">
+  <a href="wrangling.html">
     <span class="fa fa-file"></span>
      
-    Data Wrangling
+    Wrangling
+  </a>
+</li>
+<li>
+  <a href="analytics.html">
+    <span class="fa fa-chart-pie"></span>
+     
+    Analytics
   </a>
 </li>
 <li>
@@ -411,6 +385,13 @@ div.tocify {
     <span class="fa fa-bar-chart"></span>
      
     Graphs
+  </a>
+</li>
+<li>
+  <a href="networks.html">
+    <span class="fa fa-project-diagram"></span>
+     
+    Networks
   </a>
 </li>
 <li>
@@ -511,9 +492,9 @@ library(phylosmith)</code></pre>
 <div id="functions" class="section level1">
 <h1>Functions</h1>
 <p><br></p>
-<p><a name="data_wrangling"></a></p>
-<div id="data-wrangling" class="section level3">
-<h3>Data Wrangling</h3>
+<p><a name="wrangling"></a></p>
+<div id="wrangling" class="section level3">
+<h3>Wrangling</h3>
 <table>
 <colgroup>
 <col width="25%" />
@@ -527,51 +508,65 @@ library(phylosmith)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="data_wrangling.html#common_taxa">common_taxa</a></td>
+<td><a href="wrangling.html#conglomerate_samples">conglomerate_samples</a></td>
+<td>combines samples based on common factor within sample_data</td>
+</tr>
+<tr class="even">
+<td><a href="wrangling.html#conglomerate_taxa">conglomerate_taxa</a></td>
+<td>combines taxa that have same classification</td>
+</tr>
+<tr class="odd">
+<td><a href="wrangling.html#melt_phyloseq">melt_phyloseq</a></td>
+<td>melts a phyloseq object into a data.table</td>
+</tr>
+<tr class="even">
+<td><a href="wrangling.html#merge_treatments">merge_treatments</a></td>
+<td>combines multiple columns in meta-data into a new column</td>
+</tr>
+<tr class="odd">
+<td><a href="wrangling.html#relative_abundance">relative_abundance</a></td>
+<td>transform abundance data to relative abundance</td>
+</tr>
+<tr class="even">
+<td><a href="wrangling.html#set_sample_order">set_sample_order</a></td>
+<td>sets the order of the samples of a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td><a href="wrangling.html#set_treatment_levels">set_treatment_levels</a></td>
+<td>sets the order of the factors in a sample_data column</td>
+</tr>
+<tr class="even">
+<td><a href="wrangling.html#taxa_filter">taxa_filter</a></td>
+<td>filter taxa by proportion of samples seen in</td>
+</tr>
+</tbody>
+</table>
+<p><a name="analyitcs"></a></p>
+</div>
+<div id="analytics" class="section level3">
+<h3>Analytics</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="analytics.html#common_taxa">common_taxa</a></td>
 <td>find taxa common to each treatment</td>
 </tr>
 <tr class="even">
-<td><a href="data_wrangling.html#conglomerate_samples">conglomerate_samples</a></td>
-<td>combines samples based on common factor within sample_data</td>
-</tr>
-<tr class="odd">
-<td><a href="data_wrangling.html#conglomerate_taxa">conglomerate_taxa</a></td>
-<td>combines taxa that have same classification</td>
-</tr>
-<tr class="even">
-<td><a href="data_wrangling.html#melt_phyloseq">melt_phyloseq</a></td>
-<td>melts a phyloseq object into a data.table</td>
-</tr>
-<tr class="odd">
-<td><a href="data_wrangling.html#merge_treatments">merge_treatments</a></td>
-<td>combines multiple columns in meta-data into a new column</td>
-</tr>
-<tr class="even">
-<td><a href="data_wrangling.html#relative_abundance">relative_abundance</a></td>
-<td>transform abundance data to relative abundance</td>
-</tr>
-<tr class="odd">
-<td><a href="data_wrangling.html#set_sample_order">set_sample_order</a></td>
-<td>sets the order of the samples of a phyloseq object</td>
-</tr>
-<tr class="even">
-<td><a href="data_wrangling.html#set_treatment_levels">set_treatment_levels</a></td>
-<td>sets the order of the factors in a sample_data column</td>
-</tr>
-<tr class="odd">
-<td><a href="data_wrangling.html#taxa_core">taxa_core</a></td>
+<td><a href="analytics.html#taxa_core">taxa_core</a></td>
 <td>filter taxa by proportion of samples and relative abundance</td>
 </tr>
-<tr class="even">
-<td><a href="data_wrangling.html#taxa_filter">taxa_filter</a></td>
-<td>filter taxa by proportion of samples seen in</td>
-</tr>
 <tr class="odd">
-<td><a href="data_wrangling.html#taxa_proportions">taxa_proportions</a></td>
+<td><a href="analytics.html#taxa_proportions">taxa_proportions</a></td>
 <td>computes the proportion of a taxa classification</td>
 </tr>
 <tr class="even">
-<td><a href="data_wrangling.html#unique_taxa">unique_taxa</a></td>
+<td><a href="analytics.html#unique_taxa">unique_taxa</a></td>
 <td>find taxa unique to each treatment</td>
 </tr>
 </tbody>
@@ -580,6 +575,8 @@ library(phylosmith)</code></pre>
 </div>
 <div id="graphs" class="section level3">
 <h3>Graphs</h3>
+<div id="abundance" class="section level4">
+<h4>Abundance</h4>
 <table>
 <colgroup>
 <col width="25%" />
@@ -601,32 +598,84 @@ library(phylosmith)</code></pre>
 <td>create a ggplot object of the abundance data as a line graph</td>
 </tr>
 <tr class="odd">
-<td><a href="graphs.html#co_occurrence_network">co_occurrence_network</a></td>
-<td>creates a network of the co-occurrence of taxa</td>
-</tr>
-<tr class="even">
-<td><a href="graphs.html#network_layout_ps">network_layout_ps</a></td>
-<td>create a layout object for a network</td>
-</tr>
-<tr class="odd">
-<td><a href="graphs.html#nmds_phyloseq">nmds_phyloseq</a></td>
-<td>create a ggplot object of the NMDS from a phyloseq object</td>
-</tr>
-<tr class="even">
 <td><a href="graphs.html#phylogeny_profile">phylogeny_profile</a></td>
 <td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="graphs.html#taxa_abundance_bars">taxa_abundance_bars</a></td>
 <td>create a ggplot object of the abundance of taxa in each sample</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="graphs.html#taxa_core_graph">taxa_core_graph</a></td>
 <td>create a ggplot object of the core taxa over a range of parameters</td>
 </tr>
+<tr class="even">
+<td><a href="graphs.html#variable_correlation_heatmap">variable_correlation_heatmap</a></td>
+<td>create a ggplot heatmatp of the correlation of numerical variables with taxa</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="diversity" class="section level4">
+<h4>Diversity</h4>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr class="odd">
+<td><a href="graphs.html#alpha_diversity_graph">alpha_diversity_graph</a></td>
+<td>create a ggplot-object box-plot of the alpha-diversity from a phyloseq-object.</td>
+</tr>
+<tr class="even">
+<td><a href="graphs.html#nmds_phyloseq">nmds_phyloseq</a></td>
+<td>create a ggplot object of the NMDS from a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td><a href="graphs.html#pcoa_phyloseq">pcoa_phyloseq</a></td>
+<td>create a ggplot object of the PCoA from a phyloseq object</td>
+</tr>
+<tr class="even">
 <td><a href="graphs.html#tsne_phyloseq">tsne_phyloseq</a></td>
 <td>create a ggplot object of the t-SNE from a phyloseq object</td>
+</tr>
+</tbody>
+</table>
+<p><a name="networks"></a></p>
+</div>
+</div>
+<div id="networks" class="section level3">
+<h3>Networks</h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="networks.html#co_occurrence_network">co_occurrence_network</a></td>
+<td>creates a network of the co-occurrence of taxa</td>
+</tr>
+<tr class="even">
+<td><a href="networks.html#network_layout_ps">network_layout_ps</a></td>
+<td>creates a layout object for a network</td>
+</tr>
+<tr class="odd">
+<td><a href="networks.html#variable_correlation_network">variable_correlation_network</a></td>
+<td>creates a network of the correlation of taxa and sample variables</td>
 </tr>
 </tbody>
 </table>
@@ -662,6 +711,10 @@ library(phylosmith)</code></pre>
 <td><a href="calculations.html#quantile_permuted_rhos">quantile_permuted_rhos</a></td>
 <td>calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence</td>
 </tr>
+<tr class="odd">
+<td><a href="calculations.html#variable_correlation">variable_correlation</a></td>
+<td>calculate the correlation of numerical variables with taxa abundances</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -696,6 +749,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

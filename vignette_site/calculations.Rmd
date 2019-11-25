@@ -151,3 +151,39 @@ quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)
 
 <br>
 
+## variable_correlation
+<a name="variable_correlation"></a>
+
+Computes the correlation of numerical variables with taxa abundances. Function from the phylosmith-package.
+
+<br>
+***Usage***
+```r
+ variable_correlation(phyloseq_obj, variables, treatment = NULL,subset = NULL,
+  classification = NULL, method = 'spearman', cores = 1)
+```
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`variables` | Numerical factors within the in the sample_data to correlate with the abundance data.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`classification` | Column name as a string or numeric in the tax_table for the factor to conglomerate by.
+`method` | Which correlation method to calculate, "pearson", "spearman".
+`cores` numeric value for number of CPU cores to use for the pair-wise permutations. Default (1), `0` uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
+
+***Examples***
+
+```{r variable_correlation}
+variable_correlation(soil_column, variables = 'Day',
+ treatment = c('Matrix', 'Treatment'), subset = 'Amended',
+ classification = 'Phylum', method = 'spearman', cores = 1)
+```
+
+<br>
+
+***
+

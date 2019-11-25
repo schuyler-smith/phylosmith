@@ -7,12 +7,18 @@ navbar:
     - text: Overview
       icon: fa-home
       href: index.html
-    - text: Data Wrangling
+    - text: Wrangling
       icon: fa-file
-      href: data_wrangling.html
+      href: wrangling.html
+    - text: Analytics
+      icon: fa-chart-pie
+      href: analytics.html
     - text: Graphs
       icon: fa-bar-chart
       href: graphs.html
+    - text: Networks
+      icon: fa-project-diagram
+      href: networks.html
     - text: Calculations
       icon: fa-calculator
       href: calculations.html

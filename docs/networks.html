@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+<meta name="date" content="2019-11-25" />
+
+<title>Networks</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li>
+  <a href="wrangling.html">
+    <span class="fa fa-file"></span>
+     
+    Wrangling
+  </a>
+</li>
+<li>
+  <a href="analytics.html">
+    <span class="fa fa-chart-pie"></span>
+     
+    Analytics
+  </a>
+</li>
+<li>
+  <a href="graphs.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphs
+  </a>
+</li>
+<li>
+  <a href="networks.html">
+    <span class="fa fa-project-diagram"></span>
+     
+    Networks
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/tree/master/R">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Networks</h1>
+<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
+<h4 class="date">2019-11-25</h4>
+
+</div>
+
+
+<p><br></p>
+<div id="co_occurrence_network" class="section level2">
+<h2>co_occurrence_network</h2>
+<p><a name="co_occurrence_network"></a></p>
+<p>Create a ggplot object of the co-occurrence network.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, classification = NULL, node_colors = &#39;default&#39;, cluster = FALSE, cluster_colors = &#39;default&#39;, buffer = 0.5)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>co_occurrence_table</code></td>
+<td>Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using <code>co_occurrence()</code>. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="even">
+<td><code>node_colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="odd">
+<td><code>cluster</code></td>
+<td>if <code>TRUE</code>, will use <code>igraph</code>’s <code>cluster_fast_greedy</code> method. Alternatively, you may pass a vector of cluster assignments with order corresponding to the order of the taxa_names in the <code>phyloseq_obj</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cluster_colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="odd">
+<td><code>buffer</code></td>
+<td>Amount of space beyond the points to extend the cluster (aesthetic argument).</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>co_occurrence_network(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, co_occurrence_table = NULL, classification = &#39;Phylum&#39;)</code></pre>
+<p><img src="networks_files/figure-html/co_occurrence_network-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="network_layout_ps" class="section level2">
+<h2>network_layout_ps</h2>
+<p><a name="network_layout_ps"></a></p>
+<p>Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the co_occurrence_network function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = &#39;fr&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>co_occurrence_table</code></td>
+<td>Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using <code>co_occurrence()</code>. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>tax_table</code> for the factor to use for node colors.</td>
+</tr>
+<tr class="even">
+<td><code>algorithm</code></td>
+<td>Supported <code>igraph::layout_</code> algorithm.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>network_layout_ps(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Soil Amended&#39;, algorithm = &#39;kk&#39;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Domain"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Phylum"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Class"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Order"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Family"],"name":[8],"type":["chr"],"align":["left"]},{"label":["Genus"],"name":[9],"type":["chr"],"align":["left"]},{"label":[".ggraph.orig_index"],"name":[10],"type":["int"],"align":["right"]},{"label":["circular"],"name":[11],"type":["lgl"],"align":["right"]},{"label":[".ggraph.index"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"7.185778e-01","2":"0.482742091","3":"OTU_5","4":"Archaea","5":"Euryarchaeota","6":"Methanobacteria","7":"Methanobacteriales","8":"Methanobacteriaceae","9":"Methanobrevibacter","10":"1","11":"FALSE","12":"1"},{"1":"-1.648684e-02","2":"0.604991857","3":"OTU_6","4":"Archaea","5":"Euryarchaeota","6":"Methanobacteria","7":"Methanobacteriales","8":"Methanobacteriaceae","9":"Methanosphaera","10":"2","11":"FALSE","12":"2"},{"1":"9.995940e-01","2":"0.028491315","3":"OTU_8","4":"Archaea","5":"Euryarchaeota","6":"Methanomicrobia","7":"Methanomicrobiales","8":"Methanomicrobiaceae","9":"Methanoculleus","10":"3","11":"FALSE","12":"3"},{"1":"1.573098e+00","2":"0.798242072","3":"OTU_9","4":"Archaea","5":"Euryarchaeota","6":"Methanomicrobia","7":"Methanomicrobiales","8":"Methanomicrobiaceae","9":"Methanogenium","10":"4","11":"FALSE","12":"4"},{"1":"6.076710e+00","2":"-0.448574784","3":"OTU_11","4":"Archaea","5":"Euryarchaeota","6":"Methanomicrobia","7":"Methanosarcinales","8":"Methanosarcinaceae","9":"Methanosarcina","10":"5","11":"FALSE","12":"5"},{"1":"-3.247719e+00","2":"-1.136671305","3":"OTU_12","4":"Archaea","5":"Euryarchaeota","6":"Thermoplasmata","7":"Methanomassiliicoccales","8":"Methanomassiliicoccaceae","9":"Methanomassiliicoccus","10":"6","11":"FALSE","12":"6"},{"1":"-5.871662e-01","2":"1.187426795","3":"OTU_13","4":"Archaea","5":"Euryarchaeota","6":"Thermoplasmata","7":"Thermoplasmatales","8":"unclassified_Thermoplasmatales","9":"unclassified_Thermoplasmatales","10":"7","11":"FALSE","12":"7"},{"1":"-3.482533e-01","2":"-4.055246766","3":"OTU_14","4":"Archaea","5":"Euryarchaeota","6":"Thermoplasmata","7":"unclassified_Thermoplasmata","8":"unclassified_Thermoplasmata","9":"unclassified_Thermoplasmata","10":"8","11":"FALSE","12":"8"},{"1":"-1.755708e+00","2":"1.677629858","3":"OTU_18","4":"Archaea","5":"Thaumarchaeota","6":"unclassified_Thaumarchaeota","7":"Nitrososphaerales","8":"Nitrososphaeraceae","9":"Nitrososphaera","10":"9","11":"FALSE","12":"9"},{"1":"-5.293734e+00","2":"-1.319214991","3":"OTU_25","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp1","7":"unclassified_Acidobacteria_Gp1","8":"unclassified_Acidobacteria_Gp1","9":"Candidatus Koribacter","10":"10","11":"FALSE","12":"10"},{"1":"-3.771587e+00","2":"-3.720940909","3":"OTU_27","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp1","7":"unclassified_Acidobacteria_Gp1","8":"unclassified_Acidobacteria_Gp1","9":"Gp1","10":"11","11":"FALSE","12":"11"},{"1":"-8.575498e-01","2":"-0.452119732","3":"OTU_28","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp1","7":"unclassified_Acidobacteria_Gp1","8":"unclassified_Acidobacteria_Gp1","9":"Granulicella","10":"12","11":"FALSE","12":"12"},{"1":"-5.216986e+00","2":"-0.445993188","3":"OTU_31","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp1","7":"unclassified_Acidobacteria_Gp1","8":"unclassified_Acidobacteria_Gp1","9":"unclassified_Acidobacteria_Gp1","10":"13","11":"FALSE","12":"13"},{"1":"-4.376208e+00","2":"-1.573386822","3":"OTU_32","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp10","7":"unclassified_Acidobacteria_Gp10","8":"unclassified_Acidobacteria_Gp10","9":"Gp10","10":"14","11":"FALSE","12":"14"},{"1":"-3.292739e+00","2":"0.706636878","3":"OTU_33","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp11","7":"unclassified_Acidobacteria_Gp11","8":"unclassified_Acidobacteria_Gp11","9":"Gp11","10":"15","11":"FALSE","12":"15"},{"1":"-3.743789e+00","2":"-3.276628092","3":"OTU_37","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp15","7":"unclassified_Acidobacteria_Gp15","8":"unclassified_Acidobacteria_Gp15","9":"Gp15","10":"16","11":"FALSE","12":"16"},{"1":"-1.627775e+00","2":"-2.066897912","3":"OTU_38","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp16","7":"unclassified_Acidobacteria_Gp16","8":"unclassified_Acidobacteria_Gp16","9":"Gp16","10":"17","11":"FALSE","12":"17"},{"1":"-1.979929e+00","2":"0.267278803","3":"OTU_39","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp17","7":"unclassified_Acidobacteria_Gp17","8":"unclassified_Acidobacteria_Gp17","9":"Gp17","10":"18","11":"FALSE","12":"18"},{"1":"-2.674810e+00","2":"0.645248232","3":"OTU_40","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp18","7":"unclassified_Acidobacteria_Gp18","8":"unclassified_Acidobacteria_Gp18","9":"Gp18","10":"19","11":"FALSE","12":"19"},{"1":"-3.528646e+00","2":"-1.975290138","3":"OTU_42","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp2","7":"unclassified_Acidobacteria_Gp2","8":"unclassified_Acidobacteria_Gp2","9":"Gp2","10":"20","11":"FALSE","12":"20"},{"1":"-2.592601e+00","2":"1.704827307","3":"OTU_43","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp20","7":"unclassified_Acidobacteria_Gp20","8":"unclassified_Acidobacteria_Gp20","9":"Gp20","10":"21","11":"FALSE","12":"21"},{"1":"-2.528147e+00","2":"2.319503525","3":"OTU_45","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp22","7":"unclassified_Acidobacteria_Gp22","8":"unclassified_Acidobacteria_Gp22","9":"Gp22","10":"22","11":"FALSE","12":"22"},{"1":"-1.682937e+00","2":"0.630232991","3":"OTU_46","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp25","7":"unclassified_Acidobacteria_Gp25","8":"unclassified_Acidobacteria_Gp25","9":"Gp25","10":"23","11":"FALSE","12":"23"},{"1":"-6.014782e+00","2":"-2.687902803","3":"OTU_47","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp3","7":"unclassified_Acidobacteria_Gp3","8":"unclassified_Acidobacteria_Gp3","9":"Candidatus Solibacter","10":"24","11":"FALSE","12":"24"},{"1":"-4.080124e+00","2":"-2.122863590","3":"OTU_48","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp3","7":"unclassified_Acidobacteria_Gp3","8":"unclassified_Acidobacteria_Gp3","9":"Gp3","10":"25","11":"FALSE","12":"25"},{"1":"-6.458601e+00","2":"-2.067627510","3":"OTU_50","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp3","7":"unclassified_Acidobacteria_Gp3","8":"unclassified_Acidobacteria_Gp3","9":"unclassified_Acidobacteria_Gp3","10":"26","11":"FALSE","12":"26"},{"1":"-4.723250e+00","2":"-1.259083547","3":"OTU_51","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp4","7":"unclassified_Acidobacteria_Gp4","8":"unclassified_Acidobacteria_Gp4","9":"Aridibacter","10":"27","11":"FALSE","12":"27"},{"1":"-4.903046e+00","2":"-0.036700307","3":"OTU_52","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp4","7":"unclassified_Acidobacteria_Gp4","8":"unclassified_Acidobacteria_Gp4","9":"Blastocatella","10":"28","11":"FALSE","12":"28"},{"1":"4.628093e-02","2":"1.880090216","3":"OTU_53","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp4","7":"unclassified_Acidobacteria_Gp4","8":"unclassified_Acidobacteria_Gp4","9":"Gp4","10":"29","11":"FALSE","12":"29"},{"1":"-6.611577e+00","2":"-1.224517682","3":"OTU_54","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp4","7":"unclassified_Acidobacteria_Gp4","8":"unclassified_Acidobacteria_Gp4","9":"unclassified_Acidobacteria_Gp4","10":"30","11":"FALSE","12":"30"},{"1":"-3.032825e+00","2":"3.296246390","3":"OTU_55","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp5","7":"unclassified_Acidobacteria_Gp5","8":"unclassified_Acidobacteria_Gp5","9":"Gp5","10":"31","11":"FALSE","12":"31"},{"1":"-6.797879e-01","2":"1.775142096","3":"OTU_56","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp6","7":"unclassified_Acidobacteria_Gp6","8":"unclassified_Acidobacteria_Gp6","9":"Gp6","10":"32","11":"FALSE","12":"32"},{"1":"-1.790113e+00","2":"1.307730579","3":"OTU_57","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp7","7":"unclassified_Acidobacteria_Gp7","8":"unclassified_Acidobacteria_Gp7","9":"Gp7","10":"33","11":"FALSE","12":"33"},{"1":"-2.789780e+00","2":"-2.657429003","3":"OTU_58","4":"Bacteria","5":"Acidobacteria","6":"Acidobacteria_Gp9","7":"unclassified_Acidobacteria_Gp9","8":"unclassified_Acidobacteria_Gp9","9":"Gp9","10":"34","11":"FALSE","12":"34"},{"1":"-2.134806e+00","2":"-0.117469173","3":"OTU_61","4":"Bacteria","5":"Acidobacteria","6":"unclassified_Acidobacteria","7":"unclassified_Acidobacteria","8":"unclassified_Acidobacteria","9":"unclassified_Acidobacteria","10":"35","11":"FALSE","12":"35"},{"1":"-2.917243e+00","2":"0.453304937","3":"OTU_65","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Acidimicrobiales","8":"Acidimicrobiaceae","9":"unclassified_Acidimicrobiaceae","10":"36","11":"FALSE","12":"36"},{"1":"-3.088651e+00","2":"0.355496675","3":"OTU_66","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Acidimicrobiales","8":"Acidimicrobineae_incertae_sedis","9":"Aciditerrimonas","10":"37","11":"FALSE","12":"37"},{"1":"-5.595768e-01","2":"-0.033540890","3":"OTU_69","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Acidimicrobiales","8":"Iamiaceae","9":"unclassified_Iamiaceae","10":"38","11":"FALSE","12":"38"},{"1":"-2.690729e+00","2":"1.517468583","3":"OTU_70","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Acidimicrobiales","8":"unclassified_Acidimicrobiales","9":"unclassified_Acidimicrobiales","10":"39","11":"FALSE","12":"39"},{"1":"1.746433e-01","2":"-2.468072563","3":"OTU_71","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Acidothermaceae","9":"Acidothermus","10":"40","11":"FALSE","12":"40"},{"1":"1.011232e-01","2":"0.123066363","3":"OTU_72","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Actinomycetaceae","9":"Actinomyces","10":"41","11":"FALSE","12":"41"},{"1":"2.556022e+00","2":"-0.858605745","3":"OTU_73","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Actinomycetaceae","9":"Trueperella","10":"42","11":"FALSE","12":"42"},{"1":"-5.379982e-01","2":"0.456136521","3":"OTU_74","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Actinomycetaceae","9":"unclassified_Actinomycetaceae","10":"43","11":"FALSE","12":"43"},{"1":"2.259707e+00","2":"4.008321773","3":"OTU_76","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Bogoriellaceae","9":"Georgenia","10":"44","11":"FALSE","12":"44"},{"1":"-5.516765e+00","2":"1.020605774","3":"OTU_78","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Cellulomonadaceae","9":"Cellulomonas","10":"45","11":"FALSE","12":"45"},{"1":"8.014136e-01","2":"0.598110530","3":"OTU_79","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Corynebacteriaceae","9":"Corynebacterium","10":"46","11":"FALSE","12":"46"},{"1":"-6.112563e-01","2":"0.049955181","3":"OTU_80","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Corynebacterineae_incertae_sedis","9":"Tomitella","10":"47","11":"FALSE","12":"47"},{"1":"-1.619396e+00","2":"2.936063328","3":"OTU_82","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Cryptosporangiaceae","9":"Jatrophihabitans","10":"48","11":"FALSE","12":"48"},{"1":"-4.238936e+00","2":"-4.783353753","3":"OTU_83","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Demequinaceae","9":"Demequina","10":"49","11":"FALSE","12":"49"},{"1":"7.144398e+00","2":"2.555826673","3":"OTU_84","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Dermabacteraceae","9":"Brachybacterium","10":"50","11":"FALSE","12":"50"},{"1":"2.205035e+00","2":"6.879013638","3":"OTU_85","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Dermacoccaceae","9":"Flexivirga","10":"51","11":"FALSE","12":"51"},{"1":"7.474196e-01","2":"0.664352278","3":"OTU_86","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Dietziaceae","9":"Dietzia","10":"52","11":"FALSE","12":"52"},{"1":"-3.400260e+00","2":"1.168086193","3":"OTU_87","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Geodermatophilaceae","9":"Blastococcus","10":"53","11":"FALSE","12":"53"},{"1":"-5.253690e+00","2":"1.888855329","3":"OTU_88","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Geodermatophilaceae","9":"Geodermatophilus","10":"54","11":"FALSE","12":"54"},{"1":"-4.073580e+00","2":"1.358319932","3":"OTU_89","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Geodermatophilaceae","9":"Modestobacter","10":"55","11":"FALSE","12":"55"},{"1":"-2.069903e+00","2":"-3.018899506","3":"OTU_90","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Geodermatophilaceae","9":"unclassified_Geodermatophilaceae","10":"56","11":"FALSE","12":"56"},{"1":"4.926681e+00","2":"-1.615128045","3":"OTU_92","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Intrasporangiaceae","9":"Intrasporangium","10":"57","11":"FALSE","12":"57"},{"1":"-5.907245e+00","2":"-0.578949083","3":"OTU_93","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Intrasporangiaceae","9":"Oryzihumus","10":"58","11":"FALSE","12":"58"},{"1":"-7.033279e+00","2":"-2.253557685","3":"OTU_95","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Intrasporangiaceae","9":"Terrabacter","10":"59","11":"FALSE","12":"59"},{"1":"-2.370111e+00","2":"0.702621474","3":"OTU_96","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Intrasporangiaceae","9":"unclassified_Intrasporangiaceae","10":"60","11":"FALSE","12":"60"},{"1":"-6.179132e+00","2":"-0.086754576","3":"OTU_97","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Jiangellaceae","9":"Jiangella","10":"61","11":"FALSE","12":"61"},{"1":"-1.393334e+00","2":"0.935946197","3":"OTU_98","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Kineosporiaceae","9":"Angustibacter","10":"62","11":"FALSE","12":"62"},{"1":"1.528958e+00","2":"0.238781170","3":"OTU_100","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Microbacteriaceae","9":"Agromyces","10":"63","11":"FALSE","12":"63"},{"1":"-1.788043e+00","2":"-0.477861407","3":"OTU_101","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Microbacteriaceae","9":"Frondihabitans","10":"64","11":"FALSE","12":"64"},{"1":"1.408105e+00","2":"1.546803278","3":"OTU_103","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Microbacteriaceae","9":"Leucobacter","10":"65","11":"FALSE","12":"65"},{"1":"-1.369878e+00","2":"0.192827390","3":"OTU_104","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Microbacteriaceae","9":"unclassified_Microbacteriaceae","10":"66","11":"FALSE","12":"66"},{"1":"-5.277352e+00","2":"-4.227937871","3":"OTU_105","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Micrococcaceae","9":"Arthrobacter","10":"67","11":"FALSE","12":"67"},{"1":"5.779448e-01","2":"0.816075837","3":"OTU_108","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Micrococcaceae","9":"Yaniella","10":"68","11":"FALSE","12":"68"},{"1":"-3.632208e+00","2":"2.159752188","3":"OTU_110","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Micromonosporaceae","9":"Actinoplanes","10":"69","11":"FALSE","12":"69"},{"1":"-1.545221e+00","2":"-5.419573385","3":"OTU_118","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Micromonosporaceae","9":"Luedemannella","10":"70","11":"FALSE","12":"70"},{"1":"-3.840447e+00","2":"-1.788628661","3":"OTU_124","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Mycobacteriaceae","9":"Mycobacterium","10":"71","11":"FALSE","12":"71"},{"1":"-4.729293e+00","2":"4.131273093","3":"OTU_125","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nakamurellaceae","9":"Nakamurella","10":"72","11":"FALSE","12":"72"},{"1":"5.183926e-01","2":"0.855142763","3":"OTU_126","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nocardiaceae","9":"Gordonia","10":"73","11":"FALSE","12":"73"},{"1":"-8.882405e-01","2":"-2.073276169","3":"OTU_131","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nocardioidaceae","9":"Aeromicrobium","10":"74","11":"FALSE","12":"74"},{"1":"-5.485718e-01","2":"0.009914989","3":"OTU_133","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nocardioidaceae","9":"Marmoricola","10":"75","11":"FALSE","12":"75"},{"1":"-3.533848e+00","2":"-0.019549001","3":"OTU_134","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nocardioidaceae","9":"Nocardioides","10":"76","11":"FALSE","12":"76"},{"1":"-2.858938e+00","2":"3.019906312","3":"OTU_135","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Nocardioidaceae","9":"unclassified_Nocardioidaceae","10":"77","11":"FALSE","12":"77"},{"1":"-3.971611e+00","2":"0.553764894","3":"OTU_144","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Pseudonocardiaceae","9":"Pseudonocardia","10":"78","11":"FALSE","12":"78"},{"1":"-3.726025e+00","2":"-1.267252183","3":"OTU_146","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Pseudonocardiaceae","9":"unclassified_Pseudonocardiaceae","10":"79","11":"FALSE","12":"79"},{"1":"5.319960e-01","2":"-2.680441677","3":"OTU_147","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Ruaniaceae","9":"Haloactinobacterium","10":"80","11":"FALSE","12":"80"},{"1":"-2.477883e+00","2":"-6.100202728","3":"OTU_149","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Sporichthyaceae","9":"Sporichthya","10":"81","11":"FALSE","12":"81"},{"1":"2.087054e+00","2":"3.876013429","3":"OTU_154","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Streptosporangiaceae","9":"Microbispora","10":"82","11":"FALSE","12":"82"},{"1":"-5.260708e-01","2":"0.005641915","3":"OTU_160","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Thermomonosporaceae","9":"Actinoallomurus","10":"83","11":"FALSE","12":"83"},{"1":"9.786596e+00","2":"11.262274627","3":"OTU_161","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Thermomonosporaceae","9":"Actinocorallia","10":"84","11":"FALSE","12":"84"},{"1":"-9.620020e-01","2":"4.420095248","3":"OTU_164","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"Thermomonosporaceae","9":"unclassified_Thermomonosporaceae","10":"85","11":"FALSE","12":"85"},{"1":"-2.270090e+00","2":"-2.072275752","3":"OTU_166","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Actinomycetales","8":"unclassified_Actinomycetales","9":"unclassified_Actinomycetales","10":"86","11":"FALSE","12":"86"},{"1":"8.692315e-01","2":"2.253532786","3":"OTU_169","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Coriobacteriales","8":"Coriobacteriaceae","9":"Collinsella","10":"87","11":"FALSE","12":"87"},{"1":"8.652932e+00","2":"1.669244409","3":"OTU_170","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Coriobacteriales","8":"Coriobacteriaceae","9":"Coriobacterium","10":"88","11":"FALSE","12":"88"},{"1":"2.775735e+00","2":"-1.966436049","3":"OTU_171","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Coriobacteriales","8":"Coriobacteriaceae","9":"Enterorhabdus","10":"89","11":"FALSE","12":"89"},{"1":"1.553985e+00","2":"-0.116424339","3":"OTU_174","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Coriobacteriales","8":"Coriobacteriaceae","9":"Senegalimassilia","10":"90","11":"FALSE","12":"90"},{"1":"1.068247e+00","2":"1.357719271","3":"OTU_176","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Coriobacteriales","8":"Coriobacteriaceae","9":"unclassified_Coriobacteriaceae","10":"91","11":"FALSE","12":"91"},{"1":"-2.198492e+00","2":"-0.840126987","3":"OTU_177","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Gaiellales","8":"Gaiellaceae","9":"Gaiella","10":"92","11":"FALSE","12":"92"},{"1":"4.296605e+00","2":"3.013773658","3":"OTU_178","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Rubrobacterales","8":"Rubrobacteraceae","9":"Rubrobacter","10":"93","11":"FALSE","12":"93"},{"1":"2.708068e-01","2":"1.743881015","3":"OTU_180","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Solirubrobacterales","8":"Patulibacteraceae","9":"Patulibacter","10":"94","11":"FALSE","12":"94"},{"1":"-3.986260e+00","2":"1.097096038","3":"OTU_181","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Solirubrobacterales","8":"Solirubrobacteraceae","9":"Solirubrobacter","10":"95","11":"FALSE","12":"95"},{"1":"-6.170574e+00","2":"4.028802868","3":"OTU_182","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"Solirubrobacterales","8":"unclassified_Solirubrobacterales","9":"unclassified_Solirubrobacterales","10":"96","11":"FALSE","12":"96"},{"1":"-2.717385e+00","2":"0.457410035","3":"OTU_183","4":"Bacteria","5":"Actinobacteria","6":"Actinobacteria","7":"unclassified_Actinobacteria","8":"unclassified_Actinobacteria","9":"unclassified_Actinobacteria","10":"97","11":"FALSE","12":"97"},{"1":"-7.063806e+00","2":"-0.406809322","3":"OTU_185","4":"Bacteria","5":"Actinobacteria","6":"unclassified_Actinobacteria","7":"unclassified_Actinobacteria","8":"unclassified_Actinobacteria","9":"unclassified_Actinobacteria","10":"98","11":"FALSE","12":"98"},{"1":"-3.816099e-01","2":"-0.061355624","3":"OTU_186","4":"Bacteria","5":"Armatimonadetes","6":"Armatimonadia","7":"Armatimonadales","8":"Armatimonadaceae","9":"Armatimonas/Armatimonadetes_gp1","10":"99","11":"FALSE","12":"99"},{"1":"-5.759748e-02","2":"2.611700995","3":"OTU_187","4":"Bacteria","5":"Armatimonadetes","6":"Chthonomonadetes","7":"Chthonomonadales","8":"Chthonomonadaceae","9":"Chthonomonas/Armatimonadetes_gp3","10":"100","11":"FALSE","12":"100"},{"1":"8.260016e+00","2":"1.348734915","3":"OTU_188","4":"Bacteria","5":"Armatimonadetes","6":"Fimbriimonadia","7":"Fimbriimonadales","8":"Fimbriimonadaceae","9":"Fimbriimonas","10":"101","11":"FALSE","12":"101"},{"1":"-1.392307e+00","2":"-1.572649844","3":"OTU_190","4":"Bacteria","5":"Armatimonadetes","6":"unclassified_Armatimonadetes","7":"unclassified_Armatimonadetes","8":"unclassified_Armatimonadetes","9":"Armatimonadetes_gp4","10":"102","11":"FALSE","12":"102"},{"1":"-4.995376e+00","2":"2.706311895","3":"OTU_193","4":"Bacteria","5":"BRC1","6":"unclassified_BRC1","7":"unclassified_BRC1","8":"unclassified_BRC1","9":"BRC1_genera_incertae_sedis","10":"103","11":"FALSE","12":"103"},{"1":"1.528577e+00","2":"0.423915589","3":"OTU_194","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Bacteroidaceae","9":"Bacteroides","10":"104","11":"FALSE","12":"104"},{"1":"2.260063e-01","2":"1.189797868","3":"OTU_197","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Marinilabiliaceae","9":"Geofilum","10":"105","11":"FALSE","12":"105"},{"1":"1.285858e-01","2":"0.299783481","3":"OTU_198","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Marinilabiliaceae","9":"unclassified_Marinilabiliaceae","10":"106","11":"FALSE","12":"106"},{"1":"2.632338e+00","2":"2.639140901","3":"OTU_199","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"Barnesiella","10":"107","11":"FALSE","12":"107"},{"1":"1.636499e+00","2":"2.271674933","3":"OTU_201","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"Macellibacteroides","10":"108","11":"FALSE","12":"108"},{"1":"-1.195375e+00","2":"0.200036433","3":"OTU_202","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"Paludibacter","10":"109","11":"FALSE","12":"109"},{"1":"3.434330e-01","2":"1.282805135","3":"OTU_204","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"Petrimonas","10":"110","11":"FALSE","12":"110"},{"1":"1.177138e+00","2":"0.714822682","3":"OTU_206","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"Proteiniphilum","10":"111","11":"FALSE","12":"111"},{"1":"5.615855e-01","2":"0.147513477","3":"OTU_208","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Porphyromonadaceae","9":"unclassified_Porphyromonadaceae","10":"112","11":"FALSE","12":"112"},{"1":"-5.950675e-01","2":"0.054159525","3":"OTU_209","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Prevotellaceae","9":"Alloprevotella","10":"113","11":"FALSE","12":"113"},{"1":"-1.176077e+00","2":"-0.032278997","3":"OTU_210","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Prevotellaceae","9":"Paraprevotella","10":"114","11":"FALSE","12":"114"},{"1":"2.615048e+00","2":"2.431507811","3":"OTU_211","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Prevotellaceae","9":"Prevotella","10":"115","11":"FALSE","12":"115"},{"1":"1.301622e+00","2":"1.100961987","3":"OTU_212","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Prevotellaceae","9":"unclassified_Prevotellaceae","10":"116","11":"FALSE","12":"116"},{"1":"1.442409e+00","2":"-0.318209488","3":"OTU_215","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Prolixibacteraceae","9":"Mariniphaga","10":"117","11":"FALSE","12":"117"},{"1":"1.771086e+00","2":"-0.105946387","3":"OTU_217","4":"Bacteria","5":"Bacteroidetes","6":"Bacteroidia","7":"Bacteroidales","8":"Rikenellaceae","9":"Anaerocella","10":"118","11":"FALSE","12":"118"},{"1":"1.493496e+00","2":"-0.952911031","3":"OTU_219","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cyclobacteriaceae","9":"Indibacter","10":"119","11":"FALSE","12":"119"},{"1":"6.281783e-01","2":"0.764471814","3":"OTU_220","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cyclobacteriaceae","9":"Mariniradius","10":"120","11":"FALSE","12":"120"},{"1":"-1.384676e-01","2":"0.990366961","3":"OTU_221","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cyclobacteriaceae","9":"unclassified_Cyclobacteriaceae","10":"121","11":"FALSE","12":"121"},{"1":"-5.716568e+00","2":"2.344739269","3":"OTU_222","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cytophagaceae","9":"Adhaeribacter","10":"122","11":"FALSE","12":"122"},{"1":"3.331383e+00","2":"-0.390950889","3":"OTU_223","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cytophagaceae","9":"Cytophaga","10":"123","11":"FALSE","12":"123"},{"1":"6.863532e+00","2":"-0.682909388","3":"OTU_228","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"Cytophagaceae","9":"Pontibacter","10":"124","11":"FALSE","12":"124"},{"1":"-2.876948e-01","2":"-0.071216170","3":"OTU_235","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"unclassified_Cytophagales","9":"Chryseolinea","10":"125","11":"FALSE","12":"125"},{"1":"-3.952100e+00","2":"-1.094729141","3":"OTU_236","4":"Bacteria","5":"Bacteroidetes","6":"Cytophagia","7":"Cytophagales","8":"unclassified_Cytophagales","9":"Ohtaekwangia","10":"126","11":"FALSE","12":"126"},{"1":"1.142026e+00","2":"2.076777354","3":"OTU_238","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"Brumimicrobium","10":"127","11":"FALSE","12":"127"},{"1":"9.543807e+00","2":"1.190964196","3":"OTU_239","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"Crocinitomix","10":"128","11":"FALSE","12":"128"},{"1":"2.219969e+00","2":"-0.062726492","3":"OTU_240","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"Cryomorpha","10":"129","11":"FALSE","12":"129"},{"1":"1.055792e+00","2":"0.703908609","3":"OTU_243","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"Salinirepens","10":"130","11":"FALSE","12":"130"},{"1":"4.628520e+00","2":"3.693866704","3":"OTU_244","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"Wandonia","10":"131","11":"FALSE","12":"131"},{"1":"1.193979e+00","2":"-1.429506370","3":"OTU_245","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Cryomorphaceae","9":"unclassified_Cryomorphaceae","10":"132","11":"FALSE","12":"132"},{"1":"8.910554e-02","2":"0.300891658","3":"OTU_246","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Aequorivita","10":"133","11":"FALSE","12":"133"},{"1":"-5.493804e-01","2":"0.660893600","3":"OTU_247","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Arenibacter","10":"134","11":"FALSE","12":"134"},{"1":"1.493951e+00","2":"5.173949571","3":"OTU_249","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Bizionia","10":"135","11":"FALSE","12":"135"},{"1":"3.047899e-01","2":"1.205055508","3":"OTU_251","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Chryseobacterium","10":"136","11":"FALSE","12":"136"},{"1":"4.327512e+00","2":"4.243368111","3":"OTU_252","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Elizabethkingia","10":"137","11":"FALSE","12":"137"},{"1":"-3.626341e-01","2":"-1.508506619","3":"OTU_254","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Flavobacterium","10":"138","11":"FALSE","12":"138"},{"1":"-3.851501e-01","2":"0.922853928","3":"OTU_255","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Gelidibacter","10":"139","11":"FALSE","12":"139"},{"1":"-1.551811e+00","2":"-0.034501544","3":"OTU_256","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Kriegella","10":"140","11":"FALSE","12":"140"},{"1":"1.742930e+00","2":"3.615030745","3":"OTU_258","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Muricauda","10":"141","11":"FALSE","12":"141"},{"1":"1.635493e+00","2":"-0.142716464","3":"OTU_259","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Myroides","10":"142","11":"FALSE","12":"142"},{"1":"-1.032206e+00","2":"-0.162017390","3":"OTU_260","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Soonwooa","10":"143","11":"FALSE","12":"143"},{"1":"-9.833039e-01","2":"-0.040600862","3":"OTU_261","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Vitellibacter","10":"144","11":"FALSE","12":"144"},{"1":"-1.928997e+00","2":"-0.810464633","3":"OTU_262","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"Winogradskyella","10":"145","11":"FALSE","12":"145"},{"1":"3.088806e-02","2":"1.409523681","3":"OTU_263","4":"Bacteria","5":"Bacteroidetes","6":"Flavobacteriia","7":"Flavobacteriales","8":"Flavobacteriaceae","9":"unclassified_Flavobacteriaceae","10":"146","11":"FALSE","12":"146"},{"1":"-5.547868e-01","2":"0.069921260","3":"OTU_265","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Arachidicoccus","10":"147","11":"FALSE","12":"147"},{"1":"-6.252832e+00","2":"0.179622973","3":"OTU_267","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Chitinophaga","10":"148","11":"FALSE","12":"148"},{"1":"-4.547383e+00","2":"1.892908799","3":"OTU_268","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Ferruginibacter","10":"149","11":"FALSE","12":"149"},{"1":"-7.566936e+00","2":"-0.901975774","3":"OTU_269","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Flavihumibacter","10":"150","11":"FALSE","12":"150"},{"1":"-3.694123e+00","2":"0.628185245","3":"OTU_270","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Flavisolibacter","10":"151","11":"FALSE","12":"151"},{"1":"-5.315277e+00","2":"-1.932559747","3":"OTU_277","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Parafilimonas","10":"152","11":"FALSE","12":"152"},{"1":"-4.237484e+00","2":"-2.316066415","3":"OTU_278","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Parasegetibacter","10":"153","11":"FALSE","12":"153"},{"1":"-9.897192e-01","2":"0.836469063","3":"OTU_281","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Taibaiella","10":"154","11":"FALSE","12":"154"},{"1":"-5.858750e+00","2":"-0.624011077","3":"OTU_282","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"Terrimonas","10":"155","11":"FALSE","12":"155"},{"1":"-4.508569e+00","2":"0.675060145","3":"OTU_283","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Chitinophagaceae","9":"unclassified_Chitinophagaceae","10":"156","11":"FALSE","12":"156"},{"1":"-2.784427e+00","2":"2.713907574","3":"OTU_288","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Saprospiraceae","9":"unclassified_Saprospiraceae","10":"157","11":"FALSE","12":"157"},{"1":"-5.333063e-01","2":"-1.124130709","3":"OTU_289","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"Mucilaginibacter","10":"158","11":"FALSE","12":"158"},{"1":"2.234972e+00","2":"3.732188006","3":"OTU_290","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"Olivibacter","10":"159","11":"FALSE","12":"159"},{"1":"2.482475e+00","2":"0.636645330","3":"OTU_291","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"Parapedobacter","10":"160","11":"FALSE","12":"160"},{"1":"-6.509365e-01","2":"0.759132211","3":"OTU_292","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"Pedobacter","10":"161","11":"FALSE","12":"161"},{"1":"-3.278392e-01","2":"0.781698044","3":"OTU_294","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"Sphingobacterium","10":"162","11":"FALSE","12":"162"},{"1":"-1.660032e-01","2":"1.165287460","3":"OTU_295","4":"Bacteria","5":"Bacteroidetes","6":"Sphingobacteriia","7":"Sphingobacteriales","8":"Sphingobacteriaceae","9":"unclassified_Sphingobacteriaceae","10":"163","11":"FALSE","12":"163"},{"1":"-1.918488e+00","2":"-0.621692384","3":"OTU_297","4":"Bacteria","5":"Bacteroidetes","6":"unclassified_Bacteroidetes","7":"unclassified_Bacteroidetes","8":"unclassified_Bacteroidetes","9":"unclassified_Bacteroidetes","10":"164","11":"FALSE","12":"164"},{"1":"-8.605056e-02","2":"-2.637815547","3":"OTU_298","4":"Bacteria","5":"Candidatus Saccharibacteria","6":"unclassified_Candidatus Saccharibacteria","7":"unclassified_Candidatus Saccharibacteria","8":"unclassified_Candidatus Saccharibacteria","9":"Saccharibacteria_genera_incertae_sedis","10":"165","11":"FALSE","12":"165"},{"1":"-2.957111e+00","2":"-0.573106734","3":"OTU_306","4":"Bacteria","5":"Chloroflexi","6":"Anaerolineae","7":"Anaerolineales","8":"Anaerolineaceae","9":"Anaerolinea","10":"166","11":"FALSE","12":"166"},{"1":"-3.226125e+00","2":"-1.060772208","3":"OTU_308","4":"Bacteria","5":"Chloroflexi","6":"Anaerolineae","7":"Anaerolineales","8":"Anaerolineaceae","9":"Ornatilinea","10":"167","11":"FALSE","12":"167"},{"1":"-2.681307e+00","2":"-2.262427484","3":"OTU_309","4":"Bacteria","5":"Chloroflexi","6":"Anaerolineae","7":"Anaerolineales","8":"Anaerolineaceae","9":"Thermomarinilinea","10":"168","11":"FALSE","12":"168"},{"1":"-1.932828e+00","2":"-0.376336746","3":"OTU_310","4":"Bacteria","5":"Chloroflexi","6":"Anaerolineae","7":"Anaerolineales","8":"Anaerolineaceae","9":"unclassified_Anaerolineaceae","10":"169","11":"FALSE","12":"169"},{"1":"-3.104301e+00","2":"0.299709019","3":"OTU_313","4":"Bacteria","5":"Chloroflexi","6":"Caldilineae","7":"Caldilineales","8":"Caldilineaceae","9":"Litorilinea","10":"170","11":"FALSE","12":"170"},{"1":"-5.237313e-01","2":"0.062525160","3":"OTU_316","4":"Bacteria","5":"Chloroflexi","6":"Chloroflexia","7":"Chloroflexales","8":"Chloroflexaceae","9":"Roseiflexus","10":"171","11":"FALSE","12":"171"},{"1":"-4.992813e+00","2":"2.122767933","3":"OTU_318","4":"Bacteria","5":"Chloroflexi","6":"Chloroflexia","7":"Chloroflexales","8":"unclassified_Chloroflexales","9":"unclassified_Chloroflexales","10":"172","11":"FALSE","12":"172"},{"1":"-1.111833e+00","2":"-4.681270962","3":"OTU_321","4":"Bacteria","5":"Chloroflexi","6":"Ktedonobacteria","7":"Ktedonobacterales","8":"Ktedonobacteraceae","9":"Ktedonobacter","10":"173","11":"FALSE","12":"173"},{"1":"-4.745601e-01","2":"0.032914173","3":"OTU_324","4":"Bacteria","5":"Chloroflexi","6":"Ktedonobacteria","7":"unclassified_Ktedonobacteria","8":"unclassified_Ktedonobacteria","9":"unclassified_Ktedonobacteria","10":"174","11":"FALSE","12":"174"},{"1":"-1.913078e+00","2":"-5.756140257","3":"OTU_327","4":"Bacteria","5":"Chloroflexi","6":"Thermomicrobia","7":"Sphaerobacterales","8":"Sphaerobacteraceae","9":"unclassified_Sphaerobacteraceae","10":"175","11":"FALSE","12":"175"},{"1":"-5.368488e+00","2":"-1.169245592","3":"OTU_329","4":"Bacteria","5":"Chloroflexi","6":"Thermomicrobia","7":"unclassified_Thermomicrobia","8":"unclassified_Thermomicrobia","9":"unclassified_Thermomicrobia","10":"176","11":"FALSE","12":"176"},{"1":"-1.438729e+00","2":"-1.043248787","3":"OTU_330","4":"Bacteria","5":"Chloroflexi","6":"unclassified_Chloroflexi","7":"unclassified_Chloroflexi","8":"unclassified_Chloroflexi","9":"unclassified_Chloroflexi","10":"177","11":"FALSE","12":"177"},{"1":"2.335610e+00","2":"-1.052936254","3":"OTU_331","4":"Bacteria","5":"Cloacimonetes","6":"unclassified_Cloacimonetes","7":"unclassified_Cloacimonetes","8":"unclassified_Cloacimonetes","9":"Candidatus Cloacamonas","10":"178","11":"FALSE","12":"178"},{"1":"-3.155751e-01","2":"0.527376890","3":"OTU_341","4":"Bacteria","5":"Deinococcus-Thermus","6":"Deinococci","7":"Deinococcales","8":"Trueperaceae","9":"Truepera","10":"179","11":"FALSE","12":"179"},{"1":"9.609028e-01","2":"0.509424944","3":"OTU_343","4":"Bacteria","5":"Fibrobacteres","6":"Fibrobacteria","7":"Fibrobacterales","8":"Fibrobacteraceae","9":"Fibrobacter","10":"180","11":"FALSE","12":"180"},{"1":"-2.530773e+00","2":"1.931662731","3":"OTU_346","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Bacillaceae 1","9":"Bacillus","10":"181","11":"FALSE","12":"181"},{"1":"-7.452957e-01","2":"0.080036362","3":"OTU_349","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Bacillaceae 2","9":"Lentibacillus","10":"182","11":"FALSE","12":"182"},{"1":"-1.119481e+00","2":"3.218694568","3":"OTU_353","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Bacillaceae 2","9":"unclassified_Bacillaceae 2","10":"183","11":"FALSE","12":"183"},{"1":"1.615834e+00","2":"8.353730430","3":"OTU_355","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Bacillales_incertae_sedis","9":"Desulfuribacillus","10":"184","11":"FALSE","12":"184"},{"1":"-5.176238e-01","2":"-0.003692820","3":"OTU_357","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Paenibacillaceae 1","9":"Cohnella","10":"185","11":"FALSE","12":"185"},{"1":"-1.353101e+00","2":"-0.063165270","3":"OTU_361","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Paenibacillaceae 1","9":"unclassified_Paenibacillaceae 1","10":"186","11":"FALSE","12":"186"},{"1":"-1.929296e+00","2":"1.795400995","3":"OTU_364","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Planococcaceae","9":"Lysinibacillus","10":"187","11":"FALSE","12":"187"},{"1":"4.804764e+00","2":"3.914921843","3":"OTU_365","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Planococcaceae","9":"Rummeliibacillus","10":"188","11":"FALSE","12":"188"},{"1":"-4.565017e+00","2":"-0.096717775","3":"OTU_366","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Planococcaceae","9":"Sporosarcina","10":"189","11":"FALSE","12":"189"},{"1":"3.040866e+00","2":"8.004055391","3":"OTU_370","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"Staphylococcaceae","9":"Staphylococcus","10":"190","11":"FALSE","12":"190"},{"1":"7.685488e-01","2":"-2.996607020","3":"OTU_372","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Bacillales","8":"unclassified_Bacillales","9":"unclassified_Bacillales","10":"191","11":"FALSE","12":"191"},{"1":"1.648698e+00","2":"2.624356539","3":"OTU_374","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Aerococcaceae","9":"Facklamia","10":"192","11":"FALSE","12":"192"},{"1":"1.145808e+00","2":"-1.276948606","3":"OTU_376","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Carnobacteriaceae","9":"Atopostipes","10":"193","11":"FALSE","12":"193"},{"1":"-5.292317e-01","2":"0.069772133","3":"OTU_378","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Carnobacteriaceae","9":"unclassified_Carnobacteriaceae","10":"194","11":"FALSE","12":"194"},{"1":"-7.221159e-02","2":"9.115381156","3":"OTU_379","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Enterococcaceae","9":"Enterococcus","10":"195","11":"FALSE","12":"195"},{"1":"1.314096e+00","2":"-1.561908343","3":"OTU_380","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Lactobacillaceae","9":"Lactobacillus","10":"196","11":"FALSE","12":"196"},{"1":"-6.912253e-01","2":"0.116639058","3":"OTU_381","4":"Bacteria","5":"Firmicutes","6":"Bacilli","7":"Lactobacillales","8":"Streptococcaceae","9":"Streptococcus","10":"197","11":"FALSE","12":"197"},{"1":"-1.136312e+00","2":"0.608146473","3":"OTU_386","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 1","9":"Clostridium sensu stricto","10":"198","11":"FALSE","12":"198"},{"1":"-2.422259e+00","2":"11.430778014","3":"OTU_387","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 1","9":"Hathewaya","10":"199","11":"FALSE","12":"199"},{"1":"2.002128e+00","2":"-1.763970944","3":"OTU_388","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 1","9":"Proteiniclasticum","10":"200","11":"FALSE","12":"200"},{"1":"1.208209e+00","2":"0.746008067","3":"OTU_390","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 1","9":"unclassified_Clostridiaceae 1","10":"201","11":"FALSE","12":"201"},{"1":"1.056968e-01","2":"-1.022160982","3":"OTU_391","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 2","9":"Alkaliphilus","10":"202","11":"FALSE","12":"202"},{"1":"6.179324e+00","2":"-1.019906489","3":"OTU_393","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiaceae 2","9":"unclassified_Clostridiaceae 2","10":"203","11":"FALSE","12":"203"},{"1":"-5.745223e-01","2":"0.050022385","3":"OTU_394","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis III","9":"Tepidanaerobacter","10":"204","11":"FALSE","12":"204"},{"1":"-4.915664e+00","2":"10.014145006","3":"OTU_396","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Clostridium XII","10":"205","11":"FALSE","12":"205"},{"1":"-4.084414e-01","2":"-6.772726484","3":"OTU_397","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Gallicola","10":"206","11":"FALSE","12":"206"},{"1":"2.428028e+00","2":"-0.061118467","3":"OTU_399","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Parvimonas","10":"207","11":"FALSE","12":"207"},{"1":"-1.065559e-01","2":"0.530795752","3":"OTU_400","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Sedimentibacter","10":"208","11":"FALSE","12":"208"},{"1":"-6.148203e-01","2":"-0.095100368","3":"OTU_402","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Tepidimicrobium","10":"209","11":"FALSE","12":"209"},{"1":"6.836010e-01","2":"-1.263531167","3":"OTU_403","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"Tissierella","10":"210","11":"FALSE","12":"210"},{"1":"1.498862e+00","2":"2.396604653","3":"OTU_404","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XI","9":"unclassified_Clostridiales_Incertae Sedis XI","10":"211","11":"FALSE","12":"211"},{"1":"1.782669e+00","2":"-0.527684141","3":"OTU_405","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XII","9":"Guggenheimella","10":"212","11":"FALSE","12":"212"},{"1":"7.868225e-01","2":"-1.510695646","3":"OTU_406","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XIII","9":"Anaerovorax","10":"213","11":"FALSE","12":"213"},{"1":"-7.055030e-01","2":"-0.041444573","3":"OTU_407","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XIII","9":"Mogibacterium","10":"214","11":"FALSE","12":"214"},{"1":"4.152304e+00","2":"-4.540126036","3":"OTU_408","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Clostridiales_Incertae Sedis XIII","9":"unclassified_Clostridiales_Incertae Sedis XIII","10":"215","11":"FALSE","12":"215"},{"1":"2.035524e+00","2":"-0.449503497","3":"OTU_409","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Eubacteriaceae","9":"Acetobacterium","10":"216","11":"FALSE","12":"216"},{"1":"5.197723e+00","2":"0.768936307","3":"OTU_410","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Eubacteriaceae","9":"Alkalibacter","10":"217","11":"FALSE","12":"217"},{"1":"1.190595e+00","2":"-1.079961165","3":"OTU_412","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Eubacteriaceae","9":"unclassified_Eubacteriaceae","10":"218","11":"FALSE","12":"218"},{"1":"-9.993657e-01","2":"0.035611433","3":"OTU_414","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Gracilibacteraceae","9":"Lutispora","10":"219","11":"FALSE","12":"219"},{"1":"-9.997716e-01","2":"0.021369752","3":"OTU_417","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Anaerostipes","10":"220","11":"FALSE","12":"220"},{"1":"2.622808e+00","2":"5.533034265","3":"OTU_418","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Blautia","10":"221","11":"FALSE","12":"221"},{"1":"-7.931974e-01","2":"-0.051179834","3":"OTU_419","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Butyrivibrio","10":"222","11":"FALSE","12":"222"},{"1":"1.522606e-01","2":"-0.178957919","3":"OTU_422","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Clostridium XlVa","10":"223","11":"FALSE","12":"223"},{"1":"-6.573659e-01","2":"0.026021902","3":"OTU_424","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Coprococcus","10":"224","11":"FALSE","12":"224"},{"1":"-7.073961e-01","2":"0.117117725","3":"OTU_425","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Dorea","10":"225","11":"FALSE","12":"225"},{"1":"1.645898e+00","2":"0.285170060","3":"OTU_430","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Lachnospiracea_incertae_sedis","10":"226","11":"FALSE","12":"226"},{"1":"-5.885771e-01","2":"0.218191475","3":"OTU_431","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Marvinbryantia","10":"227","11":"FALSE","12":"227"},{"1":"5.823712e+00","2":"-3.263826411","3":"OTU_432","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Oribacterium","10":"228","11":"FALSE","12":"228"},{"1":"-7.423009e-01","2":"-0.037089544","3":"OTU_433","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Parasporobacterium","10":"229","11":"FALSE","12":"229"},{"1":"6.581361e+00","2":"0.413728794","3":"OTU_435","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Roseburia","10":"230","11":"FALSE","12":"230"},{"1":"7.459615e+00","2":"-1.908493139","3":"OTU_436","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"Ruminococcus2","10":"231","11":"FALSE","12":"231"},{"1":"5.093312e-01","2":"0.400242861","3":"OTU_437","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Lachnospiraceae","9":"unclassified_Lachnospiraceae","10":"232","11":"FALSE","12":"232"},{"1":"1.785348e+00","2":"-1.540775441","3":"OTU_438","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptococcaceae 1","9":"Desulfitobacterium","10":"233","11":"FALSE","12":"233"},{"1":"-4.649215e-01","2":"-0.031676175","3":"OTU_439","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptococcaceae 1","9":"Desulfonispora","10":"234","11":"FALSE","12":"234"},{"1":"-8.073749e-01","2":"0.099588495","3":"OTU_441","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptococcaceae 1","9":"Peptococcus","10":"235","11":"FALSE","12":"235"},{"1":"-7.022553e-01","2":"0.071807927","3":"OTU_442","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptococcaceae 2","9":"Cryptanaerobacter","10":"236","11":"FALSE","12":"236"},{"1":"-7.231948e-01","2":"0.121919024","3":"OTU_444","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptoniphilaceae","9":"Peptoniphilus","10":"237","11":"FALSE","12":"237"},{"1":"-9.105066e-01","2":"-0.415601931","3":"OTU_449","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptostreptococcaceae","9":"Romboutsia","10":"238","11":"FALSE","12":"238"},{"1":"-1.005555e+00","2":"-0.626650744","3":"OTU_450","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Peptostreptococcaceae","9":"Terrisporobacter","10":"239","11":"FALSE","12":"239"},{"1":"-6.983493e-01","2":"-0.046846035","3":"OTU_452","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Acetanaerobacterium","10":"240","11":"FALSE","12":"240"},{"1":"1.608553e+00","2":"-0.680320361","3":"OTU_454","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Clostridium III","10":"241","11":"FALSE","12":"241"},{"1":"2.433693e+00","2":"0.293877529","3":"OTU_455","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Clostridium IV","10":"242","11":"FALSE","12":"242"},{"1":"1.996796e+00","2":"1.479541626","3":"OTU_456","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Ercella","10":"243","11":"FALSE","12":"243"},{"1":"-1.015883e+00","2":"-0.129765761","3":"OTU_457","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Ethanoligenens","10":"244","11":"FALSE","12":"244"},{"1":"-7.213852e-01","2":"-0.025741444","3":"OTU_458","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Faecalibacterium","10":"245","11":"FALSE","12":"245"},{"1":"-8.361364e-01","2":"-0.053902166","3":"OTU_460","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Gemmiger","10":"246","11":"FALSE","12":"246"},{"1":"-9.347245e-01","2":"-0.355373328","3":"OTU_461","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Intestinimonas","10":"247","11":"FALSE","12":"247"},{"1":"2.439956e+00","2":"0.067563443","3":"OTU_464","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Ruminococcus","10":"248","11":"FALSE","12":"248"},{"1":"2.106304e+00","2":"0.206444819","3":"OTU_465","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Saccharofermentans","10":"249","11":"FALSE","12":"249"},{"1":"1.549728e+00","2":"2.040074551","3":"OTU_466","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"Sporobacter","10":"250","11":"FALSE","12":"250"},{"1":"8.336413e-04","2":"-0.804480149","3":"OTU_467","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Ruminococcaceae","9":"unclassified_Ruminococcaceae","10":"251","11":"FALSE","12":"251"},{"1":"1.595500e+00","2":"-0.135751742","3":"OTU_468","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"Syntrophomonadaceae","9":"Syntrophomonas","10":"252","11":"FALSE","12":"252"},{"1":"1.260619e+00","2":"-0.302535972","3":"OTU_470","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Clostridiales","8":"unclassified_Clostridiales","9":"unclassified_Clostridiales","10":"253","11":"FALSE","12":"253"},{"1":"1.254561e+00","2":"2.073948420","3":"OTU_471","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Natranaerobiales","8":"Natranaerobiaceae","9":"Dethiobacter","10":"254","11":"FALSE","12":"254"},{"1":"9.959488e-01","2":"1.182479400","3":"OTU_472","4":"Bacteria","5":"Firmicutes","6":"Clostridia","7":"Thermoanaerobacterales","8":"Thermoanaerobacteraceae","9":"Syntrophaceticus","10":"255","11":"FALSE","12":"255"},{"1":"2.258990e+00","2":"-2.819297674","3":"OTU_474","4":"Bacteria","5":"Firmicutes","6":"Erysipelotrichia","7":"Erysipelotrichales","8":"Erysipelotrichaceae","9":"Bulleidia","10":"256","11":"FALSE","12":"256"},{"1":"1.350984e+00","2":"1.516151321","3":"OTU_476","4":"Bacteria","5":"Firmicutes","6":"Erysipelotrichia","7":"Erysipelotrichales","8":"Erysipelotrichaceae","9":"Erysipelothrix","10":"257","11":"FALSE","12":"257"},{"1":"-4.404701e-01","2":"0.230709482","3":"OTU_478","4":"Bacteria","5":"Firmicutes","6":"Erysipelotrichia","7":"Erysipelotrichales","8":"Erysipelotrichaceae","9":"Holdemanella","10":"258","11":"FALSE","12":"258"},{"1":"-1.214682e+00","2":"-0.219136521","3":"OTU_480","4":"Bacteria","5":"Firmicutes","6":"Erysipelotrichia","7":"Erysipelotrichales","8":"Erysipelotrichaceae","9":"Turicibacter","10":"259","11":"FALSE","12":"259"},{"1":"1.102703e+00","2":"0.911010252","3":"OTU_483","4":"Bacteria","5":"Firmicutes","6":"Negativicutes","7":"Selenomonadales","8":"Acidaminococcaceae","9":"Phascolarctobacterium","10":"260","11":"FALSE","12":"260"},{"1":"-9.646186e-01","2":"0.147447196","3":"OTU_484","4":"Bacteria","5":"Firmicutes","6":"Negativicutes","7":"Selenomonadales","8":"Acidaminococcaceae","9":"Succiniclasticum","10":"261","11":"FALSE","12":"261"},{"1":"6.019283e+00","2":"1.809796080","3":"OTU_487","4":"Bacteria","5":"Firmicutes","6":"Negativicutes","7":"Selenomonadales","8":"Veillonellaceae","9":"Centipeda","10":"262","11":"FALSE","12":"262"},{"1":"-6.033972e-01","2":"0.059852715","3":"OTU_495","4":"Bacteria","5":"Firmicutes","6":"Negativicutes","7":"Selenomonadales","8":"Veillonellaceae","9":"Sporomusa","10":"263","11":"FALSE","12":"263"},{"1":"-2.507954e+00","2":"1.055560180","3":"OTU_499","4":"Bacteria","5":"Firmicutes","6":"unclassified_Firmicutes","7":"unclassified_Firmicutes","8":"unclassified_Firmicutes","9":"unclassified_Firmicutes","10":"264","11":"FALSE","12":"264"},{"1":"-4.524025e+00","2":"-0.277262026","3":"OTU_502","4":"Bacteria","5":"Gemmatimonadetes","6":"Gemmatimonadetes","7":"Gemmatimonadales","8":"Gemmatimonadaceae","9":"Gemmatimonas","10":"265","11":"FALSE","12":"265"},{"1":"-2.230512e+00","2":"0.117766137","3":"OTU_505","4":"Bacteria","5":"Latescibacteria","6":"unclassified_Latescibacteria","7":"unclassified_Latescibacteria","8":"unclassified_Latescibacteria","9":"Latescibacteria_genera_incertae_sedis","10":"266","11":"FALSE","12":"266"},{"1":"-6.966521e-01","2":"0.034491759","3":"OTU_506","4":"Bacteria","5":"Lentisphaerae","6":"Lentisphaeria","7":"Victivallales","8":"Victivallaceae","9":"Victivallis","10":"267","11":"FALSE","12":"267"},{"1":"1.322747e+00","2":"2.037239288","3":"OTU_507","4":"Bacteria","5":"Lentisphaerae","6":"Oligosphaeria","7":"Oligosphaerales","8":"Oligosphaeraceae","9":"Oligosphaera","10":"268","11":"FALSE","12":"268"},{"1":"-2.071027e+00","2":"1.135072021","3":"OTU_509","4":"Bacteria","5":"Nitrospirae","6":"Nitrospira","7":"Nitrospirales","8":"Nitrospiraceae","9":"Nitrospira","10":"269","11":"FALSE","12":"269"},{"1":"-4.486634e+00","2":"-0.143900138","3":"OTU_512","4":"Bacteria","5":"Planctomycetes","6":"Phycisphaerae","7":"Tepidisphaerales","8":"Tepidisphaeraceae","9":"Tepidisphaera","10":"270","11":"FALSE","12":"270"},{"1":"-2.943795e+00","2":"0.910685392","3":"OTU_516","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Candidatus Brocadiales","8":"Candidatus Brocadiaceae","9":"unclassified_Candidatus Brocadiaceae","10":"271","11":"FALSE","12":"271"},{"1":"-3.880424e+00","2":"-2.235999743","3":"OTU_517","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Aquisphaera","10":"272","11":"FALSE","12":"272"},{"1":"-6.229078e-01","2":"2.213591810","3":"OTU_519","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Gemmata","10":"273","11":"FALSE","12":"273"},{"1":"-2.787591e+00","2":"2.645943770","3":"OTU_522","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Pirellula","10":"274","11":"FALSE","12":"274"},{"1":"-4.609519e+00","2":"1.670989157","3":"OTU_524","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Planctopirus","10":"275","11":"FALSE","12":"275"},{"1":"1.282066e+00","2":"1.395986574","3":"OTU_525","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Rhodopirellula","10":"276","11":"FALSE","12":"276"},{"1":"-3.291574e+00","2":"-1.497495852","3":"OTU_528","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Singulisphaera","10":"277","11":"FALSE","12":"277"},{"1":"-1.448726e+00","2":"3.456982190","3":"OTU_530","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Thermogutta","10":"278","11":"FALSE","12":"278"},{"1":"-3.181648e+00","2":"1.355707431","3":"OTU_531","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"Zavarzinella","10":"279","11":"FALSE","12":"279"},{"1":"-2.466936e+00","2":"-2.042678985","3":"OTU_532","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"Planctomycetales","8":"Planctomycetaceae","9":"unclassified_Planctomycetaceae","10":"280","11":"FALSE","12":"280"},{"1":"-2.155222e+00","2":"-1.123918038","3":"OTU_533","4":"Bacteria","5":"Planctomycetes","6":"Planctomycetia","7":"unclassified_Planctomycetia","8":"unclassified_Planctomycetia","9":"unclassified_Planctomycetia","10":"281","11":"FALSE","12":"281"},{"1":"-3.503612e+00","2":"-1.094748903","3":"OTU_534","4":"Bacteria","5":"Planctomycetes","6":"unclassified_Planctomycetes","7":"unclassified_Planctomycetes","8":"unclassified_Planctomycetes","9":"unclassified_Planctomycetes","10":"282","11":"FALSE","12":"282"},{"1":"-4.642667e+00","2":"0.745152373","3":"OTU_535","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Alphaproteobacteria_incertae_sedis","8":"unclassified_Alphaproteobacteria_incertae_sedis","9":"Geminicoccus","10":"283","11":"FALSE","12":"283"},{"1":"6.619711e-01","2":"-0.523998570","3":"OTU_538","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Caulobacterales","8":"Caulobacteraceae","9":"Brevundimonas","10":"284","11":"FALSE","12":"284"},{"1":"2.269807e-01","2":"2.650968289","3":"OTU_539","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Caulobacterales","8":"Caulobacteraceae","9":"Caulobacter","10":"285","11":"FALSE","12":"285"},{"1":"-5.255470e+00","2":"0.294436084","3":"OTU_540","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Caulobacterales","8":"Caulobacteraceae","9":"Phenylobacterium","10":"286","11":"FALSE","12":"286"},{"1":"1.208758e-02","2":"-0.443899701","3":"OTU_545","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Beijerinckiaceae","9":"Camelimonas","10":"287","11":"FALSE","12":"287"},{"1":"-4.821831e+00","2":"0.210022239","3":"OTU_546","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Beijerinckiaceae","9":"Chelatococcus","10":"288","11":"FALSE","12":"288"},{"1":"6.120253e-01","2":"-2.197835554","3":"OTU_549","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Bradyrhizobiaceae","9":"Afipia","10":"289","11":"FALSE","12":"289"},{"1":"-6.540263e-01","2":"1.708970538","3":"OTU_550","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Bradyrhizobiaceae","9":"Bosea","10":"290","11":"FALSE","12":"290"},{"1":"-1.516985e+00","2":"-1.996058099","3":"OTU_553","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Bradyrhizobiaceae","9":"Rhodopseudomonas","10":"291","11":"FALSE","12":"291"},{"1":"9.636843e-01","2":"-1.087607684","3":"OTU_555","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Brucellaceae","9":"Falsochrobactrum","10":"292","11":"FALSE","12":"292"},{"1":"9.150859e-02","2":"1.242889481","3":"OTU_556","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Brucellaceae","9":"Ochrobactrum","10":"293","11":"FALSE","12":"293"},{"1":"-3.110570e-01","2":"1.496480954","3":"OTU_558","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Hyphomicrobiaceae","9":"Devosia","10":"294","11":"FALSE","12":"294"},{"1":"6.324238e-01","2":"-1.361527573","3":"OTU_559","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Hyphomicrobiaceae","9":"Filomicrobium","10":"295","11":"FALSE","12":"295"},{"1":"-4.662163e+00","2":"0.775044492","3":"OTU_560","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Hyphomicrobiaceae","9":"Hyphomicrobium","10":"296","11":"FALSE","12":"296"},{"1":"-3.228594e+00","2":"-2.412850232","3":"OTU_561","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Hyphomicrobiaceae","9":"Pedomicrobium","10":"297","11":"FALSE","12":"297"},{"1":"-5.418418e+00","2":"1.749608734","3":"OTU_563","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Hyphomicrobiaceae","9":"Rhodoplanes","10":"298","11":"FALSE","12":"298"},{"1":"-3.603539e+00","2":"0.515197373","3":"OTU_566","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Methylobacteriaceae","9":"Microvirga","10":"299","11":"FALSE","12":"299"},{"1":"-1.112203e+00","2":"-0.520139636","3":"OTU_570","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Phyllobacteriaceae","9":"Aminobacter","10":"300","11":"FALSE","12":"300"},{"1":"-4.242317e-01","2":"-0.905553689","3":"OTU_571","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Phyllobacteriaceae","9":"Aquamicrobium","10":"301","11":"FALSE","12":"301"},{"1":"-3.909949e+00","2":"-0.181222225","3":"OTU_572","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Phyllobacteriaceae","9":"Mesorhizobium","10":"302","11":"FALSE","12":"302"},{"1":"-3.265699e-01","2":"-0.038765106","3":"OTU_575","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Phyllobacteriaceae","9":"unclassified_Phyllobacteriaceae","10":"303","11":"FALSE","12":"303"},{"1":"-2.160626e-01","2":"2.296091070","3":"OTU_578","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhizobiaceae","9":"Kaistia","10":"304","11":"FALSE","12":"304"},{"1":"-3.306786e+00","2":"-0.716881004","3":"OTU_580","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhizobiaceae","9":"Rhizobium","10":"305","11":"FALSE","12":"305"},{"1":"-1.568935e-01","2":"-1.975523311","3":"OTU_582","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhizobiaceae","9":"unclassified_Rhizobiaceae","10":"306","11":"FALSE","12":"306"},{"1":"-4.642615e+00","2":"-0.350284432","3":"OTU_584","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhizobiales_incertae_sedis","9":"Bauldia","10":"307","11":"FALSE","12":"307"},{"1":"-1.196519e+00","2":"0.668516253","3":"OTU_585","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhizobiales_incertae_sedis","9":"Variibacter","10":"308","11":"FALSE","12":"308"},{"1":"-3.636456e+00","2":"0.682745614","3":"OTU_587","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhodobiaceae","9":"Anderseniella","10":"309","11":"FALSE","12":"309"},{"1":"5.684021e-01","2":"-1.673320212","3":"OTU_588","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhodobiaceae","9":"Parvibaculum","10":"310","11":"FALSE","12":"310"},{"1":"3.547611e+00","2":"0.767770515","3":"OTU_589","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhodobiaceae","9":"Rhodoligotrophos","10":"311","11":"FALSE","12":"311"},{"1":"-4.944961e+00","2":"2.653933743","3":"OTU_590","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Rhodobiaceae","9":"unclassified_Rhodobiaceae","10":"312","11":"FALSE","12":"312"},{"1":"4.421174e+00","2":"0.868128469","3":"OTU_593","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"Xanthobacteraceae","9":"Azorhizobium","10":"313","11":"FALSE","12":"313"},{"1":"-4.599576e+00","2":"-0.965307095","3":"OTU_597","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhizobiales","8":"unclassified_Rhizobiales","9":"unclassified_Rhizobiales","10":"314","11":"FALSE","12":"314"},{"1":"-7.035639e-01","2":"-0.868219909","3":"OTU_600","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodobacterales","8":"Rhodobacteraceae","9":"Paracoccus","10":"315","11":"FALSE","12":"315"},{"1":"-6.436223e-02","2":"-2.313018550","3":"OTU_603","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodobacterales","8":"Rhodobacteraceae","9":"unclassified_Rhodobacteraceae","10":"316","11":"FALSE","12":"316"},{"1":"1.090211e+01","2":"-3.960930115","3":"OTU_604","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Acetobacteraceae","9":"Acidicaldus","10":"317","11":"FALSE","12":"317"},{"1":"-3.898150e+00","2":"1.051544264","3":"OTU_606","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Acetobacteraceae","9":"Acidisoma","10":"318","11":"FALSE","12":"318"},{"1":"-5.076894e+00","2":"-1.372023646","3":"OTU_608","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Acetobacteraceae","9":"Rhodopila","10":"319","11":"FALSE","12":"319"},{"1":"-2.802385e+00","2":"0.361688538","3":"OTU_611","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Acetobacteraceae","9":"Roseomonas","10":"320","11":"FALSE","12":"320"},{"1":"-3.365349e+00","2":"1.065019372","3":"OTU_613","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Acetobacteraceae","9":"unclassified_Acetobacteraceae","10":"321","11":"FALSE","12":"321"},{"1":"-3.484165e+00","2":"0.303847640","3":"OTU_615","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Rhodospirillaceae","9":"Defluviicoccus","10":"322","11":"FALSE","12":"322"},{"1":"5.271811e+00","2":"5.513721385","3":"OTU_621","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Rhodospirillaceae","9":"Magnetovibrio","10":"323","11":"FALSE","12":"323"},{"1":"-3.953248e+00","2":"-0.481937245","3":"OTU_625","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Rhodospirillaceae","9":"Skermanella","10":"324","11":"FALSE","12":"324"},{"1":"-4.831329e+00","2":"-1.214095718","3":"OTU_627","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"Rhodospirillaceae","9":"unclassified_Rhodospirillaceae","10":"325","11":"FALSE","12":"325"},{"1":"-5.007438e+00","2":"-0.567910936","3":"OTU_629","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Rhodospirillales","8":"unclassified_Rhodospirillales","9":"unclassified_Rhodospirillales","10":"326","11":"FALSE","12":"326"},{"1":"1.045697e+00","2":"2.410635874","3":"OTU_636","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sneathiellales","8":"Sneathiellaceae","9":"Sneathiella","10":"327","11":"FALSE","12":"327"},{"1":"-1.529832e+00","2":"3.076390673","3":"OTU_639","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Erythrobacteraceae","9":"Altererythrobacter","10":"328","11":"FALSE","12":"328"},{"1":"2.536019e+00","2":"1.977949608","3":"OTU_640","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Erythrobacteraceae","9":"Porphyrobacter","10":"329","11":"FALSE","12":"329"},{"1":"-3.511069e+00","2":"-0.200208487","3":"OTU_641","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Erythrobacteraceae","9":"unclassified_Erythrobacteraceae","10":"330","11":"FALSE","12":"330"},{"1":"-4.090380e-01","2":"-0.894486327","3":"OTU_642","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Novosphingobium","10":"331","11":"FALSE","12":"331"},{"1":"-4.822456e+00","2":"2.700549268","3":"OTU_644","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Rhizorhapis","10":"332","11":"FALSE","12":"332"},{"1":"3.414145e+00","2":"-0.646083891","3":"OTU_645","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sandaracinobacter","10":"333","11":"FALSE","12":"333"},{"1":"1.014270e+00","2":"-0.984204342","3":"OTU_646","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sphingobium","10":"334","11":"FALSE","12":"334"},{"1":"-3.353905e+00","2":"-0.019691832","3":"OTU_647","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sphingomonas","10":"335","11":"FALSE","12":"335"},{"1":"6.051524e-02","2":"-0.998167273","3":"OTU_648","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sphingopyxis","10":"336","11":"FALSE","12":"336"},{"1":"1.241854e+00","2":"-0.901541540","3":"OTU_649","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sphingorhabdus","10":"337","11":"FALSE","12":"337"},{"1":"-5.604429e-01","2":"-0.047250797","3":"OTU_650","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"Sphingosinicella","10":"338","11":"FALSE","12":"338"},{"1":"-4.531014e+00","2":"-0.950258122","3":"OTU_651","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"Sphingomonadales","8":"Sphingomonadaceae","9":"unclassified_Sphingomonadaceae","10":"339","11":"FALSE","12":"339"},{"1":"-2.526408e+00","2":"-2.070970837","3":"OTU_652","4":"Bacteria","5":"Proteobacteria","6":"Alphaproteobacteria","7":"unclassified_Alphaproteobacteria","8":"unclassified_Alphaproteobacteria","9":"unclassified_Alphaproteobacteria","10":"340","11":"FALSE","12":"340"},{"1":"5.193031e-03","2":"-0.372487518","3":"OTU_653","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Achromobacter","10":"341","11":"FALSE","12":"341"},{"1":"2.028429e+00","2":"2.738614830","3":"OTU_654","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Advenella","10":"342","11":"FALSE","12":"342"},{"1":"9.743070e-02","2":"-0.783942537","3":"OTU_655","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Alcaligenes","10":"343","11":"FALSE","12":"343"},{"1":"-5.831871e+00","2":"-0.276965499","3":"OTU_656","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Azohydromonas","10":"344","11":"FALSE","12":"344"},{"1":"-2.581374e+00","2":"-1.717189334","3":"OTU_657","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Basilea","10":"345","11":"FALSE","12":"345"},{"1":"-5.508552e-01","2":"-0.982464461","3":"OTU_658","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Candidimonas","10":"346","11":"FALSE","12":"346"},{"1":"1.112615e+00","2":"-0.744439040","3":"OTU_659","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Castellaniella","10":"347","11":"FALSE","12":"347"},{"1":"1.394827e+00","2":"-0.645991402","3":"OTU_660","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Oligella","10":"348","11":"FALSE","12":"348"},{"1":"1.018652e+00","2":"-0.739931070","3":"OTU_661","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Paenalcaligenes","10":"349","11":"FALSE","12":"349"},{"1":"-7.627310e-01","2":"3.773838161","3":"OTU_662","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Pigmentiphaga","10":"350","11":"FALSE","12":"350"},{"1":"-2.400078e-01","2":"1.132325959","3":"OTU_663","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"Pusillimonas","10":"351","11":"FALSE","12":"351"},{"1":"-1.809834e-01","2":"-0.846522493","3":"OTU_664","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Alcaligenaceae","9":"unclassified_Alcaligenaceae","10":"352","11":"FALSE","12":"352"},{"1":"4.951330e+00","2":"1.509650269","3":"OTU_673","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Burkholderiales_incertae_sedis","9":"unclassified_Burkholderiales_incertae_sedis","10":"353","11":"FALSE","12":"353"},{"1":"7.390899e-01","2":"-2.167643884","3":"OTU_675","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Comamonadaceae","9":"Comamonas","10":"354","11":"FALSE","12":"354"},{"1":"9.693886e-01","2":"-2.017597725","3":"OTU_677","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Comamonadaceae","9":"Hydrogenophaga","10":"355","11":"FALSE","12":"355"},{"1":"1.152757e+01","2":"2.287094161","3":"OTU_680","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Comamonadaceae","9":"Pseudorhodoferax","10":"356","11":"FALSE","12":"356"},{"1":"2.158446e+00","2":"0.191068764","3":"OTU_690","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"Oxalobacteraceae","9":"Janthinobacterium","10":"357","11":"FALSE","12":"357"},{"1":"-5.133393e+00","2":"4.979112496","3":"OTU_699","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Burkholderiales","8":"unclassified_Burkholderiales","9":"unclassified_Burkholderiales","10":"358","11":"FALSE","12":"358"},{"1":"4.634243e-01","2":"-1.405229093","3":"OTU_702","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Hydrogenophilales","8":"Hydrogenophilaceae","9":"Thiobacillus","10":"359","11":"FALSE","12":"359"},{"1":"-4.837299e+00","2":"-0.458690959","3":"OTU_713","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Neisseriales","8":"Neisseriaceae","9":"unclassified_Neisseriaceae","10":"360","11":"FALSE","12":"360"},{"1":"-5.075739e+00","2":"-1.280561522","3":"OTU_716","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Nitrosomonadales","8":"Nitrosomonadaceae","9":"unclassified_Nitrosomonadaceae","10":"361","11":"FALSE","12":"361"},{"1":"-3.368531e+00","2":"-0.522596240","3":"OTU_722","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Rhodocyclales","8":"Rhodocyclaceae","9":"Methyloversatilis","10":"362","11":"FALSE","12":"362"},{"1":"-7.364471e-01","2":"4.264548498","3":"OTU_726","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Rhodocyclales","8":"Rhodocyclaceae","9":"unclassified_Rhodocyclaceae","10":"363","11":"FALSE","12":"363"},{"1":"-4.209261e+00","2":"3.548234858","3":"OTU_727","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"Sulfuricellales","8":"Sulfuricellaceae","9":"Sulfuricella","10":"364","11":"FALSE","12":"364"},{"1":"-1.838278e+00","2":"-1.249128701","3":"OTU_729","4":"Bacteria","5":"Proteobacteria","6":"Betaproteobacteria","7":"unclassified_Betaproteobacteria","8":"unclassified_Betaproteobacteria","9":"unclassified_Betaproteobacteria","10":"365","11":"FALSE","12":"365"},{"1":"2.148323e+00","2":"-3.462892404","3":"OTU_732","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Bdellovibrionales","8":"Bacteriovoracaceae","9":"Peredibacter","10":"366","11":"FALSE","12":"366"},{"1":"-6.932067e-01","2":"-0.081175268","3":"OTU_736","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Bdellovibrionales","8":"Pseudobacteriovoracaceae","9":"Pseudobacteriovorax","10":"367","11":"FALSE","12":"367"},{"1":"4.938180e-01","2":"-0.869565295","3":"OTU_739","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Desulfobacterales","8":"Desulfobacteraceae","9":"Desulfobacterium","10":"368","11":"FALSE","12":"368"},{"1":"1.429032e+00","2":"1.146567157","3":"OTU_740","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Desulfobacterales","8":"Desulfobacteraceae","9":"Desulfocella","10":"369","11":"FALSE","12":"369"},{"1":"-1.004458e+01","2":"-10.187656272","3":"OTU_743","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Desulfobacterales","8":"unclassified_Desulfobacterales","9":"unclassified_Desulfobacterales","10":"370","11":"FALSE","12":"370"},{"1":"2.729872e+00","2":"-0.641801067","3":"OTU_744","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Desulfovibrionales","8":"Desulfovibrionaceae","9":"Desulfovibrio","10":"371","11":"FALSE","12":"371"},{"1":"9.148857e-01","2":"-0.475348578","3":"OTU_746","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Desulfuromonadales","8":"Desulfuromonadaceae","9":"Desulfuromonas","10":"372","11":"FALSE","12":"372"},{"1":"-4.518960e+00","2":"-0.815526036","3":"OTU_751","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Cystobacteraceae","9":"Cystobacter","10":"373","11":"FALSE","12":"373"},{"1":"-2.206366e+00","2":"2.215751746","3":"OTU_755","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Haliangiaceae","9":"Haliangium","10":"374","11":"FALSE","12":"374"},{"1":"-3.179613e+00","2":"-2.112520578","3":"OTU_756","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Kofleriaceae","9":"Kofleria","10":"375","11":"FALSE","12":"375"},{"1":"-1.037081e+00","2":"4.375112275","3":"OTU_771","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Polyangiaceae","9":"Minicystis","10":"376","11":"FALSE","12":"376"},{"1":"-4.157379e+00","2":"-2.603614933","3":"OTU_773","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Polyangiaceae","9":"Sorangium","10":"377","11":"FALSE","12":"377"},{"1":"-4.141082e+00","2":"2.242630866","3":"OTU_774","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Polyangiaceae","9":"unclassified_Polyangiaceae","10":"378","11":"FALSE","12":"378"},{"1":"1.060708e+00","2":"-1.832458658","3":"OTU_776","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"Vulgatibacteraceae","9":"Vulgatibacter","10":"379","11":"FALSE","12":"379"},{"1":"-2.742072e+00","2":"3.005780004","3":"OTU_777","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"Myxococcales","8":"unclassified_Myxococcales","9":"unclassified_Myxococcales","10":"380","11":"FALSE","12":"380"},{"1":"-2.716032e+00","2":"1.708361778","3":"OTU_781","4":"Bacteria","5":"Proteobacteria","6":"Deltaproteobacteria","7":"unclassified_Deltaproteobacteria","8":"unclassified_Deltaproteobacteria","9":"unclassified_Deltaproteobacteria","10":"381","11":"FALSE","12":"381"},{"1":"-8.441663e-01","2":"0.023771700","3":"OTU_782","4":"Bacteria","5":"Proteobacteria","6":"Epsilonproteobacteria","7":"Campylobacterales","8":"Campylobacteraceae","9":"Campylobacter","10":"382","11":"FALSE","12":"382"},{"1":"1.812904e+00","2":"0.364082882","3":"OTU_784","4":"Bacteria","5":"Proteobacteria","6":"Epsilonproteobacteria","7":"Campylobacterales","8":"Helicobacteraceae","9":"Sulfurimonas","10":"383","11":"FALSE","12":"383"},{"1":"-1.008955e+01","2":"-5.502169009","3":"OTU_786","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Aeromonadales","8":"Aeromonadaceae","9":"Oceanisphaera","10":"384","11":"FALSE","12":"384"},{"1":"6.879669e-01","2":"-0.725742045","3":"OTU_789","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Alteromonadales","8":"Alteromonadaceae","9":"Marinobacter","10":"385","11":"FALSE","12":"385"},{"1":"-1.071615e+00","2":"0.262016450","3":"OTU_792","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Alteromonadales","8":"Idiomarinaceae","9":"Aliidiomarina","10":"386","11":"FALSE","12":"386"},{"1":"-6.601622e+00","2":"2.872792909","3":"OTU_795","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Chromatiales","8":"Ectothiorhodospiraceae","9":"unclassified_Ectothiorhodospiraceae","10":"387","11":"FALSE","12":"387"},{"1":"7.183494e-01","2":"-0.695682551","3":"OTU_796","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Chromatiales","8":"Halothiobacillaceae","9":"Halothiobacillus","10":"388","11":"FALSE","12":"388"},{"1":"-6.046266e-01","2":"0.317403687","3":"OTU_798","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Chromatiales","8":"Thioalkalispiraceae","9":"Thioprofundum","10":"389","11":"FALSE","12":"389"},{"1":"2.448213e-02","2":"-3.266020773","3":"OTU_800","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Enterobacteriales","8":"Enterobacteriaceae","9":"Enterobacter","10":"390","11":"FALSE","12":"390"},{"1":"-4.726687e+00","2":"-3.644033386","3":"OTU_809","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Legionellales","8":"Coxiellaceae","9":"Aquicella","10":"391","11":"FALSE","12":"391"},{"1":"-7.972899e-01","2":"0.038526858","3":"OTU_815","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Methylococcales","8":"Methylococcaceae","9":"Methylobacter","10":"392","11":"FALSE","12":"392"},{"1":"-4.157506e+00","2":"-3.452640508","3":"OTU_816","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Methylococcales","8":"Methylococcaceae","9":"Methylocaldum","10":"393","11":"FALSE","12":"393"},{"1":"-4.378786e+00","2":"-7.570645412","3":"OTU_822","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Oceanospirillales","8":"Oceanospirillaceae","9":"unclassified_Oceanospirillaceae","10":"394","11":"FALSE","12":"394"},{"1":"2.121732e+00","2":"2.815414666","3":"OTU_823","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Oceanospirillales","8":"Oceanospirillales_incertae_sedis","9":"Pseudohongiella","10":"395","11":"FALSE","12":"395"},{"1":"1.638676e+00","2":"0.355274629","3":"OTU_830","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Moraxellaceae","9":"Acinetobacter","10":"396","11":"FALSE","12":"396"},{"1":"1.382832e+00","2":"3.115966946","3":"OTU_834","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Moraxellaceae","9":"Psychrobacter","10":"397","11":"FALSE","12":"397"},{"1":"-7.976222e-01","2":"-0.029406557","3":"OTU_836","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Pseudomonadaceae","9":"Azotobacter","10":"398","11":"FALSE","12":"398"},{"1":"4.615058e-01","2":"-1.796475548","3":"OTU_839","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Pseudomonadaceae","9":"Pseudomonas","10":"399","11":"FALSE","12":"399"},{"1":"8.262388e-01","2":"-0.563320058","3":"OTU_841","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Pseudomonadaceae","9":"Thiopseudomonas","10":"400","11":"FALSE","12":"400"},{"1":"8.341806e-01","2":"-0.551491374","3":"OTU_842","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Pseudomonadales","8":"Pseudomonadaceae","9":"unclassified_Pseudomonadaceae","10":"401","11":"FALSE","12":"401"},{"1":"-8.755209e-01","2":"0.035806816","3":"OTU_843","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Thiotrichales","8":"Francisellaceae","9":"Francisella","10":"402","11":"FALSE","12":"402"},{"1":"4.230614e+00","2":"2.630489327","3":"OTU_844","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Thiotrichales","8":"Piscirickettsiaceae","9":"Methylophaga","10":"403","11":"FALSE","12":"403"},{"1":"1.914942e+00","2":"1.251030244","3":"OTU_845","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Thiotrichales","8":"Piscirickettsiaceae","9":"Thioalkalimicrobium","10":"404","11":"FALSE","12":"404"},{"1":"-7.504854e-01","2":"-0.082400318","3":"OTU_846","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Thiotrichales","8":"Piscirickettsiaceae","9":"Thiomicrospira","10":"405","11":"FALSE","12":"405"},{"1":"-5.245858e+00","2":"0.330402947","3":"OTU_853","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Sinobacteraceae","9":"Povalibacter","10":"406","11":"FALSE","12":"406"},{"1":"-5.666765e+00","2":"0.400559618","3":"OTU_856","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Sinobacteraceae","9":"unclassified_Sinobacteraceae","10":"407","11":"FALSE","12":"407"},{"1":"-1.405302e+00","2":"-3.403217080","3":"OTU_857","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Arenimonas","10":"408","11":"FALSE","12":"408"},{"1":"-4.614356e-01","2":"0.095100355","3":"OTU_862","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Ignatzschineria","10":"409","11":"FALSE","12":"409"},{"1":"-1.225051e+00","2":"0.424232407","3":"OTU_863","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Luteibacter","10":"410","11":"FALSE","12":"410"},{"1":"-2.702734e+00","2":"-0.095875056","3":"OTU_864","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Luteimonas","10":"411","11":"FALSE","12":"411"},{"1":"-4.146244e+00","2":"1.863876673","3":"OTU_865","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Lysobacter","10":"412","11":"FALSE","12":"412"},{"1":"1.783943e+00","2":"0.378650370","3":"OTU_868","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Pseudoxanthomonas","10":"413","11":"FALSE","12":"413"},{"1":"-3.680044e+00","2":"0.507224665","3":"OTU_869","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Rhodanobacter","10":"414","11":"FALSE","12":"414"},{"1":"4.362820e-01","2":"1.315590815","3":"OTU_872","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Stenotrophomonas","10":"415","11":"FALSE","12":"415"},{"1":"-1.041294e+00","2":"-0.085186586","3":"OTU_873","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Tahibacter","10":"416","11":"FALSE","12":"416"},{"1":"-2.877881e+00","2":"-0.436923640","3":"OTU_874","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"Thermomonas","10":"417","11":"FALSE","12":"417"},{"1":"-2.282200e+00","2":"0.158181884","3":"OTU_876","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"Xanthomonadaceae","9":"unclassified_Xanthomonadaceae","10":"418","11":"FALSE","12":"418"},{"1":"-5.155472e+00","2":"0.251885945","3":"OTU_877","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"Xanthomonadales","8":"unclassified_Xanthomonadales","9":"unclassified_Xanthomonadales","10":"419","11":"FALSE","12":"419"},{"1":"-3.728235e+00","2":"1.646834165","3":"OTU_878","4":"Bacteria","5":"Proteobacteria","6":"Gammaproteobacteria","7":"unclassified_Gammaproteobacteria","8":"unclassified_Gammaproteobacteria","9":"unclassified_Gammaproteobacteria","10":"420","11":"FALSE","12":"420"},{"1":"-4.899617e+00","2":"2.140269644","3":"OTU_879","4":"Bacteria","5":"Proteobacteria","6":"Oligoflexia","7":"Oligoflexales","8":"Oligoflexaceae","9":"Oligoflexus","10":"421","11":"FALSE","12":"421"},{"1":"-4.303566e+00","2":"-0.629714613","3":"OTU_880","4":"Bacteria","5":"Proteobacteria","6":"unclassified_Proteobacteria","7":"unclassified_Proteobacteria","8":"unclassified_Proteobacteria","9":"unclassified_Proteobacteria","10":"422","11":"FALSE","12":"422"},{"1":"3.227415e+00","2":"6.627709463","3":"OTU_883","4":"Bacteria","5":"Spirochaetes","6":"Spirochaetia","7":"Spirochaetales","8":"Leptospiraceae","9":"Leptonema","10":"423","11":"FALSE","12":"423"},{"1":"7.896945e+00","2":"2.767524181","3":"OTU_886","4":"Bacteria","5":"Spirochaetes","6":"Spirochaetia","7":"Spirochaetales","8":"Spirochaetaceae","9":"Sphaerochaeta","10":"424","11":"FALSE","12":"424"},{"1":"9.708105e-01","2":"-0.239847689","3":"OTU_888","4":"Bacteria","5":"Spirochaetes","6":"Spirochaetia","7":"Spirochaetales","8":"Spirochaetaceae","9":"Treponema","10":"425","11":"FALSE","12":"425"},{"1":"8.583912e-01","2":"5.146356353","3":"OTU_889","4":"Bacteria","5":"Spirochaetes","6":"Spirochaetia","7":"Spirochaetales","8":"Spirochaetaceae","9":"unclassified_Spirochaetaceae","10":"426","11":"FALSE","12":"426"},{"1":"9.772500e-01","2":"-0.212090651","3":"OTU_891","4":"Bacteria","5":"Synergistetes","6":"Synergistia","7":"Synergistales","8":"Synergistaceae","9":"Aminivibrio","10":"427","11":"FALSE","12":"427"},{"1":"-1.543825e+01","2":"1.294055303","3":"OTU_892","4":"Bacteria","5":"Synergistetes","6":"Synergistia","7":"Synergistales","8":"Synergistaceae","9":"Aminobacterium","10":"428","11":"FALSE","12":"428"},{"1":"9.828960e-01","2":"-0.184161413","3":"OTU_894","4":"Bacteria","5":"Synergistetes","6":"Synergistia","7":"Synergistales","8":"Synergistaceae","9":"unclassified_Synergistaceae","10":"429","11":"FALSE","12":"429"},{"1":"9.854200e-01","2":"-0.170139300","3":"OTU_895","4":"Bacteria","5":"Tenericutes","6":"Mollicutes","7":"Acholeplasmatales","8":"Acholeplasmataceae","9":"Acholeplasma","10":"430","11":"FALSE","12":"430"},{"1":"-5.066522e+00","2":"-5.729269654","3":"OTU_898","4":"Bacteria","5":"Verrucomicrobia","6":"Opitutae","7":"Opitutales","8":"Opitutaceae","9":"Opitutus","10":"431","11":"FALSE","12":"431"},{"1":"-2.324969e+00","2":"3.317802911","3":"OTU_899","4":"Bacteria","5":"Verrucomicrobia","6":"Opitutae","7":"Opitutales","8":"Opitutaceae","9":"unclassified_Opitutaceae","10":"432","11":"FALSE","12":"432"},{"1":"-4.516276e+00","2":"-2.715328479","3":"OTU_901","4":"Bacteria","5":"Verrucomicrobia","6":"Spartobacteria","7":"unclassified_Spartobacteria","8":"unclassified_Spartobacteria","9":"Spartobacteria_genera_incertae_sedis","10":"433","11":"FALSE","12":"433"},{"1":"-3.401498e+00","2":"1.549682574","3":"OTU_902","4":"Bacteria","5":"Verrucomicrobia","6":"Spartobacteria","7":"unclassified_Spartobacteria","8":"unclassified_Spartobacteria","9":"Terrimicrobium","10":"434","11":"FALSE","12":"434"},{"1":"-3.602622e+00","2":"0.601372870","3":"OTU_904","4":"Bacteria","5":"Verrucomicrobia","6":"Spartobacteria","7":"unclassified_Spartobacteria","8":"unclassified_Spartobacteria","9":"unclassified_Spartobacteria","10":"435","11":"FALSE","12":"435"},{"1":"-1.512634e+00","2":"1.694302806","3":"OTU_906","4":"Bacteria","5":"Verrucomicrobia","6":"Subdivision3","7":"unclassified_Subdivision3","8":"unclassified_Subdivision3","9":"Subdivision3_genera_incertae_sedis","10":"436","11":"FALSE","12":"436"},{"1":"-5.177596e+00","2":"-0.197326506","3":"OTU_907","4":"Bacteria","5":"Verrucomicrobia","6":"Subdivision3","7":"unclassified_Subdivision3","8":"unclassified_Subdivision3","9":"unclassified_Subdivision3","10":"437","11":"FALSE","12":"437"},{"1":"1.745929e+00","2":"0.216016788","3":"OTU_908","4":"Bacteria","5":"Verrucomicrobia","6":"Subdivision5","7":"unclassified_Subdivision5","8":"unclassified_Subdivision5","9":"Subdivision5_genera_incertae_sedis","10":"438","11":"FALSE","12":"438"},{"1":"-1.946450e+00","2":"3.572833659","3":"OTU_914","4":"Bacteria","5":"Verrucomicrobia","6":"Verrucomicrobiae","7":"Verrucomicrobiales","8":"Verrucomicrobiaceae","9":"unclassified_Verrucomicrobiaceae","10":"439","11":"FALSE","12":"439"},{"1":"-5.005432e+00","2":"-2.246502563","3":"OTU_916","4":"Bacteria","5":"candidate division WPS-1","6":"unclassified_candidate division WPS-1","7":"unclassified_candidate division WPS-1","8":"unclassified_candidate division WPS-1","9":"WPS-1_genera_incertae_sedis","10":"440","11":"FALSE","12":"440"},{"1":"-2.111112e+00","2":"0.155265813","3":"OTU_919","4":"Bacteria","5":"unclassified_Bacteria","6":"unclassified_Bacteria","7":"unclassified_Bacteria","8":"unclassified_Bacteria","9":"unclassified_Bacteria","10":"441","11":"FALSE","12":"441"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="variable_correlation_network" class="section level2">
+<h2>variable_correlation_network</h2>
+<p><a name="variable_correlation_network"></a></p>
+<p>Create a network ggplot object of the correlation of taxa and sample variables from a phyloseq object. This may also be refered to as a bipartite graph. Function from the phylosmith-package.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>variable_correlation_network(phyloseq_obj, variables, classification = NULL,
+ treatment = NULL, subset = NULL, correlation_table = NULL, method = &#39;spearman&#39;,
+ rho_threshold = c(-0.01, 0.01), p_threshold = 0.05, colors = &#39;default&#39;,
+ negative_positive_colors = c(&#39;pink1&#39;, &#39;gray22&#39;))</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
+</tr>
+<tr class="even">
+<td><code>variables</code></td>
+<td>Numerical factors within the in the sample_data to correlate with the abundance data.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a string or numeric in the tax_table for the factor to conglomerate by.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code>. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>correlation_table</code></td>
+<td>Table of the correlation of taxa/variables in the phyloseq_ob}, computed using <code>variable_correlation</code>. If no</td>
+</tr>
+</tbody>
+</table>
+<p>table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05. <code>method</code> | Which correlation method to calculate, “pearson”, “spearman”. <code>rho_threshold</code> | Cutoffs to use to subset the <code>correlation_table</code> by correlation values. <code>p_threshold</code> | Cutoffs to use to subset the <code>correlation_table</code> by singnificance values. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors. <code>negative_positive_colors</code> | colors to use for the edges to represent negative and positive correlations. Defaul (‘pink1’, ‘gray22’)</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>variable_correlation_network(soil_column, &#39;Day&#39;, &#39;Class&#39;, c(&#39;Matrix&#39;,&#39;Treatment&#39;), &#39;Soil Amended&#39;)</code></pre>
+<p><img src="networks_files/figure-html/variable_correlation_network-1.png" width="1536" /></p>
+<p><br></p>
+<hr />
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Student - Bioinformatics and Computational Biology<br>
+Iowa State University.  Ames, IA.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
