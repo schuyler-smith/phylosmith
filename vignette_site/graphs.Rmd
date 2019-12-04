@@ -228,7 +228,6 @@ Call | Description
 variable_correlation_heatmap(soil_column, variables = 'Day',
  treatment = c('Matrix', 'Treatment'), subset = 'Amended',
  classification = 'Phylum', method = 'spearman', cores = 1,
- colors = c("#2C7BB6", "white", "#D7191C"),
  significance_color = 'black')
 ```
 

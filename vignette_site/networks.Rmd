@@ -112,9 +112,7 @@ Call | Description
 `classification` | Column name as a string or numeric in the tax_table for the factor to conglomerate by.
 `treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
-`correlation_table` | Table of the correlation of taxa/variables in the phyloseq_ob}, computed using `variable_correlation`. If no
-table is given, it will be computed with the phyloseq_obj, using the
-given treatment and p = 0.05.
+`correlation_table` | Table of the correlation of taxa/variables in the phyloseq_ob}, computed using `variable_correlation`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05.
 `method` | Which correlation method to calculate, "pearson", "spearman".
 `rho_threshold` | Cutoffs to use to subset the `correlation_table` by correlation values.
 `p_threshold` | Cutoffs to use to subset the `correlation_table` by singnificance values.

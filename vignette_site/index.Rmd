@@ -136,9 +136,3 @@ Originally I had created 2 mock phyloseq objects (`mock_phyloseq` and `mock_phyl
 Then I decided that I should include a real example of microbiome data (`soil_column`) becasue it's always nice to see real examples. `soil_column` is a <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.03197/full" target="_blank" >published dataset</a>  from my lab-group. The data is from an experiment where they looked at the microbial composition of farmland soil before and after manure application, over time, using 16S-sequencing.
 
 
-[dapa]:index.html#wrangling
-[anly]:index.html#analytics
-[grap]:index.html#graphs
-[netw]:index.html#networks
-[calc]:index.html#calculations
-

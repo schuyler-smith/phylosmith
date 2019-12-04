@@ -534,13 +534,16 @@ variable_correlation_network <- function(
   layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
 
   edge_colors <- negative_positive_colors[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
-  variable_colors <- create_palette(sum(names(igraph::V(net)) %in% variables), colors)
   node_colors <- dcast.data.table(correlation_table, X ~ Y, value.var = 'weight')
   node_colors[is.na(node_colors)] <- 0
-  node_colors <- apply(node_colors[,-1], 1,FUN=function(x) paste(rev(variables)[x>0], collapse = '_'))
-  node_colors <- create_palette(length(unique(node_colors)))[factor(c(node_colors, variables))]
+  node_colors <- apply(node_colors[,-1], 1,FUN=function(x) paste(rev(variables[variables %in% colnames(node_colors)])[x>0], collapse = '_'))
+  vars <- factor(c(node_colors, variables),
+                 levels = c(variables, unique(node_colors[!(node_colors %in% variables)])))
+  node_colors <- create_palette(length(levels(vars)))[vars]
   node_sizes <- rep(5, length(names(igraph::V(net))))
-  node_sizes[names(igraph::V(net)) %in% variables] <- 20
+  node_sizes[names(igraph::V(net)) %in% variables] <- 15
+  node_sizes[names(igraph::V(net)) %in% correlation_table[['Y']]] <- 20
+
   variables_layout <- subset(layout, apply(layout, 1, function(class) {
     any(class %in% variables)
   }))

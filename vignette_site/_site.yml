@@ -24,7 +24,7 @@ navbar:
       href: calculations.html
     - text: Source Code
       icon: fa-code
-      href: https://github.com/schuyler-smith/phylosmith/tree/master/R
+      href: https://github.com/schuyler-smith/phylosmith/
 
   right:
     - icon: fa-github fa-lg
