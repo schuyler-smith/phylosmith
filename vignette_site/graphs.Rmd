@@ -42,7 +42,7 @@ Call | Description
 `colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r abundance_heatmap}
+```{r abundance_heatmap, fig.width=10, fig.height=8}
 abundance_heatmap(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', transformation = 'log10')
 ```
 
@@ -113,7 +113,7 @@ Call | Description
 
 ***Examples***
 
-```{r phylogeny_profile}
+```{r phylogeny_profile, fig.width=12, fig.height=10}
 phylogeny_profile(derep_sc, classification = 'Phylum', treatment = c('Matrix', 'Treatment'), subset = 'Soil', merge = TRUE, relative_abundance = TRUE)
 ```
 
@@ -224,7 +224,7 @@ Call | Description
 
 ***Examples***
 
-```{r variable_correlation_heatmap}
+```{r variable_correlation_heatmap, fig.width=4, fig.height=8}
 variable_correlation_heatmap(soil_column, variables = 'Day',
  treatment = c('Matrix', 'Treatment'), subset = 'Amended',
  classification = 'Phylum', method = 'spearman', cores = 1,
@@ -265,7 +265,7 @@ Call | Description
 `colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
 
 ***Examples***
-```{r alpha_diversity_graph}
+```{r alpha_diversity_graph, fig.width=10, fig.height=8}
 alpha_diversity_graph(soil_column, index = 'shannon', treatment = c('Matrix', 'Treatment'), subset = NULL, colors = 'default')
 ```
 
@@ -300,7 +300,7 @@ Call | Description
 
 ***Examples***
 
-```{r nmds_phyloseq}
+```{r nmds_phyloseq, fig.width=10, fig.height=8}
 nmds_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE, verbose = FALSE)
 ```
 
@@ -340,7 +340,7 @@ Call | Description
 
 ***Examples***
 
-```{r pcoa_phyloseq}
+```{r pcoa_phyloseq, fig.width=10, fig.height=8}
 pcoa_phyloseq(soil_column, c('Matrix', 'Treatment'), circle = TRUE)
 ```
 
@@ -375,7 +375,7 @@ Call | Description
 
 ***Examples***
 
-```{r tsne_phyloseq}
+```{r tsne_phyloseq, fig.width=10, fig.height=8}
 tsne_phyloseq(soil_column, treatment = c('Matrix', 'Treatment'), perplexity = 10)
 ```
 
