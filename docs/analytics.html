@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-12-04" />
+<meta name="date" content="2020-01-15" />
 
 <title>Analytics</title>
 
@@ -242,6 +241,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -446,7 +446,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analytics</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-12-04</h4>
+<h4 class="date">2020-01-15</h4>
 
 </div>
 
@@ -491,10 +491,10 @@ div.tocify {
 </table>
 <p><strong><em>Examples</em></strong></p>
 <pre class="r"><code>common_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;, n = &#39;all&#39;)[1:35]</code></pre>
-<pre><code>##  [1] &quot;OTU_1&quot;   &quot;OTU_100&quot; &quot;OTU_101&quot; &quot;OTU_104&quot; &quot;OTU_105&quot; &quot;OTU_110&quot; &quot;OTU_114&quot; &quot;OTU_115&quot; &quot;OTU_116&quot; &quot;OTU_117&quot; &quot;OTU_118&quot;
-## [12] &quot;OTU_119&quot; &quot;OTU_12&quot;  &quot;OTU_120&quot; &quot;OTU_121&quot; &quot;OTU_122&quot; &quot;OTU_123&quot; &quot;OTU_124&quot; &quot;OTU_125&quot; &quot;OTU_126&quot; &quot;OTU_127&quot; &quot;OTU_128&quot;
-## [23] &quot;OTU_129&quot; &quot;OTU_130&quot; &quot;OTU_131&quot; &quot;OTU_133&quot; &quot;OTU_134&quot; &quot;OTU_135&quot; &quot;OTU_137&quot; &quot;OTU_138&quot; &quot;OTU_139&quot; &quot;OTU_14&quot;  &quot;OTU_140&quot;
-## [34] &quot;OTU_141&quot; &quot;OTU_142&quot;</code></pre>
+<pre><code>##  [1] &quot;OTU_1&quot;   &quot;OTU_100&quot; &quot;OTU_101&quot; &quot;OTU_104&quot; &quot;OTU_105&quot; &quot;OTU_110&quot; &quot;OTU_114&quot; &quot;OTU_115&quot; &quot;OTU_116&quot; &quot;OTU_117&quot;
+## [11] &quot;OTU_118&quot; &quot;OTU_119&quot; &quot;OTU_12&quot;  &quot;OTU_120&quot; &quot;OTU_121&quot; &quot;OTU_122&quot; &quot;OTU_123&quot; &quot;OTU_124&quot; &quot;OTU_125&quot; &quot;OTU_126&quot;
+## [21] &quot;OTU_127&quot; &quot;OTU_128&quot; &quot;OTU_129&quot; &quot;OTU_130&quot; &quot;OTU_131&quot; &quot;OTU_133&quot; &quot;OTU_134&quot; &quot;OTU_135&quot; &quot;OTU_137&quot; &quot;OTU_138&quot;
+## [31] &quot;OTU_139&quot; &quot;OTU_14&quot;  &quot;OTU_140&quot; &quot;OTU_141&quot; &quot;OTU_142&quot;</code></pre>
 <p><br></p>
 <hr />
 <p><br></p>
@@ -542,6 +542,7 @@ div.tocify {
 </table>
 <p><strong><em>Examples</em></strong> The <code>soil_column</code> data has 18,441 OTUs listed in its <code>taxa_table</code>.</p>
 <pre class="r"><code>taxa_core(soil_column, frequency = 0.2, abundance_threshold = 0.01)</code></pre>
+<pre><code>## Warning in rm(list = c(&quot;taxa&quot;, &quot;sample_data&quot;)): object &#39;taxa&#39; not found</code></pre>
 <pre><code>## phyloseq-class experiment-level object
 ## otu_table()   OTU Table:         [ 26 taxa and 481 samples ]
 ## sample_data() Sample Data:       [ 481 samples by 3 sample variables ]
@@ -642,27 +643,28 @@ div.tocify {
 <p><strong><em>Examples</em></strong></p>
 <pre class="r"><code>unique_taxa(soil_column, treatment = c(&#39;Matrix&#39;, &#39;Treatment&#39;), subset = &#39;Unamended&#39;)</code></pre>
 <pre><code>## $`Soil Unamended`
-##   [1] &quot;OTU_8&quot;   &quot;OTU_9&quot;   &quot;OTU_36&quot;  &quot;OTU_49&quot;  &quot;OTU_73&quot;  &quot;OTU_74&quot;  &quot;OTU_76&quot;  &quot;OTU_80&quot;  &quot;OTU_103&quot; &quot;OTU_108&quot; &quot;OTU_111&quot;
-##  [12] &quot;OTU_112&quot; &quot;OTU_113&quot; &quot;OTU_132&quot; &quot;OTU_147&quot; &quot;OTU_148&quot; &quot;OTU_154&quot; &quot;OTU_158&quot; &quot;OTU_161&quot; &quot;OTU_165&quot; &quot;OTU_171&quot; &quot;OTU_176&quot;
-##  [23] &quot;OTU_189&quot; &quot;OTU_198&quot; &quot;OTU_201&quot; &quot;OTU_206&quot; &quot;OTU_209&quot; &quot;OTU_215&quot; &quot;OTU_219&quot; &quot;OTU_220&quot; &quot;OTU_221&quot; &quot;OTU_226&quot; &quot;OTU_229&quot;
-##  [34] &quot;OTU_238&quot; &quot;OTU_240&quot; &quot;OTU_243&quot; &quot;OTU_246&quot; &quot;OTU_247&quot; &quot;OTU_249&quot; &quot;OTU_258&quot; &quot;OTU_260&quot; &quot;OTU_265&quot; &quot;OTU_275&quot; &quot;OTU_290&quot;
-##  [45] &quot;OTU_291&quot; &quot;OTU_306&quot; &quot;OTU_311&quot; &quot;OTU_312&quot; &quot;OTU_315&quot; &quot;OTU_316&quot; &quot;OTU_318&quot; &quot;OTU_320&quot; &quot;OTU_323&quot; &quot;OTU_326&quot; &quot;OTU_328&quot;
-##  [56] &quot;OTU_333&quot; &quot;OTU_334&quot; &quot;OTU_336&quot; &quot;OTU_337&quot; &quot;OTU_343&quot; &quot;OTU_365&quot; &quot;OTU_373&quot; &quot;OTU_379&quot; &quot;OTU_384&quot; &quot;OTU_388&quot; &quot;OTU_389&quot;
-##  [67] &quot;OTU_405&quot; &quot;OTU_406&quot; &quot;OTU_412&quot; &quot;OTU_418&quot; &quot;OTU_430&quot; &quot;OTU_433&quot; &quot;OTU_438&quot; &quot;OTU_439&quot; &quot;OTU_442&quot; &quot;OTU_453&quot; &quot;OTU_456&quot;
-##  [78] &quot;OTU_460&quot; &quot;OTU_482&quot; &quot;OTU_486&quot; &quot;OTU_492&quot; &quot;OTU_497&quot; &quot;OTU_513&quot; &quot;OTU_545&quot; &quot;OTU_546&quot; &quot;OTU_555&quot; &quot;OTU_573&quot; &quot;OTU_577&quot;
-##  [89] &quot;OTU_581&quot; &quot;OTU_586&quot; &quot;OTU_601&quot; &quot;OTU_604&quot; &quot;OTU_607&quot; &quot;OTU_615&quot; &quot;OTU_616&quot; &quot;OTU_649&quot; &quot;OTU_655&quot; &quot;OTU_671&quot; &quot;OTU_700&quot;
-## [100] &quot;OTU_739&quot; &quot;OTU_740&quot; &quot;OTU_746&quot; &quot;OTU_764&quot; &quot;OTU_784&quot; &quot;OTU_788&quot; &quot;OTU_789&quot; &quot;OTU_791&quot; &quot;OTU_794&quot; &quot;OTU_796&quot; &quot;OTU_805&quot;
+##   [1] &quot;OTU_8&quot;   &quot;OTU_9&quot;   &quot;OTU_36&quot;  &quot;OTU_49&quot;  &quot;OTU_73&quot;  &quot;OTU_74&quot;  &quot;OTU_76&quot;  &quot;OTU_80&quot;  &quot;OTU_103&quot; &quot;OTU_108&quot;
+##  [11] &quot;OTU_111&quot; &quot;OTU_112&quot; &quot;OTU_113&quot; &quot;OTU_132&quot; &quot;OTU_147&quot; &quot;OTU_148&quot; &quot;OTU_154&quot; &quot;OTU_158&quot; &quot;OTU_161&quot; &quot;OTU_165&quot;
+##  [21] &quot;OTU_171&quot; &quot;OTU_176&quot; &quot;OTU_189&quot; &quot;OTU_198&quot; &quot;OTU_201&quot; &quot;OTU_206&quot; &quot;OTU_209&quot; &quot;OTU_215&quot; &quot;OTU_219&quot; &quot;OTU_220&quot;
+##  [31] &quot;OTU_221&quot; &quot;OTU_226&quot; &quot;OTU_229&quot; &quot;OTU_238&quot; &quot;OTU_240&quot; &quot;OTU_243&quot; &quot;OTU_246&quot; &quot;OTU_247&quot; &quot;OTU_249&quot; &quot;OTU_258&quot;
+##  [41] &quot;OTU_260&quot; &quot;OTU_265&quot; &quot;OTU_275&quot; &quot;OTU_290&quot; &quot;OTU_291&quot; &quot;OTU_306&quot; &quot;OTU_311&quot; &quot;OTU_312&quot; &quot;OTU_315&quot; &quot;OTU_316&quot;
+##  [51] &quot;OTU_318&quot; &quot;OTU_320&quot; &quot;OTU_323&quot; &quot;OTU_326&quot; &quot;OTU_328&quot; &quot;OTU_333&quot; &quot;OTU_334&quot; &quot;OTU_336&quot; &quot;OTU_337&quot; &quot;OTU_343&quot;
+##  [61] &quot;OTU_365&quot; &quot;OTU_373&quot; &quot;OTU_379&quot; &quot;OTU_384&quot; &quot;OTU_388&quot; &quot;OTU_389&quot; &quot;OTU_405&quot; &quot;OTU_406&quot; &quot;OTU_412&quot; &quot;OTU_418&quot;
+##  [71] &quot;OTU_430&quot; &quot;OTU_433&quot; &quot;OTU_438&quot; &quot;OTU_439&quot; &quot;OTU_442&quot; &quot;OTU_453&quot; &quot;OTU_456&quot; &quot;OTU_460&quot; &quot;OTU_482&quot; &quot;OTU_486&quot;
+##  [81] &quot;OTU_492&quot; &quot;OTU_497&quot; &quot;OTU_513&quot; &quot;OTU_545&quot; &quot;OTU_546&quot; &quot;OTU_555&quot; &quot;OTU_573&quot; &quot;OTU_577&quot; &quot;OTU_581&quot; &quot;OTU_586&quot;
+##  [91] &quot;OTU_601&quot; &quot;OTU_604&quot; &quot;OTU_607&quot; &quot;OTU_615&quot; &quot;OTU_616&quot; &quot;OTU_649&quot; &quot;OTU_655&quot; &quot;OTU_671&quot; &quot;OTU_700&quot; &quot;OTU_739&quot;
+## [101] &quot;OTU_740&quot; &quot;OTU_746&quot; &quot;OTU_764&quot; &quot;OTU_784&quot; &quot;OTU_788&quot; &quot;OTU_789&quot; &quot;OTU_791&quot; &quot;OTU_794&quot; &quot;OTU_796&quot; &quot;OTU_805&quot;
 ## [111] &quot;OTU_823&quot; &quot;OTU_841&quot; &quot;OTU_843&quot; &quot;OTU_845&quot; &quot;OTU_858&quot; &quot;OTU_891&quot; &quot;OTU_905&quot; &quot;OTU_908&quot;
 ## 
 ## $`Effluent Unamended`
-##  [1] &quot;OTU_2&quot;   &quot;OTU_3&quot;   &quot;OTU_13&quot;  &quot;OTU_21&quot;  &quot;OTU_172&quot; &quot;OTU_195&quot; &quot;OTU_203&quot; &quot;OTU_210&quot; &quot;OTU_213&quot; &quot;OTU_214&quot; &quot;OTU_216&quot;
-## [12] &quot;OTU_217&quot; &quot;OTU_227&quot; &quot;OTU_257&quot; &quot;OTU_266&quot; &quot;OTU_274&quot; &quot;OTU_300&quot; &quot;OTU_367&quot; &quot;OTU_370&quot; &quot;OTU_375&quot; &quot;OTU_397&quot; &quot;OTU_399&quot;
-## [23] &quot;OTU_408&quot; &quot;OTU_411&quot; &quot;OTU_428&quot; &quot;OTU_429&quot; &quot;OTU_448&quot; &quot;OTU_452&quot; &quot;OTU_463&quot; &quot;OTU_472&quot; &quot;OTU_488&quot; &quot;OTU_496&quot; &quot;OTU_500&quot;
-## [34] &quot;OTU_552&quot; &quot;OTU_593&quot; &quot;OTU_596&quot; &quot;OTU_609&quot; &quot;OTU_622&quot; &quot;OTU_626&quot; &quot;OTU_630&quot; &quot;OTU_633&quot; &quot;OTU_634&quot; &quot;OTU_666&quot; &quot;OTU_680&quot;
-## [45] &quot;OTU_682&quot; &quot;OTU_684&quot; &quot;OTU_687&quot; &quot;OTU_694&quot; &quot;OTU_695&quot; &quot;OTU_703&quot; &quot;OTU_704&quot; &quot;OTU_705&quot; &quot;OTU_708&quot; &quot;OTU_711&quot; &quot;OTU_738&quot;
-## [56] &quot;OTU_748&quot; &quot;OTU_749&quot; &quot;OTU_752&quot; &quot;OTU_782&quot; &quot;OTU_793&quot; &quot;OTU_797&quot; &quot;OTU_798&quot; &quot;OTU_807&quot; &quot;OTU_814&quot; &quot;OTU_815&quot; &quot;OTU_819&quot;
-## [67] &quot;OTU_824&quot; &quot;OTU_829&quot; &quot;OTU_831&quot; &quot;OTU_832&quot; &quot;OTU_838&quot; &quot;OTU_849&quot; &quot;OTU_861&quot; &quot;OTU_862&quot; &quot;OTU_881&quot; &quot;OTU_883&quot; &quot;OTU_884&quot;
-## [78] &quot;OTU_890&quot; &quot;OTU_918&quot;</code></pre>
+##  [1] &quot;OTU_2&quot;   &quot;OTU_3&quot;   &quot;OTU_13&quot;  &quot;OTU_21&quot;  &quot;OTU_172&quot; &quot;OTU_195&quot; &quot;OTU_203&quot; &quot;OTU_210&quot; &quot;OTU_213&quot; &quot;OTU_214&quot;
+## [11] &quot;OTU_216&quot; &quot;OTU_217&quot; &quot;OTU_227&quot; &quot;OTU_257&quot; &quot;OTU_266&quot; &quot;OTU_274&quot; &quot;OTU_300&quot; &quot;OTU_367&quot; &quot;OTU_370&quot; &quot;OTU_375&quot;
+## [21] &quot;OTU_397&quot; &quot;OTU_399&quot; &quot;OTU_408&quot; &quot;OTU_411&quot; &quot;OTU_428&quot; &quot;OTU_429&quot; &quot;OTU_448&quot; &quot;OTU_452&quot; &quot;OTU_463&quot; &quot;OTU_472&quot;
+## [31] &quot;OTU_488&quot; &quot;OTU_496&quot; &quot;OTU_500&quot; &quot;OTU_552&quot; &quot;OTU_593&quot; &quot;OTU_596&quot; &quot;OTU_609&quot; &quot;OTU_622&quot; &quot;OTU_626&quot; &quot;OTU_630&quot;
+## [41] &quot;OTU_633&quot; &quot;OTU_634&quot; &quot;OTU_666&quot; &quot;OTU_680&quot; &quot;OTU_682&quot; &quot;OTU_684&quot; &quot;OTU_687&quot; &quot;OTU_694&quot; &quot;OTU_695&quot; &quot;OTU_703&quot;
+## [51] &quot;OTU_704&quot; &quot;OTU_705&quot; &quot;OTU_708&quot; &quot;OTU_711&quot; &quot;OTU_738&quot; &quot;OTU_748&quot; &quot;OTU_749&quot; &quot;OTU_752&quot; &quot;OTU_782&quot; &quot;OTU_793&quot;
+## [61] &quot;OTU_797&quot; &quot;OTU_798&quot; &quot;OTU_807&quot; &quot;OTU_814&quot; &quot;OTU_815&quot; &quot;OTU_819&quot; &quot;OTU_824&quot; &quot;OTU_829&quot; &quot;OTU_831&quot; &quot;OTU_832&quot;
+## [71] &quot;OTU_838&quot; &quot;OTU_849&quot; &quot;OTU_861&quot; &quot;OTU_862&quot; &quot;OTU_881&quot; &quot;OTU_883&quot; &quot;OTU_884&quot; &quot;OTU_890&quot; &quot;OTU_918&quot;</code></pre>
 <p><br></p>
 <hr />
 </div>

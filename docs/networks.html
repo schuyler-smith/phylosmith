@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Schuyler D. Smith" />
 
-<meta name="date" content="2019-12-04" />
+<meta name="date" content="2020-01-15" />
 
 <title>Networks</title>
 
@@ -242,6 +241,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -446,7 +446,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Networks</h1>
 <h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
-<h4 class="date">2019-12-04</h4>
+<h4 class="date">2020-01-15</h4>
 
 </div>
 
@@ -616,11 +616,30 @@ div.tocify {
 </tr>
 <tr class="even">
 <td><code>correlation_table</code></td>
-<td>Table of the correlation of taxa/variables in the phyloseq_ob}, computed using <code>variable_correlation</code>. If no</td>
+<td>Table of the correlation of taxa/variables in the phyloseq_ob}, computed using <code>variable_correlation</code>. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05.</td>
+</tr>
+<tr class="odd">
+<td><code>method</code></td>
+<td>Which correlation method to calculate, “pearson”, “spearman”.</td>
+</tr>
+<tr class="even">
+<td><code>rho_threshold</code></td>
+<td>Cutoffs to use to subset the <code>correlation_table</code> by correlation values.</td>
+</tr>
+<tr class="odd">
+<td><code>p_threshold</code></td>
+<td>Cutoffs to use to subset the <code>correlation_table</code> by singnificance values.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="odd">
+<td><code>negative_positive_colors</code></td>
+<td>colors to use for the edges to represent negative and positive correlations. Defaul (‘pink1’, ‘gray22’)</td>
 </tr>
 </tbody>
 </table>
-<p>table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05. <code>method</code> | Which correlation method to calculate, “pearson”, “spearman”. <code>rho_threshold</code> | Cutoffs to use to subset the <code>correlation_table</code> by correlation values. <code>p_threshold</code> | Cutoffs to use to subset the <code>correlation_table</code> by singnificance values. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors. <code>negative_positive_colors</code> | colors to use for the edges to represent negative and positive correlations. Defaul (‘pink1’, ‘gray22’)</p>
 <p><strong><em>Examples</em></strong></p>
 <pre class="r"><code>variable_correlation_network(soil_column, &#39;Day&#39;, &#39;Class&#39;, c(&#39;Matrix&#39;,&#39;Treatment&#39;), &#39;Soil Amended&#39;)</code></pre>
 <p><img src="networks_files/figure-html/variable_correlation_network-1.png" width="1536" /></p>
