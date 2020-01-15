@@ -3,8 +3,7 @@
 language: r
 use_bioc: true
 bioc_required: true
-cache:
-  - packages
+cache: packages
 sudo: false
 dist: trusty
 os:
@@ -34,6 +33,7 @@ r_packages:
   - vegan
   - Rtsne
   - stringr
+  - stats
   - grDevices
   - graphics
   - RColorBrewer
@@ -45,8 +45,5 @@ r_packages:
   - sp
   - rgdal
   - rgeos
-# before_install:
-#   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
-#     export PATH="/usr/local/opt/llvm/bin:$PATH" &&
-#     export LDFLAGS="-L/usr/local/opt/llvm/lib" &&
-#     export CFLAGS="-I/usr/local/opt/llvm/include"; fi
+  - Rcpp
+  - RcppArmadillo
