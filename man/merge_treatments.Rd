@@ -4,14 +4,14 @@
 \alias{merge_treatments}
 \title{Combine meta-data columns. Function from the phylosmith-package.}
 \usage{
-merge_treatments(phyloseq_obj, ...)
+merge_treatments(phyloseq_obj, merge_treatments)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
 must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 information about each sample.}
 
-\item{...}{any number of column names as \code{string}s or \code{numeric}s
+\item{merge_treatments}{A vector of any number of column names as \code{string}s or \code{numeric}s
 in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be
 combined.}
 }
@@ -24,5 +24,5 @@ object \code{\link[phyloseq:sample_data]{sample_data}} into a
 single-variable column.
 }
 \examples{
-merge_treatments(soil_column, 'Matrix', 'Treatment', 'Day')
+merge_treatments(soil_column, c('Matrix', 'Treatment', 'Day'))
 }

@@ -45,7 +45,7 @@ co_occurrence <-
       stop("`phyloseq_obj` must be a phyloseq-class object",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (!(is.null(treatment)) &
         is.null(access(phyloseq_obj, 'sam_data'))) {
       stop(
@@ -172,7 +172,7 @@ permute_rho <-
       stop("`phyloseq_obj` must be a phyloseq-class object",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (!(is.null(treatment)) &
         is.null(access(phyloseq_obj, 'sam_data'))) {
       stop(
@@ -182,7 +182,7 @@ permute_rho <-
       )
     }
     if (replicate_samples != 'independent'){
-      replicate_samples <- check_numeric_treatment(phyloseq_obj,
+      replicate_samples <- check_index_treatment(phyloseq_obj,
                                                    replicate_samples)
     }
     if (replicate_samples != 'independent' &

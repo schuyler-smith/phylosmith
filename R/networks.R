@@ -51,7 +51,7 @@ network_ps <-
           information",
          call. = FALSE)
   }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
   if (!(is.null(treatment)) &
       any(!(treatment %in% colnames(access(
         phyloseq_obj, 'sam_data'
@@ -268,7 +268,7 @@ co_occurrence_network <- function(phyloseq_obj,
     stop("`buffer` must be a numeric value >= 0", call.
          = FALSE)
   }
-  classification <- check_numeric_classification(phyloseq_obj,
+  classification <- check_index_classification(phyloseq_obj,
                                                  classification)
   if (!(is.null(classification)) &
       any(!(classification %in% colnames(access(

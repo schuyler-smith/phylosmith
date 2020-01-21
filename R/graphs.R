@@ -48,8 +48,8 @@ abundance_heatmap <-
       stop("`phyloseq_obj` must be a
         phyloseq-class object", call. = FALSE)
     }
-    classification <- check_numeric_classification(phyloseq_obj,
-                                                   classification)
+    classification <- check_index_classification(phyloseq_obj,
+                                                 classification)
     if (!(is.null(classification)) &
         is.null(access(phyloseq_obj, 'tax_table'))) {
       stop(
@@ -71,7 +71,7 @@ abundance_heatmap <-
         sample_data() information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -264,8 +264,8 @@ abundance_lines <-
       stop("`phyloseq_obj` must be a
         phyloseq-class object", call. = FALSE)
     }
-    classification <- check_numeric_classification(phyloseq_obj,
-                                                   classification)
+    classification <- check_index_classification(phyloseq_obj,
+                                                 classification)
     if (!(is.null(classification)) &
         is.null(access(phyloseq_obj, 'tax_table'))) {
       stop(
@@ -287,7 +287,7 @@ abundance_lines <-
         sample_data() information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -437,7 +437,7 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
   }
   indices <- c("shannon", "simpson", "invsimpson")
   index <- match.arg(index, indices)
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
   treatment_name <- paste(treatment, collapse = sep)
@@ -533,7 +533,7 @@ nmds_phyloseq <-
         sample_data() information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -548,7 +548,7 @@ nmds_phyloseq <-
       stop("`circle` must be either `TRUE`, `FALSE`, or a confidence interval",
            call. = FALSE)
     }
-    labels <- check_numeric_treatment(phyloseq_obj, labels)
+    labels <- check_index_treatment(phyloseq_obj, labels)
     if (!(is.null(labels)) &
         any(!(labels %in% colnames(access(
           phyloseq_obj,
@@ -725,7 +725,7 @@ phylogeny_profile <-
         sample_data() information",
            call. = FALSE)
     }
-    classification <- check_numeric_classification(phyloseq_obj,
+    classification <- check_index_classification(phyloseq_obj,
                                                    classification)
     if (!(is.null(classification)) &
         is.null(access(phyloseq_obj, 'tax_table'))) {
@@ -741,7 +741,7 @@ phylogeny_profile <-
         the the tax_table()",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -920,7 +920,7 @@ taxa_abundance_bars <-
         sample_data() information",
            call. = FALSE)
     }
-    classification <- check_numeric_classification(phyloseq_obj,
+    classification <- check_index_classification(phyloseq_obj,
                                                    classification)
     if (!(is.null(classification)) &
         is.null(access(phyloseq_obj, 'tax_table'))) {
@@ -936,8 +936,8 @@ taxa_abundance_bars <-
         the the tax_table()",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
-    wrap_by <- check_numeric_treatment(phyloseq_obj, wrap_by)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
+    wrap_by <- check_index_treatment(phyloseq_obj, wrap_by)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -1274,7 +1274,7 @@ tsne_phyloseq <-
         sample_data() information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -1293,7 +1293,7 @@ tsne_phyloseq <-
       stop("`circle` must be either `TRUE`, `FALSE`, or a confidence interval",
            call. = FALSE)
     }
-    labels <- check_numeric_treatment(phyloseq_obj, labels)
+    labels <- check_index_treatment(phyloseq_obj, labels)
     if (!(is.null(labels)) & any(!(labels %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -1453,7 +1453,7 @@ pcoa_phyloseq <- function(phyloseq_obj,
                           colors = 'default',
                           labels = NULL){
 
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
   if (any(!(treatment %in% colnames(access(phyloseq_obj, "sam_data"))))) {
     stop("`treatment` must be at least one column\n        name, or index, from the sample_data()",
          call. = FALSE)
@@ -1463,7 +1463,7 @@ pcoa_phyloseq <- function(phyloseq_obj,
     stop("`circle` must be either `TRUE`, `FALSE`, or a confidence interval",
          call. = FALSE)
   }
-  labels <- check_numeric_treatment(phyloseq_obj, labels)
+  labels <- check_index_treatment(phyloseq_obj, labels)
   if (!(is.null(labels)) & any(!(labels %in% colnames(access(phyloseq_obj,
                                                              "sam_data"))))) {
     stop("`labels` must be a column name, or\n        index, from the sample_data()",

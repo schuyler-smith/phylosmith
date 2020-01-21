@@ -54,7 +54,7 @@ variable_correlation <-
           information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (!(is.null(treatment)) &
         any(!(treatment %in% colnames(access(
           phyloseq_obj, 'sam_data'
@@ -66,7 +66,7 @@ variable_correlation <-
       )
     }
     tryCatch({
-      variables <- check_numeric_treatment(phyloseq_obj, variables)
+      variables <- check_index_treatment(phyloseq_obj, variables)
     }, error = function(e){
       stop(
         "`variables` must be at least one column name, or index, from the sample_data() that contains numeric data.",

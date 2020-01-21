@@ -40,7 +40,7 @@ common_taxa <-
         information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -143,7 +143,7 @@ taxa_proportions <-
         information",
            call. = FALSE)
     }
-    classification <- check_numeric_classification(phyloseq_obj,
+    classification <- check_index_classification(phyloseq_obj,
                                                    classification)
     if (any(!(classification %in% colnames(access(
       phyloseq_obj, 'tax_table'
@@ -258,7 +258,7 @@ taxa_core <-
             information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (!(is.null(treatment)) &
         any(!(treatment %in% colnames(access(
           phyloseq_obj, 'sam_data'
@@ -338,7 +338,7 @@ unique_taxa <- function(phyloseq_obj, treatment, subset = NULL) {
         information",
          call. = FALSE)
   }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
   if (any(!(treatment %in% colnames(access(
     phyloseq_obj, 'sam_data'
   ))))) {

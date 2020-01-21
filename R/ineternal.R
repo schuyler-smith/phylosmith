@@ -2,19 +2,20 @@
 #'
 #' Converts numeric values to column names in sample_data.
 #' @useDynLib phylosmith
-#' @usage check_numeric_treatment(phyloseq_obj, ...)
+#' @usage check_index_treatment(phyloseq_obj, columns)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param ... Column name as a \code{string} or \code{numeric} in the
+#' @param columns Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be any number of
 #' multiple columns and they will be combined into a new column.
 #' @return string
 
-check_numeric_treatment <- function(phyloseq_obj, ...) {
-  treatments <- list(...)
+check_index_treatment <- function(phyloseq_obj, columns) {
+  argument <- deparse(substitute(columns))
+  treatments <- list(columns)
   if (any(unlist(lapply(treatments, is.null))) |
       any(unlist(lapply(treatments, is.na)))) {
     return(NULL)
@@ -28,7 +29,7 @@ check_numeric_treatment <- function(phyloseq_obj, ...) {
       ))
     }, error = function(e) {
       stop(
-        "`treatment` must be at least one column name, or index, from the sample_data()",
+        paste("{",argument,"}","must be at least one column name, or index, from the sample_data()"),
         call. = FALSE
       )
     }))
@@ -39,19 +40,20 @@ check_numeric_treatment <- function(phyloseq_obj, ...) {
 #'
 #' Converts numeric values to column names in tax_table.
 #' @useDynLib phylosmith
-#' @usage check_numeric_classification(phyloseq_obj, ...)
+#' @usage check_index_classification(phyloseq_obj, columns)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param ... Column name as a \code{string} or \code{numeric} in the
+#' @param columns Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to conglomerate
 #' by.
 #' @return string
 
-check_numeric_classification <- function(phyloseq_obj, ...) {
-  classifications <- list(...)
+check_index_classification <- function(phyloseq_obj, columns) {
+  argument <- deparse(substitute(columns))
+  classifications <- list(columns)
   if (any(unlist(lapply(classifications, is.null))) |
       any(unlist(lapply(classifications, is.na)))) {
     return(NULL)
@@ -65,7 +67,7 @@ check_numeric_classification <- function(phyloseq_obj, ...) {
       ))
     }, error = function(e) {
       stop(
-        "taxa_filter(): `classification` must be at least one column name, or index, from the tax_table()",
+        paste("{",argument,"}","must be at least one column name, or index, from the tax_table()"),
         call. = FALSE
       )
     }))
@@ -92,29 +94,12 @@ check_numeric_classification <- function(phyloseq_obj, ...) {
 create_palette <- function(color_count, colors = 'default') {
   options(warn = -1)
   mycolors <- c(
-    "#A8B1CC",
-    "#E69F00",
-    "#56B4E9",
-    "#009E73",
-    "#F0E442",
-    "#0072B2",
-    "#D55E00",
-    "#9EDA8F",
-    "#CC79A7",
-    "#757575",
-    "#DE9861",
-    "#A6CBE0",
-    "#B275D8",
-    "#82BB47",
-    "#e0503a",
-    "#F5E56C",
-    "#949696",
-    "#4989DE",
-    "#E2E2E2",
-    "#565656",
-    "#F7B04C",
-    "#696bb2"
-  )
+    "#757575", "#E69F00", "#56B4E9", "#009E73",
+    "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#9EDA8F", "#DE9861","#565656",  "#A6CBE0",
+    "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
+    "#949696", "#4989DE", "#E2E2E2",
+    "#F7B04C", "#696bb2")
   # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
   if (any(colors == 'default')) {
     colors <- mycolors

@@ -42,7 +42,7 @@ conglomerate_samples <-
         sample_data() information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -52,7 +52,7 @@ conglomerate_samples <-
         call. = FALSE
       )
     }
-    merge_on <- check_numeric_treatment(phyloseq_obj, merge_on)
+    merge_on <- check_index_treatment(phyloseq_obj, merge_on)
     if (any(!(merge_on %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -251,7 +251,7 @@ conglomerate_taxa <- function(phyloseq_obj,
         information",
          call. = FALSE)
   }
-  classification <- check_numeric_classification(phyloseq_obj,
+  classification <- check_index_classification(phyloseq_obj,
                                                  classification)
   if (any(!(classification %in% colnames(access(
     phyloseq_obj, 'tax_table'
@@ -397,18 +397,18 @@ melt_phyloseq <- function(phyloseq_obj) {
 #' object \code{\link[phyloseq:sample_data]{sample_data}} into a
 #' single-variable column.
 #' @useDynLib phylosmith
-#' @usage merge_treatments(phyloseq_obj, ...)
+#' @usage merge_treatments(phyloseq_obj, merge_treatments)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample.
-#' @param ... any number of column names as \code{string}s or \code{numeric}s
+#' @param merge_treatments A vector of any number of column names as \code{string}s or \code{numeric}s
 #' in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be
 #' combined.
 #' @export
 #' @return phyloseq-object
-#' @examples merge_treatments(soil_column, 'Matrix', 'Treatment', 'Day')
+#' @examples merge_treatments(soil_column, c('Matrix', 'Treatment', 'Day'))
 
-merge_treatments <- function(phyloseq_obj, ...) {
+merge_treatments <- function(phyloseq_obj, merge_treatments) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
     stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -418,7 +418,7 @@ merge_treatments <- function(phyloseq_obj, ...) {
         information",
          call. = FALSE)
   }
-  treatments <- check_numeric_treatment(phyloseq_obj, ...)
+  treatments <- check_index_treatment(phyloseq_obj, merge_treatments)
   if (any(!(treatments %in% colnames(access(
     phyloseq_obj, 'sam_data'
   ))))) {
@@ -554,7 +554,7 @@ set_sample_order <- function(phyloseq_obj, sort_on) {
   metadata <- as(access(phyloseq_obj, 'sam_data'), 'data.frame')
   metadata <- data.table(samples = rownames(metadata), metadata)
   if (length(sort_on) < nsamples(phyloseq_obj)) {
-    sort_on <- check_numeric_treatment(phyloseq_obj, sort_on)
+    sort_on <- check_index_treatment(phyloseq_obj, sort_on)
     if (any(!(sort_on %in% colnames(access(
       phyloseq_obj, 'sam_data'
     ))))) {
@@ -634,7 +634,7 @@ set_treatment_levels <- function(phyloseq_obj, treatment, order) {
         information",
          call. = FALSE)
   }
-  treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
   if (length(treatment) > 1 |
       !(treatment %in% colnames(access(phyloseq_obj, 'sam_data')))) {
     stop("`treatment` must be a single column name,
@@ -699,7 +699,7 @@ taxa_filter <-
             information",
            call. = FALSE)
     }
-    treatment <- check_numeric_treatment(phyloseq_obj, treatment)
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (!(is.null(treatment)) &
         any(!(treatment %in% colnames(access(
           phyloseq_obj, 'sam_data'

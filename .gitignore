@@ -35,5 +35,4 @@ build
 src-i386/
 src-x64/
 phylosmith*.tar.gz
-configure.ac
 */*_cache
