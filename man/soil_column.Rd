@@ -4,7 +4,9 @@
 \name{soil_column}
 \alias{soil_column}
 \title{Soil Column 16S Data - OTUs}
-\format{A \code{\link[phyloseq]{phyloseq-class}} object.}
+\format{
+A \code{\link[phyloseq]{phyloseq-class}} object.
+}
 \source{
 Experiment
 }

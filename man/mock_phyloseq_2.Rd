@@ -4,7 +4,9 @@
 \name{mock_phyloseq_2}
 \alias{mock_phyloseq_2}
 \title{Mock Phyloseq Object 2}
-\format{A \code{\link[phyloseq]{phyloseq-class}} object.}
+\format{
+A \code{\link[phyloseq]{phyloseq-class}} object.
+}
 \source{
 Simulation
 }

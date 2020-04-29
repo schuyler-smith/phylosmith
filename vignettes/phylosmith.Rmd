@@ -7,7 +7,6 @@ output:
 vignette: >
     %\VignetteIndexEntry{phylosmith}
     %\VignetteEngine{knitr::rmarkdown}
-    \usepackage[utf8]{inputenc}
 ---
 # `phylosmith` 
 
@@ -87,8 +86,8 @@ examples of how the functions worked.
 Then I decided that I should include a real example of microbiome data 
 (`soil_column`) because it's always nice to see real examples. 
 `soil_column` is a <a href="https://www.frontiersin.org/
-articles/10.3389/fmicb.2018.03197/full" target="_blank" 
->published dataset</a>  from my lab-group. The data is from an experiment 
+articles/10.3389/fmicb.2018.03197/full" target="_blank">published dataset</a> 
+from my lab-group. The data is from an experiment 
 where they looked at the microbial composition of farmland soil before and 
 after manure application, over time, using 16S-sequencing.
 
