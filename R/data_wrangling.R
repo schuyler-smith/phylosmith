@@ -571,12 +571,13 @@ set_sample_order <- function(phyloseq_obj, sort_on) {
   } else {
     if (is.character(sort_on)) {
       if (!(any(sort_on %in% sample_names(phyloseq_obj)))) {
-        stop(
-          "`sort_on` must be at least one column
-        name, or index, from the sample_data(), or a vector of a set
-        order of sample names or indices",
-          call. = FALSE
-        )
+        stop("`sort_on` must be at least one column\n        name, or index, from the sample_data(), or a vector of a set\n        order of sample names or indices", 
+             call. = FALSE)
+      }
+      metadata <- metadata[match(sort_on, metadata$samples), ]
+    } else {
+      if (is.numeric(sort_on)){
+        metadata <- metadata[sort_on, ]
       }
     }
   }
