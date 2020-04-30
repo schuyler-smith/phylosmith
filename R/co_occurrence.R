@@ -511,7 +511,7 @@ histogram_permuted_rhos <- function(permuted_rhos,
       legend.background = element_rect(fill = (alpha = 0)),
       legend.spacing.x = unit(0.01, 'npc')
     ) +
-    scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
+    scale_y_continuous(expand = expansion(mult = c(0.0025, 0.002)))
   return(g)
 }
 

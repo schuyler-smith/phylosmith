@@ -200,7 +200,7 @@ abundance_heatmap <-
         strip.text.x = element_text(size = 10, face = 'bold'),
         strip.background = element_rect(colour = 'black', size = 1.4)
       ) +
-      scale_x_discrete(expand = expand_scale(mult = 0, add = .53)) +
+      scale_x_discrete(expand = expansion(mult = 0, add = .53)) +
       if (colors == 'default') {
         scale_fill_viridis()
       } else {
@@ -397,8 +397,8 @@ abundance_lines <-
           fill = 'white'
         )
       ) +
-      scale_y_continuous(expand = expand_scale(mult = c(0, 0.003), add = c(0.0015, 0.001))) +
-      scale_x_discrete(expand = expand_scale(mult = 0, add = c(0.3, 0.5)))
+      scale_y_continuous(expand = expansion(mult = c(0, 0.003), add = c(0.0015, 0.001))) +
+      scale_x_discrete(expand = expansion(mult = 0, add = c(0.3, 0.5)))
     return(g)
   }
 
@@ -857,8 +857,8 @@ phylogeny_profile <-
         strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white'),
         panel.grid.major.x = element_blank()
       ) +
-      scale_y_continuous(expand = expand_scale(mult = c(0.0037, 0.003), add = c(0, 0))) +
-      scale_x_discrete(expand = expand_scale(mult = 0, add = 0.51))
+      scale_y_continuous(expand = expansion(mult = c(0.0037, 0.003), add = c(0, 0))) +
+      scale_x_discrete(expand = expansion(mult = 0, add = 0.51))
     if(grid){
       g <- g + facet_wrap(reformulate(treatment_name), scales = "free") + theme(axis.text.x = element_blank())
     }
@@ -1068,7 +1068,7 @@ taxa_abundance_bars <-
         strip.text.x = element_text(size = 10, face = 'bold', color = 'black'),
         strip.background = element_rect(colour = 'black', size = 1.4, fill = 'white')
       ) +
-      scale_y_continuous(expand = expand_scale(mult = c(0.0025, 0.002)))
+      scale_y_continuous(expand = expansion(mult = c(0.0025, 0.002)))
     if(!is.null(wrap_by)){
       g <- g + facet_wrap(reformulate(wrap_by))
     }
@@ -1212,8 +1212,8 @@ taxa_core_graph <-
         )
       ) +
       labs(x = 'Relative Abundance', y = 'Number of OTUs', color = 'Proportion\nof Samples') +
-      scale_y_continuous(expand = expand_scale(add = c(0.3, 0.5))) +
-      scale_x_continuous(expand = expand_scale(add = c(0.0005, 0.001)))
+      scale_y_continuous(expand = expansion(add = c(0.3, 0.5))) +
+      scale_x_continuous(expand = expansion(add = c(0.0005, 0.001)))
     if(!is.null(treatment)){
       g <- g + facet_wrap(~treatment, ncol = 3, dir = 'v')
     }
@@ -1620,7 +1620,7 @@ variable_correlation_heatmap <-
         strip.text.x = element_text(size = 10, face = 'bold'),
         strip.background = element_rect(colour = 'black', size = 1.4)
       ) +
-      scale_x_discrete(expand = expand_scale(mult = 0, add = 0))
+      scale_x_discrete(expand = expansion(mult = 0, add = 0))
     return(g)
   }
 
