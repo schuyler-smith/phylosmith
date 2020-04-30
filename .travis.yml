@@ -47,3 +47,5 @@ r_packages:
   - rgeos
   - Rcpp
   - RcppArmadillo
+
+warnings_are_errors: false
