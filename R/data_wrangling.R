@@ -354,6 +354,7 @@ conglomerate_taxa <- function(phyloseq_obj,
 #' @examples melt_phyloseq(soil_column)
 
 melt_phyloseq <- function(phyloseq_obj) {
+  options(warn = -1)
   if (!(inherits(phyloseq_obj, "phyloseq") | inherits(phyloseq_obj, "otu_table"))) {
     stop("`phyloseq_obj` must be a phyloseq-class object or otu_table to melt",
          call. = FALSE)
@@ -571,7 +572,7 @@ set_sample_order <- function(phyloseq_obj, sort_on) {
   } else {
     if (is.character(sort_on)) {
       if (!(any(sort_on %in% sample_names(phyloseq_obj)))) {
-        stop("`sort_on` must be at least one column\n        name, or index, from the sample_data(), or a vector of a set\n        order of sample names or indices", 
+        stop("`sort_on` must be at least one column\n        name, or index, from the sample_data(), or a vector of a set\n        order of sample names or indices",
              call. = FALSE)
       }
       metadata <- metadata[match(sort_on, metadata$samples), ]
