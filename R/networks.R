@@ -458,8 +458,6 @@ co_occurrence_network <- function(phyloseq_obj,
 #' @importFrom ggraph ggraph create_layout theme_graph geom_edge_link
 #' @export
 #' @return ggplot-object
-#' @examples #variable_correlation_network(soil_column, 'Day', 'Phylum', c('Matrix','Treatment'),
-#' #'Soil Amended')
 
 variable_correlation_network <- function(
   phyloseq_obj,

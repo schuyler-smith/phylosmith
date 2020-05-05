@@ -59,7 +59,3 @@ creates a network from the co-occurrence. The co-occurrence can either be
 input, or it will be calculated with the Spearman-rank correlation. Also,
 the layout of the graph can be given as an argument as well for reproducibility.
 }
-\examples{
-variable_correlation_network(soil_column, 'Day', 'Phylum', c('Matrix','Treatment'),
-'Soil Amended')
-}
