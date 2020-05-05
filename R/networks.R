@@ -458,8 +458,8 @@ co_occurrence_network <- function(phyloseq_obj,
 #' @importFrom ggraph ggraph create_layout theme_graph geom_edge_link
 #' @export
 #' @return ggplot-object
-#' @examples variable_correlation_network(soil_column, 'Day', 'Class', c('Matrix','Treatment'),
-#' 'Soil Amended')
+#' @examples #variable_correlation_network(soil_column, 'Day', 'Phylum', c('Matrix','Treatment'),
+#' #'Soil Amended')
 
 variable_correlation_network <- function(
   phyloseq_obj,
@@ -498,7 +498,8 @@ variable_correlation_network <- function(
          call. = FALSE)
   }
   if(is.null(correlation_table[['Treatment']])){
-    correlation_table <- cbind(correlation_table, Treatment = 'NA')}
+    correlation_table <- cbind(correlation_table, Treatment = 'NA')
+  }
   correlation_table <- correlation_table[, c('X', 'Y', 'Treatment', 'rho', 'p')]
   colnames(correlation_table)[colnames(correlation_table)
                               == 'rho'] <- 'weight'
@@ -534,48 +535,37 @@ variable_correlation_network <- function(
   layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
 
   edge_colors <- negative_positive_colors[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
-  node_colors <- dcast.data.table(correlation_table, X ~ Y, value.var = 'weight')
-  node_colors[is.na(node_colors)] <- 0
-  node_colors <- apply(node_colors[,-1], 1,FUN=function(x) paste(rev(variables[variables %in% colnames(node_colors)])[x>0], collapse = '_'))
-  vars <- factor(c(node_colors, variables),
-                 levels = c(variables, unique(node_colors[!(node_colors %in% variables)])))
-  node_colors <- create_palette(length(levels(vars)))[vars]
-  node_sizes <- rep(5, length(names(igraph::V(net))))
-  node_sizes[names(igraph::V(net)) %in% variables] <- 15
-  node_sizes[names(igraph::V(net)) %in% correlation_table[['Y']]] <- 20
 
-  variables_layout <- subset(layout, apply(layout, 1, function(class) {
-    any(class %in% variables)
-  }))
+  node_sizes <- rep(15, length(variables))
+  node_sizes[names(node_sizes) %in% correlation_table[["Y"]]] <- 20
+
+  variables_layout <- subset(layout, layout[,classification] %in% variables)
 
   g <- ggraph(layout) + theme_graph() + coord_fixed() +
-    geom_edge_link(width = 0.8, color = edge_colors) +
-    guides(colour = FALSE,
-           alpha = FALSE,
-           fill = guide_legend(ncol = ceiling(length(levels(
-             layout[[classification]]
-           )) / 25)), override.aes = list(size = 4)) +
-    geom_point(
-      aes_string(x = 'x', y = 'y'),
-      pch = 21,
-      color = 'black',
-      fill = node_colors,
-      size = node_sizes
-    ) + theme(
-      legend.text = element_text(size = 8),
-      legend.title = element_text(size = 10, face = 'bold'),
-      legend.key.size = unit(4, "mm"),
-      legend.spacing.x = unit(0.005, 'npc')
-    )
-  g <- g + geom_label(data = variables_layout, aes_string(x = 'x', y = 'y'),
-                      label = unname(apply(variables_layout, 1, function(x) {
-                        x[which(x %in% variables)]
-                      }))[1,],
-                      size = 3,
-                      alpha = 0,
-                      label.size = 0,
-                      fontface = "bold",
-                      show.legend = FALSE
-  )
+    geom_edge_link(width = 0.8, color = edge_colors)
+
+  layout <- subset(layout, !(layout[,classification] %in% variables))
+
+  g <- g + geom_point(data = layout,
+                      aes_string(x = "x", y = "y", fill = classification),
+                      pch = 21, color = "black",
+                      size = 5, show.legend = TRUE) +
+    theme(legend.text = element_text(size = 8),
+          legend.title = element_text(size = 10, face = "bold"),
+          legend.key.size = unit(4, "mm"), legend.spacing.x = unit(0.005,"npc")) +
+    scale_fill_manual(values = create_palette(length(unique(layout[,classification])))) +
+    guides(fill = guide_legend(ncol = ceiling(length(unique(layout[[classification]]))/25), override.aes = list(size=4)))
+
+  g <- g + geom_point(data = variables_layout,
+                      aes_string(x = "x", y = "y"),
+                      pch = 21, color = "black",
+                      size = 20, show.legend = FALSE, fill = create_palette(length(variables)))
+
+  g <- g + geom_label(data = variables_layout,
+                      aes_string(x = "x", y = "y"),
+                      label = unname(apply(variables_layout, 1,
+                                           function(x) {x[which(x %in% variables)] }))[1, ],
+                      size = 3, alpha = 0, label.size = 0, fontface = "bold",
+                      show.legend = FALSE)
   return(g)
 }
