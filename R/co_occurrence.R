@@ -90,7 +90,7 @@ co_occurrence <-
     phyloseq_obj <-
       taxa_filter(phyloseq_obj, treatment = treatment, subset = subset)
     treatment_name <- paste(treatment, collapse = sep)
-    phyloseq_obj <- relative_abundance(phyloseq_obj)
+ #   phyloseq_obj <- relative_abundance(phyloseq_obj)
 
     treatment_classes <- as.character(unique(access(phyloseq_obj,
                                                     'sam_data')[[treatment_name]]))
@@ -260,7 +260,7 @@ permute_rho <-
       )
     }
     rhos <- data.table()
-    phyloseq_obj <- relative_abundance(phyloseq_obj)
+ #   phyloseq_obj <- relative_abundance(phyloseq_obj)
     permuted_counts <- as(phyloseq_obj@otu_table, 'matrix')
     tryCatch({
       for (j in seq(permutations)){
