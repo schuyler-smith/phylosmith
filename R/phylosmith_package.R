@@ -19,7 +19,11 @@ NA
 
 # load('R/sysdata.rda')
 # sep = '_'
-# save(sep, file = 'R/sysdata.rda')
+# methods = c("euclidian", "manhattan", "canberra", "bray",
+#             "kulczynski", "gower", "morisita", "horn", "mountford",
+#             "jaccard", "raup", "binomial", "chao", "altGower", "cao",
+#             "mahalanobis", "clark")
+# save(sep, methods, file = 'R/sysdata.rda')
 
 
 

@@ -5,7 +5,7 @@
 \title{Create a ggplot object using t-SNE from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10,
+tsne_phyloseq(phyloseq_obj, treatment, method = 'bray', perplexity = 10,
 circle = TRUE, labels = NULL, colors = 'default')
 }
 \arguments{
@@ -18,6 +18,11 @@ taxa/gene.}
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
+
+\item{method}{the distance measurement algorithm to use, match to
+"euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+"jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+"binomial", "chao", "cao" or "mahalanobis".}
 
 \item{perplexity}{similar to selecting the number of neighbors to consider
 in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1,

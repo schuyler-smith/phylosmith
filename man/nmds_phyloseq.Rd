@@ -5,7 +5,7 @@
 \title{Create a ggplot object of the NMDS from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-nmds_phyloseq(phyloseq_obj, treatment, circle = 0.95,
+nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', circle = 0.95,
 labels = NULL, colors = 'default', verbose = TRUE)
 }
 \arguments{
@@ -18,6 +18,11 @@ taxa/gene.}
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
+
+\item{method}{the distance measurement algorithm to use, match to
+"euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+"jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+"binomial", "chao", "cao" or "mahalanobis".}
 
 \item{circle}{If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,

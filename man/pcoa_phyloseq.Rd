@@ -23,7 +23,10 @@ multiple columns and they will be combined into a new column.}
 
 \item{y}{the numerical principle compenent to use as the y-axis}
 
-\item{method}{the distance measurement algorithm to use}
+\item{method}{the distance measurement algorithm to use, match to
+"euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+"jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+"binomial", "chao", "cao" or "mahalanobis".}
 
 \item{circle}{If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,

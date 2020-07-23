@@ -488,7 +488,7 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' plots the NMDS of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq(phyloseq_obj, treatment, circle = 0.95,
+#' @usage nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', circle = 0.95,
 #' labels = NULL, colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -498,6 +498,10 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
+#' @param method the distance measurement algorithm to use, match to
+#' "euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+#' "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+#' "binomial", "chao", "cao" or "mahalanobis".
 #' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 #' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
 #' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
@@ -520,6 +524,7 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
 nmds_phyloseq <-
   function(phyloseq_obj,
            treatment,
+           method = 'bray',
            circle = 0.95,
            labels = NULL,
            colors = 'default',
@@ -562,6 +567,7 @@ nmds_phyloseq <-
       stop("`verbose` must be either `TRUE`, or
         `FALSE`", call. = FALSE)
     }
+    match.arg(method, methods)
     options(warn = -1)
     phyloseq_obj <-
       taxa_filter(phyloseq_obj, treatment, frequency = 0)
@@ -575,7 +581,7 @@ nmds_phyloseq <-
       metaMDS(
         t(otu_matrix),
         autotransform = FALSE,
-        distance = "bray",
+        distance = method,
         k = 3,
         trymax = 100,
         trace = verbose
@@ -1227,7 +1233,7 @@ taxa_core_graph <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object to plot the t-SNE of a
 #' treatment or set of treatments.
 #' @useDynLib phylosmith
-#' @usage tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10,
+#' @usage tsne_phyloseq(phyloseq_obj, treatment, method = 'bray', perplexity = 10,
 #' circle = TRUE, labels = NULL, colors = 'default')
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -1237,6 +1243,10 @@ taxa_core_graph <-
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
+#' @param method the distance measurement algorithm to use, match to
+#' "euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+#' "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+#' "binomial", "chao", "cao" or "mahalanobis".
 #' @param perplexity similar to selecting the number of neighbors to consider
 #' in decision making (should not be bigger than 3 * perplexity < nrow(X) - 1,
 #' see \code{\link[=Rtsne]{Rtsne}} for interpretation)
@@ -1261,6 +1271,7 @@ taxa_core_graph <-
 tsne_phyloseq <-
   function (phyloseq_obj,
             treatment,
+            method = 'bray',
             perplexity = 10,
             circle = TRUE,
             labels = NULL,
@@ -1301,6 +1312,7 @@ tsne_phyloseq <-
         index, from the sample_data()",
            call. = FALSE)
     }
+    match.arg(method, methods)
     options(warn = -1)
     phyloseq_obj <-
       taxa_filter(phyloseq_obj, treatment, frequency = 0)
@@ -1313,7 +1325,7 @@ tsne_phyloseq <-
       vegdist(t(access(
         phyloseq_obj, 'otu_table'
       )),
-      method = 'bray'),
+      method = method),
       dims = 2,
       theta = 0.0,
       perplexity = perplexity
@@ -1426,7 +1438,10 @@ tsne_phyloseq <-
 #' multiple columns and they will be combined into a new column.
 #' @param x the numerical principle compenent to use as the x-axis
 #' @param y the numerical principle compenent to use as the y-axis
-#' @param method the distance measurement algorithm to use
+#' @param method the distance measurement algorithm to use, match to
+#' "euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
+#' "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
+#' "binomial", "chao", "cao" or "mahalanobis".
 #' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 #' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
 #' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
@@ -1470,10 +1485,7 @@ pcoa_phyloseq <- function(phyloseq_obj,
          call. = FALSE)
   }
 
-  match.arg(method, c("manhattan", "euclidean", "canberra", "bray",
-       "kulczynski", "gower", "morisita", "horn", "mountford",
-       "jaccard", "raup", "binomial", "chao", "altGower", "cao",
-       "mahalanobis", "clark"))
+  match.arg(method, methods)
 
   phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, frequency = 0)
   phyloseq_obj <- relative_abundance(phyloseq_obj)

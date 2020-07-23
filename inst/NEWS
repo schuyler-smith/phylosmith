@@ -17,3 +17,7 @@ Changes in version 1.0.4
 + Update routines for co-occurrence
 + Add PCoA
 + Add variable correlations
+
+Changes in version 1.0.5
++ Add checks to force taxa_are_rows = TRUE
++ Add methods for all ordinations

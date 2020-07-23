@@ -359,6 +359,7 @@ melt_phyloseq <- function(phyloseq_obj) {
     stop("`phyloseq_obj` must be a phyloseq-class object or otu_table to melt",
          call. = FALSE)
   }
+  phyloseq_obj <- check_TaR(phyloseq_obj)
   melted_phyloseq <-
     melt.data.table(data.table(as(
       access(phyloseq_obj,
@@ -486,6 +487,7 @@ relative_abundance <- function(phyloseq_obj) {
     stop("`phyloseq_obj` must be a phyloseq-class
             object", call. = FALSE)
   }
+  phyloseq_obj <- check_TaR(phyloseq_obj)
   abundance_table <- access(phyloseq_obj, 'otu_table')
   abundance_table <-
     apply(
@@ -725,6 +727,7 @@ taxa_filter <-
       stop("`drop_samples` must be either `TRUE` or `FALSE`",
            call. = FALSE)
     }
+    phyloseq_obj <- check_TaR(phyloseq_obj)
     if (!(is.null(treatment))) {
       phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
       treatment_name <- paste(treatment, collapse = sep)

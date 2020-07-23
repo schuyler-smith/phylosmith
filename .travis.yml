@@ -17,6 +17,7 @@ addons:
    packages:
      - libudunits2-dev # required for units, required for ggforce, required for ggraph
      - libgdal-dev # required for sf
+     - devscripts #required for configure/cleanup
 env:
   global:
   - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true

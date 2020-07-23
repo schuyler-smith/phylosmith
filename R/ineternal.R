@@ -74,6 +74,25 @@ check_index_classification <- function(phyloseq_obj, columns) {
   }
 }
 
+#' phyloseq object so taxa are rows.
+#'
+#' phyloseq object so taxa are rows.
+#' @useDynLib phylosmith
+#' @usage check_TaR(phyloseq_obj)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @return phyloseq_obj
+
+check_TaR <- function(phyloseq_obj){
+  if(!(attributes(phyloseq_obj@otu_table)$taxa_are_rows)){
+    phyloseq_obj@otu_table <- t(phyloseq_obj@otu_table)
+  }
+  return(phyloseq_obj)
+}
+
 #' Creates color palettes for figures.
 #'
 #' Creates color palettes for figures using the the RColorBrewer, or the default
