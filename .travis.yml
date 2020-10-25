@@ -5,7 +5,6 @@ use_bioc: true
 bioc_required: true
 cache: packages
 sudo: false
-dist: trusty
 os:
   - linux
   - osx
