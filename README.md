@@ -36,7 +36,7 @@ BiocManager::install("phyloseq")
 Additionally, the package imports a number of other packages to use their advanced functions. These packages may install with the phylosmith installation, but it is always best to install independently.
 
 ```
-install.packages(c("devtools", RcppEigen", "RcppParallel", "Rtsne", "ggforce", "units"))
+install.packages(c("devtools", "RcppEigen", "RcppParallel", "Rtsne", "ggforce", "units"))
 ```
 
 ## phylosmith
