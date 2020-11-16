@@ -484,7 +484,7 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td><code>phyloseq_obj</code></td>
-<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+<td>A <code>phyloseq-class</code> object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
@@ -492,11 +492,11 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 <tr class="even">
 <td><code>merge_on</code></td>
-<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the . This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
+<td>Defines which variable the data is merged according to. This needs to be a column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code>. This can be a <code>vector</code> of multiple columns and they will be combined into a new column.</td>
 </tr>
 </tbody>
 </table>
@@ -687,11 +687,11 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td><code>phyloseq_obj</code></td>
-<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+<td>A <code>phyloseq-class</code> object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
 </tr>
 <tr class="even">
 <td><code>sort_by</code></td>
-<td>Column name as a  or  in the , or vector of sample names or indices in particular order.</td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code>, or vector of sample names or indices in particular order.</td>
 </tr>
 </tbody>
 </table>
@@ -732,7 +732,7 @@ as(set_sample_order(unsorted, sort_on = c(&#39;Treatment&#39;, &#39;Matrix&#39;,
 <tbody>
 <tr class="odd">
 <td><code>phyloseq_obj</code></td>
-<td>A  object. It must contain ) with information about each sample, and it must contain ) with information about each taxa/gene.</td>
+<td>A <code>phyloseq-class</code> object. It must contain <code>sample_data</code> with information about each sample, and it must contain <code>tax_table</code> with information about each taxa/gene.</td>
 </tr>
 <tr class="even">
 <td><code>treatment</code></td>
@@ -797,7 +797,7 @@ levels(ordered_days@sam_data$Day)</code></pre>
 </tr>
 <tr class="odd">
 <td><code>subset</code></td>
-<td>A factor within the . This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on.</td>
 </tr>
 <tr class="even">
 <td><code>frequency</code></td>
@@ -805,11 +805,11 @@ levels(ordered_days@sam_data$Day)</code></pre>
 </tr>
 <tr class="odd">
 <td><code>below</code></td>
-<td>Does frequency define the minimum () or maximum () proportion of samples the taxa is found in.</td>
+<td>Does frequency define the minimum (<code>FALSE</code>) or maximum (<code>TRUE</code>) proportion of samples the taxa is found in.</td>
 </tr>
 <tr class="even">
 <td><code>drop_samples</code></td>
-<td>Should the function remove samples that that are empty after removing taxa filtered by frequency ().</td>
+<td>Should the function remove samples that that are empty after removing taxa filtered by frequency (<code>TRUE</code>).</td>
 </tr>
 </tbody>
 </table>

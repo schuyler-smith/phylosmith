@@ -102,7 +102,7 @@ histogram_permuted_rhos(permuted_rhos, p = 0.05, x_breaks = 0.25, colors = 'defa
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
+`permuted_rhos` | A `data.table` output from `permute_rho`.
 `p` | The significance threshold for setting cutoffs.
 `x_breaks` | What intervals to set the ticks on the x-axis.
 `colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
@@ -134,7 +134,7 @@ quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = TRUE)
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`permuted_rhos` | A \code{data.table} output from \code{\link[=permute_rho]{permute_rho}}.
+`permuted_rhos` | A `data.table` output from `permute_rho`.
 `p` | The significance threshold for setting cutoffs.
 `by_treatment` | Whether to find the rho cutoffs for each treatment individually or for the entire experiment. Suggested to do by treatment first, to see if there is any treatments that are outliers.
 

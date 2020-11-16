@@ -31,10 +31,10 @@ conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatmen
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`phyloseq_obj` |  A `phyloseq-class` object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
 `treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
-`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 
 ***Examples***
 ```{r samples_otu, echo=FALSE}
@@ -188,8 +188,8 @@ set_sample_order(phyloseq_obj, sort_by)
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`sort_by` | Column name as a \code{string} or \code{numeric} in the \code{\link[phyloseq:sample_data]{sample_data}}, or vector of sample names or indices in particular order.
+`phyloseq_obj` | A `phyloseq-class` object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`sort_by` | Column name as a `string` or `numeric` in the `sample_data`, or vector of sample names or indices in particular order.
 
 ***Examples***
 ```{r set_sample_order}
@@ -222,7 +222,7 @@ set_treatment_levels(phyloseq_obj, treatment, order)
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
+`phyloseq_obj` | A `phyloseq-class` object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
 `treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `order` | The order of factors in `treatment` column as a `vector` of `string`s. If assigned "numeric" will set ascending numerical order.
 
@@ -270,10 +270,10 @@ Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
 `treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
+`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 `frequency` | The proportion of samples the taxa is found in.
-`below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.
-`drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (\code{TRUE}).
+`below` | Does frequency define the minimum (`FALSE`) or maximum (`TRUE`) proportion of samples the taxa is found in.
+`drop_samples` | Should the function remove samples that that are empty after removing taxa filtered by frequency (`TRUE`).
 
 ***Examples***
 The `soil_column` data has 18,441 OTUs listed in its `taxa_table`.
