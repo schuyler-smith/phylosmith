@@ -33,7 +33,7 @@ co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, 
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `p` | The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to `p`.
 `cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP 
 
@@ -69,7 +69,7 @@ permute_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutat
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a string or number in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `replicate_samples` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
 `permutations` | Number of iterations to compute.
 `cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.

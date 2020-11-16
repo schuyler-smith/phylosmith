@@ -33,7 +33,7 @@ co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurren
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 `co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
 `classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
@@ -70,7 +70,7 @@ network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset 
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a vector of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
 `co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
 `classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.

@@ -32,7 +32,7 @@ conglomerate_samples(phyloseq_obj, treatment, subset = NULL, merge_on = treatmen
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` |  A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 `merge_on` | Defines which variable the data is merged according to. This needs to be a column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
 
@@ -129,11 +129,12 @@ merge_treatments(phyloseq_obj, ...)
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample.
-`...` | any number of column names as `string`s or `numeric`s in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be combined.
+`...` | any number of column names as `string`s or `numeric`s in the `sample_data` that are to be combined.
+`merge_treatments` | A vector of any number of column names as `string`s or `numeric`s in the `sample_data` that are to be combined.
 
 ***Examples***
 ```{r merge_treatments}
-merge_treatments(soil_column, 'Matrix', 2, 'Day')
+merge_treatments(soil_column, c('Matrix', 'Day'))
 ```
 
 <br>
@@ -222,8 +223,8 @@ set_treatment_levels(phyloseq_obj, treatment, order)
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A \code{\link[phyloseq]{phyloseq-class}} object. It must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with information about each sample, and it must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}.
-`order` | The order of factors in \code{treatment} column as a `vector` of `string`s. If assigned "numeric" will set ascending numerical order.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`order` | The order of factors in `treatment` column as a `vector` of `string`s. If assigned "numeric" will set ascending numerical order.
 
 ***Examples***
 ```{r set_treatment_levels}
@@ -268,7 +269,7 @@ taxa_filter(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0, below 
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 `frequency` | The proportion of samples the taxa is found in.
 `below` | Does frequency define the minimum (\code{FALSE}) or maximum (\code{TRUE}) proportion of samples the taxa is found in.

@@ -32,7 +32,7 @@ common_taxa(phyloseq_obj, treatment = NULL, subset = NULL, n = 'all')
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 `n` | Number of treatment groups that need to share the taxa to be considered a common taxa.
 
@@ -63,7 +63,7 @@ taxa_core(phyloseq_obj, treatment = NULL, subset = NULL, frequency = 0.5, abunda
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the \code{treatment}. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 `frequency` | The proportion of samples the taxa is found in.
 `abundance_threshold` | The minimum relative abundance the taxa is found in for each sample.
@@ -97,7 +97,7 @@ Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
 `classification` | Column name as a `string` or `numeric` in the tax_table for the prportions to be reported on.
-`treatment` | Column name as a `string` or `numeric` in the \code{\link[phyloseq:sample_data]{sample_data}}. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 
 ***Examples***
 ```{r taxa_proportions_treatment}
@@ -133,7 +133,7 @@ unique_taxa(phyloseq_obj, treatment, subset = NULL)
 Call | Description
 -------------------- | ------------------------------------------------------------
 `phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the sample_data. This can be a `vector` of multiple columns and they will be combined into a new column.
+`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
 `subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a `vector` of multiple factors to subset on.
 
 ***Examples***
