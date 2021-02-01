@@ -443,13 +443,16 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
   treatment_name <- paste(treatment, collapse = sep)
 
   alpha <- data.table(as(phyloseq_obj@otu_table, 'matrix'))
-  alpha <- alpha[,lapply(.SD,function(sample) sample/sum(sample))]
+  taxa_total <- rowSums(alpha)
+  for(sample in seq_along(alpha)){
+    set(alpha, j = sample, value = alpha[[sample]]/taxa_total)
+  }
   if (index == "shannon"){
     alpha <- -alpha * log(alpha)
   } else {
     alpha <- alpha * alpha
   }
-  alpha <- alpha[,lapply(.SD, sum, na.rm = TRUE)]
+  alpha <- rowSums(alpha, na.rm = TRUE)
   if (index == "simpson") {
     alpha <- 1 - alpha
   } else if (index == "invsimpson"){
