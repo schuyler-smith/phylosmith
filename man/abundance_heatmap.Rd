@@ -6,8 +6,8 @@
 phyloseq object. Function from the phylosmith-package.}
 \usage{
 abundance_heatmap(phyloseq_obj, classification = NULL,
-treatment, subset = NULL,
-transformation = 'none', colors = 'default')
+treatment, subset = NULL, transformation = 'none', colors = 'default',
+treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -35,6 +35,14 @@ factors to subset on.}
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
+
+\item{treatment_labels}{a vector of names to be used as labels for
+treatments/facets.}
+
+\item{sample_labels}{a vector of names to be used as labels for Samples.}
+
+\item{classification_labels}{a vector of names to be used as labels for the
+taxonomic classifications.}
 }
 \value{
 ggplot-object

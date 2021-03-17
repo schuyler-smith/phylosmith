@@ -7,7 +7,8 @@ abundance and smaple-frequency values.  Function from the phylosmith-package.}
 \usage{
 taxa_core_graph(phyloseq_obj, treatment = NULL, subset = NULL,
 frequencies = seq(0.1, 1, 0.1), abundance_thresholds = seq(0.01, 1, 0.01),
-colors = 'default')
+colors = 'default',
+treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -32,6 +33,14 @@ in for each sample.}
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
 colors.}
+
+\item{treatment_labels}{a vector of names to be used as labels for
+treatments/facets.}
+
+\item{sample_labels}{a vector of names to be used as labels for Samples.}
+
+\item{classification_labels}{a vector of names to be used as labels for the
+taxonomic classifications.}
 }
 \value{
 phyloseq-object

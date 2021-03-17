@@ -7,7 +7,8 @@ Function from the phylosmith-package.}
 \usage{
 phylogeny_profile(phyloseq_obj, classification = NULL,
 treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
-colors = 'default', grid = FALSE)
+colors = 'default', grid = FALSE,
+treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -39,6 +40,14 @@ into relative abundance by sample.}
 colors.}
 
 \item{grid}{Wraps the sub-plots into a grid pattern rather than side-by-side.}
+
+\item{treatment_labels}{a vector of names to be used as labels for
+treatments/facets.}
+
+\item{sample_labels}{a vector of names to be used as labels for Samples.}
+
+\item{classification_labels}{a vector of names to be used as labels for the
+taxonomic classifications.}
 }
 \value{
 ggplot-object

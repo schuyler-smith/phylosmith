@@ -23,6 +23,11 @@ NA
 #             "kulczynski", "gower", "morisita", "horn", "mountford",
 #             "jaccard", "raup", "binomial", "chao", "altGower", "cao",
 #             "mahalanobis", "clark")
+# transformations = c("none",
+#              "relative_abundance", "log", "log10", "log1p", "log2", 
+#              "asn", "atanh", "boxcox", "exp", "identity", "logit", 
+#              "probability", "probit", "reciprocal", "reverse", "sqrt")
+
 # save(sep, methods, file = 'R/sysdata.rda')
 
 

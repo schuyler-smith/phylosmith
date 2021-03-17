@@ -1,3 +1,49 @@
+#' Change names of factors in graph_data to change labels in plot objects
+#'
+#' Change names of factors in graph_data to change labels in plot objects
+#' @useDynLib phylosmith
+#' @usage change_labels(graph_data, treatment = NULL, treatment_labels = NULL,
+#' sample_labels = NULL, classification = NULL, classification_labels = NULL)
+#' @param graph_data A \code{\link[data.table:data.table]{data.table()}}) object
+#' containing the melted phyloseq data.
+#' @param treatment name of the column defined as the treatment.
+#' @param treatment_labels a vector of names to be used as labels for 
+#' treatments/facets.
+#' @param sample_labels a vector of names to be used as labels for Samples.
+#' @param classification name of the column defined as the classification.
+#' @param classification_labels a vector of names to be used as labels for the 
+#' taxonomic classifications.
+#' @import data.table
+#' @return data.table
+
+change_labels <- function(graph_data, 
+                          treatment = NULL,
+                          treatment_labels = NULL,
+                          sample_labels = NULL, 
+                          classification = NULL,
+                          classification_labels = NULL
+                          ) { 
+  if(!is.null(treatment_labels)){
+    set(graph_data, j = treatment,
+        value = factor(treatment_labels[as.numeric(graph_data[[treatment]])], 
+                       levels = treatment_labels)
+    )
+  }
+  if(!is.null(sample_labels)){
+    set(graph_data, j = 'Sample',
+        value = factor(sample_labels[as.numeric(graph_data[['Sample']])], 
+                       levels = sample_labels)
+    )
+  }
+  if(!is.null(classification_labels)){
+    set(graph_data, j = classification,
+        value = factor(classification_labels[as.numeric(graph_data[[classification]])], 
+                       levels = classification_labels)
+    )
+  }
+  return(graph_data)
+}
+
 #' Converts numeric values to column names in sample_data.
 #'
 #' Converts numeric values to column names in sample_data.

@@ -8,7 +8,8 @@ Function from the phylosmith-package.}
 variable_correlation_heatmap(phyloseq_obj, variables,
 treatment = NULL, subset = NULL, classification = NULL,
 method = 'spearman', limits = c(-0.8, 0.8),
-colors = 'default', significance_color = 'white', cores = 1)
+colors = 'default', significance_color = 'white', cores = 1,
+treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
@@ -41,6 +42,14 @@ correlations.}
 \item{cores}{\code{numeric} Number of CPU cores to use for the pair-wise
 permutations. Default (1), (0) uses max cores available. Parallelization not
 available for systems running MacOS without openMP configuration.}
+
+\item{treatment_labels}{a vector of names to be used as labels for
+treatments/facets.}
+
+\item{sample_labels}{a vector of names to be used as labels for Samples.}
+
+\item{classification_labels}{a vector of names to be used as labels for the
+taxonomic classifications.}
 }
 \value{
 data.table

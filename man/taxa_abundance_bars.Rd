@@ -7,7 +7,8 @@ Function from the phylosmith-package.}
 \usage{
 taxa_abundance_bars(phyloseq_obj, classification = NULL,
 treatment, subset = NULL, transformation = 'none', colors = 'default',
-wrap_by = NULL)
+wrap_by = NULL,
+treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -38,6 +39,14 @@ colors.}
 \item{wrap_by}{Column name as a string or number in the
 phyloseq \code{\link[phyloseq:sample_data]{sample_data}} to facet the ggplot
 figure by.}
+
+\item{treatment_labels}{a vector of names to be used as labels for
+treatments/facets.}
+
+\item{sample_labels}{a vector of names to be used as labels for Samples.}
+
+\item{classification_labels}{a vector of names to be used as labels for the
+taxonomic classifications.}
 }
 \value{
 ggplot-object
