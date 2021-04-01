@@ -6,8 +6,6 @@ bioc_required: true
 sudo: false
 os:
   - linux
-  - osx
-osx_image: xcode10.1
 compiler:
   - gcc
   - clang

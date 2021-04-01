@@ -1,8 +1,8 @@
-#' Create a heatmap ggplot object of the abundance table from a
+#' Create a heatmap of the abundance table from a
 #' phyloseq object. Function from the phylosmith-package.
 #'
-#' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
-#' creates heatmaps of the abundances across samples as a ggplot object.
+#' Takes a \code{\link[phyloseq]{phyloseq-class}} object as input and
+#' creates a ggplot-heatmap of the abundances across samples.
 #' The default color choice is the viridis palette, which is supposed to
 #' be both aesthetic for normal and color-blind viewers.
 #' @useDynLib phylosmith
@@ -11,7 +11,7 @@
 #' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-#' information about each sample, and it must contain
+#' information about each sample, and it must contain.
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
 #' each taxa/gene.
 #' @param classification Column name as a string or number in the
@@ -140,12 +140,12 @@ abundance_heatmap <-
 
     }
     graph_data <- melt_phyloseq(graph_data)
-    set(graph_data, j = classification, 
+    set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
             levels = rev(unique(graph_data[[classification]]))))
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
-    set(graph_data, j = 'Sample', 
+    set(graph_data, j = 'Sample',
         value = factor(graph_data[['Sample']],
             levels = rownames(access(phyloseq_obj, 'sam_data'))))
     setkey(graph_data, 'Sample', 'Abundance')
@@ -327,13 +327,13 @@ abundance_lines <-
       )
     }
 
-    graph_data <- data.table(melt_phyloseq(graph_data))
-    set(graph_data, j = classification, 
+    graph_data <- melt_phyloseq(graph_data
+    set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
             levels = rev(unique(graph_data[[classification]]))))
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
-    set(graph_data, j = 'Sample', 
+    set(graph_data, j = 'Sample',
         value = factor(graph_data[['Sample']],
             levels = rownames(access(phyloseq_obj, 'sam_data'))))
     graph_data <- change_labels(graph_data, treatment_name, treatment_labels,
@@ -526,12 +526,12 @@ phylogeny_profile <-
       )
     }
         graph_data <- melt_phyloseq(graph_data)
-    set(graph_data, j = classification, 
+    set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
             levels = rev(unique(graph_data[[classification]]))))
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
-    set(graph_data, j = 'Sample', 
+    set(graph_data, j = 'Sample',
         value = factor(graph_data[['Sample']],
             levels = rownames(access(phyloseq_obj, 'sam_data'))))
     setkey(graph_data, 'Sample', 'Abundance')
@@ -727,7 +727,7 @@ taxa_abundance_bars <-
     }
 
     graph_data <- melt_phyloseq(phyloseq_obj)
-    set(graph_data, j = classification, 
+    set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
             levels = rev(unique(graph_data[[classification]]))))
     if (transformation == 'none') {
@@ -928,7 +928,7 @@ taxa_core_graph <-
           }
         }
       }
-    set(graph_data, j = 'treatment', 
+    set(graph_data, j = 'treatment',
         value = factor(graph_data[['treatment']], levels = treatments))
     }
 
