@@ -14,6 +14,7 @@ Depends:
 Imports:
     phyloseq,
     data.table,
+    RcppParallel,
     parallel,
     stats,
     grDevices,
