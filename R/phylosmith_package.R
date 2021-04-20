@@ -11,9 +11,7 @@
 #' @author Schuyler Smith \email{schuyler.smith@@iastate.edu}
 #' @docType package
 #' @keywords package
-#' @import phyloseq
-#' @import data.table
-#' @import ggplot2
+#' @import phyloseq data.table ggplot2 RcppParallel
 NA
 
 
@@ -24,8 +22,8 @@ NA
 #             "jaccard", "raup", "binomial", "chao", "altGower", "cao",
 #             "mahalanobis", "clark")
 # transformations = c("none",
-#              "relative_abundance", "log", "log10", "log1p", "log2", 
-#              "asn", "atanh", "boxcox", "exp", "identity", "logit", 
+#              "relative_abundance", "log", "log10", "log1p", "log2",
+#              "asn", "atanh", "boxcox", "exp", "identity", "logit",
 #              "probability", "probit", "reciprocal", "reverse", "sqrt")
 
 # save(sep, methods, file = 'R/sysdata.rda')
