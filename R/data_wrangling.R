@@ -251,8 +251,8 @@ conglomerate_taxa <- function(phyloseq_obj,
         information",
          call. = FALSE)
   }
-  classification <- check_index_classification(phyloseq_obj,
-                                                 classification)
+  classification <- phylosmith:::check_index_classification(phyloseq_obj,
+                                                            classification)
   if (any(!(classification %in% colnames(access(
     phyloseq_obj, 'tax_table'
   )))))
@@ -292,36 +292,23 @@ conglomerate_taxa <- function(phyloseq_obj,
                                       'tax_table')[, classification]
   }
   phyloseq_obj@tax_table[is.na(phyloseq_obj@tax_table[, classification]), classification] <- 'Unclassified'
+
   phyloseq_table <- melt_phyloseq(phyloseq_obj)
-  otus <- eval(parse(
-    text = paste0(
-      "dcast(phyloseq_table, with = FALSE, Sample ~ ",
-      paste(colnames(access(
-        phyloseq_obj, 'tax_table'
-      )), collapse = '+'),
-      ", value.var = 'Abundance', fun = sum)"
-    )
-  ))
+  for (j in seq_along(phyloseq_table)) {
+    set(phyloseq_table, i = which(is.na(phyloseq_table[[j]])), j = j, value = 'Unclassified')
+  }
+  otus <- dcast(phyloseq_table, with = FALSE,
+                paste(paste("Sample ~"), paste(colnames(access(phyloseq_obj, 'tax_table')), collapse = '+')),
+                value.var = 'Abundance', fun = sum)
   otus <- as.matrix(otus, rownames = 1)
-  taxa <-
-    eval(parse(
-      text = paste0(
-        "setkey(unique(phyloseq_table[, c('",
-        paste(colnames(access(
-          phyloseq_obj, 'tax_table'
-        )), collapse = "', '"),
-        "')]), ",
-        paste(colnames(access(
-          phyloseq_obj, 'tax_table'
-        )), collapse = ', '),
-        ")"
-      )
-    ))
+  taxa <- setkeyv(unique(phyloseq_table[, colnames(access(phyloseq_obj, 'tax_table')), with=FALSE]),
+                  colnames(access(phyloseq_obj, 'tax_table')))
   taxa <-
     as.matrix(taxa, rownames = unlist(taxa[, .(col_test = do.call(paste, c(.SD, sep = "_")))]))
 
   phyloseq_obj <- phyloseq(otu_table(t(otus)[, sample_order], taxa_are_rows = TRUE),
                            tax_table(taxa))
+  taxa_names(phyloseq_obj) <- paste0(classification,"_",seq(length(taxa_names(phyloseq_obj))))
   if (!(is.logical(sam))) {
     sample_data(phyloseq_obj) <- sam
   }
