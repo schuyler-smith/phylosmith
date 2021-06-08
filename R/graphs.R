@@ -474,12 +474,6 @@ phylogeny_profile <-
         call. = FALSE
       )
     }
-    if (!(is.null(classification)) &
-        !(classification %in% colnames(access(phyloseq_obj, 'tax_table')))) {
-      stop("`classification` must be a column from
-        the the tax_table()",
-           call. = FALSE)
-    }
     treatment <- check_index_treatment(phyloseq_obj, treatment)
     if (any(!(treatment %in% colnames(access(
       phyloseq_obj, 'sam_data'
