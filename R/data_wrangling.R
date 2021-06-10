@@ -840,8 +840,8 @@ taxa_prune <- function(phyloseq_obj,
   taxa <- as(access(phyloseq_obj,'tax_table'), 'matrix')
   taxa <- as.data.table(taxa, keep.rownames='OTU')
   if(is.null(classification)){classification <- colnames(taxa)}
-  for (j in seq_along(classification)) {
-    set(taxa, i = which(taxa[[j]] %in% taxa_to_remove), j = j, value = 'REMOVE')
+  for (rank in classification) {
+    set(taxa, i = which(taxa[[rank]] %in% taxa_to_remove), j = rank, value = 'REMOVE')
   }
   if(length(classification) == 1 & na.rm){
     set(taxa, i = which(is.na(taxa[[classification]])), j = classification, value = 'REMOVE')

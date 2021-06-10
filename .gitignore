@@ -38,3 +38,4 @@ phylosmith*.tar.gz
 */*_cache
 configure.status
 configure.log
+.Rproj.user
