@@ -5,7 +5,8 @@
 \title{Conglomerate taxa by sample on a given classification level.
 Function from the phylosmith-package.}
 \usage{
-conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
+conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE,
+use_taxonomic_names = TRUE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -21,6 +22,10 @@ conglomerate by.}
 \item{hierarchical}{Whether the order of factors in the tax_table represent
 a decreasing hierarchy (TRUE) or are independent (FALSE). If FALSE, will
 only return the factor given by \code{classification}.}
+
+\item{use_taxonomic_names}{If (TRUE), will use the hierarchical taxonomic
+name from Domain to classification level. If (FALSE) will uses the
+classification level with a numerical assignment.}
 }
 \value{
 phyloseq-object

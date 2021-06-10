@@ -54,12 +54,13 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
   }
 
   graph_data <- data.table(Sample = sample_names(phyloseq_obj),
-                           Treatment = phyloseq_obj@sam_data[[treatment_name]],
                            Alpha = unlist(alpha))
-  color_count <- length(unique(graph_data[['Treatment']]))
+  graph_data <- merge(graph_data, as.data.table(as(phyloseq_obj@sam_data, 'data.frame'),
+                                                keep.rownames = "Sample"), by = "Sample")
+  color_count <- length(unique(graph_data[[treatment_name]]))
   graph_colors <- create_palette(color_count, colors)
 
-  g <- ggplot(graph_data, aes(Treatment, Alpha, fill = Treatment))
+  g <- ggplot(graph_data, aes_string(treatment_name, "Alpha", fill = treatment_name))
   g <- g + geom_boxplot(show.legend = FALSE) +
     scale_fill_manual(values = graph_colors) +
     theme_bw() +
@@ -73,7 +74,7 @@ alpha_diversity_graph <- function(phyloseq_obj, index = 'shannon',
       axis.title.y = element_text(size = 10, face = 'bold'),
       axis.ticks.x = element_blank(),
       panel.grid.major.x = element_blank()
-    ) +
+    ) + scale_y_continuous(limits = c(0,5))
     labs(y = paste('Alpha-Diverity (', str_to_title(index), ' Index)', sep = ''))
   return(g)
 }

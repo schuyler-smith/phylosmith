@@ -222,7 +222,8 @@ conglomerate_samples <-
 #' Conglomerate taxa by sample on a given classification level from the
 #' tax_table.
 #' @useDynLib phylosmith
-#' @usage conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE)
+#' @usage conglomerate_taxa(phyloseq_obj, classification, hierarchical = TRUE,
+#' use_taxonomic_names = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}} with
 #' information about each sample, and it must contain
@@ -234,6 +235,9 @@ conglomerate_samples <-
 #' @param hierarchical Whether the order of factors in the tax_table represent
 #' a decreasing hierarchy (TRUE) or are independent (FALSE). If FALSE, will
 #' only return the factor given by \code{classification}.
+#' @param use_taxonomic_names If (TRUE), will use the hierarchical taxonomic
+#' name from Domain to classification level. If (FALSE) will uses the
+#' classification level with a numerical assignment.
 #' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
 #' @export
 #' @return phyloseq-object
@@ -241,7 +245,8 @@ conglomerate_samples <-
 
 conglomerate_taxa <- function(phyloseq_obj,
                               classification,
-                              hierarchical = TRUE) {
+                              hierarchical = TRUE,
+                              use_taxonomic_names = TRUE) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
     stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -251,7 +256,7 @@ conglomerate_taxa <- function(phyloseq_obj,
         information",
          call. = FALSE)
   }
-  phyloseq_obj <- phylosmith:::check_TaR(phyloseq_obj)
+  phyloseq_obj <- check_TaR(phyloseq_obj)
   classification <- check_index_classification(phyloseq_obj, classification)
   if (any(!(classification %in% colnames(access(
     phyloseq_obj, 'tax_table'
@@ -317,7 +322,11 @@ conglomerate_taxa <- function(phyloseq_obj,
 
   phyloseq_obj <- phyloseq(otu_table(otus[, sample_order], taxa_are_rows = TRUE),
                            tax_table(taxa))
-  taxa_names(phyloseq_obj) <- paste0(classification,"_",seq(length(taxa_names(phyloseq_obj))))
+  if(!use_taxonomic_names){
+    taxa_names(phyloseq_obj) <- paste0(classification,"_",
+                                       seq(length(taxa_names(phyloseq_obj))))
+  }
+
   if (!(is.logical(sam))) {
     sample_data(phyloseq_obj) <- sam
   }
@@ -778,3 +787,71 @@ taxa_filter <-
     gc()
     return(phyloseq_obj)
   }
+
+#' Remove specific taxa from all samples based on a given classification level.
+#' Function from the phylosmith-package.
+#'
+#' Prunes taxa from phyloseq objects based on taxanomic names.
+#' @useDynLib phylosmith
+#' @usage taxa_prune(phyloseq_obj, taxa_to_remove,
+#' classification=NULL, na.rm=TRUE)
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
+#' must contain \code{\link[phyloseq:sample_data]{sample_data()}} with
+#' information about each sample, and it must contain
+#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
+#' taxa/gene.
+#' @param taxa_to_remove A vector of the classification names of the taxon to
+#' be removed. If you are using ASVs and want to remove specific sequences, this
+#' should be set OTU or NULL. By default, it will search for the names in all
+#' taxanomic ranks
+#' @param classification Column name as a \code{string} or \code{numeric} in
+#' the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
+#' conglomerate by.
+#' @param na.rm if TRUE, and classification is specified, will remove taxon at
+#' the classificaiton level that have NA values.
+#' @seealso \code{\link[phyloseq:tax_glom]{tax_glom()}}
+#' @export
+#' @return phyloseq-object
+#' @examples taxa_prune(soil_column, 'Firmicutes', 'Phylum')
+
+taxa_prune <- function(phyloseq_obj,
+                       taxa_to_remove,
+                       classification = NULL,
+                       na.rm = TRUE) {
+  if (!inherits(phyloseq_obj, "phyloseq")) {
+    stop("`phyloseq_obj` must be a phyloseq-class
+        object", call. = FALSE)
+  }
+  if (is.null(access(phyloseq_obj, 'tax_table'))) {
+    stop("`phyloseq_obj` must contain tax_table()
+        information",
+         call. = FALSE)
+  }
+  classification <- check_index_classification(phyloseq_obj, classification)
+  if (any(!(classification %in% colnames(access(
+    phyloseq_obj, 'tax_table'
+  )))))
+  {
+    stop("`classification` must be a column from the
+        tax_table()",
+         call. = FALSE)
+  }
+
+  taxa <- as(access(phyloseq_obj,'tax_table'), 'matrix')
+  taxa <- as.data.table(taxa, keep.rownames='OTU')
+  if(is.null(classification)){classification <- colnames(taxa)}
+  for (j in seq_along(classification)) {
+    set(taxa, i = which(taxa[[j]] %in% taxa_to_remove), j = j, value = 'REMOVE')
+  }
+  if(length(classification) == 1 & na.rm){
+    set(taxa, i = which(is.na(taxa[[classification]])), j = classification, value = 'REMOVE')
+  }
+
+  taxa <- taxa[!(taxa[, Reduce(`|`, lapply(.SD, `%in%`, 'REMOVE')), .SDcols = classification])]
+  taxa <- as.matrix(taxa, rownames = 'OTU')
+  tax_table(phyloseq_obj) <- tax_table(taxa)
+
+  rm(list = c('taxa'))
+  gc()
+  return(phyloseq_obj)
+}

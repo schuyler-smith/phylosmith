@@ -21,3 +21,9 @@ Changes in version 1.0.4
 Changes in version 1.0.5
 + Add checks to force taxa_are_rows = TRUE
 + Add methods for all ordinations
+
+Changes in version 1.0.6
++ add taxa_prune function
++ update melt function for increased efficiency
++ fix dependencies
++ add label arguments for graphics
