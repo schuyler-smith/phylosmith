@@ -794,7 +794,7 @@ taxa_filter <-
 #' Prunes taxa from phyloseq objects based on taxanomic names.
 #' @useDynLib phylosmith
 #' @usage taxa_prune(phyloseq_obj, taxa_to_remove,
-#' classification=NULL, na.rm=TRUE)
+#' classification=NULL, na.rm=FALSE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}} with
 #' information about each sample, and it must contain
@@ -817,7 +817,7 @@ taxa_filter <-
 taxa_prune <- function(phyloseq_obj,
                        taxa_to_remove,
                        classification = NULL,
-                       na.rm = TRUE) {
+                       na.rm = FALSE) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
     stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
