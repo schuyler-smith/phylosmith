@@ -727,56 +727,42 @@ taxa_filter <-
            call. = FALSE)
     }
     phyloseq_obj <- check_TaR(phyloseq_obj)
+
     if (!(is.null(treatment))) {
       phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
       treatment_name <- paste(treatment, collapse = sep)
-      treatment_classes <- as.character(sort(unique(access(phyloseq_obj,
-                                                           'sam_data')[[treatment_name]])))
-      phyloseq_obj <- do.call(merge_phyloseq,
-                              lapply(treatment_classes, FUN = function(trt_class){
-                                sub_phy <- eval(parse(text = paste0(
-                                  "subset_samples(phyloseq_obj, ", treatment_name, " == '", trt_class, "')"
-                                )))
-                                N <- nsamples(sub_phy)
-                                otu_matrix <- as(sub_phy@otu_table, 'matrix')
-                                if(below){
-                                  sub_phy <- filter_taxa(sub_phy, function(x){
-                                    sum(x != 0) <= floor(N*frequency)
-                                  }, TRUE)
-                                } else {
-                                  sub_phy <- filter_taxa(sub_phy, function(x){
-                                    sum(x != 0) >= floor(N*frequency)
-                                  }, TRUE)
-                                }
-                                return(sub_phy)
-                              }
-                              )
-      )
-    } else {
-      N <- nsamples(phyloseq_obj)
-      if(below){
-        phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){
-          sum(x != 0) <= floor(N*frequency)
-        }, TRUE)
-      } else {
-        phyloseq_obj <- filter_taxa(phyloseq_obj, function(x){
-          sum(x != 0) >= floor(N*frequency)
-        }, TRUE)
+
+      phyloseq_table <- melt_phyloseq(phyloseq_obj)
+      phyloseq_table <- phyloseq_table[Abundance > 0]
+      if (!(is.null(subset))) {
+        phyloseq_table <- phyloseq_table[!(phyloseq_table[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
+                                                          .SDcols = c(treatment, treatment_name)])]
+        phyloseq_obj <- prune_samples(sample_names(phyloseq_obj) %in% phyloseq_table$Sample, phyloseq_obj)
       }
+      phyloseq_table <- phyloseq_table[,c('OTU', 'Sample', treatment_name), with = FALSE]
+      sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample)), by = c(treatment_name)]
+      phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU', treatment_name)]
+      phyloseq_table <- merge(phyloseq_table, sample_counts, by = treatment_name)
+      phyloseq_table <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU', treatment_name)]
+    } else {
+      phyloseq_table <- melt_phyloseq(phyloseq_obj)
+      phyloseq_table <- phyloseq_table[Abundance > 0]
+      phyloseq_table <- phyloseq_table[,c('OTU', 'Sample'), with = FALSE]
+      sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
+      phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU')]
+      phyloseq_table[,n_samples := sample_counts$n_samples]
+      phyloseq_table <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU')]
     }
-    if (!(is.null(subset))) {
-      phyloseq_obj <-
-        prune_samples(sample_names(phyloseq_obj)[unname(apply(access(phyloseq_obj, 'sam_data')[, c(treatment, treatment_name)], 1,
-                                                              function(x) {
-                                                                any(x %in% subset)
-                                                              }))], phyloseq_obj)
-      phyloseq_obj <- filter_taxa(phyloseq_obj, function(x) {
-        sum(x, na.rm = TRUE) > 0
-      }, TRUE)
+    if(below){
+      phyloseq_table <- phyloseq_table[proportion <= frequency]
+    } else {
+      phyloseq_table <- phyloseq_table[proportion >= frequency]
     }
+    phyloseq_table <- unique(phyloseq_table[['OTU']])
+    phyloseq_obj <- taxa_prune(phyloseq_obj,
+                               taxa_names(phyloseq_obj)[!(taxa_names(phyloseq_obj) %in% phyloseq_table)])
     if (drop_samples == TRUE) {
-      phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0,
-                                    phyloseq_obj)
+      phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
     }
     gc()
     return(phyloseq_obj)
