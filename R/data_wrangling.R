@@ -365,34 +365,28 @@ melt_phyloseq <- function(phyloseq_obj) {
          call. = FALSE)
   }
   phyloseq_obj <- check_TaR(phyloseq_obj)
-  melted_phyloseq <-
-    melt.data.table(data.table(as(
-      access(phyloseq_obj,
-             'otu_table'), "matrix"
-    ), keep.rownames = TRUE), id.vars = 1)
-  colnames(melted_phyloseq) <- c("OTU", "Sample", "Abundance")
+  melted_phyloseq <- data.table(as(
+    access(phyloseq_obj, 'otu_table'), "matrix"
+  ), keep.rownames = 'OTU')
   if (!(is.null(access(phyloseq_obj, 'tax_table')))) {
-    taxa <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'),
-                       OTU = taxa_names(phyloseq_obj))
-  }
+    taxa <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'), keep.rownames = 'OTU')
+  } else {taxa <- NULL}
 
   if (!(is.null(access(phyloseq_obj, 'sam_data')))) {
     sample_data <-
       data.table(data.frame(access(phyloseq_obj, 'sam_data'),
-                            stringsAsFactors = FALSE))
-    sample_data[, 'Sample' := sample_names(phyloseq_obj)]
+                            stringsAsFactors = FALSE), keep.rownames = 'Sample')
   } else {
     sample_data <- data.table(Sample = sample_names(phyloseq_obj))
   }
-
-  melted_phyloseq <-
-    merge(melted_phyloseq, sample_data, by = "Sample")
-  if (!(is.null(access(phyloseq_obj, 'tax_table')))) {
+  if (!(is.null(taxa))) {
     melted_phyloseq <- merge(melted_phyloseq, taxa, by = "OTU")
   }
+  melted_phyloseq <- melt(melted_phyloseq, variable.name = 'Sample', value.name = 'Abundance', id.vars = colnames(taxa))
   melted_phyloseq <-
-    melted_phyloseq[order(melted_phyloseq$Abundance
-                          , decreasing = TRUE),]
+    merge(melted_phyloseq, sample_data, by = "Sample")
+
+  setorder(melted_phyloseq, -Abundance)
   rm(list = c('taxa', 'sample_data'))
   gc()
   return(melted_phyloseq)

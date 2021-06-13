@@ -144,7 +144,7 @@ taxa_proportions <-
            call. = FALSE)
     }
     classification <- check_index_classification(phyloseq_obj,
-                                                   classification)
+                                                 classification)
     if (any(!(classification %in% colnames(access(
       phyloseq_obj, 'tax_table'
     )))))
@@ -171,8 +171,6 @@ taxa_proportions <-
         call. = FALSE
       )
     }
-    tax_table(phyloseq_obj) <- access(phyloseq_obj,
-                                      'tax_table')[, classification]
 
     if (any(!(is.na(treatment))) & !('sample' %in% treatment)) {
       phyloseq_obj <- taxa_filter(phyloseq_obj, treatment)
@@ -186,32 +184,23 @@ taxa_proportions <-
       phyloseq_obj <- phyloseq(access(phyloseq_obj, 'otu_table'),
                                access(phyloseq_obj, 'tax_table'))
     }
-    class_table <- melt_phyloseq(conglomerate_taxa(phyloseq_obj,
-                                                   classification))
+    phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification, FALSE)
+    class_table <- melt_phyloseq(phyloseq_obj)
     if (any(!(is.na(treatment))) & !('sample' %in% treatment)) {
-      class_table <- class_table[,-2]
-      class_table[, Abundance := sum(Abundance),
-                  by = c(treatment_name, classification)]
-      class_table <- unique(class_table)
-      class_table[, Proportion := round(Abundance / sum(Abundance), 3),
+      class_table <- class_table[, .(Abundance = sum(Abundance)),
+                                 by = c(treatment_name, classification)]
+      class_table[, Proportion := round(Abundance / sum(Abundance), 4),
                   by = treatment_name]
-      class_table <- class_table[, c(3, 4, 5)]
-      eval(parse(text = paste0(
-        'setkey(class_table, ', treatment_name, ')'
-      )))
+      setkeyv(class_table, treatment_name)
     } else if ('sample' %in% treatment) {
-      class_table[, Proportion := round(Abundance / sum(Abundance), 3),
-                  by = Sample]
-      class_table <- class_table[, c(2, 4, 5)]
+      class_table <- class_table[, .(classification = get(classification), Proportion = round(Abundance / sum(Abundance), 4)), by = Sample]
+      setnames(class_table, 'classification', classification)
       setkey(class_table, Sample)
     } else if (any(is.na(treatment))) {
-      class_table <-
-        class_table[, c(3, 4)][, lapply(.SD, sum, na.rm = TRUE),
-                               by = classification]
-      class_table <- class_table[,
-                                 Proportion := round(Abundance / sum(Abundance), 3)][, -2]
+      class_table <- class_table[, .(Abundance = sum(Abundance)),by = classification]
+      class_table[, Proportion := round(Abundance / sum(Abundance), 4)]
+      class_table[, Abundance := NULL]
     }
-    return(class_table)
   }
 
 

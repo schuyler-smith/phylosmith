@@ -5,7 +5,8 @@
 \title{Remove specific taxa from all samples based on a given classification level.
 Function from the phylosmith-package.}
 \usage{
-taxa_prune(phyloseq_obj, taxa_to_remove, classification=NULL, na.rm=T)
+taxa_prune(phyloseq_obj, taxa_to_remove,
+classification=NULL, na.rm=FALSE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
