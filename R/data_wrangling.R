@@ -757,7 +757,7 @@ taxa_filter <-
       taxa_counts[, proportion := count/unlist(sample_counts)]
       taxa <- rbind(taxa, taxa_counts)
     }
-    rm('subset_table', 'sam_data')
+    rm('sub_table', 'sam_data')
   } else {
     sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
     taxa_counts <- phyloseq_table[, .(count = .N), by = c('OTU')]
