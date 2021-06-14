@@ -742,6 +742,7 @@ taxa_filter <-
       sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
                                     .SDcols = c(treatment, treatment_name)]]
       phyloseq_table <- phyloseq_table[Sample %in% sam_data$Sample]
+      phyloseq_obj <- prune_samples((sample_names(phyloseq_obj) %in% sam_data$Sample), phyloseq_obj)
     }
     sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
     taxa_counts <- phyloseq_table[, .(count = .N), by = c('OTU')]
