@@ -727,17 +727,17 @@ taxa_filter <-
          call. = FALSE)
   }
   phyloseq_obj <- check_TaR(phyloseq_obj)
-
+  phyloseq_table <- data.table(as(
+    access(phyloseq_obj, 'otu_table'), "matrix"
+  ), keep.rownames = 'OTU')
+  phyloseq_table <- melt(phyloseq_table, id.vars = 'OTU',
+                         variable.name = 'Sample', value.name = 'Abundance')
+  phyloseq_table <- phyloseq_table[Abundance > 0]
   if (!(is.null(treatment))) {
     phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
     treatment_name <- paste(treatment, collapse = sep)
     sam_data <- data.table(as(access(phyloseq_obj, 'sam_data'), 'data.frame'), keep.rownames = "Sample")
     sam_data <- sam_data[,c("Sample", treatment, treatment_name), with= FALSE]
-    phyloseq_table <- data.table(as(
-      access(phyloseq_obj, 'otu_table'), "matrix"
-    ), keep.rownames = 'OTU')
-    phyloseq_table <- melt(phyloseq_table, variable.name = 'Sample', value.name = 'Abundance')
-    phyloseq_table <- phyloseq_table[Abundance > 0]
     if (!(is.null(subset))) {
       sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
                                     .SDcols = c(treatment, treatment_name)]]
@@ -757,19 +757,14 @@ taxa_filter <-
       taxa_counts[, proportion := count/unlist(sample_counts)]
       taxa <- rbind(taxa, taxa_counts)
     }
+    rm('subset_table', 'sam_data')
   } else {
-    phyloseq_table <- data.table(as(
-      access(phyloseq_obj, 'otu_table'), "matrix"
-    ), keep.rownames = 'OTU')
-    phyloseq_table <- melt(phyloseq_table, variable.name = 'Sample', value.name = 'Abundance')
-    phyloseq_table <- phyloseq_table[Abundance > 0]
-    phyloseq_table <- phyloseq_table[,c('OTU', 'Sample'), with = FALSE]
     sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
-    phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU')]
-    phyloseq_table[, n_samples := sample_counts$n_samples]
-    taxa <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU')]
+    taxa_counts <- phyloseq_table[, .(count = .N), by = c('OTU')]
+    taxa_counts[, n_samples := sample_counts$n_samples]
+    taxa <- taxa_counts[, .(proportion = count/n_samples), by = c('OTU')]
   }
-  rm(list = c('phyloseq_table', 'sub_table', 'sample_counts', 'taxa_counts', 'sam_data'))
+  rm('phyloseq_table', 'sample_counts', 'taxa_counts')
   if(below){
     taxa <- taxa[proportion <= frequency]
   } else {
