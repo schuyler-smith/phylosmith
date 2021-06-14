@@ -693,80 +693,98 @@ taxa_filter <-
            frequency = 0,
            below = FALSE,
            drop_samples = FALSE) {
-    if (!inherits(phyloseq_obj, "phyloseq")) {
-      stop("`phyloseq_obj` must be a phyloseq-class object",
-           call. = FALSE)
-    }
-    if (is.null(access(phyloseq_obj, 'sam_data'))) {
-      stop("`phyloseq_obj` must contain sample_data()
-            information",
-           call. = FALSE)
-    }
-    treatment <- check_index_treatment(phyloseq_obj, treatment)
-    if (!(is.null(treatment)) &
-        any(!(treatment %in% colnames(access(
-          phyloseq_obj, 'sam_data'
-        ))))) {
-      stop(
-        "`treatment` must be at least one column name, or
-        index, from the sample_data()",
-        call. = FALSE
-      )
-    }
-    if (!(is.numeric(frequency)) |
-        !(frequency >= 0 & frequency <= 1)) {
-      stop("`frequency` must be a numeric value between
-        0 and 1", call. = FALSE)
-    }
-    if (!(is.logical(below))) {
-      stop("`below` must be either `TRUE` or `FALSE`",
-           call. = FALSE)
-    }
-    if (!(is.logical(drop_samples))) {
-      stop("`drop_samples` must be either `TRUE` or `FALSE`",
-           call. = FALSE)
-    }
-    phyloseq_obj <- check_TaR(phyloseq_obj)
-
-    if (!(is.null(treatment))) {
-      phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
-      treatment_name <- paste(treatment, collapse = sep)
-
-      phyloseq_table <- melt_phyloseq(phyloseq_obj)
-      phyloseq_table <- phyloseq_table[Abundance > 0]
-      if (!(is.null(subset))) {
-        phyloseq_table <- phyloseq_table[!(phyloseq_table[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
-                                                          .SDcols = c(treatment, treatment_name)])]
-        phyloseq_obj <- prune_samples(sample_names(phyloseq_obj) %in% phyloseq_table$Sample, phyloseq_obj)
-      }
-      phyloseq_table <- phyloseq_table[,c('OTU', 'Sample', treatment_name), with = FALSE]
-      sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample)), by = c(treatment_name)]
-      phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU', treatment_name)]
-      phyloseq_table <- merge(phyloseq_table, sample_counts, by = treatment_name)
-      phyloseq_table <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU', treatment_name)]
-    } else {
-      phyloseq_table <- melt_phyloseq(phyloseq_obj)
-      phyloseq_table <- phyloseq_table[Abundance > 0]
-      phyloseq_table <- phyloseq_table[,c('OTU', 'Sample'), with = FALSE]
-      sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
-      phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU')]
-      phyloseq_table[,n_samples := sample_counts$n_samples]
-      phyloseq_table <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU')]
-    }
-    if(below){
-      phyloseq_table <- phyloseq_table[proportion <= frequency]
-    } else {
-      phyloseq_table <- phyloseq_table[proportion >= frequency]
-    }
-    phyloseq_table <- unique(phyloseq_table[['OTU']])
-    phyloseq_obj <- taxa_prune(phyloseq_obj,
-                               taxa_names(phyloseq_obj)[!(taxa_names(phyloseq_obj) %in% phyloseq_table)])
-    if (drop_samples == TRUE) {
-      phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
-    }
-    gc()
-    return(phyloseq_obj)
+  if (!inherits(phyloseq_obj, "phyloseq")) {
+    stop("`phyloseq_obj` must be a phyloseq-class object",
+         call. = FALSE)
   }
+  if (is.null(access(phyloseq_obj, 'sam_data'))) {
+    stop("`phyloseq_obj` must contain sample_data()
+          information",
+         call. = FALSE)
+  }
+  treatment <- check_index_treatment(phyloseq_obj, treatment)
+  if (!(is.null(treatment)) &
+      any(!(treatment %in% colnames(access(
+        phyloseq_obj, 'sam_data'
+      ))))) {
+    stop(
+      "`treatment` must be at least one column name, or
+      index, from the sample_data()",
+      call. = FALSE
+    )
+  }
+  if (!(is.numeric(frequency)) |
+      !(frequency >= 0 & frequency <= 1)) {
+    stop("`frequency` must be a numeric value between
+      0 and 1", call. = FALSE)
+  }
+  if (!(is.logical(below))) {
+    stop("`below` must be either `TRUE` or `FALSE`",
+         call. = FALSE)
+  }
+  if (!(is.logical(drop_samples))) {
+    stop("`drop_samples` must be either `TRUE` or `FALSE`",
+         call. = FALSE)
+  }
+  phyloseq_obj <- check_TaR(phyloseq_obj)
+
+  if (!(is.null(treatment))) {
+    phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
+    treatment_name <- paste(treatment, collapse = sep)
+    sam_data <- data.table(as(access(phyloseq_obj, 'sam_data'), 'data.frame'), keep.rownames = "Sample")
+    sam_data <- sam_data[,c("Sample", treatment, treatment_name), with= FALSE]
+    phyloseq_table <- data.table(as(
+      access(phyloseq_obj, 'otu_table'), "matrix"
+    ), keep.rownames = 'OTU')
+    phyloseq_table <- melt(phyloseq_table, variable.name = 'Sample', value.name = 'Abundance')
+    phyloseq_table <- phyloseq_table[Abundance > 0]
+    if (!(is.null(subset))) {
+      sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
+                                    .SDcols = c(treatment, treatment_name)]]
+      phyloseq_table <- phyloseq_table[Sample %in% sam_data$Sample]
+    }
+    sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
+    taxa_counts <- phyloseq_table[, .(count = .N), by = c('OTU')]
+    taxa_counts[, proportion := count/unlist(sample_counts)]
+    phyloseq_table <- phyloseq_table[OTU %in% taxa_counts[proportion > frequency]$OTU]
+
+    treatment_classes <- unique(sam_data[[treatment_name]])
+    taxa <- data.table()
+    for(trt in sam_data){
+      sub_table <- phyloseq_table[Sample %in% sam_data[get(treatment_name) %in% trt]$Sample]
+      sample_counts <- sub_table[, .(n_samples = uniqueN(Sample))]
+      taxa_counts <- sub_table[, .(count = .N), by = c('OTU')]
+      taxa_counts[, proportion := count/unlist(sample_counts)]
+      taxa <- rbind(taxa, taxa_counts)
+    }
+  } else {
+    phyloseq_table <- data.table(as(
+      access(phyloseq_obj, 'otu_table'), "matrix"
+    ), keep.rownames = 'OTU')
+    phyloseq_table <- melt(phyloseq_table, variable.name = 'Sample', value.name = 'Abundance')
+    phyloseq_table <- phyloseq_table[Abundance > 0]
+    phyloseq_table <- phyloseq_table[,c('OTU', 'Sample'), with = FALSE]
+    sample_counts <- phyloseq_table[, .(n_samples = uniqueN(Sample))]
+    phyloseq_table <- phyloseq_table[, .(count = .N), by = c('OTU')]
+    phyloseq_table[, n_samples := sample_counts$n_samples]
+    taxa <- phyloseq_table[, .(proportion = count/n_samples), by = c('OTU')]
+  }
+  rm(list = c('phyloseq_table', 'sub_table', 'sample_counts', 'taxa_counts', 'sam_data'))
+  if(below){
+    taxa <- taxa[proportion <= frequency]
+  } else {
+    taxa <- taxa[proportion >= frequency]
+  }
+  taxa <- unique(taxa[['OTU']])
+  phyloseq_obj <- taxa_prune(phyloseq_obj,
+                             taxa_names(phyloseq_obj)[!(taxa_names(phyloseq_obj) %in% taxa)])
+  if (drop_samples == TRUE) {
+    phyloseq_obj <- prune_samples(sample_sums(phyloseq_obj) > 0, phyloseq_obj)
+  }
+  rm('taxa')
+  gc()
+  return(phyloseq_obj)
+}
 
 #' Remove specific taxa from all samples based on a given classification level.
 #' Function from the phylosmith-package.
