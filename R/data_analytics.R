@@ -201,6 +201,7 @@ taxa_proportions <-
       class_table[, Proportion := round(Abundance / sum(Abundance), 4)]
       class_table[, Abundance := NULL]
     }
+    return(class_table)
   }
 
 
