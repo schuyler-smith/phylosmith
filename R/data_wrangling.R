@@ -375,7 +375,9 @@ melt_phyloseq <- function(phyloseq_obj) {
   if (!(is.null(access(phyloseq_obj, 'sam_data')))) {
     sample_data <-
       data.table(data.frame(access(phyloseq_obj, 'sam_data'),
-                            stringsAsFactors = FALSE), keep.rownames = 'Sample')
+                            stringsAsFactors = FALSE), keep.rownames = TRUE)
+    sample_data[, Sample := NULL]
+    setnames(sample_data, 'rn', 'Sample')
   } else {
     sample_data <- data.table(Sample = sample_names(phyloseq_obj))
   }
