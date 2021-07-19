@@ -199,8 +199,9 @@ taxa_proportions <-
     } else if (any(is.na(treatment))) {
       class_table <- class_table[, .(Abundance = sum(Abundance)),by = classification]
       class_table[, Proportion := round(Abundance / sum(Abundance), 4)]
-      class_table[, Abundance := NULL]
+      setorder(class_table, -Proportion)
     }
+    class_table[, Abundance := NULL][]
     return(class_table)
   }
 
