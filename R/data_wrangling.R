@@ -400,18 +400,18 @@ melt_phyloseq <- function(phyloseq_obj) {
 #' object \code{\link[phyloseq:sample_data]{sample_data}} into a
 #' single-variable column.
 #' @useDynLib phylosmith
-#' @usage merge_treatments(phyloseq_obj, merge_treatments)
+#' @usage merge_treatments(phyloseq_obj, treatments)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample.
-#' @param merge_treatments A vector of any number of column names as \code{string}s or \code{numeric}s
+#' @param treatments A vector of any number of column names as \code{string}s or \code{numeric}s
 #' in the \code{\link[phyloseq:sample_data]{sample_data}} that are to be
 #' combined.
 #' @export
 #' @return phyloseq-object
 #' @examples merge_treatments(soil_column, c('Matrix', 'Treatment', 'Day'))
 
-merge_treatments <- function(phyloseq_obj, merge_treatments) {
+merge_treatments <- function(phyloseq_obj, treatments) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
     stop("`phyloseq_obj` must be a phyloseq-class
         object", call. = FALSE)
@@ -421,7 +421,7 @@ merge_treatments <- function(phyloseq_obj, merge_treatments) {
         information",
          call. = FALSE)
   }
-  treatments <- check_index_treatment(phyloseq_obj, merge_treatments)
+  treatments <- check_index_treatment(phyloseq_obj, treatments)
   if (any(!(treatments %in% colnames(access(
     phyloseq_obj, 'sam_data'
   ))))) {
