@@ -160,7 +160,10 @@ conglomerate_taxa <- function(phyloseq_obj,
   taxa <- as(access(phyloseq_obj,'tax_table'), 'matrix')
   taxa <- as.data.table(taxa, keep.rownames='OTU')
   if (hierarchical) {
-    taxa[, seq(ncol(taxa))[-c(seq(which(colnames(taxa) %in% classification)))] := NULL]
+    if(which(colnames(taxa) %in% classification) != length(colnames(taxa))){
+      taxa[, `:=`(seq(ncol(taxa))[-c(seq(which(colnames(taxa) %in% 
+                                                 classification)))], NULL)]
+    }
     set(taxa, i = taxa[, .I[is.na(get(classification))]], j = classification,
         value = paste0('Unclassified_',
                        unlist(taxa[ taxa[, .I[is.na(get(classification))]],
