@@ -21,23 +21,23 @@
 #' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
 #' @export
 #' @return phyloseq-object
-#' @examples conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
+#' @examples conglomerate_samples(soil_column, treatment = c('Day', 'Matrix', 'Treatment'))
 
 conglomerate_samples <-
   function(phyloseq_obj,
            treatment,
            subset = NULL) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
-    stop("`phyloseq_obj` must be a phyloseq-class\n        object", 
+    stop("`phyloseq_obj` must be a phyloseq-class\n        object",
          call. = FALSE)
   }
   if (is.null(access(phyloseq_obj, "sam_data"))) {
-    stop("`phyloseq_obj` must contain\n        sample_data() information", 
+    stop("`phyloseq_obj` must contain\n        sample_data() information",
          call. = FALSE)
   }
   treatment <- phylosmith:::check_index_treatment(phyloseq_obj, treatment)
   if (any(!(treatment %in% colnames(access(phyloseq_obj, "sam_data"))))) {
-    stop("`treatment` must be at least one column\n        name, or index, from the sample_data()", 
+    stop("`treatment` must be at least one column\n        name, or index, from the sample_data()",
          call. = FALSE)
   }
   if (!(is.null(access(phyloseq_obj, "phy_tree")))) {
@@ -55,7 +55,7 @@ conglomerate_samples <-
   }  else {
     tax_table <- FALSE
   }
-  
+
   original_levels <- lapply(access(phyloseq_obj, "sam_data"), levels)
   treatment_name <- paste(treatment, collapse = sep)
   phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
@@ -70,14 +70,14 @@ conglomerate_samples <-
   }
   otu_table <- otu_table[, lapply(.SD, sum, na.rm=TRUE), by=Sample]
   sam_data <- sam_data[, .SD[1], Sample]
-  
+
   phyloseq_obj <- phyloseq(
-    otu_table(t(as.matrix(otu_table, rownames = "Sample")), 
-            taxa_are_rows = TRUE), tax_table, 
+    otu_table(t(as.matrix(otu_table, rownames = "Sample")),
+            taxa_are_rows = TRUE), tax_table,
     phyloseq::sample_data(data.frame(sam_data, row.names = 1)))
 
   if (!(is.logical(refseqs))) {
-    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, 
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table,
                              phyloseq_obj@sam_data, refseq(refseqs))
   }
   if (!(is.logical(phylo_tree))) {

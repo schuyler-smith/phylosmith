@@ -39,3 +39,5 @@ phylosmith*.tar.gz
 configure.status
 configure.log
 .Rproj.user
+/doc/
+/Meta/
