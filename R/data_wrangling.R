@@ -6,8 +6,7 @@
 #' samples statistically proven to not be significantly different. This should
 #' be used with caution as it may be a misleading representation of the data.
 #' @useDynLib phylosmith
-#' @usage conglomerate_samples(phyloseq_obj, treatment, subset = NULL,
-#' merge_on = treatment)
+#' @usage conglomerate_samples(phyloseq_obj, treatment, subset = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -19,10 +18,6 @@
 #' @param subset A factor within the \code{treatment}. This will remove any
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
-#' @param merge_on Defines which variable the data is merged according to.
-#' This needs to be a column name as a \code{string} or \code{numeric} in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-#' multiple columns and they will be combined into a new column.
 #' @seealso \code{\link[phyloseq:merge_samples]{merge_samples()}}
 #' @export
 #' @return phyloseq-object
@@ -31,189 +26,65 @@
 conglomerate_samples <-
   function(phyloseq_obj,
            treatment,
-           subset = NULL,
-           merge_on = treatment) {
-    if (!inherits(phyloseq_obj, "phyloseq")) {
-      stop("`phyloseq_obj` must be a phyloseq-class
-        object", call. = FALSE)
-    }
-    if (is.null(access(phyloseq_obj, 'sam_data'))) {
-      stop("`phyloseq_obj` must contain
-        sample_data() information",
-           call. = FALSE)
-    }
-    treatment <- check_index_treatment(phyloseq_obj, treatment)
-    if (any(!(treatment %in% colnames(access(
-      phyloseq_obj, 'sam_data'
-    ))))) {
-      stop(
-        "`treatment` must be at least one column
-        name, or index, from the sample_data()",
-        call. = FALSE
-      )
-    }
-    merge_on <- check_index_treatment(phyloseq_obj, merge_on)
-    if (any(!(merge_on %in% colnames(access(
-      phyloseq_obj, 'sam_data'
-    ))))) {
-      stop("`merge_on` must be at least one column
-        name, or index, from the sample_data()",
-           call. = FALSE)
-    }
-    if (!(is.null(access(phyloseq_obj, 'phy_tree')))) {
-      phylo_tree <- access(phyloseq_obj, 'phy_tree')
-    } else {
-      phylo_tree <- FALSE
-    }
-    if (!(is.null(access(phyloseq_obj, 'refseq')))) {
-      refseqs <- access(phyloseq_obj, 'refseq')
-    } else {
-      refseqs <- FALSE
-    }
-    original_levels <-
-      lapply(access(phyloseq_obj, 'sam_data'), levels)
-    phyloseq_obj <- phyloseq(
-      access(phyloseq_obj, 'otu_table'),
-      access(phyloseq_obj, 'tax_table'),
-      access(phyloseq_obj, 'sam_data')
-    )
-    merge_on_name <- paste(merge_on, collapse = sep)
-
-    phyloseq_obj <- taxa_filter(phyloseq_obj, treatment, subset)
-    phyloseq_obj <- merge_treatments(phyloseq_obj, merge_on_name)
-    treatment_name <- paste(treatment, collapse = sep)
-    merge_sample_levels <-
-      as.character(unique(sort(unlist(
-        access(phyloseq_obj,
-               'sam_data')[[merge_on_name]]
-      ))))
-
-    treatment_classes <- sort(unique(access(phyloseq_obj,
-                                            'sam_data')[[treatment_name]]))
-    treatment_classes <-
-      eval(parse(
-        text = paste0(
-          'treatment_classes[grepl("',
-          paste0(subset),
-          '", treatment_classes)]'
-        )
-      ))
-    phyloseq_table <- melt_phyloseq(phyloseq_obj)
-
-    if (any(merge_on != treatment)) {
-      merge_sample_levels <- paste(
-        vapply(
-          as.character(treatment_classes),
-          rep,
-          character(length(merge_sample_levels)),
-          times = length(merge_sample_levels)
-        ),
-        rep(merge_sample_levels,
-            length(treatment_classes)),
-        sep = ' '
-      )
-      phyloseq_table[, 'Merged_Name' := do.call(paste0,
-                                                list(phyloseq_table[[treatment_name]], ' ',
-                                                     phyloseq_table[[merge_on_name]]))]
-    } else {
-      phyloseq_table[, 'Merged_Name' := phyloseq_table[[merge_on_name]]]
-    }
-    otu_tab <-
-      dcast(
-        phyloseq_table[, c('OTU', 'Abundance', 'Merged_Name'),
-                       with = FALSE],
-        Merged_Name ~ OTU,
-        value.var = 'Abundance',
-        fun.aggregate = mean
-      )
-
-    sub_phy <- do.call(merge_phyloseq,
-                       lapply(
-                         treatment_classes,
-                         FUN = function(group) {
-                           group_phy <- eval(parse(
-                             text =
-                               paste0(
-                                 'subset_samples(taxa_filter(phyloseq_obj,
-                    treatment), ',
-                                 treatment_name,
-                                 ' == "',
-                                 group,
-                                 '")'
-                               )
-                           ))
-                           if (nsamples(group_phy) > 1) {
-                             sub_phy <- merge_samples(group_phy, merge_on_name)
-                             merge_names <-
-                               rownames(access(sub_phy, 'sam_data'))
-                             if (any(group != merge_names)) {
-                               sample_names(sub_phy) <- paste0(group, ' ',
-                                                               merge_names)
-                             }
-                             sam <-
-                               as(access(sub_phy, 'sam_data'), 'data.frame')
-                             sam[, treatment_name] <- group
-                             for (i in treatment) {
-                               sam[, i] <- unique(group_phy@sam_data[, i])
-                             }
-                             sam[, merge_on_name] <- factor(merge_names,
-                                                            levels = levels(access(phyloseq_obj,
-                                                                                   'sam_data')[[merge_on_name]]))
-                             sample_data(sub_phy) <- sample_data(sam)
-                           }
-                           return(sub_phy)
-                         }
-                       ))
-    phyloseq_obj <- tryCatch({
-      eval(parse(
-        text = paste0(
-          'subset_samples(phyloseq_obj, !(',
-          treatment_name,
-          ' %in% treatment_classes))'
-        )
-      ))
-    },
-    error = function(e) {
-      phyloseq_obj <- sub_phy
-    },
-    finally = {
-      merge_phyloseq(phyloseq_obj, sub_phy)
-    })
-    phyloseq_obj <- phyloseq(
-      otu_table(t(
-        as.matrix(otu_tab[order(factor(otu_tab$Merged_Name,
-                                       levels = merge_sample_levels)), ],
-                  rownames = 'Merged_Name')
-      ),
-      taxa_are_rows = TRUE),
-      access(phyloseq_obj, 'tax_table'),
-      access(phyloseq_obj, 'sam_data')[order(factor(rownames(access(
-        phyloseq_obj, 'sam_data'
-      )),
-      levels = merge_sample_levels)), ]
-    )
-    for (i in seq_along(original_levels)) {
-      if (!(is.null(unname(unlist(
-        original_levels[i]
-      ))))) {
-        phyloseq_obj <- set_treatment_levels(phyloseq_obj,
-                                             names(original_levels)[i], unname(unlist(original_levels[i])))
-      }
-    }
-    if (!(is.logical(refseqs))) {
-      phyloseq_obj <-
-        phyloseq(
-          phyloseq_obj@otu_table,
-          phyloseq_obj@tax_table,
-          phyloseq_obj@sam_data,
-          refseq(refseqs)
-        )
-    }
-    if (!(is.logical(phylo_tree))) {
-      phy_tree(phyloseq_obj) <- phylo_tree
-    }
-    return(phyloseq_obj)
+           subset = NULL) {
+  if (!inherits(phyloseq_obj, "phyloseq")) {
+    stop("`phyloseq_obj` must be a phyloseq-class\n        object", 
+         call. = FALSE)
   }
+  if (is.null(access(phyloseq_obj, "sam_data"))) {
+    stop("`phyloseq_obj` must contain\n        sample_data() information", 
+         call. = FALSE)
+  }
+  treatment <- phylosmith:::check_index_treatment(phyloseq_obj, treatment)
+  if (any(!(treatment %in% colnames(access(phyloseq_obj, "sam_data"))))) {
+    stop("`treatment` must be at least one column\n        name, or index, from the sample_data()", 
+         call. = FALSE)
+  }
+  if (!(is.null(access(phyloseq_obj, "phy_tree")))) {
+    phylo_tree <- access(phyloseq_obj, "phy_tree")
+  }  else {
+    phylo_tree <- FALSE
+  }
+  if (!(is.null(access(phyloseq_obj, "refseq")))) {
+    refseqs <- access(phyloseq_obj, "refseq")
+  }  else {
+    refseqs <- FALSE
+  }
+  if (!(is.null(access(phyloseq_obj, "tax_table")))) {
+    tax_table <- access(phyloseq_obj, "tax_table")
+  }  else {
+    tax_table <- FALSE
+  }
+  
+  original_levels <- lapply(access(phyloseq_obj, "sam_data"), levels)
+  treatment_name <- paste(treatment, collapse = sep)
+  phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
+  sam_data <- data.table(as(access(phyloseq_obj, "sam_data"), 'data.frame'), keep.rownames = "Sample")
+  set(sam_data, j = "Sample", value = sam_data[[treatment_name]])
+  if(length(treatment) > 1){sam_data[, (treatment_name) := NULL]}
+  otu_table <- data.table(t(as(access(phyloseq_obj, "otu_table"), 'matrix')), keep.rownames = "Sample")
+  otu_table[, Sample := sam_data[['Sample']]]
+  if(!is.null(subset)){
+    sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)), .SDcols = c(treatment)]]
+    otu_table <- otu_table[Sample %in% sam_data$Sample]
+  }
+  otu_table <- otu_table[, lapply(.SD, sum, na.rm=TRUE), by=Sample]
+  sam_data <- sam_data[, .SD[1], Sample]
+  
+  phyloseq_obj <- phyloseq(
+    otu_table(t(as.matrix(otu_table, rownames = "Sample")), 
+            taxa_are_rows = TRUE), tax_table, 
+    phyloseq::sample_data(data.frame(sam_data, row.names = 1)))
+
+  if (!(is.logical(refseqs))) {
+    phyloseq_obj <- phyloseq(phyloseq_obj@otu_table, phyloseq_obj@tax_table, 
+                             phyloseq_obj@sam_data, refseq(refseqs))
+  }
+  if (!(is.logical(phylo_tree))) {
+    phy_tree(phyloseq_obj) <- phylo_tree
+  }
+  return(phyloseq_obj)
+}
 
 
 #' Conglomerate taxa by sample on a given classification level.

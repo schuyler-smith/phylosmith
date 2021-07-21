@@ -5,8 +5,7 @@
 \title{Merge samples based on common factor within sample_data.
 Function from the phylosmith-package.}
 \usage{
-conglomerate_samples(phyloseq_obj, treatment, subset = NULL,
-merge_on = treatment)
+conglomerate_samples(phyloseq_obj, treatment, subset = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -22,11 +21,6 @@ multiple columns and they will be combined into a new column.}
 \item{subset}{A factor within the \code{treatment}. This will remove any
 samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
-
-\item{merge_on}{Defines which variable the data is merged according to.
-This needs to be a column name as a \code{string} or \code{numeric} in the
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-multiple columns and they will be combined into a new column.}
 }
 \value{
 phyloseq-object
