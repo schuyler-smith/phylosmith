@@ -7,37 +7,37 @@
 #' @param graph_data A \code{\link[data.table:data.table]{data.table()}}) object
 #' containing the melted phyloseq data.
 #' @param treatment name of the column defined as the treatment.
-#' @param treatment_labels a vector of names to be used as labels for 
+#' @param treatment_labels a vector of names to be used as labels for
 #' treatments/facets.
 #' @param sample_labels a vector of names to be used as labels for Samples.
 #' @param classification name of the column defined as the classification.
-#' @param classification_labels a vector of names to be used as labels for the 
+#' @param classification_labels a vector of names to be used as labels for the
 #' taxonomic classifications.
 #' @import data.table
 #' @return data.table
 
-change_labels <- function(graph_data, 
+change_labels <- function(graph_data,
                           treatment = NULL,
                           treatment_labels = NULL,
-                          sample_labels = NULL, 
+                          sample_labels = NULL,
                           classification = NULL,
                           classification_labels = NULL
-                          ) { 
+                          ) {
   if(!is.null(treatment_labels)){
     set(graph_data, j = treatment,
-        value = factor(treatment_labels[as.numeric(graph_data[[treatment]])], 
+        value = factor(treatment_labels[as.numeric(graph_data[[treatment]])],
                        levels = treatment_labels)
     )
   }
   if(!is.null(sample_labels)){
     set(graph_data, j = 'Sample',
-        value = factor(sample_labels[as.numeric(graph_data[['Sample']])], 
+        value = factor(sample_labels[as.numeric(graph_data[['Sample']])],
                        levels = sample_labels)
     )
   }
   if(!is.null(classification_labels)){
     set(graph_data, j = classification,
-        value = factor(classification_labels[as.numeric(graph_data[[classification]])], 
+        value = factor(classification_labels[as.numeric(graph_data[[classification]])],
                        levels = classification_labels)
     )
   }
@@ -237,4 +237,58 @@ CI_ellipse <- function(points,
     ellipse_df <- cbind(ellipse)
   }
   return(ellipse_df)
+}
+
+bin <- function(data, nbins = 9, labels = NULL) {
+  vec <- FALSE
+  if (is.atomic(data) == TRUE & is.null(dim(data)) == TRUE) {
+    vec <- TRUE
+    data <- data.frame(data)
+  }
+  if (is.list(data) == FALSE)
+    data <- data.frame(data)
+  data <- na.omit(data)
+  if (!is.null(labels))
+    if (nbins != length(labels))
+      stop("number of 'nbins' and 'labels' differ")
+  if (nbins <= 1)
+    stop("nbins must be greater than 1")
+  data[] <- lapply(data, function(x)
+    if (is.numeric(x)) {
+      if (length(unique(x)) <= nbins){
+        as.factor(x)
+      } else {
+        CUT(x, breaks = unique(nbins), labels = labels)
+      }
+    } else as.factor(x))
+  data[] <- lapply(data, function(x) if (any(is.na(as.character(x))))
+    ADDNA(x)
+    else x)
+  if (vec) {
+    data <- unlist(data)
+    names(data) <- NULL
+  }
+  return(data)
+}
+
+CUT <- function(x, breaks, ...) {
+  if (length(breaks) == 1L) {
+    nb <- as.integer(breaks + 1)
+    dx <- diff(rx <- range(x, na.rm = TRUE))
+    if (dx == 0) {
+      dx <- abs(rx[1L])
+      breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000, length.out = nb)
+    } else {
+      breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
+      breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
+    }
+  }
+  breaks.f <- c(breaks[1], as.numeric(formatC(0 + breaks[2:(length(breaks)-1)], digits = 3, width = 1L)), breaks[length(breaks)])
+  cut(x, breaks = unique(breaks.f), ...)
+}
+
+ADDNA <- function(x) {
+  if (is.factor(x) & !("NA" %in% levels(x))) x <- factor(x, levels = c(levels(x), "NA"))
+  x[is.na(x)] <- "NA"
+  x
 }

@@ -37,106 +37,105 @@ network_ps <-
             treatment = NULL,
             subset = NULL,
             co_occurrence_table = NULL) {
-  if (!inherits(phyloseq_obj, "phyloseq")) {
-    stop("`phyloseq_obj` must be a phyloseq-class
-          object", call. = FALSE)
-  }
-  if (is.null(access(phyloseq_obj, 'sam_data'))) {
-    stop("`phyloseq_obj` must contain sample_data()
-          information",
-         call. = FALSE)
-  }
-  if (is.null(access(phyloseq_obj, 'tax_table'))) {
-    stop("`phyloseq_obj` must contain tax_table()
-          information",
-         call. = FALSE)
-  }
-  treatment <- check_index_treatment(phyloseq_obj, treatment)
-  if (!(is.null(treatment)) &
-      any(!(treatment %in% colnames(access(
-        phyloseq_obj, 'sam_data'
-      ))))) {
-    stop(
-      "`treatment` must be at least one column
-          name, or index, from the sample_data()",
-      call. = FALSE
-    )
-  }
-  if (!(is.null(treatment)) &
-      is.null(subset)) {
-    stop(
-      "if `treatment` is declared,
-        a `subset` must also be declared.",
-      call. = FALSE
-    )
-  }
-  if (!(is.null(co_occurrence_table)) &
-      !(is.data.frame(co_occurrence_table))) {
-    stop("`co_occurrence_table` must be at data.frame
-          object", call. = FALSE)
-  }
-  phyloseq_obj <- taxa_filter(phyloseq_obj,
-                              treatment,
-                              frequency = 0,
-                              subset = subset)
-  treatment_name <- paste(treatment, collapse = sep)
-
-  if (is.null(co_occurrence_table)) {
-    co_occurrence_table <- co_occurrence(phyloseq_obj,
-                                         treatment, method = 'spearman')[rho >= 0.6 |
-                                                                           rho <= -0.6]
-  } else { if(!is.null(subset)){
-    co_occurrence_table <-
-      co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
+    if (!inherits(phyloseq_obj, "phyloseq")) {
+      stop("`phyloseq_obj` must be a phyloseq-class
+object", call. = FALSE)
     }
-  }
-  if(is.null(co_occurrence_table[['Treatment']])){
-    co_occurrence_table <- cbind(co_occurrence_table, Treatment = 'NA')
-  }
-  co_occurrence_table <- co_occurrence_table[, c('X',
-                                                 'Y', 'Treatment', 'rho', 'p')]
-  if (!is.null(access(phyloseq_obj, 'tax_table'))){
-    nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
-    nodes <-
-      data.table('Node_Name' = rownames(access(phyloseq_obj,
-                                               'tax_table')), nodes)
-  } else {
-    nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj,
-                                                      'otu_table')))
-  }
-  nodes <- nodes[nodes[['Node_Name']] %in%
-                   c(
-                     as.character(co_occurrence_table$X),
-                     as.character(co_occurrence_table$Y)
-                   ),]
-  cluster_table <- co_occurrence_table
-  cluster_table[['weight']] <- abs(cluster_table[['rho']])
-  clusters <- cluster_fast_greedy(simplify(
-    graph_from_data_frame(
-      d = cluster_table,
-      vertices = nodes,
-      directed = FALSE
-    ),
-    remove.multiple = TRUE,
-    remove.loops = TRUE
-  ))$membership
-  cluster_sizes <- table(clusters)
-  nodes <- nodes[clusters %in% names(cluster_sizes[cluster_sizes > 3])]
-  co_occurrence_table <- co_occurrence_table[X %in% nodes$Node_Name &
-                                               Y %in% nodes$Node_Name]
-  edge_sign <- vapply(
-    co_occurrence_table$rho,
-    FUN = function(x) {
-      as.numeric(as.logical(sign(x) + 1) + 1)
-    }, numeric(1)
-  )
-  co_occurrence_table$rho <- abs(co_occurrence_table$rho)
-  setnames(co_occurrence_table, 'rho', 'weight')
-  co_occurrence_table$edge_sign <- edge_sign
-  net <- graph_from_data_frame(d = co_occurrence_table,
-                               vertices = nodes,
-                               directed = FALSE)
-  return(net)
+    if (is.null(access(phyloseq_obj, 'sam_data'))) {
+      stop("`phyloseq_obj` must contain sample_data()
+information",
+           call. = FALSE)
+    }
+    if (is.null(access(phyloseq_obj, 'tax_table'))) {
+      stop("`phyloseq_obj` must contain tax_table()
+information",
+           call. = FALSE)
+    }
+    treatment <- check_index_treatment(phyloseq_obj, treatment)
+    if (!(is.null(treatment)) &
+        any(!(treatment %in% colnames(access(
+          phyloseq_obj, 'sam_data'
+        ))))) {
+      stop(
+        "`treatment` must be at least one column
+name, or index, from the sample_data()",
+        call. = FALSE
+      )
+    }
+    if (!(is.null(treatment)) &
+        is.null(subset)) {
+      stop(
+        "if `treatment` is declared,
+a `subset` must also be declared.",
+        call. = FALSE
+      )
+    }
+    if (!(is.null(co_occurrence_table)) &
+        !(is.data.frame(co_occurrence_table))) {
+      stop("`co_occurrence_table` must be at data.frame
+object", call. = FALSE)
+    }
+    phyloseq_obj <- taxa_filter(phyloseq_obj,
+                                treatment,
+                                frequency = 0,
+                                subset = subset)
+    treatment_name <- paste(treatment, collapse = sep)
+
+    if (is.null(co_occurrence_table)) {
+      co_occurrence_table <- co_occurrence(phyloseq_obj,
+                                           treatment, method = 'spearman')[rho >= 0.6 |
+                                                                             rho <= -0.6]
+    } else { if(!is.null(subset)){
+      co_occurrence_table <-
+        co_occurrence_table[co_occurrence_table[['Treatment']] %like% subset]
+    }
+    }
+    if(is.null(co_occurrence_table[['Treatment']])){
+      co_occurrence_table <- cbind(co_occurrence_table, Treatment = 'NA')
+    }
+    co_occurrence_table <- co_occurrence_table[, c('X',
+                                                   'Y', 'Treatment', 'rho', 'p')]
+    if (!is.null(access(phyloseq_obj, 'tax_table'))){
+      nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
+      nodes <-
+        data.table('Node_Name' = rownames(access(phyloseq_obj,
+                                                 'tax_table')), nodes)
+    } else {
+      nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj,
+                                                        'otu_table')))
+    }
+    phyloseq_obj <- relative_abundance(phyloseq_obj)
+    nodes[,`Mean Relative Abundance` := bin(taxa_sums(phyloseq_obj)/nsamples(phyloseq_obj), nbins = 9)]
+    nodes <- nodes[nodes[['Node_Name']] %in%
+                     c(
+                       as.character(co_occurrence_table$X),
+                       as.character(co_occurrence_table$Y)
+                     ),]
+    co_occurrence_table[, Weight := abs(rho)]
+    clusters <- cluster_fast_greedy(simplify(
+      graph_from_data_frame(
+        d = co_occurrence_table,
+        vertices = nodes,
+        directed = FALSE
+      ),
+      remove.multiple = TRUE,
+      remove.loops = TRUE
+    ))$membership
+    cluster_sizes <- table(clusters)
+    nodes <- nodes[clusters %in% names(cluster_sizes[cluster_sizes >= 3])]
+    co_occurrence_table <- co_occurrence_table[X %in% nodes$Node_Name &
+                                                 Y %in% nodes$Node_Name]
+    edge_sign <- vapply(
+      co_occurrence_table$rho,
+      FUN = function(x) {
+        as.numeric(as.logical(sign(x) + 1) + 1)
+      }, numeric(1)
+    )
+    co_occurrence_table[, Edge := factor(c("Negative", "Positive")[edge_sign], levels = c("Positive", "Negative"))]
+    net <- graph_from_data_frame(d = co_occurrence_table,
+                                 vertices = nodes,
+                                 directed = FALSE)
+    return(net)
 }
 
 #' Create an layout_igraph object of the co-occurrence from a phyloseq object.
@@ -197,8 +196,8 @@ network_layout_ps <-
 #' input, or it will be calculated with the Spearman-rank correlation. Also,
 #' the layout of the graph can be given as an argument as well for reproducibility.
 #' @useDynLib phylosmith
-#' @usage co_occurrence_network(phyloseq_obj, classification = NULL,
-#' treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
+#' @usage co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL,
+#' classification = NULL, co_occurrence_table = NULL, layout = NULL,
 #' nodes_of_interest = NULL, node_colors = 'default',
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -206,15 +205,15 @@ network_layout_ps <-
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
+#' @param classification Column name as a string or number in the
+#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+#' colors.
 #' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the
 #' \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no
 #' table is given, it will be computed with the \code{phyloseq_obj}, using the
@@ -248,15 +247,15 @@ network_layout_ps <-
 #' #classification = 'Phylum')
 
 co_occurrence_network <- function(phyloseq_obj,
-                                  classification = NULL,
                                   treatment = NULL,
                                   subset = NULL,
+                                  classification = NULL,
                                   co_occurrence_table = NULL,
                                   layout = NULL,
                                   nodes_of_interest = NULL,
                                   node_colors = 'default',
                                   cluster = FALSE,
-                                  cluster_colors = 'default',
+                                  cluster_colors = '#979aaa',
                                   buffer = 0.5) {
   if (!(is.null(nodes_of_interest))) {
     if (!(is.vector(nodes_of_interest))) {
@@ -269,7 +268,7 @@ co_occurrence_network <- function(phyloseq_obj,
          = FALSE)
   }
   classification <- check_index_classification(phyloseq_obj,
-                                                 classification)
+                                               classification)
   if (!(is.null(classification)) &
       any(!(classification %in% colnames(access(
         phyloseq_obj,
@@ -295,8 +294,8 @@ co_occurrence_network <- function(phyloseq_obj,
   }
   if (cluster == TRUE) {
     cluster <- cluster_fast_greedy(simplify(net,
-      remove.multiple = TRUE,
-      remove.loops = TRUE
+                                            remove.multiple = TRUE,
+                                            remove.loops = TRUE
     ))$membership
   }
   if (length(cluster) > 1) {
@@ -316,9 +315,8 @@ co_occurrence_network <- function(phyloseq_obj,
     colnames(circle_coords) <- c('x', 'y')
     communities[, 'Community' := factor(cluster,
                                         levels = sort(unique(cluster)))]
-    communities <- data.table(circle_coords,
-                              'Community' = unlist(lapply(communities$Community, rep,
-                                                          times = 62)))
+    communities <- data.table(circle_coords, Community = unlist(lapply(communities$Community, rep, times = nrow(circles@polygons[[i]]@Polygons[[1]]@coords))))
+
     communities <-
       communities[, .SD[chull(.SD)], by = 'Community', ]
     hulls <- communities[, .SD[chull(.SD)], by = 'Community', ]
@@ -337,15 +335,15 @@ co_occurrence_network <- function(phyloseq_obj,
     )[, classification])), 'Unclassified')
     node_colors <- create_palette(length(node_classes), node_colors)
     node_colors <- node_colors[node_classes %in%
-      eval(parse(text = paste0(
-        'igraph::V(net)$',
-        classification
-      )))]
+                                 eval(parse(text = paste0(
+                                   'igraph::V(net)$',
+                                   classification
+                                 )))]
   }
   if (is.null(classification) & node_colors == 'default') {
     node_colors <- 'steelblue'
   }
-  edge_colors <- c('pink1', 'gray22')[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
+  # edge_colors <- c('tomato3', 'gray22')[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
 
   g <- ggraph(layout) + theme_graph() + coord_fixed()
   if (length(cluster) > 1) {
@@ -355,61 +353,58 @@ co_occurrence_network <- function(phyloseq_obj,
         aes_string(
           x = 'x',
           y = 'y',
-          alpha = 0.4,
           group = 'Community'
         ),
+        alpha = 0.2,
+        color = '#414a4c',
         fill = community_colors[hulls$Community]
       )
   }
-  g <- g + geom_edge_link(width = 0.8, color = edge_colors) +
-    guides(colour = FALSE,
-           alpha = FALSE,
-           fill = guide_legend(ncol = ceiling(length(unique(
-             layout[[classification]]
-           )) / 25)), override.aes = list(size = 4))
-  if (is.null(classification)) {
-    g <-
-      g + geom_point(
-        aes_string(x = 'x', y = 'y', fill = classification),
-        pch = 21,
-        color = 'black',
-        fill = node_colors,
-        size = 5
-      )
-  } else {
-    g <-
-      g + geom_point(
-        aes_string(x = 'x', y = 'y', fill = classification),
-        pch = 21,
-        color = 'black',
-        size = 5
-      ) +
-      scale_fill_manual(values = node_colors)
-  }
+  g <- g + geom_edge_link(aes(color = Edge, width = Weight)) +
+    scale_edge_color_manual(values = c('tomato3', 'gray22')) +
+    scale_edge_width_continuous(range = c(0.2,2))
+  g <-
+    g + geom_point(
+      aes_string(x = 'x', y = 'y', fill = classification, size = '`Mean Relative Abundance`'),
+      pch = 21,
+      color = 'black'
+    ) +
+    scale_fill_manual(values = node_colors, aesthetics = "fill") +
+    scale_size_discrete(range = c(4,12))
   if (!is.null(nodes_of_interest)) {
     coi <-
       subset(layout, apply(layout, 1, function(class) {
-        any(class %in% nodes_of_interest)
+        any(grepl(paste(nodes_of_interest, collapse="|"), class))
       }))
+
     g <-
       g + ggrepel::geom_label_repel(
         data = coi,
         aes_string(x = 'x', y = 'y', fill = classification),
-        label = unname(apply(coi, 1, function(class) {
-          class[which(class %in% nodes_of_interest)]
-        })),
-        box.padding = unit(0.8, "lines"),
-        point.padding = unit(0.1, "lines"),
-        size = 5,
-        show.legend = FALSE
+        box.padding = unit(2.0, "lines"),
+        point.padding = unit(0.5, "lines"),
+        size = 4,
+        arrow = arrow(length = unit(0.2, "inches"),
+                      ends="last", type="closed"),
+        show.legend = FALSE,
+        label = lapply(unname(apply(coi, 1, function(class) {
+          class[which(grepl(paste(nodes_of_interest, collapse="|"), class))]
+        })), `[[`, 1),
+        max.overlaps = 1000
       )
   }
   g <- g + theme(
-    legend.text = element_text(size = 8),
+    legend.text = element_text(size = 10),
     legend.title = element_text(size = 10, face = 'bold'),
     legend.key.size = unit(4, "mm"),
     legend.spacing.x = unit(0.005, 'npc')
-  )
+  ) +
+    guides(colour = guide_legend(override.aes = list(size=10)),
+           alpha = FALSE,
+           fill = guide_legend(ncol = ceiling(length(unique(
+             layout[[classification]]
+           )) / 12), override.aes = list(size = 5)),
+           edge_color = guide_legend(override.aes = list(edge_width = 2)))
   return(g)
 }
 
@@ -425,7 +420,7 @@ co_occurrence_network <- function(phyloseq_obj,
 #' @usage variable_correlation_network(phyloseq_obj, variables, classification = NULL,
 #' treatment = NULL, subset = NULL, correlation_table = NULL, method = 'spearman',
 #' rho_threshold = c(-0.01, 0.01), p_threshold = 0.05, colors = 'default',
-#' negative_positive_colors = c('pink1', 'gray22'))
+#' negative_positive_colors = c('tomato3', 'gray22'))
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -470,7 +465,7 @@ variable_correlation_network <- function(
   rho_threshold = c(-0.01, 0.01),
   p_threshold = 0.05,
   colors = 'default',
-  negative_positive_colors = c('pink1', 'gray22')
+  negative_positive_colors = c('tomato3', 'gray22')
 ){
   if(!(is.null(treatment)) & is.null(subset)) {
     stop("`subset` must be declared if `treatment`
@@ -499,8 +494,15 @@ variable_correlation_network <- function(
     correlation_table <- cbind(correlation_table, Treatment = 'NA')
   }
   correlation_table <- correlation_table[, c('X', 'Y', 'Treatment', 'rho', 'p')]
-  colnames(correlation_table)[colnames(correlation_table)
-                              == 'rho'] <- 'weight'
+  correlation_table[, Weight := abs(rho)]
+  edge_sign <- vapply(
+    correlation_table$rho,
+    FUN = function(x) {
+      as.numeric(as.logical(sign(x) + 1) + 1)
+    }, numeric(1)
+  )
+  correlation_table[, Edge := factor(c("Negative", "Positive")[edge_sign], levels = c("Positive", "Negative"))]
+
   if (!is.null(access(phyloseq_obj, 'tax_table'))){
     nodes <- data.table(as(access(phyloseq_obj, 'tax_table'), 'matrix'))
     nodes <-
@@ -510,6 +512,8 @@ variable_correlation_network <- function(
     nodes <- data.table('Node_Name' = rownames(access(phyloseq_obj,
                                                       'tax_table')))
   }
+  phyloseq_obj <- relative_abundance(phyloseq_obj)
+  nodes[,`Mean Relative Abundance` := bin(taxa_sums(phyloseq_obj)/nsamples(phyloseq_obj), nbins = 9)]
   nodes <- nodes[nodes[['Node_Name']] %in%
                    c(
                      as.character(correlation_table$X),
@@ -518,52 +522,62 @@ variable_correlation_network <- function(
   vars <- matrix(rep(variables, ncol(nodes)), nrow = length(variables))
   colnames(vars) <- colnames(nodes)
   nodes <- rbind(nodes, vars)
-  edge_sign <- vapply(
-    correlation_table$weight,
-    FUN = function(x) {
-      as.numeric(as.logical(sign(x) + 1) + 1)
-    }, numeric(1)
-  )
-  correlation_table$weight <- abs(correlation_table$weight)
+
+
   net <- graph_from_data_frame(d = correlation_table,
                                vertices = nodes,
                                directed = FALSE)
-  igraph::E(net)$edge_sign <- edge_sign
   net <- simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
   layout <- create_layout(net, layout = 'igraph', algorithm = 'fr')
 
-  edge_colors <- negative_positive_colors[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
-
-  node_sizes <- rep(15, length(variables))
+  node_sizes <- rep(16, length(variables))
   node_sizes[names(node_sizes) %in% correlation_table[["Y"]]] <- 20
 
   variables_layout <- subset(layout, layout[,classification] %in% variables)
 
   g <- ggraph(layout) + theme_graph() + coord_fixed() +
-    geom_edge_link(width = 0.8, color = edge_colors)
+    geom_edge_link(aes(color = Edge, width = Weight)) +
+    scale_edge_color_manual(values = negative_positive_colors) +
+    scale_edge_width_continuous(range = c(0.2,2))
 
   layout <- subset(layout, !(layout[,classification] %in% variables))
 
   g <- g + geom_point(data = layout,
-                      aes_string(x = "x", y = "y", fill = classification),
-                      pch = 21, color = "black",
-                      size = 5, show.legend = TRUE) +
+                      aes_string(x = "x", y = "y",
+                                 size = '`Mean Relative Abundance`',
+                                 fill = classification),
+                      pch = 21,
+                      color = "black",
+                      show.legend = TRUE) +
+    scale_size_discrete(range = c(4,12)) +
     theme(legend.text = element_text(size = 8),
           legend.title = element_text(size = 10, face = "bold"),
           legend.key.size = unit(4, "mm"), legend.spacing.x = unit(0.005,"npc")) +
-    scale_fill_manual(values = create_palette(length(unique(layout[,classification])))) +
-    guides(fill = guide_legend(ncol = ceiling(length(unique(layout[[classification]]))/25), override.aes = list(size=4)))
-
-  g <- g + geom_point(data = variables_layout,
-                      aes_string(x = "x", y = "y"),
-                      pch = 21, color = "black",
-                      size = 20, show.legend = FALSE, fill = create_palette(length(variables)))
+    scale_fill_manual(values = create_palette(length(unique(layout[,classification])), colors))
 
   g <- g + geom_label(data = variables_layout,
                       aes_string(x = "x", y = "y"),
                       label = unname(apply(variables_layout, 1,
                                            function(x) {x[which(x %in% variables)] }))[1, ],
-                      size = 3, alpha = 0, label.size = 0, fontface = "bold",
-                      show.legend = FALSE)
+                      size = 5.5,
+                      alpha = 1,
+                      label.size = 1,
+                      fontface = "bold",
+                      show.legend = FALSE,
+                      label.padding = unit(0.65, "lines"),
+                      label.r = unit(1, "lines")
+  )
+  g <- g + theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10, face = 'bold'),
+    legend.key.size = unit(4, "mm"),
+    legend.spacing.x = unit(0.005, 'npc')
+  ) +
+    guides(colour = guide_legend(override.aes = list(size=10)),
+           alpha = FALSE,
+           fill = guide_legend(ncol = ceiling(length(unique(
+             layout[[classification]]
+           )) / 12), override.aes = list(size = 5)),
+           edge_color = guide_legend(override.aes = list(edge_width = 2)))
   return(g)
 }

@@ -132,7 +132,7 @@ co_occurrence <-
 #' significant rho-cutoff.
 #' @useDynLib phylosmith
 #' @usage permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-#' replicate_samples = 'independent', permutations = 10, method = 'spearman',
+#' replicate_samples = NULL, permutations = 10, method = 'spearman',
 #' cores = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
@@ -164,7 +164,7 @@ permute_rho <-
   function(phyloseq_obj,
            treatment = NULL,
            subset = NULL,
-           replicate_samples = 'independent',
+           replicate_samples = NULL,
            permutations = 10,
            method = 'spearman',
            cores = 1) {
@@ -181,11 +181,11 @@ permute_rho <-
         call. = FALSE
       )
     }
-    if (replicate_samples != 'independent'){
+    if (!(is.null(replicate_samples))){
       replicate_samples <- check_index_treatment(phyloseq_obj,
                                                    replicate_samples)
     }
-    if (replicate_samples != 'independent' &
+    if (!(is.null(replicate_samples)) &
         is.null(access(phyloseq_obj, 'sam_data'))) {
       stop(
         "`phyloseq_obj` must contain sample_data()
@@ -193,7 +193,7 @@ permute_rho <-
         call. = FALSE
       )
     }
-    if (replicate_samples != 'independent' &
+    if (!(is.null(replicate_samples)) &
         any(!(replicate_samples %in% colnames(access(
           phyloseq_obj,
           'sam_data'
@@ -241,9 +241,9 @@ permute_rho <-
       treatment_indices <- list(seq(nsamples(phyloseq_obj)) - 1)
     }
     replicate_sample_classes <- vector()
-    if (replicate_samples == 'independent'){
+    if (is.null(replicate_samples)){
       replicate_indices <- seq(ncol(access(phyloseq_obj, 'otu_table')))
-    } else if (replicate_samples != 'independent'){
+    } else if (!(is.null(replicate_samples))){
       phyloseq_obj_reps <- merge_treatments(phyloseq_obj,
                                             c(treatment, replicate_samples))
       replicate_name <- paste(c(treatment, replicate_samples),
@@ -265,7 +265,7 @@ permute_rho <-
     tryCatch({
       for (j in seq(permutations)){
         co_occurrence_table <- data.table()
-        if(replicate_samples == 'independent'){
+        if(is.null(replicate_samples)){
           n <- nrow(permuted_counts)
           permuted_counts<- apply(permuted_counts, 2, FUN = function(x){
             sample(x, n)
@@ -353,15 +353,12 @@ quantile_permuted_rhos <- function(permuted_rhos,
          call. = FALSE)
   }
   if (by_treatment) {
-    permuted_rhos[, Proportion := Count / sum(Count), by = Treatment]
+    permuted_rhos[, Proportion := Count / sum(Count), by = 'Treatment']
     quantiles <-
       permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <=
                                              (p / 2))], upper = rho[sum(cumsum(Proportion) <= (1 - (p / 2)))]),
-                    by = Treatment]
+                    by = 'Treatment']
   } else {
-    permuted_rhos <-
-      permuted_rhos[, -1][, lapply(.SD, sum, na.rm = TRUE),
-                          by = rho]
     permuted_rhos[, Proportion := Count / sum(Count)]
     quantiles <-
       permuted_rhos[, list(lower = rho[sum(cumsum(Proportion) <=

@@ -6,22 +6,22 @@
 #' The default color choice is the viridis palette, which is supposed to
 #' be both aesthetic for normal and color-blind viewers.
 #' @useDynLib phylosmith
-#' @usage abundance_heatmap(phyloseq_obj, classification = NULL,
-#' treatment, subset = NULL, transformation = 'none', colors = 'default',
+#' @usage abundance_heatmap(phyloseq_obj, treatment, subset = NULL,
+#' classification = NULL, transformation = 'none', colors = 'default',
 #' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain.
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
 #' each taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
+#' @param classification Column name as a string or number in the
+#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor.
 #' @param transformation Transformation to be used on the data. "none",
 #' "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh",
 #' "boxcox", "exp", "identity", "logit", "probability", "probit",
@@ -44,9 +44,9 @@
 
 abundance_heatmap <-
   function(phyloseq_obj,
-           classification = NULL,
-           treatment,
+           treatment = NULL,
            subset = NULL,
+           classification = NULL,
            transformation = 'none',
            colors = 'default',
            treatment_labels = NULL,
@@ -209,24 +209,24 @@ abundance_heatmap <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates line graphs with points across samples.
 #' @useDynLib phylosmith
-#' @usage abundance_lines(phyloseq_obj, classification = NULL,
-#' treatment, subset = NULL,
-#' relative_abundance = FALSE, points = TRUE, colors = 'default',
-#' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+#' @usage abundance_lines(phyloseq_obj, treatment, subset = NULL,
+#' classification = NULL, relative_abundance = FALSE, points = TRUE,
+#' colors = 'default', treatment_labels = NULL, sample_labels = NULL,
+#' classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
+#' @param classification Column name as a string or number in the
+#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+#' colors.
 #' @param relative_abundance If \code{TRUE}, transforms the abundance data
 #' into relative abundance by sample.
 #' @param points if \code{FALSE}, will not display the data-points.
@@ -245,9 +245,9 @@ abundance_heatmap <-
 
 abundance_lines <-
   function(phyloseq_obj,
-           classification = NULL,
-           treatment,
+           treatment = NULL,
            subset = NULL,
+           classification = NULL,
            relative_abundance = FALSE,
            points = TRUE,
            colors = 'default',
@@ -405,10 +405,10 @@ abundance_lines <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates phylogenic barplots.
 #' @useDynLib phylosmith
-#' @usage phylogeny_profile(phyloseq_obj, classification = NULL,
-#' treatment = NULL, subset = NULL, merge = TRUE, relative_abundance = FALSE,
-#' colors = 'default', grid = FALSE,
-#' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+#' @usage phylogeny_profile(phyloseq_obj, treatment = NULL, subset = NULL,
+#' classification = NULL, merge = TRUE, relative_abundance = FALSE,
+#' colors = 'default', grid = FALSE, treatment_labels = NULL,
+#' sample_labels = NULL, classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -444,9 +444,9 @@ abundance_lines <-
 
 phylogeny_profile <-
   function(phyloseq_obj,
-           classification = NULL,
            treatment = NULL,
            subset = NULL,
+           classification = NULL,
            merge = TRUE,
            relative_abundance = FALSE,
            colors = 'default',
@@ -533,7 +533,7 @@ phylogeny_profile <-
                         sample_labels, classification, classification_labels)
 
     color_count <- length(unique(graph_data[[classification]]))
-    graph_colors <- create_palette(color_count, colors)
+    graph_colors <- rev(create_palette(color_count, colors))
 
     g <-
       ggplot(graph_data,
@@ -608,24 +608,24 @@ phylogeny_profile <-
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage taxa_abundance_bars(phyloseq_obj, classification = NULL,
-#' treatment, subset = NULL, transformation = 'none', colors = 'default',
-#' wrap_by = NULL,
-#' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+#' @usage taxa_abundance_bars(phyloseq_obj, treatment = NULL,
+#' classification = NULL, subset = NULL, transformation = 'none',
+#' colors = 'default', wrap_by = NULL, treatment_labels = NULL,
+#' sample_labels = NULL, classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
-#' @param classification Column name as a string or number in the
-#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-#' colors.
 #' @param treatment Column name as a string or number in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
 #' @param subset A factor within the \code{treatment}. This will remove any
 #' samples that to not contain this factor. This can be a vector of multiple
 #' factors to subset on.
+#' @param classification Column name as a string or number in the
+#' \code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+#' colors.
 #' @param transformation Transformation to be used on the data. "none",
 #' "mean", "median", "sd", "log", "log10"
 #' @param colors Name of a color set from the
@@ -648,9 +648,9 @@ phylogeny_profile <-
 
 taxa_abundance_bars <-
   function(phyloseq_obj,
-           classification = NULL,
-           treatment,
+           treatment = NULL,
            subset = NULL,
+           classification = NULL,
            transformation = 'none',
            colors = 'default',
            wrap_by = NULL,
@@ -716,6 +716,7 @@ taxa_abundance_bars <-
       classification <- 'OTU'
     }
     treatment_name <- paste(treatment, collapse = sep)
+    if(is.null(treatment)){treatment_name <- NULL}
     if(!(is.null(wrap_by)) && !(wrap_by %in% treatment)){
       treatment <- c(treatment, wrap_by)
     }
@@ -723,7 +724,7 @@ taxa_abundance_bars <-
     graph_data <- melt_phyloseq(phyloseq_obj)
     set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
-            levels = rev(unique(graph_data[[classification]]))))
+            levels = unique(graph_data[[classification]])))
     if (transformation == 'none') {
       abundance <- 'Abundance'
       graph_data <- graph_data[, sum(Abundance),
@@ -763,7 +764,9 @@ taxa_abundance_bars <-
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
 
-    color_count <- length(unique(graph_data[[treatment_name]]))
+    if(is.null(treatment)){color_count <- 1} else {
+      color_count <- length(unique(graph_data[[treatment_name]]))
+    }
     graph_colors <- create_palette(color_count, colors)
 
     # graph_data[[classification]] <-
@@ -984,15 +987,12 @@ taxa_core_graph <-
 #'
 #' Computes the correlation of numerical variables with taxa
 #' @useDynLib phylosmith
-#' @usage variable_correlation_heatmap(phyloseq_obj, variables,
-#' treatment = NULL, subset = NULL, classification = NULL,
+#' @usage variable_correlation_heatmap(phyloseq_obj, treatment = NULL,
+#' subset = NULL, classification = NULL, variables,
 #' method = 'spearman', limits = c(-0.8, 0.8),
 #' colors = 'default', significance_color = 'white', cores = 1,
 #' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
-#' @param variables Numerical factors within the in the
-#' \code{\link[phyloseq:sample_data]{sample_data}} to correlate with the
-#' abundance data.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 #' multiple columns and they will be combined into a new column.
@@ -1002,6 +1002,9 @@ taxa_core_graph <-
 #' @param classification Column name as a \code{string} or \code{numeric} in
 #' the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
 #' conglomerate by.
+#' @param variables Numerical factors within the in the
+#' \code{\link[phyloseq:sample_data]{sample_data}} to correlate with the
+#' abundance data.
 #' @param method Which correlation method to calculate, "pearson", "spearman".
 #' @param limits The range for the legend, smaller limits will accentuate smaller
 #' correlations.
@@ -1029,10 +1032,10 @@ taxa_core_graph <-
 
 variable_correlation_heatmap <-
   function(phyloseq_obj,
-           variables,
            treatment = NULL,
            subset = NULL,
            classification = NULL,
+           variables,
            method = 'spearman',
            limits = c(-0.8, 0.8),
            colors = 'default',
@@ -1054,6 +1057,10 @@ variable_correlation_heatmap <-
     correlations <- change_labels(correlations, treatment_name, treatment_labels,
                         sample_labels, classification, classification_labels)
     correlations$Significance<-cut(correlations$p, breaks=c(-Inf, 0.001, 0.01, 0.05, Inf), label=c("***", "**", "*", ""))
+    set(correlations, j = 'X',
+        value = factor(correlations[['X']],
+                       levels = rev(unique(sort(correlations[['X']])))
+        ))
     if(is.null(treatment)){
       g <- ggplot(data = correlations, aes(x = Y, y = X, fill = rho))
     } else {
