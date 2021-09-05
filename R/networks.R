@@ -341,7 +341,7 @@ co_occurrence_network <- function(phyloseq_obj,
                                  )))]
   }
   if (is.null(classification) & node_colors == 'default') {
-    node_colors <- 'steelblue'
+    node_colors <- 'black'
   }
   # edge_colors <- c('tomato3', 'gray22')[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
 
@@ -361,7 +361,7 @@ co_occurrence_network <- function(phyloseq_obj,
       )
   }
   g <- g + geom_edge_link(aes(color = Edge, width = Weight)) +
-    scale_edge_color_manual(values = c('tomato3', 'gray22')) +
+    scale_edge_color_manual(values = c('tomato3', 'steelblue')) +
     scale_edge_width_continuous(range = c(0.2,2))
   g <-
     g + geom_point(

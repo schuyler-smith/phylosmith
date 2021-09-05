@@ -253,7 +253,7 @@ bin <- function(data, nbins = 9, labels = NULL) {
       stop("number of 'nbins' and 'labels' differ")
   if (nbins <= 1)
     stop("nbins must be greater than 1")
-  data[] <- lapply(data, function(x)
+  data <- lapply(data, function(x)
     if (is.numeric(x)) {
       if (length(unique(x)) <= nbins){
         as.factor(x)
@@ -261,12 +261,8 @@ bin <- function(data, nbins = 9, labels = NULL) {
         CUT(x, breaks = unique(nbins), labels = labels)
       }
     } else as.factor(x))
-  data[] <- lapply(data, function(x) if (any(is.na(as.character(x))))
-    ADDNA(x)
-    else x)
   if (vec) {
-    data <- unlist(data)
-    names(data) <- NULL
+    data <- unname(unlist(data))
   }
   return(data)
 }
@@ -274,17 +270,19 @@ bin <- function(data, nbins = 9, labels = NULL) {
 CUT <- function(x, breaks, ...) {
   if (length(breaks) == 1L) {
     nb <- as.integer(breaks + 1)
-    dx <- diff(rx <- range(x, na.rm = TRUE))
+    rx <- range(x, na.rm = TRUE)
+    dx <- diff(rx)
     if (dx == 0) {
       dx <- abs(rx[1L])
       breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000, length.out = nb)
     } else {
       breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
-      breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
+      breaks[c(1L, nb)] <- c(floor(rx[1L]), ceiling(rx[2L]))
     }
   }
-  breaks.f <- c(breaks[1], as.numeric(formatC(0 + breaks[2:(length(breaks)-1)], digits = 3, width = 1L)), breaks[length(breaks)])
-  cut(x, breaks = unique(breaks.f), ...)
+  breaks_f <- c(breaks[1], as.numeric(formatC(0 + breaks[2:(length(breaks)-1)], digits = 1, width = 1L)), breaks[length(breaks)])
+  cut_x <- cut(x, breaks = unique(breaks_f), ...)
+  return(cut_x)
 }
 
 ADDNA <- function(x) {
