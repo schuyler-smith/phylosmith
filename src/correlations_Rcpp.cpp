@@ -3,10 +3,11 @@
  *	Author: Schuyler Smith
  *
  */
+#include "significance.h"
+
 #include <cmath>
 #include <vector>
-#include <string>
-#include <regex>
+
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
@@ -19,9 +20,6 @@
   #include <omp.h>
 #endif
 
-#include "significance.h"
-
-using namespace std;
 
 //' @author Schuyler D. Smith
 //' @title Assign rank values to a matrix.
@@ -91,18 +89,18 @@ Rcpp::DataFrame Correlation(
     const std::string method = "pearson",
     const int ncores = 1
 ){
-  vector<int> X_names;
-  vector<int> Y_names;
-  vector<double> p_values;
-  vector<double> cor_coef_values;
+  std::vector<int> X_names;
+  std::vector<int> Y_names;
+  std::vector<double> p_values;
+  std::vector<double> cor_coef_values;
 
   size_t N_X = X.nrow();
   int df = X.ncol() - 2;
 
   arma::mat X_comp;
-  const string pearson = "pearson";
-  const string spearman = "spearman";
-  const string kendall = "kendall";
+  const std::string pearson = "pearson";
+  const std::string spearman = "spearman";
+  const std::string kendall = "kendall";
   if(method != pearson){
     X_comp = assign_rank(X);
   } else {
@@ -128,8 +126,8 @@ Rcpp::DataFrame Correlation(
           double p_val;
           arma::rowvec Y_values = Y_comp.row(j);
           if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
-            vector<double> X_i = arma::conv_to<vector <double> >::from(X_values);
-            vector<double> Y_j = arma::conv_to<vector <double> >::from(Y_values);
+            std::vector<double> X_i = arma::conv_to<std::vector <double> >::from(X_values);
+            std::vector<double> Y_j = arma::conv_to<std::vector <double> >::from(Y_values);
             if(method != kendall){
               cor_coef = pearsoncoeff(X_i, Y_j);
             } else {
@@ -167,8 +165,8 @@ Rcpp::DataFrame Correlation(
           double p_val;
           arma::rowvec Y_values = X_comp.row(j);
           if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
-            vector<double> X_i = arma::conv_to<vector <double> >::from(X_values);
-            vector<double> Y_j = arma::conv_to<vector <double> >::from(Y_values);
+            std::vector<double> X_i = arma::conv_to<std::vector <double> >::from(X_values);
+            std::vector<double> Y_j = arma::conv_to<std::vector <double> >::from(Y_values);
             if(method != kendall){
               cor_coef = pearsoncoeff(X_i, Y_j);
             } else {
@@ -224,13 +222,13 @@ Rcpp::DataFrame permute_rho_Rcpp(
     const int ncores = 1){
 
   size_t N = count_matrix.nrow();
-  vector<double> cor_coef_values;
+  std::vector<double> cor_coef_values;
 
   arma::mat comparison_matrix;
   arma::mat permuted_comparison_matrix;
-  const string pearson = "pearson";
-  const string spearman = "spearman";
-  const string kendall = "kendall";
+  const std::string pearson = "pearson";
+  const std::string spearman = "spearman";
+  const std::string kendall = "kendall";
   if(method != pearson){
     comparison_matrix = assign_rank(count_matrix);
     permuted_comparison_matrix = assign_rank(permuted_matrix);
@@ -250,8 +248,8 @@ Rcpp::DataFrame permute_rho_Rcpp(
         double cor_coef;
         arma::rowvec Y_values = permuted_comparison_matrix.row(j);
         if(arma::sum(X_values) > 0 && arma::sum(Y_values) > 0){
-          vector<double> X = arma::conv_to<vector <double> >::from(X_values);
-          vector<double> Y = arma::conv_to<vector <double> >::from(Y_values);
+          std::vector<double> X = arma::conv_to<std::vector <double> >::from(X_values);
+          std::vector<double> Y = arma::conv_to<std::vector <double> >::from(Y_values);
           if(method != kendall){
             cor_coef = pearsoncoeff(X, Y);
           } else {
@@ -292,14 +290,14 @@ Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table,
     Rcpp::CharacterVector taxa_2 = co_occurrence_table[2];
     Rcpp::NumericVector rho_values = co_occurrence_table[3];
     Rcpp::NumericVector p_values = co_occurrence_table[4];
-    vector<string> headers = co_occurrence_table.names();
+    std::vector<std::string> headers = co_occurrence_table.names();
     int n_pairs = co_occurrence_table.nrow();
     int n_taxa = taxa_of_interest.size();
 
     #pragma omp parallel for
     for(int row=0; row<n_pairs; ++row){
-        string t_1 = Rcpp::as<string>(taxa_1[row]);
-        string t_2 = Rcpp::as<string>(taxa_2[row]);
+        std::string t_1 = Rcpp::as<std::string>(taxa_1[row]);
+        std::string t_2 = Rcpp::as<std::string>(taxa_2[row]);
         bool t_1_in = FALSE;
         bool t_2_in = FALSE;
         for(int taxa=0; taxa<n_taxa; ++taxa){

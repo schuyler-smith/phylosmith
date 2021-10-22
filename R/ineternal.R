@@ -239,6 +239,17 @@ CI_ellipse <- function(points,
   return(ellipse_df)
 }
 
+
+#' Bin data
+#'
+#' Assigns bins to a vector of values
+#' @useDynLib phylosmith
+#' @usage bin(data, nbins, labels = NULL)
+#' @param data vector of data to bin
+#' @param nbins number of bins to produce
+#' @param labels names for the bins
+#' @return bins of values
+
 bin <- function(data, nbins = 9, labels = NULL) {
   vec <- FALSE
   if (is.atomic(data) == TRUE & is.null(dim(data)) == TRUE) {
