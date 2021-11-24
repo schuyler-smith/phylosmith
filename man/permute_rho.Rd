@@ -6,7 +6,7 @@
 significant rho-cutoff. Function from the phylosmith-package.}
 \usage{
 permute_rho(phyloseq_obj, treatment = NULL, subset = NULL,
-replicate_samples = 'independent', permutations = 10, method = 'spearman',
+replicate_samples = NULL, permutations = 10, method = 'spearman',
 cores = 1)
 }
 \arguments{

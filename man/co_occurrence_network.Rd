@@ -5,8 +5,8 @@
 \title{Create a node network ggplot object of the co-occurrence from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-co_occurrence_network(phyloseq_obj, classification = NULL,
-treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
+co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL,
+classification = NULL, co_occurrence_table = NULL, layout = NULL,
 nodes_of_interest = NULL, node_colors = 'default',
 cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 }
@@ -17,10 +17,6 @@ information about each sample, and it must contain
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 
-\item{classification}{Column name as a string or number in the
-\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-colors.}
-
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
@@ -28,6 +24,10 @@ multiple columns and they will be combined into a new column.}
 \item{subset}{A factor within the \code{treatment}. This will remove any
 samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
+
+\item{classification}{Column name as a string or number in the
+\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+colors.}
 
 \item{co_occurrence_table}{Table of the co-occurrence of taxa/genes in the
 \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no

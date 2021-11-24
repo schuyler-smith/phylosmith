@@ -5,8 +5,8 @@
 \title{Create a heatmap of the abundance table from a
 phyloseq object. Function from the phylosmith-package.}
 \usage{
-abundance_heatmap(phyloseq_obj, classification = NULL,
-treatment, subset = NULL, transformation = 'none', colors = 'default',
+abundance_heatmap(phyloseq_obj, treatment, subset = NULL,
+classification = NULL, transformation = 'none', colors = 'default',
 treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
@@ -16,9 +16,6 @@ information about each sample, and it must contain.
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
 each taxa/gene.}
 
-\item{classification}{Column name as a string or number in the
-\code{\link[phyloseq:tax_table]{tax_table}} for the factor.}
-
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
@@ -26,6 +23,9 @@ multiple columns and they will be combined into a new column.}
 \item{subset}{A factor within the \code{treatment}. This will remove any
 samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
+
+\item{classification}{Column name as a string or number in the
+\code{\link[phyloseq:tax_table]{tax_table}} for the factor.}
 
 \item{transformation}{Transformation to be used on the data. "none",
 "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh",

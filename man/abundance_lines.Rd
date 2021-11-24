@@ -5,10 +5,10 @@
 \title{Create a lineplot ggplot object of the abundance table from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-abundance_lines(phyloseq_obj, classification = NULL,
-treatment, subset = NULL,
-relative_abundance = FALSE, points = TRUE, colors = 'default',
-treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+abundance_lines(phyloseq_obj, treatment, subset = NULL,
+classification = NULL, relative_abundance = FALSE, points = TRUE,
+colors = 'default', treatment_labels = NULL, sample_labels = NULL,
+classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -17,10 +17,6 @@ information about each sample, and it must contain
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 taxa/gene.}
 
-\item{classification}{Column name as a string or number in the
-\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
-colors.}
-
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
@@ -28,6 +24,10 @@ multiple columns and they will be combined into a new column.}
 \item{subset}{A factor within the \code{treatment}. This will remove any
 samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
+
+\item{classification}{Column name as a string or number in the
+\code{\link[phyloseq:tax_table]{tax_table}} for the factor to use for node
+colors.}
 
 \item{relative_abundance}{If \code{TRUE}, transforms the abundance data
 into relative abundance by sample.}

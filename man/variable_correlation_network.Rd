@@ -8,7 +8,7 @@ from a phyloseq object. Function from the phylosmith-package.}
 variable_correlation_network(phyloseq_obj, variables, classification = NULL,
 treatment = NULL, subset = NULL, correlation_table = NULL, method = 'spearman',
 rho_threshold = c(-0.01, 0.01), p_threshold = 0.05, colors = 'default',
-negative_positive_colors = c('pink1', 'gray22'))
+negative_positive_colors = c('tomato3', 'gray22'))
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

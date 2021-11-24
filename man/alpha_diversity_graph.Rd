@@ -4,8 +4,8 @@
 \alias{alpha_diversity_graph}
 \title{Create a boxplot of the alpha-diversity. Function from the phylosmith-package.}
 \usage{
-alpha_diversity_graph(phyloseq_obj, index = 'shannon',
-treatment = NULL, subset = NULL, colors = 'default')
+alpha_diversity_graph(phyloseq_obj, treatment = NULL, subset = NULL,
+index = 'shannon', colors = 'default')
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -14,8 +14,6 @@ information about each sample, and it must contain
 \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
 each taxa/gene.}
 
-\item{index}{The diversity index to calculate ('shannon', 'simpson', 'invsimpson')}
-
 \item{treatment}{Column name as a string or number in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
 multiple columns and they will be combined into a new column.}
@@ -23,6 +21,8 @@ multiple columns and they will be combined into a new column.}
 \item{subset}{A factor within the \code{treatment}. This will remove any
 samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
+
+\item{index}{The diversity index to calculate ('shannon', 'simpson', 'invsimpson')}
 
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted

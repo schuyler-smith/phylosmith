@@ -6,6 +6,7 @@
 #include "significance.h"
 
 #include <cmath>
+#include <string>
 #include <vector>
 
 // [[Rcpp::plugins(cpp11)]]
@@ -95,7 +96,7 @@ Rcpp::DataFrame Correlation(
   std::vector<double> cor_coef_values;
 
   size_t N_X = X.nrow();
-  int df = X.ncol() - 2;
+  size_t df = X.ncol() - 2;
 
   arma::mat X_comp;
   const std::string pearson = "pearson";
@@ -291,8 +292,8 @@ Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table,
     Rcpp::NumericVector rho_values = co_occurrence_table[3];
     Rcpp::NumericVector p_values = co_occurrence_table[4];
     std::vector<std::string> headers = co_occurrence_table.names();
-    int n_pairs = co_occurrence_table.nrow();
-    int n_taxa = taxa_of_interest.size();
+    size_t n_pairs = co_occurrence_table.nrow();
+    size_t n_taxa = taxa_of_interest.size();
 
     #pragma omp parallel for
     for(int row=0; row<n_pairs; ++row){
@@ -300,7 +301,7 @@ Rcpp::DataFrame arrange_co_occurrence_table(Rcpp::DataFrame co_occurrence_table,
         std::string t_2 = Rcpp::as<std::string>(taxa_2[row]);
         bool t_1_in = FALSE;
         bool t_2_in = FALSE;
-        for(int taxa=0; taxa<n_taxa; ++taxa){
+        for(size_t taxa=0; taxa<n_taxa; ++taxa){
             if (t_1.find(taxa_of_interest[taxa]) != std::string::npos){
                 t_1_in = TRUE;
             }

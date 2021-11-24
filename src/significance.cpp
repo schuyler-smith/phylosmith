@@ -43,9 +43,9 @@ double stdev(std::vector<double> X){
   size_t N = X.size();
   double x_mean = mean(X);
   for(std::size_t i=0; i<N; ++i){
-    X[i] = pow(X[i] - x_mean, 2);
+    X[i] = std::pow(X[i] - x_mean, 2);
   }
-  return pow(sum(X)/(N), 0.5);
+  return std::pow(sum(X)/(N), 0.5);
 }
 
 double pearsoncoeff(std::vector<double> X, std::vector<double> Y){
@@ -93,12 +93,14 @@ double betai(double a, double b, double x)
     return 1.0-bt*betacf(b,a,1.0-x)/b; // metry transformation.
 }
 
-#define MAXIT 1000
-#define EPS 3.0e-7
-#define FPMIN 1.0e-30
+
+
 double betacf(double a, double b, double x)
   // Used by betai: Evaluates continued fraction for incomplete beta function by modiﬁed Lentz’s method (§5.2).
 {
+  constexpr double MAXIT { 1000 };
+  constexpr double EPS { 3.0e-7 };
+  constexpr double FPMIN { 1.0e-30 };
   int m,m2;
   double aa,c,d,del,h,qab,qam,qap;
   qab=a+b; // These q’s will be used in factors that occur

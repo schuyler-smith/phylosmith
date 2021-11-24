@@ -13,14 +13,14 @@ containing the melted phyloseq data.}
 
 \item{treatment}{name of the column defined as the treatment.}
 
-\item{treatment_labels}{a vector of names to be used as labels for 
+\item{treatment_labels}{a vector of names to be used as labels for
 treatments/facets.}
 
 \item{sample_labels}{a vector of names to be used as labels for Samples.}
 
 \item{classification}{name of the column defined as the classification.}
 
-\item{classification_labels}{a vector of names to be used as labels for the 
+\item{classification_labels}{a vector of names to be used as labels for the
 taxonomic classifications.}
 }
 \value{

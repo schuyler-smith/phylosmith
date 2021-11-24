@@ -5,18 +5,14 @@
 \title{Computes the correlation of numerical variables with taxa
 Function from the phylosmith-package.}
 \usage{
-variable_correlation_heatmap(phyloseq_obj, variables,
-treatment = NULL, subset = NULL, classification = NULL,
+variable_correlation_heatmap(phyloseq_obj, treatment = NULL,
+subset = NULL, classification = NULL, variables,
 method = 'spearman', limits = c(-0.8, 0.8),
 colors = 'default', significance_color = 'white', cores = 1,
 treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
-
-\item{variables}{Numerical factors within the in the
-\code{\link[phyloseq:sample_data]{sample_data}} to correlate with the
-abundance data.}
 
 \item{treatment}{Column name as a \code{string} or \code{numeric} in the
 \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -29,6 +25,10 @@ factors to subset on.}
 \item{classification}{Column name as a \code{string} or \code{numeric} in
 the \code{\link[phyloseq:tax_table]{tax_table}} for the factor to
 conglomerate by.}
+
+\item{variables}{Numerical factors within the in the
+\code{\link[phyloseq:sample_data]{sample_data}} to correlate with the
+abundance data.}
 
 \item{method}{Which correlation method to calculate, "pearson", "spearman".}
 
