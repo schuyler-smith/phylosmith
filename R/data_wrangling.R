@@ -159,41 +159,37 @@ conglomerate_taxa <- function(phyloseq_obj,
   sample_order <- sample_names(phyloseq_obj)
   taxa <- as(access(phyloseq_obj,'tax_table'), 'matrix')
   taxa <- as.data.table(taxa, keep.rownames='OTU')
+  for (j in seq_len(ncol(taxa))) set(taxa,which(is.na(taxa[[j]])),j, "Unclassified")
+  for (j in seq_len(ncol(taxa))) set(taxa,which(taxa[[j]] %in% "Incertae Sedis"),j, "Unclassified")
   if (hierarchical) {
     if(which(colnames(taxa) %in% classification) != length(colnames(taxa))){
       taxa[, `:=`(seq(ncol(taxa))[-c(seq(which(colnames(taxa) %in% 
                                                  classification)))], NULL)]
     }
-    set(taxa, i = taxa[, .I[is.na(get(classification))]], j = classification,
-        value = paste0('Unclassified_',
-                       unlist(taxa[ taxa[, .I[is.na(get(classification))]],
+    set(taxa, i = taxa[, .I[get(classification) %in% "Unclassified"]], j = classification,
+        value = paste0('Unclassified ',
+                       unlist(taxa[ taxa[, .I[get(classification) %in% "Unclassified"]],
                                     colnames(taxa)[which(colnames(taxa) %in% classification) - 1],
                                     with=F])))
-    set(taxa, i = taxa[, .I[is.na(get(classification))]], j = classification,
-        value = paste0('Unclassified_',
-                       unlist(taxa[ taxa[, .I[is.na(get(classification))]],
-                                    colnames(taxa)[which(colnames(taxa) %in% classification) - 1],
-                                    with=F])))
-    set(taxa, i = taxa[, .I[get(classification) %in% "Unclassified_NA"]], j = classification, value = "Unclassified")
+    for(i in seq_len(ncol(taxa)-1)){
+      set(taxa, i = taxa[, .I[get(classification) %in% "Unclassified Unclassified"]], j = classification,
+          value = paste0('Unclassified ',
+                         unlist(taxa[ taxa[, .I[get(classification) %in% "Unclassified Unclassified"]],
+                                      colnames(taxa)[which(colnames(taxa) %in% classification) - i],
+                                      with=F])))
+    }
   } else {
     taxa[, seq(ncol(taxa))[-c(which(colnames(taxa) %in% classification))][-1] := NULL]
   }
-  for (j in seq_along(taxa)) {
-    set(taxa, i = which(is.na(taxa[[j]])), j = j, value = 'Unclassified')
-  }
-
+  
   otus <- as(access(phyloseq_obj,'otu_table'), 'matrix')
   otus <- as.data.table(otus, keep.rownames='OTU')
-
-  otus <- merge(taxa, otus, by = 'OTU')
-  otus[, 'OTU' := NULL]
-  otus <- otus[, lapply(.SD, sum), by = c(colnames(taxa)[-1])]
-
-  otus[, OTU :=  do.call(paste, c(otus[, c(colnames(taxa)[-1]), with=FALSE], sep = "_"))]
-  otus <- as.matrix(otus[,-colnames(taxa)[-1], with=FALSE], rownames = 'OTU')
-  taxa[, OTU :=  do.call(paste, c(taxa[, c(colnames(taxa)[-1]), with=FALSE], sep = "_"))]
+  otus[, OTU := taxa[[classification]]]
+  otus <- otus[, lapply(.SD, sum), by = OTU]
+  otus <- as.matrix(otus, rownames = 'OTU')
+  taxa[, OTU := get(classification)]
   taxa <- as.matrix(unique(taxa), rownames = 'OTU')
-
+  
   phyloseq_obj <- phyloseq(otu_table(otus[, sample_order], taxa_are_rows = TRUE),
                            tax_table(taxa))
   if(!use_taxonomic_names){
