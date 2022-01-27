@@ -68,7 +68,7 @@ conglomerate_samples <-
     sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)), .SDcols = c(treatment)]]
     otu_table <- otu_table[Sample %in% sam_data$Sample]
   }
-  otu_table <- otu_table[, lapply(.SD, sum, na.rm=TRUE), by=Sample]
+  otu_table <- otu_table[, lapply(.SD, mean, na.rm=TRUE), by=Sample]
   sam_data <- sam_data[, .SD[1], Sample]
 
   phyloseq_obj <- phyloseq(
