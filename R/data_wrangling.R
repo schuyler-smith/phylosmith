@@ -161,6 +161,8 @@ conglomerate_taxa <- function(phyloseq_obj,
   taxa <- as.data.table(taxa, keep.rownames='OTU')
   for (j in seq_len(ncol(taxa))) set(taxa,which(is.na(taxa[[j]])),j, "Unclassified")
   for (j in seq_len(ncol(taxa))) set(taxa,which(taxa[[j]] %in% "Incertae Sedis"),j, "Unclassified")
+  for (j in seq_len(ncol(taxa))) set(taxa,which(taxa[[j]] %in% ""),j, "Unclassified")
+  
   if (hierarchical) {
     if(which(colnames(taxa) %in% classification) != length(colnames(taxa))){
       taxa[, `:=`(seq(ncol(taxa))[-c(seq(which(colnames(taxa) %in% 
