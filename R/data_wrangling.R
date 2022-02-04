@@ -190,7 +190,7 @@ conglomerate_taxa <- function(phyloseq_obj,
   otus <- otus[, lapply(.SD, sum), by = OTU]
   otus <- as.matrix(otus, rownames = 'OTU')
   taxa[, OTU := get(classification)]
-  taxa <- as.matrix(unique(taxa), rownames = 'OTU')
+  taxa <- as.matrix(unique(taxa, by = 'OTU'), rownames = 'OTU')
   
   phyloseq_obj <- phyloseq(otu_table(otus[, sample_order], taxa_are_rows = TRUE),
                            tax_table(taxa))
