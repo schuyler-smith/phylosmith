@@ -85,8 +85,8 @@ alpha_diversity_graph <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' plots the NMDS of a treatment or set of treatments in space.
 #' @useDynLib phylosmith
-#' @usage nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', circle = 0.95,
-#' labels = NULL, colors = 'default', verbose = TRUE)
+#' @usage nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', dimensions = 2, trymax = 100, 
+#' circle = 0.95, labels = NULL, colors = 'default', verbose = TRUE)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
@@ -99,6 +99,11 @@ alpha_diversity_graph <- function(phyloseq_obj, treatment = NULL, subset = NULL,
 #' "euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
 #' "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
 #' "binomial", "chao", "cao" or "mahalanobis".
+#' @param dimensions Number of dimensions. NB., the number of points n should 
+#' be n > 2*k + 1, and preferably higher in global non-metric MDS, and still 
+#' higher in local NMDS.
+#' @param trymax Maximum numbers of random starts in search of stable 
+#' solution. The iteration will stop when two convergent solutions were found or trymax was reached.
 #' @param circle If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 #' each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
 #' will add ellipse of confidence interval equal to value given (i.e. 0.95 produces
@@ -122,6 +127,8 @@ nmds_phyloseq <-
   function(phyloseq_obj,
            treatment,
            method = 'bray',
+           dimensions = 2,
+           trymax = 100,
            circle = 0.95,
            labels = NULL,
            colors = 'default',
@@ -179,8 +186,8 @@ nmds_phyloseq <-
         t(otu_matrix),
         autotransform = FALSE,
         distance = method,
-        k = 3,
-        trymax = 100,
+        k = dimensions,
+        trymax = trymax,
         trace = verbose
       )
     NMDS1 <- data.table(scores(MDS))$NMDS1
