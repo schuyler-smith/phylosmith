@@ -773,7 +773,7 @@ taxa_extract <- function(phyloseq_obj,
   if(is.null(classification)){classification <- colnames(taxa)}
   taxa <- cbind(taxa, ID = taxa$OTU)
   for (rank in classification) {
-    set(taxa, i = grep(tolower(taxa_to_extract), tolower(taxa[[rank]])), j = 'ID', value = 'EXTRACT')
+    set(taxa, i = unlist(lapply(tolower(taxa_to_extract), grep, tolower(taxa[[rank]]))), j = 'ID', value = 'EXTRACT')
   }
   taxa <- taxa[ID == 'EXTRACT'][, ID := NULL]
   if(nrow(taxa) == 0){
