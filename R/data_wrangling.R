@@ -368,7 +368,7 @@ relative_abundance <- function(phyloseq_obj, sig.fig=4) {
       abundance_table,
       2,
       FUN = function(c) {
-        rond(c / sum(c), sig.fig)
+        round(c / sum(c), sig.fig)
       }
     )
   abundance_table[is.na(abundance_table)] <- 0
