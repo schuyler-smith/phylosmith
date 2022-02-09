@@ -24,7 +24,7 @@ library_size <- function(phyloseq_obj) {
   phyloseq_obj <- phylosmith::taxa_filter(phyloseq_obj)
   totCounts <- sample_sums(phyloseq_obj)
   normFactor <- totCounts/exp(mean(log(totCounts)))
-  otu_table(phyloseq_obj) <- otu_table(phyloseq_obj)/rep(normFactor, each = (ntaxa(phyloseq_obj)))
+  otu_table(phyloseq_obj) <- round(otu_table(phyloseq_obj)/rep(normFactor, each = (ntaxa(phyloseq_obj))))
   return(phyloseq_obj)
 }
 

@@ -5,14 +5,10 @@
 \title{Transform abundance data in an \code{otu_table} to relative abundance,
 sample-by-sample. Function from the phylosmith-package.}
 \usage{
-relative_abundance(phyloseq_obj)
+relative_abundance(phyloseq_obj, sig.fig=4)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
-must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-information about each sample, and it must contain
-\code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
-taxa/gene.}
+\item{phyloseq_obj}{Number of significant figures to round to.}
 }
 \value{
 phyloseq-object
@@ -24,5 +20,5 @@ for all datasets, particularly if your sequencing depth varies between
 samples.
 }
 \examples{
-relative_abundance(soil_column)
+relative_abundance(soil_column, 3)
 }

@@ -345,17 +345,18 @@ merge_treatments <- function(phyloseq_obj, treatments) {
 #' for all datasets, particularly if your sequencing depth varies between
 #' samples.
 #' @useDynLib phylosmith
-#' @usage relative_abundance(phyloseq_obj)
+#' @usage relative_abundance(phyloseq_obj, sig.fig=4)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain
 #' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about each
 #' taxa/gene.
+#' @param phyloseq_obj Number of significant figures to round to.
 #' @export
 #' @return phyloseq-object
-#' @examples relative_abundance(soil_column)
+#' @examples relative_abundance(soil_column, 3)
 
-relative_abundance <- function(phyloseq_obj) {
+relative_abundance <- function(phyloseq_obj, sig.fig=4) {
   if (!inherits(phyloseq_obj, "phyloseq")) {
     stop("`phyloseq_obj` must be a phyloseq-class
             object", call. = FALSE)
@@ -367,7 +368,7 @@ relative_abundance <- function(phyloseq_obj) {
       abundance_table,
       2,
       FUN = function(c) {
-        c / sum(c)
+        rond(c / sum(c), sig.fig)
       }
     )
   abundance_table[is.na(abundance_table)] <- 0
