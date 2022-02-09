@@ -5,8 +5,8 @@
 \title{Create a ggplot object of the NMDS from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', circle = 0.95,
-labels = NULL, colors = 'default', verbose = TRUE)
+nmds_phyloseq(phyloseq_obj, treatment, method = 'bray', dimensions = 2, trymax = 100, 
+circle = 0.95, labels = NULL, colors = 'default', verbose = TRUE)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
@@ -23,6 +23,13 @@ multiple columns and they will be combined into a new column.}
 "euclidean", "manhattan", "canberra", "clark", "bray", "kulczynski",
 "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup",
 "binomial", "chao", "cao" or "mahalanobis".}
+
+\item{dimensions}{Number of dimensions. NB., the number of points n should 
+be n > 2*k + 1, and preferably higher in global non-metric MDS, and still 
+higher in local NMDS.}
+
+\item{trymax}{Maximum numbers of random starts in search of stable 
+solution. The iteration will stop when two convergent solutions were found or trymax was reached.}
 
 \item{circle}{If TRUE, a \code{\link[ggplot2:stat_ellipse]{stat_ellipse}} around
 each of the \code{treatment} factors (\code{TRUE}). If numeric between 0 and 1,
