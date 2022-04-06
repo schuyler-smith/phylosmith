@@ -330,7 +330,7 @@ abundance_lines <-
     graph_data <- melt_phyloseq(graph_data)
     set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
-            levels = rev(unique(graph_data[[classification]]))))
+            levels = unique(graph_data[[classification]])))
     set(graph_data, which(is.na(graph_data[[classification]])),
         classification, 'Unclassified')
     set(graph_data, j = 'Sample',
