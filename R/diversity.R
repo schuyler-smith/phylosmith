@@ -358,6 +358,7 @@ pcoa_phyloseq <- function(phyloseq_obj,
   distance_matrix[is.na(distance_matrix)] <- 0
   MDS <- cmdscale(distance_matrix, k = max(c(x,y)), eig = TRUE)
   graph_data <- cbind(x = MDS$points[,x], y = MDS$points[,y], metadata)
+  graph_data <- data.table::data.table(graph_data, keep.rownames = "Sample")
 
   g <- ggplot(data = graph_data, aes_string('x', 'y', group = treatment_name))
   if (circle) {
