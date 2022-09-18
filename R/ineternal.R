@@ -292,7 +292,7 @@ CUT <- function(x, breaks, ...) {
     }
   }
   breaks_f <- c(breaks[1], as.numeric(formatC(0 + breaks[2:(length(breaks)-1)], digits = 1, width = 1L)), breaks[length(breaks)])
-  cut_x <- cut(x, breaks = unique(breaks_f), ...)
+  cut_x <- cut(x+.000001, breaks = unique(breaks_f), ...)
   return(cut_x)
 }
 
