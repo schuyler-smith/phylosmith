@@ -340,7 +340,7 @@ co_occurrence_network <- function(phyloseq_obj,
                                    classification
                                  )))]
   }
-  if (is.null(classification) & node_colors == 'default') {
+  if (is.null(classification) &  'default' %in% node_colors) {
     node_colors <- 'black'
   }
   # edge_colors <- c('tomato3', 'gray22')[vapply(igraph::E(net)$edge_sign, rep, numeric(100), 100)]
