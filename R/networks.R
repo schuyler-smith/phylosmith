@@ -361,8 +361,8 @@ co_occurrence_network <- function(phyloseq_obj,
       )
   }
   g <- g + geom_edge_link(aes(color = Edge, width = Weight)) +
-    scale_edge_color_manual(values = c('tomato3', 'steelblue')) +
-    scale_edge_width_continuous(range = c(0.2,2))
+    ggraph::scale_edge_color_manual(values = c('tomato3', 'steelblue')) +
+    ggraph::scale_edge_width_continuous(range = c(0.2,2))
   g <-
     g + geom_point(
       aes_string(x = 'x', y = 'y', fill = classification, size = '`Mean Relative Abundance`'),
@@ -537,8 +537,8 @@ variable_correlation_network <- function(
 
   g <- ggraph(layout) + theme_graph() + coord_fixed() +
     geom_edge_link(aes(color = Edge, width = Weight)) +
-    scale_edge_color_manual(values = negative_positive_colors) +
-    scale_edge_width_continuous(range = c(0.2,2))
+    ggraph::scale_edge_color_manual(values = negative_positive_colors) +
+    ggraph::scale_edge_width_continuous(range = c(0.2,2))
 
   layout <- subset(layout, !(layout[,classification] %in% variables))
 
