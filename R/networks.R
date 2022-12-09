@@ -199,6 +199,7 @@ network_layout_ps <-
 #' @usage co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL,
 #' classification = NULL, co_occurrence_table = NULL, layout = NULL,
 #' nodes_of_interest = NULL, node_colors = 'default',
+#' negative_positive_colors = c('tomato3', 'gray22'),
 #' cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
@@ -225,6 +226,8 @@ network_layout_ps <-
 #' @param node_colors Name of a color set from the
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
 #' colors.
+#' @param negative_positive_colors colors to use for the edges to represent negative and
+#' positive correlations.
 #' @param cluster if \code{TRUE}, will use igraph's
 #' \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method.
 #' Alternatively, you may pass a vector of cluster assignments with order
@@ -254,6 +257,7 @@ co_occurrence_network <- function(phyloseq_obj,
                                   layout = NULL,
                                   nodes_of_interest = NULL,
                                   node_colors = 'default',
+                                  negative_positive_colors = c('tomato3', 'gray22'),
                                   cluster = FALSE,
                                   cluster_colors = '#979aaa',
                                   buffer = 0.5) {
@@ -361,7 +365,7 @@ co_occurrence_network <- function(phyloseq_obj,
       )
   }
   g <- g + geom_edge_link(aes(color = Edge, width = Weight)) +
-    ggraph::scale_edge_color_manual(values = c('tomato3', 'steelblue')) +
+    ggraph::scale_edge_color_manual(values = negative_positive_colors) +
     ggraph::scale_edge_width_continuous(range = c(0.2,2))
   g <-
     g + geom_point(
