@@ -306,10 +306,6 @@ abundance_lines <-
                   treatment,
                   frequency = 0,
                   subset = subset)
-    if (!(is.null(classification))) {
-      phyloseq_obj <- conglomerate_taxa(phyloseq_obj, classification,
-                                        hierarchical = FALSE)
-    }
     if (relative_abundance) {
       phyloseq_obj <- relative_abundance(phyloseq_obj)
     }
@@ -326,7 +322,6 @@ abundance_lines <-
         access(phyloseq_obj, 'sam_data')[, treatment_name]
       )
     }
-
     graph_data <- melt_phyloseq(graph_data)
     set(graph_data, j = classification,
         value = factor(graph_data[[classification]],
@@ -351,7 +346,8 @@ abundance_lines <-
                        show.legend = FALSE)
     }
     g <-
-      g + geom_line(size = 1.2, aes_string(color = classification)) +
+      g + stat_summary(fun.y='sum', geom='line') +
+      geom_line(size = 1.2, aes_string(color = classification)) +
       facet_grid(reformulate(treatment_name), scales = "free", space = "free") +
       scale_colour_manual(values = graph_colors) +
       guides(colour = guide_legend(
