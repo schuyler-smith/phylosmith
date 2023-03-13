@@ -341,13 +341,12 @@ abundance_lines <-
              aes_string(x = 'Sample', y = 'Abundance', group = classification))
     if (points == TRUE) {
       g <-
-        g + geom_point(size = 1.5,
+        g + stat_summary(fun.y='sum', geom='line', size = 1.5,
                        aes_string(color = classification),
                        show.legend = FALSE)
     }
     g <-
-      g + stat_summary(fun.y='sum', geom='line') +
-      geom_line(size = 1.2, aes_string(color = classification)) +
+      g + stat_summary(fun.y='sum', geom='line',size = 1.2, aes_string(color = classification)) +
       facet_grid(reformulate(treatment_name), scales = "free", space = "free") +
       scale_colour_manual(values = graph_colors) +
       guides(colour = guide_legend(
