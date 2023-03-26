@@ -16,13 +16,14 @@
 #' @import data.table
 #' @return data.table
 
-change_labels <- function(graph_data,
-                          treatment = NULL,
-                          treatment_labels = NULL,
-                          sample_labels = NULL,
-                          classification = NULL,
-                          classification_labels = NULL
-                          ) {
+change_labels <- function(
+  graph_data,
+  treatment = NULL,
+  treatment_labels = NULL,
+  sample_labels = NULL,
+  classification = NULL,
+  classification_labels = NULL
+) {
   if(!is.null(treatment_labels)){
     set(graph_data, j = treatment,
         value = factor(treatment_labels[as.numeric(graph_data[[treatment]])],
@@ -59,26 +60,26 @@ change_labels <- function(graph_data,
 #' multiple columns and they will be combined into a new column.
 #' @return string
 
-check_index_treatment <- function(phyloseq_obj, columns) {
-  argument <- deparse(substitute(columns))
-  treatments <- list(columns)
-  if (any(unlist(lapply(treatments, is.null))) |
-      any(unlist(lapply(treatments, is.na)))) {
+check_index_treatment <- function(phyloseq_obj, treatment) {
+  check_args(
+    phyloseq_obj = phyloseq_obj,
+    treatment    = treatment
+  )
+  if (any(sapply(treatment, is.null)) |
+      any(sapply(treatment, is.na))) {
     return(NULL)
   } else {
-    return(tryCatch({
-      unlist(lapply(
-        treatments,
-        FUN = function(treatment) {
-          colnames(access(phyloseq_obj, 'sam_data')[, treatment])
+    return(
+      sapply(treatment, FUN = function(trt) {
+        col <- suppressWarnings(as.numeric(trt))
+        if (!is.na(col)) {
+          colnames(phyloseq::access(phyloseq_obj, "sam_data")[, col])
+        } else {
+          trt
         }
-      ))
-    }, error = function(e) {
-      stop(
-        paste("{",argument,"}","must be at least one column name, or index, from the sample_data()"),
-        call. = FALSE
+        }
       )
-    }))
+    )
   }
 }
 
@@ -165,7 +166,8 @@ create_palette <- function(color_count, colors = 'default') {
     "#B275D8", "#82BB47", "#e0503a", "#F5E56C",
     "#949696", "#4989DE", "#E2E2E2",
     "#F7B04C", "#696bb2")
-  # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
+  # image(1:length(mycolors), 1, as.matrix(1:length(mycolors)), 
+  # col=mycolors, xlab="", ylab = "", xaxt = "n", yaxt = "n", bty = "n")
   if (any(colors == 'default')) {
     colors <- mycolors
     if (color_count <= length(colors)) {
@@ -179,7 +181,7 @@ create_palette <- function(color_count, colors = 'default') {
     }
   }
   if (any(!(colors %in% colors()))) {
-    if (any(colors %in% rownames(brewer.pal.info))) {
+    if (any(colors %in% rownames(RColorBrewer::brewer.pal.info))) {
       getPalette <- colorRampPalette(brewer.pal(min(c(
         color_count,
         brewer.pal.info[rownames(brewer.pal.info) == colors, 1]
@@ -300,4 +302,71 @@ ADDNA <- function(x) {
   if (is.factor(x) & !("NA" %in% levels(x))) x <- factor(x, levels = c(levels(x), "NA"))
   x[is.na(x)] <- "NA"
   x
+}
+
+phyloparts <- function(phyloseq_obj, ...) {
+  check_args(phyloseq_obj = phyloseq_obj)
+  args <- list(...)
+  parts <- list()
+  if ("otu_table" %in% args) {
+    if (!(is.null(phyloseq::access(phyloseq_obj, "otu_table")))) {
+      part <- phyloseq::access(phyloseq_obj, "otu_table")
+    } else part <- FALSE
+    parts$otu_table <- part
+  }
+  if ("tax_table" %in% args) {
+    if (!(is.null(phyloseq::access(phyloseq_obj, "tax_table")))) {
+      part <- phyloseq::access(phyloseq_obj, "tax_table")
+    } else part <- FALSE
+    parts$tax_table <- part
+  }
+  if ("sam_data" %in% args) {
+    if (!(is.null(phyloseq::access(phyloseq_obj, "sam_data")))) {
+      part <- phyloseq::access(phyloseq_obj, "sam_data")
+    } else part <- FALSE
+    parts$sam_data <- part
+  }
+  if ("phy_tree" %in% args) {
+    if (!(is.null(phyloseq::access(phyloseq_obj, "phy_tree")))) {
+      part <- phyloseq::access(phyloseq_obj, "phy_tree")
+    } else part <- FALSE
+    parts$phy_tree <- part
+  }
+  if ("refseq" %in% args) {
+    if (!(is.null(phyloseq::access(phyloseq_obj, "refseq")))) {
+      part <- phyloseq::access(phyloseq_obj, "refseq")
+    } else part <- FALSE
+    parts$refseq <- part
+  }
+  return(parts)
+}
+
+return_parts <- function(phyloseq_obj, original_obj, ...) {
+  check_args(phyloseq_obj = phyloseq_obj)
+  args <- list(...)
+  if ("otu_table" %in% args) {
+    if (!(is.null(original_obj@otu_table))) {
+        phyloseq::otu_table(phyloseq_obj) <- original_obj@otu_table
+    }
+  }
+  if ("tax_table" %in% args) {
+    if (!(is.null(original_obj@tax_table))) {
+        phyloseq::tax_table(phyloseq_obj) <- original_obj@tax_table
+    }
+  }
+  if ("sam_data" %in% args) {
+    if (!(is.null(original_obj@sam_data))) {
+        phyloseq::sample_data(phyloseq_obj) <- original_obj@sam_data
+    }
+  }
+  if ("refseq" %in% args) {
+    if (!(is.null(original_obj@refseq))) {
+        phyloseq::refseq(phyloseq_obj) <- original_obj@refseq
+    }
+  }
+  if ("phy_tree" %in% args) {
+    if (!(is.null(original_obj@phy_tree))) {
+        phyloseq::phy_tree(phyloseq_obj) <- original_obj@phy_tree
+    }
+  }
 }
