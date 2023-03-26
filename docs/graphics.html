@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Schuyler D. Smith" />
+
+<meta name="date" content="2023-03-26" />
+
+<title>Graphics</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="src/styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phylosmith</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="wrangling.html">
+    <span class="fa fa-file"></span>
+     
+    Wrangling
+  </a>
+</li>
+<li>
+  <a href="analytics.html">
+    <span class="fa fa-chart-pie"></span>
+     
+    Analytics
+  </a>
+</li>
+<li>
+  <a href="graphics.html">
+    <span class="fa fa-bar-chart"></span>
+     
+    Graphics
+  </a>
+</li>
+<li>
+  <a href="networks.html">
+    <span class="fa fa-project-diagram"></span>
+     
+    Networks
+  </a>
+</li>
+<li>
+  <a href="calculations.html">
+    <span class="fa fa-calculator"></span>
+     
+    Calculations
+  </a>
+</li>
+<li>
+  <a href="https://github.com/schuyler-smith/phylosmith/">
+    <span class="fa fa-code"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/schuyler-smith">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://germslab.org/">
+    <span class="fa fa-flask"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.bcb.iastate.edu/people/schuyler-smith">
+    <span class="fa fa-university"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:sdsmith@iastate.edu">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Graphics</h1>
+<h4 class="author"><a href="https://schuyler-smith.github.io/" target="_blank" >Schuyler D. Smith</a></h4>
+<h4 class="date">2023-03-26</h4>
+
+</div>
+
+
+<p>Examples used in this vignette will use the <code>GlobalPatterns</code> dataset from <code>phyloseq</code>. Or, in some cases, the <code>enterotype</code> dataset.</p>
+<pre class="r"><code>library(phyloseq)
+data(GlobalPatterns)</code></pre>
+<p><br></p>
+<div id="abundance" class="section level2">
+<h2>Abundance</h2>
+<div id="abundance_heatmap" class="section level3">
+<h3>abundance_heatmap</h3>
+<p><a name="abundance_heatmap"></a></p>
+<p>Create a ggplot object heatmap of abundances of each taxa for each sample.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>abundance_heatmap(phyloseq_obj, classification = NULL, treatment, subset = NULL, 
+  transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>subset</code></td>
+<td>A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> in the <code>tax_table</code> for the factor</td>
+</tr>
+</tbody>
+</table>
+<p>to conglomerate by. <code>transformation</code> | Transformation to be used on the data. “none”, “relative_abundance”, “log”, “log10”, “log1p”, “log2”, “asn”, “atanh”, “boxcox”, “exp”, “identity”, “logit”, “probability”, “probit”, “reciprocal”, “reverse” and “sqrt”. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>abundance_heatmap(GlobalPatterns, classification = &#39;Phylum&#39;,
+  treatment = &quot;SampleType&quot;, transformation = &#39;log2&#39;)</code></pre>
+<pre><code>## Warning in conglomerate_taxa(phyloseq_obj, classification, hierarchical =
+## FALSE): trees cannot be preserved after taxa conglomeration</code></pre>
+<p><img src="graphics_files/figure-html/abundance_heatmap-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="abundance_lines" class="section level3">
+<h3>abundance_lines</h3>
+<p><a name="abundance_lines"></a></p>
+<p>Create a ggplot object line graph of abundances across samples</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>abundance_lines(phyloseq_obj, classification, treatment, subset = NULL, 
+  relative_abundance = FALSE, points = TRUE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> in the <code>tax_table</code> for the factor</td>
+</tr>
+</tbody>
+</table>
+<p>to conglomerate by. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on. <code>relative_abundance</code> | If <code>TRUE</code>, transforms the abundance data into relative abundance by sample. <code>points</code> | Whether or not to display point on the lines for each data-point. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>abundance_lines(GlobalPatterns, classification = &#39;Phylum&#39;, 
+  treatment = &quot;SampleType&quot;, subset = c(&#39;Soil&#39;, &#39;Mock&#39;, &#39;Skin&#39;, &#39;Ocean&#39;), 
+  relative_abundance = TRUE)</code></pre>
+<p><img src="graphics_files/figure-html/abundance_lines-1.png" width="768" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="phylogeny_profile" class="section level3">
+<h3>phylogeny_profile</h3>
+<p><a name="phylogeny_profile"></a></p>
+<p>Creates a ggplot object of the stacked bar plots of a classification level in the tax_data, for each sample.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>phylogeny_profile(phyloseq_obj, classification, treatment, subset = NULL,
+  merge = TRUE, relative_abundance = FALSE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> in the <code>tax_table</code> for the factor</td>
+</tr>
+</tbody>
+</table>
+<p>to conglomerate by. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on. <code>merge</code> | If <code>FALSE</code>, will show separation of individuals within each <code>classification</code>. <code>relative_abundance</code> | If <code>TRUE</code>, transforms the abundance data into relative abundance by sample. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>phylogeny_profile(GlobalPatterns, classification = &#39;Phylum&#39;, 
+  treatment = &quot;SampleType&quot;, merge = TRUE, 
+  relative_abundance = TRUE)</code></pre>
+<p><img src="graphics_files/figure-html/phylogeny_profile-1.png" width="1152" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_abundance_bars" class="section level3">
+<h3>taxa_abundance_bars</h3>
+<p><a name="taxa_abundance_bars"></a></p>
+<p>Creates a ggplot object of the side-by-side bar plots of a classification level in the tax_data.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_abundance_bars(phyloseq_obj, classification = NULL, treatment, subset = NULL, transformation = &#39;none&#39;, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="odd">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> in the <code>tax_table</code> for the factor</td>
+</tr>
+</tbody>
+</table>
+<p>to conglomerate by. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on. <code>transformation</code> | Transformation to be used on the data. “none”, “mean”, “median”, “sd”, “log”, “log10” <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>filtered_obj &lt;- taxa_filter(GlobalPatterns, frequency = 0.8)
+taxa_abundance_bars(filtered_obj, classification = &#39;Phylum&#39;,
+  treatment = &quot;SampleType&quot;)</code></pre>
+<p><img src="graphics_files/figure-html/taxa_abundance_bars-1.png" width="768" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="taxa_core_graph" class="section level3">
+<h3>taxa_core_graph</h3>
+<p><a name="taxa_core_graph"></a></p>
+<p>Create graph of the core taxa seen in phyloseq-object over a range of abundance and smaple-frequency values.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>taxa_core_graph(phyloseq_obj, treatment = NULL, subset = NULL, 
+  frequencies = seq(0.1, 1, 0.1), abundance_thresholds = seq(0.01, 1, 0.01), 
+  colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>classification</code></td>
+<td>Column name as a <code>string</code> in the <code>tax_table</code> for the factor</td>
+</tr>
+</tbody>
+</table>
+<p>to conglomerate by. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on. <code>frequencies</code> | The range of proportions of samples the taxa are found in. <code>abundance_thresholds</code> | The range of minimum relative abundances the taxa are found in for each sample. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>taxa_core_graph(GlobalPatterns, abundance_thresholds = seq(0.01, 0.25, 0.01))</code></pre>
+<p><img src="graphics_files/figure-html/taxa_core_graph-1.png" width="768" /> <br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="variable_correlation_heatmap" class="section level3">
+<h3>variable_correlation_heatmap</h3>
+<p><a name="variable_correlation_heatmap"></a></p>
+<p>Computes the correlation of numerical variables with taxa and graphs as heatmap.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>variable_correlation_heatmap(phyloseq_obj, variables,
+  treatment = NULL, subset = NULL, classification = NULL,
+  method = &#39;spearman&#39;, limits = c(-0.8, 0.8),
+  colors = &#39;default&#39;, significance_color = &#39;white&#39;, cores = 1)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>variables</code></td>
+<td>Numerical factors within the in the sample_data to correlate with</td>
+</tr>
+</tbody>
+</table>
+<p>the abundance data. <code>classification</code> | Column name as a <code>string</code> in the <code>tax_table</code> for the factor to conglomerate by. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on. <code>method</code> | Which correlation method to calculate, “pearson”, “spearman”. <code>limits</code> | The range for the legend, smaller limits will accentuate smaller correlations. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors. <code>significance_color</code> | the color to use for the significance stars. <code>cores</code> numeric value for number of CPU cores to use for the pair-wise permutations. Default (1), <code>0</code> uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>filtered_obj &lt;- phyloseq::subset_samples(enterotype, 
+  !is.na(enterotype@sam_data$ClinicalStatus))
+filtered_obj &lt;- taxa_filter(filtered_obj, frequency = 0.65)
+variable_correlation_heatmap(filtered_obj, variables = &#39;Age&#39;,
+ treatment = &quot;ClinicalStatus&quot;, subset = c(&quot;healthy&quot;, &quot;elderly&quot;, &quot;obese&quot;), 
+ classification = &#39;Genus&#39;, method = &#39;spearman&#39;, cores = 1, 
+ significance_color = &#39;black&#39;)</code></pre>
+<p><img src="graphics_files/figure-html/variable_correlation_heatmap-1.png" width="384" /></p>
+<p><br></p>
+<hr />
+</div>
+</div>
+<div id="diversity" class="section level2">
+<h2>Diversity</h2>
+<p><br></p>
+<div id="alpha_diversity_graph" class="section level3">
+<h3>alpha_diversity_graph</h3>
+<p><a name="alpha_diversity_graph"></a></p>
+<p>Create a ggplot-object box-plot of the alpha-diversity from a phyloseq-object.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>alpha_diversity_graph(phyloseq_obj, index = &#39;shannon&#39;, treatment = NULL, 
+  subset = NULL, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p><code>phyloseq_obj</code> | A phyloseq-class object. <code>index</code> | The diversity index to calculate (‘shannon’, ‘simpson’, ‘invsimpson’) <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>subset</code> | A factor within the <code>treatment</code>. This will remove any samples that to not contain this factor. This can be a <code>vector</code> of multiple factors to subset on. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>alpha_diversity_graph(GlobalPatterns, index = &#39;shannon&#39;, treatment = &quot;SampleType&quot;,
+  subset = NULL, colors = &#39;default&#39;)</code></pre>
+<p><img src="graphics_files/figure-html/alpha_diversity_graph-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="dendrogram_phyloseq" class="section level3">
+<h3>dendrogram_phyloseq</h3>
+<p><a name="dendrogram_phyloseq"></a></p>
+<p>Create a ggplot-object dendrogram of the distance measure from a phyloseq-object.</p>
+<p><br></p>
+<p><strong><em>Usage</em></strong></p>
+<pre class="r"><code>dendrogram_phyloseq(phyloseq_obj, treatment = NULL, method = &#39;bray&#39;,
+  colors = &#39;default&#39;)</code></pre>
+<p><br></p>
+<p><strong><em>Arguments</em></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p><code>phyloseq_obj</code> | A phyloseq-class object. <code>treatment</code> | Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>. <code>colors</code> | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors. <code>method</code> | the distance measurement algorithm to use from “manhattan”, “euclidean”, “canberra”, “bray”, “kulczynski”, “gower”, “morisita”, “horn”, “mountford”, “jaccard”, “raup”, “binomial”, “chao”, “altGower”, “cao”, “mahalanobis”, “clark”</p>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>dendrogram_phyloseq(GlobalPatterns, &quot;SampleType&quot;, method = &#39;bray&#39;)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;dendextend&#39;:
+##   method     from 
+##   rev.hclust vegan</code></pre>
+<p><img src="graphics_files/figure-html/dendrogram_phyloseq-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+</div>
+<div id="nmds_phyloseq" class="section level3">
+<h3>nmds_phyloseq</h3>
+<p><a name="nmds_phyloseq"></a></p>
+<p>Creates a ggplot object of the NMDS ordination of samples.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>nmds_phyloseq(phyloseq_obj, treatment, circle = TRUE, labels = FALSE, 
+  colors = &#39;default&#39;, verbose = TRUE)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>circle</code></td>
+<td>Whether to add a stat_elipse around eache treatment factor on the graph.</td>
+</tr>
+<tr class="even">
+<td><code>labels</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data to use to place labels of that factor instead of circle points.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+<tr class="even">
+<td><code>verbose</code></td>
+<td>Whether or not to print the <code>vegan::metaMDS</code> stress convergence to console (TRUE) or not (FALSE).</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>nmds_phyloseq(GlobalPatterns, c(&quot;SampleType&quot;), circle = TRUE, verbose = FALSE)</code></pre>
+<pre><code>## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse
+## Too few points to calculate an ellipse</code></pre>
+<p><img src="graphics_files/figure-html/nmds_phyloseq-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="pcoa_phyloseq" class="section level3">
+<h3>pcoa_phyloseq</h3>
+<p><a name="pcoa_phyloseq"></a></p>
+<p>Creates a ggplot object of the NMDS ordination of samples.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>pcoa_phyloseq(phyloseq_obj, treatment, x = 1, y = 2, method = &#39;bray&#39;,
+  circle = 0.95, colors = &#39;default&#39;, labels = NULL)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>x</code></td>
+<td>the numerical principle compenent to use as the x-axis.</td>
+</tr>
+<tr class="even">
+<td><code>y</code></td>
+<td>the numerical principle compenent to use as the y-axis.</td>
+</tr>
+<tr class="odd">
+<td><code>method</code></td>
+<td>the distance measurement algorithm to use from “manhattan”, “euclidean”, “canberra”, “bray”, “kulczynski”, “gower”, “morisita”, “horn”, “mountford”, “jaccard”, “raup”, “binomial”, “chao”, “altGower”, “cao”, “mahalanobis”, “clark”</td>
+</tr>
+<tr class="even">
+<td><code>circle</code></td>
+<td>Whether to add a stat_elipse around eache treatment factor on the graph.</td>
+</tr>
+<tr class="odd">
+<td><code>labels</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the sample_data to use to place labels of that factor instead of circle points.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>pcoa_phyloseq(GlobalPatterns, &quot;SampleType&quot;, circle = FALSE)</code></pre>
+<p><img src="graphics_files/figure-html/pcoa_phyloseq-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+<p><br></p>
+</div>
+<div id="tsne_phyloseq" class="section level3">
+<h3>tsne_phyloseq</h3>
+<p><a name="tsne_phyloseq"></a></p>
+<p>Creates a ggplot object of the t-SNE ordination of the samples. t-Distributed Tochastic Neighbor Embedding is a machine learning algorithm of nonlinear dimensionality reduction for high-dimensional data.</p>
+<p><br> <strong><em>Usage</em></strong></p>
+<pre class="r"><code>tsne_phyloseq(phyloseq_obj, treatment, perplexity = 10, circle = FALSE, 
+  labels = FALSE, colors = &#39;default&#39;)</code></pre>
+<p><br> <strong><em>Arguments</em></strong></p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phyloseq_obj</code></td>
+<td>A phyloseq-class object.</td>
+</tr>
+<tr class="even">
+<td><code>treatment</code></td>
+<td>Column name as a <code>string</code>, or <code>vector</code> of, in the <code>sample_data</code>.<code>vector</code> of multiple columns and they will be combined into a new column.</td>
+</tr>
+<tr class="odd">
+<td><code>perplexity</code></td>
+<td>similar to selecting the number of neighbors to consider in decision making (should not be bigger than 3 * perplexity &lt; nrow(X) - 1, see Rtsne for interpretation)</td>
+</tr>
+<tr class="even">
+<td><code>circle</code></td>
+<td>Whether to add a <code>stat_elipse</code> around each <code>treatment</code> factor on the graph.</td>
+</tr>
+<tr class="odd">
+<td><code>labels</code></td>
+<td>Column name as a <code>string</code> or <code>numeric</code> in the <code>sample_data</code> to use to place labels of that factor instead of circle points.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" ><code>RColorBrewer</code></a> package or a vector palete of R-accepted colors.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Examples</em></strong></p>
+<pre class="r"><code>tsne_phyloseq(GlobalPatterns, treatment = &quot;SampleType&quot;, perplexity = 5,
+  circle = FALSE)</code></pre>
+<p><img src="graphics_files/figure-html/tsne_phyloseq-1.png" width="960" /></p>
+<p><br></p>
+<hr />
+</div>
+</div>
+
+<p><br>
+<br>
+<strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
+<br>
+Ph.D. Bioinformatics and Computational Biology
+<br>
+</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

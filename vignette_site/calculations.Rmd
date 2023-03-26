@@ -7,10 +7,17 @@ output:
     df_print: paged
 ---
 
-```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.width=8, fig.height=4, cache = TRUE)
+```{r load_package, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig.width=16, fig.height=8, cache = TRUE)
 library(phylosmith)
-data(soil_column)
+```
+
+Examples used in this vignette will use the `GlobalPatterns` dataset from 
+`phyloseq`.
+
+```{r load_data, message=FALSE, warning=FALSE}
+library(phyloseq)
+data(GlobalPatterns)
 ```
 
 <br>
@@ -32,16 +39,16 @@ co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL, rho = 0, p = 0.05, 
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`phyloseq_obj` | A phyloseq-class object.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
 `p` | The p-value cutoff. All returned co-occurrences will have a p-value less than or equal to `p`.
 `cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP 
 
 ***Examples***
 
-```{r co_occurrence}
-co_occurrence_table <- co_occurrence(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Amended', rho = 0.8, p = 0.05)
-co_occurrence_table
+```{r co_occurrence, warning=FALSE}
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+co_occurrence(filtered_obj, "SampleType", rho = 0.8, p = 0.05)
 ```
 
 <br>
@@ -68,8 +75,8 @@ permute_rho(phyloseq_obj, treatment, replicate_samples = 'independent', permutat
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain sample_data() with information about each sample, and it must contain tax_table() with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
+`phyloseq_obj` | A phyloseq-class object.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
 `replicate_samples` | Column name as a string or number in the sample_data that indicates which samples are non-independent of each other.
 `permutations` | Number of iterations to compute.
 `cores` | Number of CPU cores to use for the pair-wise permutations. Default (0) uses max cores available. Parallelization not available for systems running MacOS without openMP configuration.
@@ -77,8 +84,8 @@ Call | Description
 ***Examples***
 
 ```{r permute_rho}
-permuted_rhos <- permute_rho(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Amended', replicate_samples = 'Day', permutations = 5)
-permuted_rhos
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+permute_rho(filtered_obj, "SampleType", replicate_samples = "SampleType", permutations = 5)
 ```
 
 <br>
@@ -110,6 +117,8 @@ Call | Description
 ***Examples***
 
 ```{r histogram_permuted_rhos}
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+permuted_rhos <- permute_rho(filtered_obj, "SampleType", replicate_samples = "SampleType", permutations = 5)
 histogram_permuted_rhos(permuted_rhos, p = 0.05)
 ```
 
@@ -141,6 +150,8 @@ Call | Description
 ***Examples***
 
 ```{r quantile_permuted_rhos}
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+permuted_rhos <- permute_rho(filtered_obj, "SampleType", replicate_samples = "SampleType", permutations = 5)
 quantile_permuted_rhos(permuted_rhos, p = 0.05)
 quantile_permuted_rhos(permuted_rhos, p = 0.05, by_treatment = FALSE)
 ```
@@ -178,12 +189,19 @@ Call | Description
 ***Examples***
 
 ```{r variable_correlation}
-variable_correlation(soil_column, variables = 'Day',
- treatment = c('Matrix', 'Treatment'), subset = 'Amended',
- classification = 'Phylum', method = 'spearman', cores = 1)
+data(enterotype)
+filtered_obj <- phyloseq::subset_samples(enterotype, 
+  !is.na(enterotype@sam_data$ClinicalStatus))
+filtered_obj <- taxa_filter(filtered_obj, frequency = 0.65)
+
+variable_correlation(filtered_obj, variables = "Age",
+ treatment = "ClinicalStatus", subset = c("healthy", "elderly", "obese"),
+ classification = "Genus", method = "spearman")
 ```
 
 <br>
 
 ***
+
+
 

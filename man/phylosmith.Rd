@@ -5,13 +5,14 @@
 \alias{phylosmith}
 \title{phylosmith-package}
 \description{
-phylosmith is a conglomeration of functions written to process
-and analyze \code{\link[phyloseq]{phyloseq-class}} objects.
+A supplementary package to build on the phyloseq package. Phyloseq objects 
+are a great data-standard for microbiome and gene-expression data, this 
+package is aimed to provied easy data-wrangling and visualization.
 }
 \details{
 \url{https://schuyler-smith.github.io/phylosmith/}
 }
 \author{
-Schuyler Smith \email{schuyler.smith@iastate.edu}
+Schuyler D. Smith \email{schuylers.emails@gmail.com}
 }
 \keyword{package}

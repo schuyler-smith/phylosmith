@@ -1,11 +1,15 @@
 
 ## `phylosmith`
-[vignette](https://schuyler-smith.github.io/phylosmith/)
 
-[![Travis Build Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith) [![status](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c/status.svg)](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c)
+[![Travis Build Status](https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master)](https://github.com/schuyler-smith/phylosmith) 
+[![status](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c/status.svg)](http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c)
+
 [![DOI](https://zenodo.org/badge/159598780.svg)](https://zenodo.org/badge/latestdoi/159598780)
 
-A conglomeration of functions that I have written, that I find useful, for analyzing phyloseq objects. Phyloseq objects are a great data-standard for microbiome and gene-expression data.
+A supplementary package to build on the [phyloseq](https://github.com/joey711/phyloseq) package. Phyloseq objects are a great data-standard for microbiome and gene-expression data, this package is aimed to provied easy data-wrangling and visualization.
+
+
+[vignette](https://schuyler-smith.github.io/phylosmith/)
 
 # Installation
 ## Requirements
@@ -13,14 +17,14 @@ A conglomeration of functions that I have written, that I find useful, for analy
 For some Linux systems you may need to install the following two programs through your terminal.
 
 Ubuntu example:
-```
-sudo apt install libmysqlclient-dev libgdal-dev libudunits2-dev
+```bash
+sudo apt-get install libmysqlclient-dev libgdal-dev libudunits2-dev
 ```
 These programs are required by some dependencies and may not come in your default OS distribution.
 
 ### Windows Systems 
 
-if you are working on WINDOWS you likely need to install the CRAN program <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>.When prompted, select `add rtools to system PATH`.
+if you are working on `WINDOWS` you likely need to install the CRAN program <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" >Rtools</a>. When prompted, select `add rtools to system PATH`.
 
 ### R
 
@@ -43,7 +47,7 @@ install.packages(c("devtools", "RcppEigen", "RcppParallel", "Rtsne", "ggforce", 
 
 The package is hosted on Github, and can be installed through R with:
 ```
-devtools::install_github('schuyler-smith/phylosmith')
+remotes::install_github('schuyler-smith/phylosmith')
 library(phylosmith)
 ```
 

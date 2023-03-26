@@ -4,7 +4,7 @@ navbar:
   title: phylosmith
   type: inverse
   left:
-    - text: Overview
+    - text: Home
       icon: fa-home
       href: index.html
     - text: Wrangling
@@ -13,9 +13,9 @@ navbar:
     - text: Analytics
       icon: fa-chart-pie
       href: analytics.html
-    - text: Graphs
+    - text: Graphics
       icon: fa-bar-chart
-      href: graphs.html
+      href: graphics.html
     - text: Networks
       icon: fa-project-diagram
       href: networks.html
@@ -42,8 +42,8 @@ output:
     theme: cerulean
     highlight: textmate
     include:
-      after_body: footer.html
-    css: styles.css
+      after_body: src/footer.html
+    css: src/styles.css
     toc: true
     toc_float:
       collapsed: false

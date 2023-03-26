@@ -7,11 +7,17 @@ output:
     df_print: paged
 ---
 
-```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
+```{r load_package, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(fig.width=16, fig.height=8, cache = TRUE)
 library(phylosmith)
-data(soil_column)
-derep_sc <- conglomerate_samples(soil_column, treatment = c('Matrix', 'Treatment'), merge_on = 'Day')
+```
+
+Examples used in this vignette will use the `GlobalPatterns` dataset from 
+`phyloseq`.
+
+```{r load_data, message=FALSE, warning=FALSE}
+library(phyloseq)
+data(GlobalPatterns)
 ```
 
 <br>
@@ -32,9 +38,10 @@ co_occurrence_network(phyloseq_obj, treatment = NULL, subset = NULL, co_occurren
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`phyloseq_obj` | A phyloseq-class object.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
+`subset` | A factor within the `treatment`. This will remove any samples that to
+not contain this factor. This can be a `vector` of multiple factors to subset on.
 `co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
 `classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
 `node_colors` | Name of a color set from the <a href="https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf" target="_blank" >`RColorBrewer`</a> package or a vector palete of R-accepted colors.
@@ -43,8 +50,11 @@ Call | Description
 `buffer` | Amount of space beyond the points to extend the cluster (aesthetic argument).
 
 ***Examples***
+This sample set is too small to get any meaningful co-occurrence.
 ```{r co_occurrence_network}
-co_occurrence_network(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', co_occurrence_table = NULL, classification = 'Phylum')
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+co_occurrence_network(filtered_obj, treatment = "SampleType", 
+  classification = 'Phylum')
 ```
 
 <br>
@@ -61,7 +71,7 @@ Create an layout_igraph object of the co-occurrence from a phyloseq object. This
 <br>
 ***Usage***
 ```r
-network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = 'fr')
+network_layout_ps(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, algorithm = 'fr')
 ```
 
 <br>
@@ -69,16 +79,52 @@ network_layout_ps(phyloseq_obj, classification = NULL, treatment = NULL, subset 
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
-`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the treatment. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`phyloseq_obj` | A phyloseq-class object.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
+`subset` | A factor within the `treatment`. This will remove any samples that to
+not contain this factor. This can be a `vector` of multiple factors to subset on.
 `co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
-`classification` | Column name as a `string` or `numeric` in the `tax_table` for the factor to use for node colors.
 `algorithm` | Supported `igraph::layout_` algorithm.
 
 ***Examples***
 ```{r network_layout_ps}
-network_layout_ps(soil_column, treatment = c('Matrix', 'Treatment'), subset = 'Soil Amended', algorithm = 'kk')
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+network_layout_ps(filtered_obj, treatment = "SampleType", algorithm = 'kk')
+```
+
+<br>
+
+***
+
+<br>
+
+## network_ps
+<a name="network_ps"></a>
+
+Create an layout_igraph object of the co-occurrence from a phyloseq object. This can be input into the co_occurrence_network function, or used for other network creating scripts. The purpose is to be able to create reproducible and comparable graphics.
+
+<br>
+***Usage***
+```rnetwork_ps(phyloseq_obj, treatment = NULL, subset = NULL, co_occurrence_table = NULL, rho = 0.6)
+```
+
+<br>
+***Arguments***
+
+Call | Description
+-------------------- | ------------------------------------------------------------
+`phyloseq_obj` | A phyloseq-class object.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
+`subset` | A factor within the `treatment`. This will remove any samples that to
+not contain this factor. This can be a `vector` of multiple factors to subset on.
+`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
+`rho` | Cutoffs to use to subset the `correlation_table` by correlation values.
+
+
+***Examples***
+```{r network_ps}
+filtered_obj <- conglomerate_taxa(GlobalPatterns, "Phylum")
+network_ps(filtered_obj, treatment = "SampleType", rho = 0.6)
 ```
 
 <br>
@@ -107,11 +153,13 @@ variable_correlation_network(phyloseq_obj, variables, classification = NULL,
 
 Call | Description
 -------------------- | ------------------------------------------------------------
-`phyloseq_obj` | A phyloseq-class object. It must contain `sample_data` with information about each sample, and it must contain `tax_table` with information about each taxa/gene.
+`phyloseq_obj` | A phyloseq-class object.
+`co_occurrence_table` | Table of the co-occurrence of taxa/genes in the phyloseq_obj, computed using `co_occurrence()`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05 with a rho cut-off of 0.8.
 `variables` | Numerical factors within the in the sample_data to correlate with the abundance data.
 `classification` | Column name as a string or numeric in the tax_table for the factor to conglomerate by.
-`treatment` | Column name as a `string` or `numeric` in the `sample_data`. This can be a `vector` of multiple columns and they will be combined into a new column.
-`subset` | A factor within the `treatment`. This will remove any samples that to not contain this factor. This can be a vector of multiple factors to subset on.
+`treatment` | Column name as a `string`, or `vector` of, in the `sample_data`.
+`subset` | A factor within the `treatment`. This will remove any samples that to
+not contain this factor. This can be a `vector` of multiple factors to subset on.
 `correlation_table` | Table of the correlation of taxa/variables in the phyloseq_ob}, computed using `variable_correlation`. If no table is given, it will be computed with the phyloseq_obj, using the given treatment and p = 0.05.
 `method` | Which correlation method to calculate, "pearson", "spearman".
 `rho_threshold` | Cutoffs to use to subset the `correlation_table` by correlation values.
@@ -122,9 +170,15 @@ Call | Description
 
 ***Examples***
 ```{r variable_correlation_network}
-variable_correlation_network(soil_column, 'Day', 'Class', c('Matrix','Treatment'), 'Soil Amended')
+filtered_obj <- phyloseq::subset_samples(enterotype, 
+  !is.na(enterotype@sam_data$ClinicalStatus))
+filtered_obj <- taxa_filter(filtered_obj, frequency = 0.65)
+variable_correlation_network(filtered_obj, variables = 'Age',
+ treatment = "ClinicalStatus", subset = c("healthy", "elderly", "obese"), 
+ classification = 'Genus', method = 'spearman')
 ```
 
 <br>
 
 ***
+

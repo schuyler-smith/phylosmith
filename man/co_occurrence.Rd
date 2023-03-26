@@ -2,8 +2,7 @@
 % Please edit documentation in R/co_occurrence.R
 \name{co_occurrence}
 \alias{co_occurrence}
-\title{pair-wise Spearman rank co-occurrence, written in efficient c++ code.
-Function from the phylosmith-package.}
+\title{Pair-wise Spearman rank co-occurrence.}
 \usage{
 co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL,
 rho = 0, p = 0.05, method = 'spearman', cores = 1)
@@ -20,7 +19,8 @@ samples that to not contain this factor. This can be a vector of multiple
 factors to subset on.}
 
 \item{rho}{\code{numeric} The rho-value cutoff. All returned co-occurrences
-will have a rho-value less than or equal to \code{rho} or less than or equal to -\code{rho}.}
+will have a rho-value less than or equal to \code{rho} or less than or
+equal to -\code{rho}.}
 
 \item{p}{\code{numeric} The p-value cutoff. All returned co-occurrences
 will have a p-value less than or equal to \code{p}.}

@@ -14,12 +14,21 @@
 
 <title>phylosmith</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -28,8 +37,6 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -43,11 +50,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -60,34 +62,10 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
-<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+<link rel="stylesheet" href="src/styles.css" type="text/css" />
 
 
 
@@ -96,10 +74,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -116,40 +90,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -177,7 +127,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -189,7 +139,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -199,11 +149,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -215,13 +182,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -229,16 +195,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -347,7 +306,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -361,7 +320,7 @@ div.tocify {
 <div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -374,7 +333,7 @@ div.tocify {
   <a href="index.html">
     <span class="fa fa-home"></span>
      
-    Overview
+    Home
   </a>
 </li>
 <li>
@@ -392,10 +351,10 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="graphs.html">
+  <a href="graphics.html">
     <span class="fa fa-bar-chart"></span>
      
-    Graphs
+    Graphics
   </a>
 </li>
 <li>
@@ -450,7 +409,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -463,8 +422,8 @@ div.tocify {
 <p><br></p>
 <p><a href="https://github.com/schuyler-smith/phylosmith"><img src="https://travis-ci.org/schuyler-smith/phylosmith.svg?branch=master" alt="Travis Build Status" /></a> <a href="http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c"><img src="http://joss.theoj.org/papers/4d4780ab16c487764ebe108fa6bcdc2c/status.svg" alt="status" /></a> <a href="https://zenodo.org/badge/latestdoi/159598780"><img src="https://zenodo.org/badge/159598780.svg" alt="DOI" /></a></p>
 <p><br></p>
-<p><a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a conglomeration of functions written to process and analyze <code>phyloseq-class</code> objects. <a href="https://joey711.github.io/phyloseq/" targe="_blank" >Phyloseq</a> objects are a great data-standard for microbiome, gene-expression, and many other data types.</p>
-<p>A lot of these functions are just to make “data-wrangling” easier for the user. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication as some may require parameter optimization.</p>
+<p><a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a supplementary package to build on the phyloseq-objecy from the <a href="https://github.com/joey711/phyloseq">phyloseq</a> package. Phyloseq-objects are a great data-standard for microbiome and gene-expression data, this package is aimed to provied easy data-wrangling and visualization.</p>
+<p>A lot of these functions are just to make “data-wrangling” easier for investigators. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication, as some may require parameter optimization.</p>
 <p><br></p>
 <div id="installation" class="section level1">
 <h1>Installation</h1>
@@ -474,7 +433,7 @@ div.tocify {
 <h3>Linux Systems</h3>
 <p>For some Linux systems you may need to install the following two programs through your terminal.</p>
 <p>Ubuntu example:</p>
-<pre><code>sudo apt install libmysqlclient-dev libgdal-dev libudunits2-dev</code></pre>
+<pre><code>sudo apt-get install libmysqlclient-dev libgdal-dev libudunits2-dev</code></pre>
 <p>These programs are required by some dependancies and may not come in your default OS distribution.</p>
 </div>
 <div id="windows-systems" class="section level3">
@@ -535,20 +494,24 @@ library(phylosmith)</code></pre>
 <td>combines multiple columns in meta-data into a new column</td>
 </tr>
 <tr class="odd">
-<td><a href="wrangling.html#relative_abundance">relative_abundance</a></td>
-<td>transform abundance data to relative abundance</td>
-</tr>
-<tr class="even">
 <td><a href="wrangling.html#set_sample_order">set_sample_order</a></td>
 <td>sets the order of the samples of a phyloseq object</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="wrangling.html#set_treatment_levels">set_treatment_levels</a></td>
 <td>sets the order of the factors in a sample_data column</td>
+</tr>
+<tr class="odd">
+<td><a href="wrangling.html#taxa_extract">taxa_extract</a></td>
+<td>creates a phyloseq-object containing only taxa of choice</td>
 </tr>
 <tr class="even">
 <td><a href="wrangling.html#taxa_filter">taxa_filter</a></td>
 <td>filter taxa by proportion of samples seen in</td>
+</tr>
+<tr class="odd">
+<td><a href="wrangling.html#taxa_prune">taxa_prune</a></td>
+<td>remove taxa from a phyloseq-object</td>
 </tr>
 </tbody>
 </table>
@@ -556,6 +519,29 @@ library(phylosmith)</code></pre>
 </div>
 <div id="analytics" class="section level3">
 <h3>Analytics</h3>
+<div id="normalization" class="section level4">
+<h4>Normalization</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Call</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="analytics.html#library_size">library_size</a></td>
+<td>transform abundance data using library-size normalization</td>
+</tr>
+<tr class="even">
+<td><a href="analytics.html#relative_abundance">relative_abundance</a></td>
+<td>transform abundance data to relative abundance</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="taxa" class="section level4">
+<h4>Taxa</h4>
 <table>
 <thead>
 <tr class="header">
@@ -582,10 +568,11 @@ library(phylosmith)</code></pre>
 </tr>
 </tbody>
 </table>
-<p><a name="graphs"></a></p>
+<p><a name="graphics"></a></p>
 </div>
-<div id="graphs" class="section level3">
-<h3>Graphs</h3>
+</div>
+<div id="graphics" class="section level3">
+<h3>Graphics</h3>
 <div id="abundance" class="section level4">
 <h4>Abundance</h4>
 <table>
@@ -601,27 +588,27 @@ library(phylosmith)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="graphs.html#abundance_heatmap">abundance_heatmap</a></td>
+<td><a href="graphics.html#abundance_heatmap">abundance_heatmap</a></td>
 <td>create a ggplot object of the heatmaps of the abundance table</td>
 </tr>
 <tr class="even">
-<td><a href="graphs.html#abundance_lines">abundance_lines</a></td>
+<td><a href="graphics.html#abundance_lines">abundance_lines</a></td>
 <td>create a ggplot object of the abundance data as a line graph</td>
 </tr>
 <tr class="odd">
-<td><a href="graphs.html#phylogeny_profile">phylogeny_profile</a></td>
+<td><a href="graphics.html#phylogeny_profile">phylogeny_profile</a></td>
 <td>create a ggplot barplot object of the compositons of each sample at a taxonomic level</td>
 </tr>
 <tr class="even">
-<td><a href="graphs.html#taxa_abundance_bars">taxa_abundance_bars</a></td>
+<td><a href="graphics.html#taxa_abundance_bars">taxa_abundance_bars</a></td>
 <td>create a ggplot object of the abundance of taxa in each sample</td>
 </tr>
 <tr class="odd">
-<td><a href="graphs.html#taxa_core_graph">taxa_core_graph</a></td>
+<td><a href="graphics.html#taxa_core_graph">taxa_core_graph</a></td>
 <td>create a ggplot object of the core taxa over a range of parameters</td>
 </tr>
 <tr class="even">
-<td><a href="graphs.html#variable_correlation_heatmap">variable_correlation_heatmap</a></td>
+<td><a href="graphics.html#variable_correlation_heatmap">variable_correlation_heatmap</a></td>
 <td>create a ggplot heatmatp of the correlation of numerical variables with taxa</td>
 </tr>
 </tbody>
@@ -642,19 +629,23 @@ library(phylosmith)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="graphs.html#alpha_diversity_graph">alpha_diversity_graph</a></td>
+<td><a href="graphics.html#alpha_diversity_graph">alpha_diversity_graph</a></td>
 <td>create a ggplot-object box-plot of the alpha-diversity from a phyloseq-object.</td>
 </tr>
 <tr class="even">
-<td><a href="graphs.html#nmds_phyloseq">nmds_phyloseq</a></td>
-<td>create a ggplot object of the NMDS from a phyloseq object</td>
+<td><a href="graphics.html#dendrogram_phyloseq">dendrogram_phyloseq</a></td>
+<td>create a ggplot-object dendrogram of the distance measurement from a phyloseq-object.</td>
 </tr>
 <tr class="odd">
-<td><a href="graphs.html#pcoa_phyloseq">pcoa_phyloseq</a></td>
-<td>create a ggplot object of the PCoA from a phyloseq object</td>
+<td><a href="graphics.html#nmds_phyloseq">nmds_phyloseq</a></td>
+<td>create a ggplot object of the NMDS from a phyloseq object</td>
 </tr>
 <tr class="even">
-<td><a href="graphs.html#tsne_phyloseq">tsne_phyloseq</a></td>
+<td><a href="graphics.html#pcoa_phyloseq">pcoa_phyloseq</a></td>
+<td>create a ggplot object of the PCoA from a phyloseq object</td>
+</tr>
+<tr class="odd">
+<td><a href="graphics.html#tsne_phyloseq">tsne_phyloseq</a></td>
 <td>create a ggplot object of the t-SNE from a phyloseq object</td>
 </tr>
 </tbody>
@@ -685,6 +676,10 @@ library(phylosmith)</code></pre>
 <td>creates a layout object for a network</td>
 </tr>
 <tr class="odd">
+<td><a href="networks.html#network_ps">network_ps</a></td>
+<td>creates a network object from a phyloseq_object</td>
+</tr>
+<tr class="even">
 <td><a href="networks.html#variable_correlation_network">variable_correlation_network</a></td>
 <td>creates a network of the correlation of taxa and sample variables</td>
 </tr>
@@ -711,18 +706,22 @@ library(phylosmith)</code></pre>
 <td>calculate co-occurrence between taxa</td>
 </tr>
 <tr class="even">
+<td><a href="calculations.html#curate_co_occurrence">curate_co_occurrence</a></td>
+<td>filter co-occurrence tables</td>
+</tr>
+<tr class="odd">
 <td><a href="calculations.html#permute_rho">permute_rho</a></td>
 <td>runs permutations of the otu_table to calculate a significant <span class="math inline">\(\rho\)</span> value</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="calculations.html#histogram_permuted_rhos">histogram_permuted_rhos</a></td>
 <td>Create a ggplot object of the distribution of rho values.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="calculations.html#quantile_permuted_rhos">quantile_permuted_rhos</a></td>
 <td>calculate quantiles for the permuted rho values from the Spearman-rank co-occurrence</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="calculations.html#variable_correlation">variable_correlation</a></td>
 <td>calculate the correlation of numerical variables with taxa abundances</td>
 </tr>
@@ -740,8 +739,9 @@ library(phylosmith)</code></pre>
 <br>
 <strong><a href="https://schuyler-smith.github.io/" target="_blank">Schuyler Smith</a></strong>
 <br>
-Ph.D. Student - Bioinformatics and Computational Biology<br>
-Iowa State University.  Ames, IA.</p>
+Ph.D. Bioinformatics and Computational Biology
+<br>
+</p>
 
 
 </div>
@@ -771,7 +771,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -780,6 +780,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
