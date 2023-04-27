@@ -14,7 +14,7 @@ output:
 
 <br>
 
-<a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a supplementary package to build on the phyloseq-objecy from the [phyloseq](https://github.com/joey711/phyloseq) package. Phyloseq-objects are a great data-standard for microbiome and gene-expression data, this package is aimed to provied easy data-wrangling and visualization.
+<a href="https://github.com/schuyler-smith/phylosmith" targe="_blank" >phylosmith</a> is a supplementary package to build on the phyloseq-object from the [phyloseq](https://github.com/joey711/phyloseq) package. Phyloseq-objects are a great data-standard for microbiome and gene-expression data, this package is aimed to provied easy data-wrangling and visualization.
 
 A lot of these functions are just to make "data-wrangling" easier for investigators. Others will implement complex routines in a, hopefully, efficient and concise manner. I have also made functions to make figures for quick examination of data, but they may or may not be suitable for publication, as some may require parameter optimization.
 
