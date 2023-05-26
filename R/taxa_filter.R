@@ -58,8 +58,9 @@ taxa_filter <- function(
       keep.rownames = "Sample")
     sam_data <- sam_data[, c("Sample", treatment, treatment_name), with = FALSE]
     if (!(is.null(subset))) {
-      sam_data <- sam_data[sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
-        .SDcols = c(treatment, treatment_name)]]
+      sub_rows <- sam_data[, Reduce(`|`, lapply(.SD, `%in%`, subset)),
+        .SDcols = c(treatment, treatment_name)]
+      sam_data <- sam_data[sub_rows]
       phyloseq_table <- phyloseq_table[Sample %in% sam_data$Sample]
       phyloseq_obj <-
         phyloseq::prune_samples((sample_names(phyloseq_obj) %in%
