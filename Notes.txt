@@ -1,0 +1,5 @@
+rho - allow for vector/tuple of lower/upper limits
+redo examples
+redo docs
+revist function naming schemes
+revisit clustering

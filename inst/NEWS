@@ -27,3 +27,6 @@ Changes in version 1.0.6
 + update melt function for increased efficiency
 + fix dependencies
 + add label arguments for graphics
+
+Changes in version 1.0.7
++ fix argument checks in abundance bars

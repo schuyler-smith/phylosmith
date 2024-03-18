@@ -8,6 +8,7 @@
 #include <cmath>
 #include <string>
 #include <vector>
+#include <cstddef>
 
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -72,8 +73,10 @@ arma::mat assign_rank(Rcpp::NumericMatrix count_matrix
 //' \code{\link[phyloseq:otu_table]{phyloseq}}
 //' @param Y An \code{otu_table} in the format from
 //' \code{\link[phyloseq:otu_table]{phyloseq}}
-//' @param cor_coef_cutoff \code{double} representing the minimum \code{rho-value}
-//' accepted for the correlation to be returned.
+//' @param lowerrho a \code{double} representing the lower range of \code{rho} 
+//' values to accept.
+//' @param upperrho a \code{double} representing the upper range of \code{rho} 
+//' values to accept.
 //' @param p_cutoff \code{double} representing the maximum \code{p-value}
 //' accepted for the correlation to be returned.
 //' @param method Pearson, Spearman
@@ -85,7 +88,8 @@ arma::mat assign_rank(Rcpp::NumericMatrix count_matrix
 Rcpp::DataFrame Correlation(
     Rcpp::NumericMatrix X,
     Rcpp::NumericMatrix Y = Rcpp::NumericMatrix(1),
-    const double cor_coef_cutoff = 0,
+    const double lowerrho = 0,
+    const double upperrho = 0,
     const double p_cutoff = 1,
     const std::string method = "pearson",
     const int ncores = 1
@@ -140,7 +144,7 @@ Rcpp::DataFrame Correlation(
             cor_coef = 0;
             p_val = 1;
           }
-          if((cor_coef >= cor_coef_cutoff || cor_coef <= -cor_coef_cutoff) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+          if((cor_coef >= upperrho || cor_coef <= lowerrho) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
             #ifdef _OPENMP
               #pragma omp critical
             #endif
@@ -179,7 +183,7 @@ Rcpp::DataFrame Correlation(
             cor_coef = 0;
             p_val = 1;
           }
-          if((cor_coef >= cor_coef_cutoff || cor_coef <= -cor_coef_cutoff) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
+          if((cor_coef >= upperrho || cor_coef <= lowerrho) && p_val <= p_cutoff){ // these pushbacks takes the longest amount of time.. i think because of how memory is allocated, may need to look for more optimal method
             #ifdef _OPENMP
               #pragma omp critical
             #endif
