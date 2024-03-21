@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(RcppProgress)]]

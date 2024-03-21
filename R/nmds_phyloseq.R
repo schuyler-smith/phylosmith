@@ -66,7 +66,7 @@ nmds_phyloseq <- function(
     verbose        = verbose
   )
   phyloseq_obj <-
-    taxa_filter(phyloseq_obj, treatment, subset)
+    taxa_filter(phyloseq_obj, treatment)
   treatment_name <- paste(treatment, collapse = sep)
   metadata <- as(phyloseq_obj@sam_data, "data.frame")
   color_count <- length(unique(metadata[[treatment_name]]))

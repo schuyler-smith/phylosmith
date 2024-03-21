@@ -9,7 +9,7 @@ co_occurrence_network(phyloseq_obj, classification = NULL,
 treatment = NULL, subset = NULL, co_occurrence_table = NULL, layout = NULL,
 nodes_of_interest = NULL, node_colors = 'default',
 negative_positive_colors = c('tomato3', 'gray22'),
-cluster = FALSE, cluster_colors = 'default', buffer = 0.5)
+cluster = FALSE, cluster_colors = '#979aaa', buffer = 0.5)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

@@ -4,10 +4,10 @@
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
 #' creates barplots of taxa by treatment.
 #' @useDynLib phylosmith
-#' @usage taxa_abundance_bars(phyloseq_obj, treatment = NULL,
-#' classification = NULL, subset = NULL, transformation = 'none',
-#' colors = 'default', wrap_by = NULL, treatment_labels = NULL,
-#' sample_labels = NULL, classification_labels= NULL)
+#' @usage taxa_abundance_bars(phyloseq_obj, treatment = NULL, subset = NULL,
+#' classification = NULL, transformation = "none", colors = "default",
+#' wrap_by = NULL, treatment_labels = NULL, sample_labels = NULL,
+#' classification_labels = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
 #' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
 #' information about each sample, and it must contain

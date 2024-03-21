@@ -19,6 +19,7 @@ merge_treatments <- function(
   phyloseq_obj, 
   treatment
 ) {
+  if(length(treatment) <= 1) return(phyloseq_obj)
   check_args(
     phyloseq_obj = phyloseq_obj,
     sam_data     = phyloseq_obj,

@@ -5,10 +5,10 @@
 \title{Create a ggplot object of the abundance barplots from a phyloseq object.
 Function from the phylosmith-package.}
 \usage{
-taxa_abundance_bars(phyloseq_obj, treatment = NULL,
-classification = NULL, subset = NULL, transformation = 'none',
-colors = 'default', wrap_by = NULL, treatment_labels = NULL,
-sample_labels = NULL, classification_labels= NULL)
+taxa_abundance_bars(phyloseq_obj, treatment = NULL, subset = NULL,
+classification = NULL, transformation = "none", colors = "default",
+wrap_by = NULL, treatment_labels = NULL, sample_labels = NULL,
+classification_labels = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It

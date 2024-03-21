@@ -43,3 +43,15 @@
 #' @keywords datasets
 #' @source Simulation
 "mock_phyloseq_2"
+
+#' IA Lake Data
+#'
+#' This data is from microbiomes associate with Lakes in 
+#' Iowa, USA between 2018 and 2019.
+#'
+#' @docType data
+#' @usage data(ia_lakes)
+#' @format A \code{\link[phyloseq]{phyloseq-class}} object.
+#' @keywords datasets
+#' @source Simulation
+"ia_lakes"

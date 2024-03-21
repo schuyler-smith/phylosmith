@@ -35,7 +35,7 @@
 #' @param classification_labels a vector of names to be used as labels for the
 #' taxonomic classifications.
 #' @importFrom stats reformulate
-#' @importFrom ggraph scale_fill_viridis
+#' @importFrom viridis scale_fill_viridis
 #' @importFrom stringr str_to_title
 #' @export
 #' @return ggplot-object

@@ -4,7 +4,7 @@
 \alias{taxa_proportions}
 \title{Compute proportions for taxa.}
 \usage{
-taxa_proportions(phyloseq_obj, classification, treatment = NA)
+taxa_proportions(phyloseq_obj, classification, treatment = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. it
@@ -28,6 +28,6 @@ phylosmith-package.
 }
 \examples{
 taxa_proportions(soil_column, 'Phylum', treatment = NULL)
-taxa_proportions(soil_column, 'Phylum', treatment = 'sample')
+taxa_proportions(soil_column, 'Phylum', treatment = 'Sample')
 taxa_proportions(soil_column, 'Phylum', treatment = c('Matrix', 'Treatment'))
 }

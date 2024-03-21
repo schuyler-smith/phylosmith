@@ -28,7 +28,7 @@
 
 alpha_diversity_graph <- function(
   phyloseq_obj,
-  treatment,
+  treatment = NULL,
   subset = NULL,
   index = "shannon",
   colors = "default"

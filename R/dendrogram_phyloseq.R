@@ -23,6 +23,8 @@
 #' colors.
 #' @importFrom vegan vegdist
 #' @importFrom stats hclust
+#' @importFrom viridis viridis
+#' @importFrom dendextend as.ggdend
 #' @export
 #' @return ggplot-object
 #' @examples dendrogram_phyloseq(soil_column, c('Matrix', 'Treatment'))
@@ -69,7 +71,7 @@ dendrogram_phyloseq <- function(
     g <- g + 
       geom_label(data = graph_data$labels, 
         aes_string(x = "x", y = "y", label = "label",
-        fill = treatment_name), color = "white",
+        fill = paste0("`", treatment_name, "`")), color = "white",
         label.padding = unit(0.2, "lines"), 
         fontface = "bold", hjust = 1.05, size = 2.5) +
       scale_fill_manual(values = sample_colors, 

@@ -5,11 +5,10 @@
 \title{Computes the correlation of numerical variables with taxa
 Function from the phylosmith-package.}
 \usage{
-variable_correlation_heatmap(phyloseq_obj, treatment = NULL,
-subset = NULL, classification = NULL, variables,
-method = 'spearman', limits = c(-0.8, 0.8),
-colors = 'default', significance_color = 'white', cores = 1,
-treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+variable_correlation_heatmap(phyloseq_obj, variables, treatment = NULL,
+subset = NULL, classification = NULL, method = "spearman", limits = c(-0.8, 0.8),
+colors = "default", significance_color = "white", cores = 1, treatment_labels = NULL,
+sample_labels = NULL, classification_labels = NULL)
 }
 \arguments{
 \item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}

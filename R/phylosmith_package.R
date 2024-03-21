@@ -10,7 +10,7 @@
 #'
 #' @name phylosmith
 #' @author Schuyler D. Smith \email{schuylers.emails@gmail.com}
-#' @docType package
+#' @docType _PACKAGE
 #' @keywords package
 #' @import phyloseq data.table ggplot2 RcppParallel
 NA

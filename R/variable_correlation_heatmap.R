@@ -3,11 +3,10 @@
 #'
 #' Computes the correlation of numerical variables with taxa
 #' @useDynLib phylosmith
-#' @usage variable_correlation_heatmap(phyloseq_obj, treatment = NULL,
-#' subset = NULL, classification = NULL, variables,
-#' method = 'spearman', limits = c(-0.8, 0.8),
-#' colors = 'default', significance_color = 'white', cores = 1,
-#' treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+#' @usage variable_correlation_heatmap(phyloseq_obj, variables, treatment = NULL,
+#' subset = NULL, classification = NULL, method = "spearman", limits = c(-0.8, 0.8),
+#' colors = "default", significance_color = "white", cores = 1, treatment_labels = NULL,
+#' sample_labels = NULL, classification_labels = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
 #' @param treatment Column name as a \code{string} or \code{numeric} in the
 #' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
@@ -96,7 +95,7 @@ variable_correlation_heatmap <- function(
     labs(y = NULL, x = NULL, fill = method) +
     facet_grid(. ~ Y, drop = TRUE, scales = "free", space = "free_x")
   if("default" %in% colors){
-    g <- g + ggraph::scale_fill_viridis(limit = limits)
+    g <- g + viridis::scale_fill_viridis(limit = limits)
   } else {
     g <- g + scale_fill_gradient2(low = colors[1], mid = colors[2],
       high = colors[3], limit = limits)

@@ -5,43 +5,44 @@ Author: Schuyler Smith <sdsmith@iastate.edu>
 Maintainer: Schuyler Smith <sdsmith@iastate.edu>
 Description: Functions for analyzing phyloseq objects.
 biocViews: Software, Sequencing, Microbiome, 
-    Metagenomics, Clustering, Classification, 
-    MultipleComparison, GeneticVariability, Visualization
+  Metagenomics, Clustering, Classification, 
+  MultipleComparison, GeneticVariability, Visualization
 URL: https://schuyler-smith.github.io/phylosmith/
 BugReports: https://github.com/schuyler-smith/phylosmith.issues
 Depends:
-    R (>= 3.5)
+  R (>= 3.5)
 Imports:
-    phyloseq,
-    data.table,
-    RcppParallel,
-    parallel,
-    stats,
-    grDevices,
-    RColorBrewer,
-    ggplot2,
-    igraph,
-    ggraph,
-    ggrepel,
-    sf,
-    vegan,
-    Rtsne,
-    stringr
+  data.table,
+  dendextend,
+  ggplot2,
+  ggraph,
+  ggrepel,
+  grDevices,
+  igraph,
+  parallel,
+  phyloseq,
+  RColorBrewer,
+  RcppParallel,
+  Rtsne,
+  sf,
+  stats,
+  stringr,
+  vegan,
+  viridis
 LinkingTo: 
-    Rcpp,
-    RcppParallel,
-    RcppArmadillo,
-    RcppProgress
+  Rcpp,
+  RcppArmadillo,
+  RcppParallel,
+  RcppProgress
 Suggests:
-    knitr,
-    devtools,
-    rmarkdown,
-    testthat,
-    BiocStyle
-SystemRequirements: C++11
+  BiocStyle,
+  devtools,
+  knitr,
+  rmarkdown,
+  testthat
 NeedsCompilation: yes
 VignetteBuilder: knitr
 License: GPL-3
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1.9000
 Encoding: UTF-8

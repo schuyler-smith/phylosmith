@@ -3,7 +3,7 @@
 #' Computes the proportion of a taxa classification. Function from the
 #' phylosmith-package.
 #' @useDynLib phylosmith
-#' @usage taxa_proportions(phyloseq_obj, classification, treatment = NA)
+#' @usage taxa_proportions(phyloseq_obj, classification, treatment = NULL)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. it
 #' must contain \code{\link[phyloseq:tax_table]{tax_table()}}) with
 #' information about each taxa/gene.
@@ -16,7 +16,7 @@
 #' @export
 #' @return data.table
 #' @examples taxa_proportions(soil_column, 'Phylum', treatment = NULL)
-#' taxa_proportions(soil_column, 'Phylum', treatment = 'sample')
+#' taxa_proportions(soil_column, 'Phylum', treatment = 'Sample')
 #' taxa_proportions(soil_column, 'Phylum', treatment = c('Matrix', 'Treatment'))
 
 taxa_proportions <- function(
@@ -27,12 +27,11 @@ taxa_proportions <- function(
   check_args(
     phyloseq_obj   = phyloseq_obj,
     tax_table      = phyloseq_obj,
-    classification = classification
+    classification = classification,
+    treatment = treatment
   )
-  if (!is.null(treatment)) if (treatment != "Sample"){
-    check_args(treatment = treatment)
-  }
   phyloseq_obj <- taxa_filter(phyloseq_obj)
+  phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
   treatment_name <- paste(treatment, collapse = sep)
 
   phyloseq_obj <- suppressWarnings(

@@ -136,7 +136,7 @@ check_args <- function(...) {
   }
   if ("transformation" %in% names(args)) {
     transformation <- args[["transformation"]]
-    options <- c("none", "relative_abundance", "log", "log10", "log1p", "log2",
+    options <- c("none", "relative_abundance", "mean", "log", "log10", "log1p", "log2",
       "asn", "atanh", "boxcox", "exp", "identity", "logit",
       "probability", "probit", "reciprocal", "reverse", "sqrt")
     check_options(transformation, options)
@@ -213,9 +213,9 @@ check_treatment <- function(phyloseq_obj, arg) {
 sample_data()", call. = FALSE)
     }
   columns <- colnames(phyloseq::access(phyloseq_obj, "sam_data"))
-  if (any(!(arg %in% columns))) {
+  if (any(!(arg %in% columns))) if (any(!(arg %in% 'Sample'))) {
     stop("`", arg_name, "` must be at least one column name from the
-phyloseq::sample_data(phyloseq_obj)", call. = FALSE)
+phyloseq::sample_data(phyloseq_obj) or specified as 'Sample'", call. = FALSE)
   }
 }
 
@@ -225,10 +225,11 @@ check_subset <- function(phyloseq_obj, treatment, subset) {
     if (is.null(treatment)) {
       stop("`subset` provided but `treatment` is null", call. = FALSE)
     }
-    treatment_vals <- data.table::data.table(as(phyloseq::access(phyloseq_obj,
-        "sam_data"), "data.frame"))[[treatment]]
+    phyloseq_obj <- merge_treatments(phyloseq_obj, treatment)
+    treatment_name <- paste(treatment, collapse = sep)
+    treatment_vals <- data.table::data.table(as(phyloseq::access(phyloseq_obj, "sam_data"), "data.frame"))[[treatment_name]]
     treatment_vals <- unique(treatment_vals)
-    if (any(!subset %in% treatment_vals)) {
+    if (any(!grepl(subset, paste(treatment_vals, collapse="|")))){
       missing <- paste(subset[!subset %in% treatment_vals], collapse = "', '")
       stop("`subset` must be values contained in `treatment`. c('", 
       paste(missing, collapse = "', '"), "') not found.", call. = FALSE)
@@ -261,6 +262,7 @@ check_boolean <- function(arg) {
 
 check_frequency <- function(arg) {
   arg_name <- deparse(substitute(arg))
+  if (is.null(arg)){return()}
   if (!(is.numeric(arg)) |
     !(arg >= 0 & arg <= 1)) {
       stop("`", arg_name, "` must be a numeric value between and 1",
