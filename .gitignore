@@ -6,7 +6,6 @@ Meta
 .Rhistory
 .RData
 .Rprofile
-*~
 tags
 build
 *.log
@@ -41,3 +40,6 @@ configure.log
 .Rproj.user
 /doc/
 /Meta/
+.DS_store
+.Renviron
+.devcontainer

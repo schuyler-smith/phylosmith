@@ -2,30 +2,26 @@
 % Please edit documentation in R/abundance_heatmap.R
 \name{abundance_heatmap}
 \alias{abundance_heatmap}
-\title{Create a heatmap of the abundance table from a
-phyloseq object. Function from the phylosmith-package.}
+\title{Create a heatmap of the out_table from a
+phyloseq-object.}
 \usage{
-abundance_heatmap(phyloseq_obj, treatment, subset = NULL,
-classification = NULL, transformation = 'none', colors = 'default',
-treatment_labels = NULL, sample_labels = NULL, classification_labels= NULL)
+abundance_heatmap(phyloseq_obj, classification = NULL, 
+  treatment =  NULL, subset = NULL, transformation = 'none', 
+  colors = 'default', treatment_labels = NULL, sample_labels = NULL,
+  classification_labels= NULL)
 }
 \arguments{
-\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object. It
-must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-information about each sample, and it must contain.
-\code{\link[phyloseq:tax_table]{tax_table()}}) with information about
-each taxa/gene.}
+\item{phyloseq_obj}{A \code{\link[phyloseq]{phyloseq-class}} object.}
 
-\item{treatment}{Column name as a string or number in the
-\code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-multiple columns and they will be combined into a new column.}
+\item{classification}{The level of taxonomy to examine. Must be a column name
+from the tax_table of the phyloseq_object.
+\code{\link[phyloseq:tax_table]{tax_table}}.}
 
-\item{subset}{A factor within the \code{treatment}. This will remove any
-samples that to not contain this factor. This can be a vector of multiple
-factors to subset on.}
+\item{treatment}{Column name as a string, or vector of strings, from the
+\code{\link[phyloseq:sample_data]{sample_data}}.}
 
-\item{classification}{Column name as a string or number in the
-\code{\link[phyloseq:tax_table]{tax_table}} for the factor.}
+\item{subset}{A level within the \code{treatment}. Multiple levels can be 
+given as a vector.}
 
 \item{transformation}{Transformation to be used on the data. "none",
 "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh",
@@ -34,26 +30,28 @@ factors to subset on.}
 
 \item{colors}{Name of a color set from the
 \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
-colors.}
+colors. The default is an adaption of the palette from 
+\url{https://www.nature.com/articles/nmeth.1618}}
 
 \item{treatment_labels}{a vector of names to be used as labels for
-treatments/facets.}
+treatments/facets, in the order they appear in the figure.}
 
-\item{sample_labels}{a vector of names to be used as labels for Samples.}
+\item{sample_labels}{a vector of names to be used as labels for Samples, 
+in the order they appear in the figure.}
 
 \item{classification_labels}{a vector of names to be used as labels for the
-taxonomic classifications.}
+taxonomic classifications, in the order they appear in the figure.}
 }
 \value{
 ggplot-object
 }
 \description{
-Takes a \code{\link[phyloseq]{phyloseq-class}} object as input and
+Uses a \code{\link[phyloseq]{phyloseq-class}} object as input and
 creates a ggplot-heatmap of the abundances across samples.
-The default color choice is the viridis palette, which is supposed to
-be both aesthetic for normal and color-blind viewers.
+The default color choice is the viridis palette.
 }
 \examples{
-abundance_heatmap(soil_column, classification = 'Phylum',
-treatment = c('Matrix', 'Treatment'), transformation = 'log')
+data(GlobalPatterns)
+abundance_heatmap(GlobalPatterns, classification = "Phylum",
+ treatment = "SampleType", transformation = "log2")
 }

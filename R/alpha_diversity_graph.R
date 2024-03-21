@@ -1,4 +1,4 @@
-
+#' @author Schuyler D. Smith
 #' Create a boxplot of the alpha-diversity. Function from the phylosmith-package.
 #'
 #' Inputs a \code{\link[phyloseq]{phyloseq-class}} object and
@@ -6,21 +6,17 @@
 #' @useDynLib phylosmith
 #' @usage alpha_diversity_graph(phyloseq_obj, treatment = NULL, subset = NULL,
 #' index = "shannon", colors = "default")
-#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object. It
-#' must contain \code{\link[phyloseq:sample_data]{sample_data()}}) with
-#' information about each sample, and it must contain
-#' \code{\link[phyloseq:tax_table]{tax_table()}}) with information about
-#' each taxa/gene.
-#' @param treatment Column name as a string or number in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-#' multiple columns and they will be combined into a new column.
-#' @param subset A factor within the \code{treatment}. This will remove any
-#' samples that to not contain this factor. This can be a vector of multiple
-#' factors to subset on.
-#' @param index The diversity index to calculate ("shannon", "simpson", "invsimpson")
-#' @param colors Name of a color set from the
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
+#' @param treatment Column name as a string, or vector of strings, from the
+#' \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset A level within the \code{treatment}. Multiple levels can be 
+#' given as a vector.
+#' @param index The diversity index to calculate ("shannon", "simpson", 
+#' "invsimpson")
+#' @param colors This can be either a name of a color set from the
 #' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
-#' colors.
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
 #' @export
 #' @return ggplot-object
 #' @examples alpha_diversity_graph(soil_column, index = "shannon",

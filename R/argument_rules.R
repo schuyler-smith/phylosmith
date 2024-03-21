@@ -1,4 +1,11 @@
-# Argument error checks
+#' Function to check inputs to arguments
+#'
+#' Checks that arguments passed to functions are correct types.
+#' @author Schuyler D. Smith
+#' @useDynLib phylosmith
+#' @usage check_args()
+#' @param ... Any argument to a function in the phylosmith package
+#' 
 check_args <- function(...) {
   args <- list(...)
   if ("phyloseq_obj" %in% names(args)) {
@@ -94,7 +101,7 @@ check_args <- function(...) {
   }
   if ("cluster" %in% names(args)) {
     cluster <- args[["cluster"]]
-    check_boolean(cluster)
+    check_boolean_or_frequency(cluster)
   }
   if ("relative_abundance" %in% names(args)) {
     relative_abundance <- args[["relative_abundance"]]
@@ -116,6 +123,23 @@ check_args <- function(...) {
     grid <- args[["grid"]]
     check_boolean(grid)
   }
+
+  if ("treatment_labels" %in% names(args)) {
+    treatment_labels <- args[["treatment_labels"]]
+    check_strings(treatment_labels)
+  }
+  if ("sample_labels" %in% names(args)) {
+    sample_labels <- args[["sample_labels"]]
+    check_strings(sample_labels)
+  }
+  if ("classification_labels" %in% names(args)) {
+    classification_labels <- args[["classification_labels"]]
+    check_strings(classification_labels)
+  }
+  if ("nodes_of_interest" %in% names(args)) {
+    nodes_of_interest <- args[["nodes_of_interest"]]
+    check_strings(nodes_of_interest)
+  }
   
   if ("dist_method" %in% names(args)) {
     method <- args[["dist_method"]]
@@ -136,7 +160,8 @@ check_args <- function(...) {
   }
   if ("transformation" %in% names(args)) {
     transformation <- args[["transformation"]]
-    options <- c("none", "relative_abundance", "mean", "log", "log10", "log1p", "log2",
+    options <- c("none", "relative_abundance", "mean", "median", "sd", 
+      "log", "log10", "log1p", "log2",
       "asn", "atanh", "boxcox", "exp", "identity", "logit",
       "probability", "probit", "reciprocal", "reverse", "sqrt")
     check_options(transformation, options)
@@ -188,6 +213,20 @@ check_args <- function(...) {
   if ("co_occurrence_table" %in% names(args)) {
     check_co_occurrence_table(args[["co_occurrence_table"]])
   }
+
+  if ("colors" %in% names(args)) {
+    colors <- args[["colors"]]
+    check_colors(colors)
+  }
+  if ("cluster_colors" %in% names(args)) {
+    cluster_colors <- args[["cluster_colors"]]
+    check_colors(cluster_colors)
+  }
+  if ("colors" %in% names(args)) {
+    node_colors <- args[["node_colors"]]
+    check_colors(node_colors)
+  }
+  
 }
 
 
@@ -239,8 +278,8 @@ check_subset <- function(phyloseq_obj, treatment, subset) {
 
 check_classification <- function(phyloseq_obj, classification) {
   if (!(is.null(classification)) &
-      is.null(phyloseq::access(phyloseq_obj, "tax_table"))) {
-      stop(
+    is.null(phyloseq::access(phyloseq_obj, "tax_table"))) {
+    stop(
 "`classification` provided by `phyloseq_obj` does not contain tax_table()",
       call. = FALSE)
   }
@@ -255,8 +294,8 @@ check_classification <- function(phyloseq_obj, classification) {
 check_boolean <- function(arg) {
     arg_name <- deparse(substitute(arg))
     if (!(is.logical(arg))) {
-        stop("`", arg_name, "` must must be either`TRUE`, or `FALSE`",
-        call. = FALSE)
+      stop("`", arg_name, "` must must be either`TRUE`, or `FALSE`",
+      call. = FALSE)
     }
 }
 
@@ -267,6 +306,12 @@ check_frequency <- function(arg) {
     !(arg >= 0 & arg <= 1)) {
       stop("`", arg_name, "` must be a numeric value between and 1",
       call. = FALSE)
+  }
+}
+
+check_boolean_or_frequency <- function(arg) {
+  if (!is.logical(arg) && (!is.numeric(arg) || arg < 0 || arg > 1)) {
+    stop("`cluster` must be a boolean or a numeric value between 0 and 1.")
   }
 }
 
@@ -321,7 +366,29 @@ being compared", call. = FALSE )
 check_co_occurrence_table <- function(co_occurrence_table) {
   if (!(is.null(co_occurrence_table)) & !(is.data.frame(co_occurrence_table))) {
     stop("`co_occurrence_table` must be at data.frame object", call. = FALSE)
+  }
+}
+
+check_strings <- function(arg) {
+  arg_name <- deparse(substitute(arg))
+  if (!is.character(arg) || any(!is.character(arg))) {
+    stop("`", arg_name, "` must be a string or vector of strings.", 
+      call. = FALSE)
+  }
+}
+
+check_colors <- function(arg) {
+  arg_name <- deparse(substitute(arg))
+  allowed_colors <- c(names(RColorBrewer::brewer.pal.info), colors())
+  if (is.character(arg)) {
+    if (!(arg %in% allowed_colors) && arg != "default") {
+      stop("`", arg_name, "` must be a palette name from `RColorBrewer`, a 
+vector of `colors` that R accepts, or 'default'.", call. = FALSE)
     }
+  } else if (!is.vector(arg) || any(!arg %in% allowed_colors)) {
+    stop("`", arg_name, "` must be a palette name from `RColorBrewer`, a vector
+of `colors` that R accepts, or 'default'.", call. = FALSE)
+  }
 }
 
 # check_colors <- function(colors) {

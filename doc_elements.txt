@@ -1,0 +1,53 @@
+#' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
+#' @param classification The level of taxonomy to examine. Must be a column name
+#' from the tax_table of the phyloseq_object.
+#' \code{\link[phyloseq:tax_table]{tax_table}}.
+#' @param treatment Column name as a string, or vector of strings, from the
+#' \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset A level within the \code{treatment}. Multiple levels can be 
+#' given as a vector.
+#' 
+#' @param transformation Transformation to be used on the data. "none",
+#' "relative_abundance", "log", "log10", "log1p", "log2", "asn", "atanh",
+#' "boxcox", "exp", "identity", "logit", "probability", "probit",
+#' "reciprocal", "reverse" and "sqrt"
+#' 
+#' @param colors This can be either a name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
+#' 
+#' @param treatment_labels a vector of names to be used as labels for
+#' treatments/facets, in the order they appear in the figure.
+#' 
+#' @param sample_labels a vector of names to be used as labels for Samples, 
+#' in the order they appear in the figure.
+#' 
+#' @param classification_labels a vector of names to be used as labels for the
+#' taxonomic classifications, in the order they appear in the figure.
+#' 
+#' 
+#' @param co_occurrence_table Table of the co-occurrence of taxa/genes in the
+#' \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no
+#' table is given, it will be computed with the \code{phyloseq_obj}, using the
+#' given \code{treatment} and \code{p} = 0.05.
+#' @param layout (optional) an `igraph` layout of the network, for 
+#' reproducibility, can be created with \code{\link{network_layout_ps}}.
+#' @param nodes_of_interest A vector of names of classes within the
+#' \code{classification} to be labeled in the figure.
+#' @param node_colors This can be either a name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
+#' @param negative_positive_colors colors to use for the edges to represent 
+#' negative and positive correlations, as a vector c("negative", "positive").
+#' @param cluster if \code{TRUE}, will use igraph's
+#' \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method.
+#' Alternatively, you may pass a vector of cluster assignments with order
+#' corresponding to the order of the \code{taxa_names} in the
+#' \code{phyloseq_obj}.
+#' @param cluster_colors This can be either a name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
+#' @param buffer Amount of space beyond the points to extend cluster ellipses.
