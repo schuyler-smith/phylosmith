@@ -74,8 +74,7 @@ co_occurrence <- function(
   for(i in seq_along(treatment_indices)){
     treatment_co_occurrence <- Correlation(
       X               = phyloseq_obj[,treatment_indices[[i]]],
-      lowerrho        = rho[1],
-      upperrho        = rho[2],
+      cor_coef_cutoff        = rho,
       p_cutoff        = p,
       method          = method,
       ncores          = cores
