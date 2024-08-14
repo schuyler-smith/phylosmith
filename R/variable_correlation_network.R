@@ -114,19 +114,19 @@ variable_correlation_network <- function(
   net <- igraph::graph_from_data_frame(d = correlation_table, vertices = nodes,
     directed = FALSE)
   net <- igraph::simplify(net, remove.multiple = FALSE, remove.loops = TRUE)
-  layout <- create_layout(net, layout = "igraph", algorithm = "fr")
+  layout <- ggraph::create_layout(net, layout = "igraph", algorithm = "fr")
 
   node_sizes <- rep(16, length(variables))
   node_sizes[names(node_sizes) %in% correlation_table[["Y"]]] <- 20
 
-  variables_layout <- subset(layout, layout[,classification] %in% variables)
+  variables_layout <- subset(layout, layout[[classification]] %in% variables)
 
   g <- ggraph::ggraph(layout) + coord_fixed() +
     ggraph::geom_edge_link(aes(color = Edge, width = Weight)) +
     ggraph::scale_edge_color_manual(values = negative_positive_colors) +
     ggraph::scale_edge_width_continuous(range = c(0.2,2))
-  layout <- subset(layout, !(layout[,classification] %in% variables))
-  node_colors <- create_palette(length(unique(layout[,classification])), colors)
+  layout <- subset(layout, !(layout[[classification]] %in% variables))
+  node_colors <- create_palette(length(unique(layout[[classification]])), colors)
 
   g <- g + geom_point(data = layout, aes_string(x = "x", y = "y",
     size = "`Mean Relative Abundance`", fill = classification),

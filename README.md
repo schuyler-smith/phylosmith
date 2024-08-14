@@ -18,7 +18,7 @@ For some Linux systems you may need to install the following two programs throug
 
 Ubuntu example:
 ```bash
-sudo apt-get install libmysqlclient-dev libgdal-dev libudunits2-dev
+sudo apt-get install libmysqlclient-dev libgdal-dev libudunits2-dev libfontconfig1-dev
 ```
 These programs are required by some dependencies and may not come in your default OS distribution.
 

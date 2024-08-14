@@ -1,3 +1,4 @@
+#' @author Schuyler D. Smith
 #' Create a node network ggplot object of the co-occurrence from a phyloseq object.
 #' Function from the phylosmith-package.
 #'
@@ -29,25 +30,26 @@
 #' \code{phyloseq_obj}, computed using \code{\link{co_occurrence}}. If no
 #' table is given, it will be computed with the \code{phyloseq_obj}, using the
 #' given \code{treatment} and \code{p} = 0.05.
-#' @param layout (optional) an igraph layout of the network, for reproducibility.
-#' Can be created with \code{\link{network_layout_ps}}.
+#' @param layout (optional) an `igraph` layout of the network, for 
+#' reproducibility, can be created with \code{\link{network_layout_ps}}.
 #' @param nodes_of_interest A vector of names of classes within the
-#' \code{classification} to be labeled.
-#' @param node_colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
-#' colors.
-#' @param negative_positive_colors colors to use for the edges to represent negative and
-#' positive correlations.
+#' \code{classification} to be labeled in the figure.
+#' @param node_colors This can be either a name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
+#' @param negative_positive_colors colors to use for the edges to represent 
+#' negative and positive correlations, as a vector c("negative", "positive").
 #' @param cluster if \code{TRUE}, will use igraph's
 #' \code{\link[igraph:cluster_fast_greedy]{cluster_fast_greedy}} method.
 #' Alternatively, you may pass a vector of cluster assignments with order
 #' corresponding to the order of the \code{taxa_names} in the
 #' \code{phyloseq_obj}.
-#' @param cluster_colors Name of a color set from the
-#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R accepted
-#' colors to use for the clusters.
-#' @param buffer Amount of space beyond the points to extend the cluster (
-#' aesthetic argument).
+#' @param cluster_colors This can be either a name of a color set from the
+#' \link[=RColorBrewer]{RColorBrewer} package or a vector palette of R-accepted
+#' colors. The default is an adaption of the palette from 
+#' \url{https://www.nature.com/articles/nmeth.1618}
+#' @param buffer Amount of space beyond the points to extend cluster ellipses.
 #' @importFrom igraph graph_from_data_frame simplify cluster_fast_greedy
 #' @importFrom ggraph ggraph create_layout theme_graph geom_edge_link
 #' @importFrom sf st_as_sf st_buffer
@@ -74,10 +76,15 @@ co_occurrence_network <- function(
   buffer = 0.5
 ) {
 check_args(
-    phyloseq_obj = phyloseq_obj,
-    tax_table    = phyloseq_obj,
-    treatment    = treatment,
-    subset       = subset,
+    phyloseq_obj   = phyloseq_obj,
+    tax_table      = phyloseq_obj,
+    treatment      = treatment,
+    subset         = subset,
+    cluster_colors = cluster_colors,
+    node_colors    = node_colors,
+    buffer         = buffer,
+    cluster        = cluster,
+    nodes_of_interest = nodes_of_interest,
     co_occurrence_table = co_occurrence_table
 )
 

@@ -7,12 +7,10 @@
 #' @usage co_occurrence(phyloseq_obj, treatment = NULL, subset = NULL,
 #' rho = 0, p = 0.05, method = 'spearman', cores = 1)
 #' @param phyloseq_obj A \code{\link[phyloseq]{phyloseq-class}} object.
-#' @param treatment Column name as a \code{string} or \code{numeric} in the
-#' \code{\link[phyloseq:sample_data]{sample_data}}. This can be a vector of
-#' multiple columns and they will be combined into a new column.
-#' @param subset A factor within the \code{treatment}. This will remove any
-#' samples that to not contain this factor. This can be a vector of multiple
-#' factors to subset on.
+#' @param treatment Column name as a string, or vector of strings, from the
+#' \code{\link[phyloseq:sample_data]{sample_data}}.
+#' @param subset A level within the \code{treatment}. Multiple levels can be 
+#' given as a vector.
 #' @param rho \code{numeric} The rho-value cutoff. All returned co-occurrences
 #' will have a rho-value less than or equal to \code{rho} or less than or
 #' equal to -\code{rho}.
@@ -72,10 +70,12 @@ co_occurrence <- function(
   }
   phyloseq_obj <- phyloseq_obj@otu_table
   co_occurrence <- data.table::data.table()
+  if (!is.vector(rho)) rho <- c(-rho, rho)
   for(i in seq_along(treatment_indices)){
     treatment_co_occurrence <- Correlation(
       X               = phyloseq_obj[,treatment_indices[[i]]],
-      cor_coef_cutoff = rho,
+      lowerrho        = rho[1],
+      upperrho        = rho[2],
       p_cutoff        = p,
       method          = method,
       ncores          = cores

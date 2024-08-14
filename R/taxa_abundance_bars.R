@@ -83,44 +83,38 @@ taxa_abundance_bars <- function(
     abundance <- "Abundance"
     graph_data <- graph_data[, sum(Abundance), 
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1", abundance, 
-      skip_absent = TRUE)]
+  }
+  if (transformation == "relative_abundance") {
+    abundance <- "Relative_Abundance"
+    graph_data[, Relative_Abundance := Abundance/sum(Abundance), by = c(treatment_name)]
   }
   if (transformation == "mean") {
     abundance <- "Mean_Abundance"
     graph_data <- graph_data[, mean(Abundance),
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1", 
-      abundance, skip_absent = TRUE)]
   }
   if (transformation == "median") {
     abundance <- "Median_Abundance"
     graph_data <- graph_data[, stats::median(Abundance), 
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1",
-      abundance, skip_absent = TRUE)]
   }
   if (transformation == "sd") {
     abundance <- "StdDev_Abundance"
     graph_data <- graph_data[, stats::sd(Abundance),
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1",
-      abundance, skip_absent = TRUE)]
   }
   if (transformation == "log") {
     abundance <- "log_Abundance"
     graph_data <- graph_data[, log(Abundance), 
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1",
-      abundance, skip_absent = TRUE)]
   }
   if (transformation == "log10") {
     abundance <- "log10_Abundance"
     graph_data <- graph_data[, log10(Abundance), 
       by = c(treatment_name, treatment, classification)]
-    graph_data <- graph_data[, data.table::setnames(.SD, "V1",
-      abundance, skip_absent = TRUE)]
   }
+  graph_data <- graph_data[, data.table::setnames(.SD, "V1",
+                                                  abundance, skip_absent = TRUE)]
   data.table::set(graph_data, which(is.na(graph_data[[classification]])),
       classification, "Unclassified")
 
