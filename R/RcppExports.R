@@ -20,10 +20,8 @@ assign_rank <- function(count_matrix) {
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
 #' @param Y An \code{otu_table} in the format from
 #' \code{\link[phyloseq:otu_table]{phyloseq}}
-#' @param lowerrho a \code{double} representing the lower range of \code{rho} 
-#' values to accept.
-#' @param upperrho a \code{double} representing the upper range of \code{rho} 
-#' values to accept.
+#' @param cor_coef_cutoff \code{double} representing the minimum \code{rho-value}
+#' accepted for the correlation to be returned.
 #' @param p_cutoff \code{double} representing the maximum \code{p-value}
 #' accepted for the correlation to be returned.
 #' @param method Pearson, Spearman
@@ -31,8 +29,8 @@ assign_rank <- function(count_matrix) {
 #' calculations.
 #' @return A \code{data.frame} with treatment, otu_1, otu_2, rho, p values.
 #' @seealso \code{\link{co_occurrence}}
-Correlation <- function(X, Y = matrix(1), lowerrho = 0, upperrho = 0, p_cutoff = 1, method = "pearson", ncores = 1L) {
-    .Call('_phylosmith_Correlation', PACKAGE = 'phylosmith', X, Y, lowerrho, upperrho, p_cutoff, method, ncores)
+Correlation <- function(X, Y = matrix(1), cor_coef_cutoff = 0, p_cutoff = 1, method = "pearson", ncores = 1L) {
+    .Call('_phylosmith_Correlation', PACKAGE = 'phylosmith', X, Y, cor_coef_cutoff, p_cutoff, method, ncores)
 }
 
 #' @author Schuyler D. Smith

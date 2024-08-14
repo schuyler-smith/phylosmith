@@ -23,19 +23,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // Correlation
-Rcpp::DataFrame Correlation(Rcpp::NumericMatrix X, Rcpp::NumericMatrix Y, const double lowerrho, const double upperrho, const double p_cutoff, const std::string method, const int ncores);
-RcppExport SEXP _phylosmith_Correlation(SEXP XSEXP, SEXP YSEXP, SEXP lowerrhoSEXP, SEXP upperrhoSEXP, SEXP p_cutoffSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
+Rcpp::DataFrame Correlation(Rcpp::NumericMatrix X, Rcpp::NumericMatrix Y, const double cor_coef_cutoff, const double p_cutoff, const std::string method, const int ncores);
+RcppExport SEXP _phylosmith_Correlation(SEXP XSEXP, SEXP YSEXP, SEXP cor_coef_cutoffSEXP, SEXP p_cutoffSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type X(XSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const double >::type lowerrho(lowerrhoSEXP);
-    Rcpp::traits::input_parameter< const double >::type upperrho(upperrhoSEXP);
+    Rcpp::traits::input_parameter< const double >::type cor_coef_cutoff(cor_coef_cutoffSEXP);
     Rcpp::traits::input_parameter< const double >::type p_cutoff(p_cutoffSEXP);
     Rcpp::traits::input_parameter< const std::string >::type method(methodSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(Correlation(X, Y, lowerrho, upperrho, p_cutoff, method, ncores));
+    rcpp_result_gen = Rcpp::wrap(Correlation(X, Y, cor_coef_cutoff, p_cutoff, method, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -68,7 +67,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_phylosmith_assign_rank", (DL_FUNC) &_phylosmith_assign_rank, 1},
-    {"_phylosmith_Correlation", (DL_FUNC) &_phylosmith_Correlation, 7},
+    {"_phylosmith_Correlation", (DL_FUNC) &_phylosmith_Correlation, 6},
     {"_phylosmith_permute_rho_Rcpp", (DL_FUNC) &_phylosmith_permute_rho_Rcpp, 4},
     {"_phylosmith_arrange_co_occurrence_table", (DL_FUNC) &_phylosmith_arrange_co_occurrence_table, 2},
     {NULL, NULL, 0}

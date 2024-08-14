@@ -268,7 +268,7 @@ check_subset <- function(phyloseq_obj, treatment, subset) {
     treatment_name <- paste(treatment, collapse = sep)
     treatment_vals <- data.table::data.table(as(phyloseq::access(phyloseq_obj, "sam_data"), "data.frame"))[[treatment_name]]
     treatment_vals <- unique(treatment_vals)
-    if (any(!grepl(subset, paste(treatment_vals, collapse="|")))){
+    if (any(!subset %in% treatment_vals)){
       missing <- paste(subset[!subset %in% treatment_vals], collapse = "', '")
       stop("`subset` must be values contained in `treatment`. c('", 
       paste(missing, collapse = "', '"), "') not found.", call. = FALSE)
