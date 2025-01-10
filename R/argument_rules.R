@@ -125,16 +125,16 @@ check_args <- function(...) {
   }
 
   if ("treatment_labels" %in% names(args)) {
-    treatment_labels <- args[["treatment_labels"]]
-    check_strings(treatment_labels)
+    labels <- args[["treatment_labels"]]
+    if (!is.null(labels)){check_strings(labels)}
   }
   if ("sample_labels" %in% names(args)) {
-    sample_labels <- args[["sample_labels"]]
-    check_strings(sample_labels)
+    labels <- args[["sample_labels"]]
+    if (!is.null(labels)){check_strings(labels)}
   }
   if ("classification_labels" %in% names(args)) {
-    classification_labels <- args[["classification_labels"]]
-    check_strings(classification_labels)
+    labels <- args[["classification_labels"]]
+    if (!is.null(labels)){check_strings(labels)}
   }
   if ("nodes_of_interest" %in% names(args)) {
     nodes_of_interest <- args[["nodes_of_interest"]]
@@ -222,7 +222,7 @@ check_args <- function(...) {
     cluster_colors <- args[["cluster_colors"]]
     check_colors(cluster_colors)
   }
-  if ("colors" %in% names(args)) {
+  if ("node_colors" %in% names(args)) {
     node_colors <- args[["node_colors"]]
     check_colors(node_colors)
   }
