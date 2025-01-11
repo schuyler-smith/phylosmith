@@ -126,15 +126,15 @@ check_args <- function(...) {
 
   if ("treatment_labels" %in% names(args)) {
     labels <- args[["treatment_labels"]]
-    if (!is.null(labels)){check_strings(labels)}
+    check_strings(labels)
   }
   if ("sample_labels" %in% names(args)) {
     labels <- args[["sample_labels"]]
-    if (!is.null(labels)){check_strings(labels)}
+    check_strings(labels)
   }
   if ("classification_labels" %in% names(args)) {
     labels <- args[["classification_labels"]]
-    if (!is.null(labels)){check_strings(labels)}
+    check_strings(labels)
   }
   if ("nodes_of_interest" %in% names(args)) {
     nodes_of_interest <- args[["nodes_of_interest"]]
@@ -370,6 +370,7 @@ check_co_occurrence_table <- function(co_occurrence_table) {
 }
 
 check_strings <- function(arg) {
+  if (is.null(arg)){return(NULL)}
   arg_name <- deparse(substitute(arg))
   if (!is.character(arg) || any(!is.character(arg))) {
     stop("`", arg_name, "` must be a string or vector of strings.", 
