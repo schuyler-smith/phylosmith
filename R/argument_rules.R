@@ -203,10 +203,6 @@ check_args <- function(...) {
     taxa_to_extract <- args[["taxa_to_extract"]]
     check_string(taxa_to_extract)
   }
-  if ("nodes_of_interest" %in% names(args)) {
-    nodes_of_interest <- args[["nodes_of_interest"]]
-    check_string(nodes_of_interest)
-  }
   if ("n" %in% names(args)) {
     check_n(args[["n"]])
   }
@@ -214,18 +210,18 @@ check_args <- function(...) {
     check_co_occurrence_table(args[["co_occurrence_table"]])
   }
 
-  if ("colors" %in% names(args)) {
-    colors <- args[["colors"]]
-    check_colors(colors)
-  }
-  if ("cluster_colors" %in% names(args)) {
-    cluster_colors <- args[["cluster_colors"]]
-    check_colors(cluster_colors)
-  }
-  if ("node_colors" %in% names(args)) {
-    node_colors <- args[["node_colors"]]
-    check_colors(node_colors)
-  }
+  # if ("colors" %in% names(args)) {
+  #   colors <- args[["colors"]]
+  #   check_colors(colors)
+  # }
+  # if ("cluster_colors" %in% names(args)) {
+  #   cluster_colors <- args[["cluster_colors"]]
+  #   check_colors(cluster_colors)
+  # }
+  # if ("node_colors" %in% names(args)) {
+  #   node_colors <- args[["node_colors"]]
+  #   check_colors(node_colors)
+  # }
   
 }
 
@@ -316,6 +312,7 @@ check_boolean_or_frequency <- function(arg) {
 }
 
 check_string <- function(arg) {
+  if (is.null(arg)){return(NULL)}
   arg_name <- deparse(substitute(arg))
   if (!all(is.character(arg))) {
     stop("`", arg_name, "` must be string values", call. = FALSE)
